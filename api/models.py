@@ -16,8 +16,8 @@ class Users(db.Model):
     username = db.Column(db.String(32), nullable=False)
     email = db.Column(db.String(64), nullable=False)
     password = db.Column(db.String(64), nullable=False)
-    jwt_auth_active = db.Column(db.Boolean())
     date_joined = db.Column(db.DateTime(), default=datetime.utcnow)
+    jwt_auth_active = db.Column(db.Boolean())
 
     def __repr__(self):
         return f"User {self.username}"
@@ -110,6 +110,15 @@ class AnthropometricData(db.Model):
     body_span = db.Column(db.Integer(), nullable=False)
     weight = db.Column(db.Float(), nullable=False)
     result = db.Column(db.Float(), nullable=False)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+class AdminConfig(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    days_reminder = db.Column(db.Integer(), default=90)
 
     def save(self):
         db.session.add(self)

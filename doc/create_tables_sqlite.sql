@@ -1,28 +1,32 @@
-CREATE TABLE PLAYER_MASTER (
-	fk_user_id INTEGER NOT NULL,
-	first_name varchar(64),
-	last_name varchar(64), 
-	PRIMARY KEY (fk_user_id)
+CREATE TABLE player_master (
+	user_id INTEGER NOT NULL, 
+	first_name VARCHAR NOT NULL, 
+	last_name VARCHAR NOT NULL, 
+	PRIMARY KEY (user_id), 
+	FOREIGN KEY(user_id) REFERENCES users (id)
 );
 
-CREATE TABLE PLAYER_DETAIL (
-	ID INTEGER,
-	FK_USER INTEGER,
-	TEXT_OF_BIRTH TEXT,
-	SEX_M_0_F_1 INTEGER,
-	HEIGHT_FATHER INTEGER,
-	HEIGHT_MOTHER INTEGER
+CREATE TABLE player_detail (
+	user_id INTEGER NOT NULL, 
+	birthday DATETIME NOT NULL, 
+	sex_m_0_f_1 INTEGER NOT NULL, 
+	height_father INTEGER NOT NULL, 
+	height_mother INTEGER NOT NULL, 
+	PRIMARY KEY (user_id), 
+	FOREIGN KEY(user_id) REFERENCES users (id)
 );
 
-CREATE TABLE ANTHROPOMETRIC_DATA (
-	ID INTEGER,
-	FK_USER INTEGER,
-	ENRY_TEXT TEXT,
-	HEIGHT INTEGER,
-	SITTING_HEIGHT INTEGER,
-	WEIGHT INTEGER,
-	BODY_SPAN INTEGER,
-	RESULT REAL
+CREATE TABLE anthropometric_data (
+	id INTEGER NOT NULL, 
+	date_measured DATETIME, 
+	user_id INTEGER NOT NULL, 
+	height INTEGER NOT NULL, 
+	sitting_height INTEGER NOT NULL, 
+	body_span INTEGER NOT NULL, 
+	weight FLOAT NOT NULL, 
+	result FLOAT NOT NULL, 
+	PRIMARY KEY (id, user_id), 
+	FOREIGN KEY(user_id) REFERENCES users (id)
 );	
 
 CREATE TABLE users (
@@ -30,12 +34,13 @@ CREATE TABLE users (
 	username VARCHAR(32) NOT NULL, 
 	email VARCHAR(64) NOT NULL, 
 	password TEXT, 
-	jwt_auth_active BOOLEAN, 
 	date_joined DATETIME, 
+	jwt_auth_active BOOLEAN, 
 	PRIMARY KEY (id)
 )
 
-CREATE TABLE ADMIN_CONFIG (
-	ID INTEGER,
-	REMINDER_DAYS INTEGER
+CREATE TABLE admin_config (
+	id INTEGER NOT NULL, 
+	days_reminder INTEGER, 
+	PRIMARY KEY (id)
 );
