@@ -5,8 +5,6 @@ Copyright (c) 2019 - present AppSeed.us
 
 from datetime import datetime
 
-import json
-
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 
@@ -17,7 +15,7 @@ class Users(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(32), nullable=False)
     email = db.Column(db.String(64), nullable=False)
-    password = db.Column(db.Text())
+    password = db.Column(db.String(64), nullable=False)
     jwt_auth_active = db.Column(db.Boolean())
     date_joined = db.Column(db.DateTime(), default=datetime.utcnow)
 
@@ -75,6 +73,43 @@ class JWTTokenBlocklist(db.Model):
 
     def __repr__(self):
         return f"Expired Token: {self.jwt_token}"
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+class PlayerMaster(db.Model):
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), primary_key=True)
+    first_name = db.Column(db.String(), nullable=False)
+    last_name = db.Column(db.String(), nullable=False)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+class PlayerDetail(db.Model):
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), primary_key=True)
+    birthday = db.Column(db.DateTime(), nullable=False)
+    sex_m_0_f_1 = db.Column(db.Integer(), nullable=False)
+    height_father = db.Column(db.Integer(), nullable=False)
+    height_mother = db.Column(db.Integer(), nullable=False)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+class AnthropometricData(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    date_measured = db.Column(db.DateTime(), default=datetime.utcnow)
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), primary_key=True)
+    height = db.Column(db.Integer(), nullable=False)
+    sitting_height = db.Column(db.Integer(), nullable=False)
+    body_span = db.Column(db.Integer(), nullable=False)
+    weight = db.Column(db.Float(), nullable=False)
+    result = db.Column(db.Float(), nullable=False)
 
     def save(self):
         db.session.add(self)
