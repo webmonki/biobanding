@@ -1,4 +1,3 @@
-import pandas as pd
 from datetime import datetime
 
 def mirwald_formula(leg_length:float, 
