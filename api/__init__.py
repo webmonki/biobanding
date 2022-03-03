@@ -9,7 +9,7 @@ from flask import Flask
 from flask_cors import CORS
 
 from .routes import rest_api
-from .models import db
+from .models import db, AdminConfig
 
 app = Flask(__name__)
 
@@ -23,6 +23,14 @@ CORS(app)
 @app.before_first_request
 def initialize_database():
     db.create_all()
+
+    # Set default config
+    if not db.session.query(AdminConfig).first():
+        config = AdminConfig(days_reminder=90)
+        db.session.add(config)
+        db.session.commit()
+
+
 
 """
    Custom responses

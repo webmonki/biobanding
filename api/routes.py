@@ -12,7 +12,7 @@ from flask_restx import Api, Resource, fields
 
 import jwt
 
-from .models import db, Users, JWTTokenBlocklist
+from .models import db, Users, JWTTokenBlocklist, AnthropometricData, AdminConfig
 from .config import BaseConfig
 
 rest_api = Api(version="1.0", title="Users API")
@@ -35,6 +35,10 @@ user_edit_model = rest_api.model('UserEditModel', {"userID": fields.String(requi
                                                    "username": fields.String(required=True, min_length=2, max_length=32),
                                                    "email": fields.String(required=True, min_length=4, max_length=64)
                                                    })
+
+
+config_model = rest_api.model('ConfigModel', {"days_reminder": fields.Integer(min=0, max=120, description='Interval in days in which the players are reminded by mail for a new measurement.')})
+
 
 
 """
@@ -192,3 +196,44 @@ class LogoutUser(Resource):
         self.save()
 
         return {"success": True}, 200
+
+@rest_api.route('/api/configurations')
+class EditConfiguration(Resource):
+    """
+       Edits the admin configuration
+    """
+
+    @rest_api.expect(config_model)
+    @token_required
+    def put(self, current_user):
+        """Updates the admin configuration"""
+
+        req_data = request.get_json()
+        _days_reminder = req_data.get("days_reminder")
+        try:
+            AdminConfig.update_days_reminder(_days_reminder)
+        except Exception:
+            return {"success": False,
+                    "msg": "Configuration could not be loaded"}, 500
+
+        return {"success": True,
+                "msg": "The config was successfully updated"}, 200
+
+    @token_required
+    def get(self, current_user):
+        """Return the admin configuration"""
+
+        try:
+            config = AdminConfig.get_days_reminder()
+        except:
+            return {"success": False,
+                    "msg": "There is no configuration."}, 500
+
+
+        return {"success": True,
+                "days_reminder": config}, 200
+
+
+
+
+

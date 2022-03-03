@@ -120,6 +120,15 @@ class AdminConfig(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     days_reminder = db.Column(db.Integer(), default=90)
 
-    def save(self):
-        db.session.add(self)
+    @classmethod
+    def update_days_reminder (cls, _days_reminder):
+        config = cls.query.filter_by(id=1).first()
+        config.days_reminder = _days_reminder
         db.session.commit()
+
+    @classmethod
+    def get_days_reminder(cls):
+        config = cls.query.filter_by(id=1).first()
+        return config.days_reminder
+
+
