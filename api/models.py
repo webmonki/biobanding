@@ -84,6 +84,10 @@ class PlayerMaster(db.Model):
     first_name = db.Column(db.String(), nullable=False)
     last_name = db.Column(db.String(), nullable=False)
 
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.query.get_or_404(id)
+
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -95,6 +99,11 @@ class PlayerDetail(db.Model):
     sex_m_0_f_1 = db.Column(db.Integer(), nullable=False)
     height_father = db.Column(db.Integer(), nullable=False)
     height_mother = db.Column(db.Integer(), nullable=False)
+
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.query.get_or_404(id)
+
 
     def save(self):
         db.session.add(self)
