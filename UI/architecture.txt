@@ -1,0 +1,57 @@
+Archtecture was created by template.
+
+	UI
+	|---------- package.json
+	|---------- package-lock.json
+	|---------- README.md
+	|---------- node_modules
+	|		 |------- ...
+	|
+	|---------- src
+		     |----------- assets
+		     |		     |----------- icons
+		     |				     |---------- ...
+		     |
+		     |----------- components
+		     |			|-------- app.js
+		     |			|-------- header
+		     |			 	     |---------- index.js
+		     |				     |---------- style.css
+		     |
+		     |----------- routes
+		     |		     |----------- 404
+		     |		     |		    |----------- index.js
+		     |		     |		    |----------- style.css
+		     |		     |
+		     |		     |----------- home
+		     |		     |		    |----------- index.js
+		     |		     |		    |----------- style.css
+		     |		     |
+		     |		     |----------- profile
+		     |		     |		     |---------- index.js
+		     |		     |		     |---------- style.css
+		     |		     |
+		     |		     |----------- register
+		     |		     |		     |---------- index.js
+		     |		     |		     |---------- style.css
+		     |		     |
+		     |		     |----------- login
+		     |		     |		     |---------- index.js
+		     |		     |		     |---------- style.css
+		     |		     |
+		     |		     |----------- admin
+		     |		     |		     |---------- index.js
+		     |		     |		     |---------- style.css
+		     |		     |
+		     |		     |----------- measurement
+		     |		     			|-------- index.js
+		     |					|-------- style.css
+		     |
+		     |-------------- style
+		     |			|---------- index.css
+		     |
+		     |------------- index.js
+		     |------------- manifest.sjon
+		     |------------- sw.js
+		     |------------- template.html
+	
