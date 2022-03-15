@@ -84,6 +84,10 @@ class PlayerMaster(db.Model):
     first_name = db.Column(db.String(), nullable=False)
     last_name = db.Column(db.String(), nullable=False)
 
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.query.get_or_404(id)
+
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -96,6 +100,11 @@ class PlayerDetail(db.Model):
     height_father = db.Column(db.Integer(), nullable=False)
     height_mother = db.Column(db.Integer(), nullable=False)
 
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.query.get_or_404(id)
+
+
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -103,8 +112,8 @@ class PlayerDetail(db.Model):
 
 class AnthropometricData(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), nullable=False)
     date_measured = db.Column(db.DateTime(), default=datetime.utcnow)
-    user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), primary_key=True)
     height = db.Column(db.Integer(), nullable=False)
     sitting_height = db.Column(db.Integer(), nullable=False)
     body_span = db.Column(db.Integer(), nullable=False)

@@ -1,0 +1,119 @@
+.navbarClosed {
+    display: none;
+}
+
+.navbarOpened {
+    position: fixed;
+    display:flex;
+    flex-direction: column;
+    height: 100%;
+    width: 150px;
+    background-color: white;
+    padding-top: 64px;
+    box-shadow: 5px 0 5px -2px #888;
+    z-index: 1;
+    
+}
+
+.nav {
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 5%;
+    color: #484852;
+}
+
+
+.active {
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 5%;
+    background-color: #34538A;
+    color: white;
+
+}
+
+.nav:hover{
+    background-color:  #EEEEF1;
+}
+
+.icon {
+    color: #484852;
+}
+
+.activeIcon {
+    color: white;
+    background-color: #34538A !important;
+    /* background-color: rgb(); */
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+
+    .navbarOpened {
+
+        width: 100px;
+
+        
+    }
+
+    .nav:hover{
+        background-color:  #EEEEF1;
+    }
+
+    .icon {
+        color: #484852;
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+
+    .activeIcon {
+        color: white;
+        background-color: #34538A !important;
+
+    }
+
+    .nav {
+        height: 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: #484852;
+        margin-bottom: 20px;
+
+    }
+
+    .active {
+        height: 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: #34538A;
+        color: white;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+
+
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+
+}

@@ -1,0 +1,66 @@
+.floatLabelField {
+    border: none;
+    outline: none;
+    position: relative;
+    margin: 0 0 20px 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  input {
+    border: none;
+    outline: none;
+    padding: 5px 5px 8px 0px;
+    width: 100%;
+    font-size: 18px;
+    border-bottom: solid 0.5px #C7C1C1;
+  }
+  
+  label {
+    opacity: 0.5;
+    position: absolute;
+    top: 10px;
+    left: 0px;
+    transition: all 0.2s ease;
+    font-size: 18px;
+  }
+  
+  .labelFocus {
+    color: rgb(52,83,138);
+    opacity: 1;
+    top: -8px;
+    font-size: 60%;
+    transition: all 0.2s ease;
+    font-weight: bold;
+  }
+
+  .labelFocusFilled {
+    /* color: rgb(52,83,138); */
+    opacity: 1;
+    top: -8px;
+    font-size: 60%;
+    transition: all 0.2s ease;
+    font-weight: bold;
+  }
+
+  .inputFocus {
+    border-bottom: solid 2px rgb(52,83,138);
+  }
+
+  .feedbackErr {
+    font-size: small;
+    color: #B1262D;
+  }
+
+  .feedbackSucc {
+    font-size: small;
+    color: #3C9052;
+  }
+
+  /* .floatLabelField.float label {
+    opacity: 1;
+    top: -8px;
+    font-size: 60%;
+    transition: all 0.2s ease;
+    font-weight: bold;
+  } */
