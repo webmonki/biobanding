@@ -1,0 +1,680 @@
+create preact app:
+npx preact-cli <usernam>/<repository> <project-name>
+
+run app:
+go to project folder
+in terminal: "npm run dev"
+
+------------------------------------------------------------------------------------
+let vdom = {
+  type: 'p',         // a <p> element
+  props: {
+    class: 'big',    // with class="big"
+    children: [
+      'Hello World!' // and the text "Hello World!"
+    ]
+  }
+}
+----------------------------------------------------------------------------------------
+import { createElement, render } from 'preact';
+
+let vdom = createElement(
+  'p',              // a <p> element
+  { class: 'big' }, // with class="big"
+  'Hello World!'    // and the text "Hello World!"
+);
+
+render(vdom, document.body);
+---------------------------------------------------------------------------------------------
+import { createElement, render } from 'preact';
+
+let vdom = <p class="big">Hello World!</p>;
+
+render(vdom, document.body);
+-------------------------------------------------------------------------------------------------------
+import { html } from 'htm/preact';
+
+let maybeBig = Math.random() > .5 ? 'big' : 'small';
+
+let vdom = html`<p class=${maybeBig}>Hello ${40 + 2}!</p>`;
+-----------------------------------------------------------------------------------------------------------
+import { createElement } from 'preact';
+
+export default function App() {
+    return (
+        <p class="big">Hello World!</p>
+    )
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+EVENTS:
+
+function clicked() {
+  console.log('clicked')
+}
+const myButton = document.getElementById('my-button')
+myButton.addEventListener('click', clicked)
+-------------------------------------------------------------------------------------------------------------
+function clicked() {
+  console.log('clicked')
+}
+<button onClick={clicked}>
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Components: 
+import { render } from 'preact';
+
+function MyButton(props) {
+  return <button class="my-button">{props.text}</button>
+}
+
+let vdom = <MyButton text="Click Me!" />
+
+let vdom = createElement(MyButton, { text: "Click Me!" })
+
+render(<MyButton text="Click me!" />, document.body)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Nesting Components:
+
+function MediaPlayer() {
+  return (
+    <div>
+      <MyButton text="Play" />
+      <MyButton text="Stop" />
+    </div>
+  )
+}
+
+render(<MediaPlayer />, document.body)
+
+--------------------------------------------------------------------------------------------------------------------------
+function MediaPlayer(props) {
+  return (
+    <div>
+      {props.playing ? (
+        <MyButton text="Stop" />
+      ) : (
+        <MyButton text="Play" />
+      )}
+    </div>
+  )
+}
+
+render(<MediaPlayer playing={false} />, document.body)
+// renders <button>Play</button>
+
+render(<MediaPlayer playing={true} />, document.body)
+// renders <button>Stop</button>
+----------------------------------------------------------------------------------------------------------------------------
+<Foo>
+  <a />
+  <b />
+</Foo>
+
+function Foo(props) {
+  return props.children  // [<a />, <b />]
+}
+-----------------------------------------------------------------------------------------------------------------------------
+function MyButton(props) {
+  return <button class="my-button">{props.children}</button>
+}
+
+function App() {
+  return (
+    <MyButton>
+      <img src="icon.png" />
+      Click Me!
+    </MyButton>
+  )
+}
+
+render(<App />, document.body)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+State in class components
+
+import { Component } from 'preact'
+
+class MyButton extends Component {
+  state = { clicked: false }
+
+  handleClick = () => {
+    this.setState({ clicked: true })
+  }
+
+  render() {
+    return (
+      <button onClick={this.handleClick}>
+        {this.state.clicked ? 'Clicked' : 'No clicks yet'}
+      </button>
+    )
+  }
+}
+---------------------------------------------------------------------------------------------------------------------------
+import { useState } from 'preact/hooks'
+
+const MyButton = () => {
+  const [clicked, setClicked] = useState(false)
+
+  const handleClick = () => {
+    setClicked(true)
+  }
+
+  return (
+    <button onClick={handleClick}>
+      {clicked ? 'Clicked' : 'No clicks yet'}
+    </button>
+  )
+}
+------------------------------------------------------------------------------------------------------------------------------
+function MyButton(props) {
+  return <button style={props.style} onClick={props.onClick}>{props.children}</button>
+}
+
+export default function App() {
+  const [count, setCount] = useState(0)
+
+  const clicked = () => {
+    setCount(count + 1)
+  }
+
+  return (
+    <div>
+      <p class="count">Count: {count}</p>
+      <MyButton style={{ color: 'purple' }} onClick={clicked}>Click me</MyButton>
+    </div>
+  )
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Refs:
+
+import { createRef } from 'preact'
+
+// create a ref:
+const ref = createRef('initial value')
+// { current: 'initial value' }
+
+// read a ref's current value:
+ref.current === 'initial value'
+
+// update a ref's current value:
+ref.current = 'new value'
+
+// pass refs around:
+console.log(ref) // { current: 'new value' }
+---------------------------------------------------------------------------------------------------------------------
+import { createRef } from 'preact';
+
+// create a ref:
+const input = createRef()
+
+// pass the ref as a prop on a Virtual DOM element:
+render(<input ref={input} />, document.body)
+
+// access the associated DOM element:
+input.current // an HTML <input> element
+input.current.focus() // focus the input!
+------------------------------------------------------------------------------------------------------------------------
+import { createRef, Component } from 'preact';
+
+export default class App extends Component {
+  input = createRef()
+
+  // this function runs after <App> is rendered
+  componentDidMount() {
+    // access the associated DOM element:
+    this.input.current.focus();
+  }
+
+  render() {
+    return <input ref={this.input} />
+  }
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Context
+
+import { createContext } from 'preact'
+
+const Username = createContext()
+
+export default function App() {
+  return (
+    // provide the username value to our subtree:
+    <Username.Provider value="Bob">
+      <div>
+        <p>
+          <Username.Consumer>
+            {username => (
+              // access the current username from context:
+              <span>{username}</span>
+            )}
+          </Username.Consumer>
+        </p>
+      </div>
+    </Username.Provider>
+  )
+}
+-------------------------------------------------------------------------------------------------------------------------
+import { createContext } from 'preact'
+import { useContext } from 'preact/hooks'
+
+const Username = createContext()
+
+export default function App() {
+  return (
+    <Username.Provider value="Bob">
+      <div>
+        <p>
+          <User />
+        </p>
+      </div>
+    </Username.Provider>
+  )
+}
+
+function User() {
+  // access the current username from context:
+  const username = useContext(Username) // "Bob"
+  return <span>{username}</span>
+}
+---------------------------------------------------------------------------------------------------------------------------
+import { createContext } from 'preact'
+import { useState, useMemo, useContext } from 'preact/hooks'
+
+const AuthContext = createContext()
+
+export default function App() {
+  const [user, setUser] = useState(null)
+
+  const auth = useMemo(() => {
+    return { user, setUser }
+  }, [user])
+
+  return (
+    <AuthContext.Provider value={auth}>
+      <div class="app">
+        {auth.user && <p>Welcome {auth.user.name}!</p>}
+        <Login />
+      </div>
+    </AuthContext.Provider>
+  )
+}
+
+function Login() {
+  const { user, setUser } = useContext(AuthContext)
+
+  if (user) return (
+    <div class="logged-in">
+      Logged in as {user.name}.
+      <button onClick={() => setUser(null)}>
+        Log Out
+      </button>
+    </div>
+  )
+
+  return (
+    <div class="logged-out">
+      <button onClick={() => setUser({ name: 'Bob' })}>
+        Log In
+      </button>
+    </div>
+  )
+}
+---------------------------------------------------------------------------------------------------------------------------------
+import { createContext } from 'preact'
+import { useContext } from 'preact/hooks'
+
+const Path = createContext(location.pathname)
+
+function Route(props) {
+  const path = useContext(Path) // the current path
+  const isMatch = path.startsWith(props.path)
+  const innerPath = path.substring(props.path.length)
+  return isMatch && (
+    <Path.Provider value={innerPath}>
+      {props.children}
+    </Path.Provider>
+  )
+}
+
+export default function App() {
+  return (
+    <div class="app">
+      <Route path="/inbox">
+        <Inbox />
+      </Route>
+      <Route path="/settings">
+        <Settings />
+      </Route>
+    </div>
+  )
+}
+
+function Inbox() {
+  return (
+    <div class="inbox">
+      <div class="messages"> ... </div>
+      <Route path="/compose">
+        <Compose />
+      </Route>
+    </div>
+  )
+}
+
+function Settings() {
+  return (
+    <div class="settings">
+      <h1>Settings</h1>
+      <Route path="/forwarding">
+        <Forwarding />
+      </Route>
+    </div>
+  )
+}
+-------------------------------------------------------------------------------------------------------------------
+import { createContext } from 'preact'
+import { useContext } from 'preact/hooks'
+
+const Username = createContext('Bob')
+
+export default function App() {
+  const username = useContext(Username) // returns "Bob"
+
+  return <span>{username}</span>
+}
+-----------------------------------------------------------------------------------------------------------------------------
+import { createContext } from 'preact';
+import { useState, useContext } from 'preact/hooks';
+
+const CounterContext = createContext(null);
+
+function Counter() {
+  const { count, increment } = useContext(CounterContext);
+
+  return (
+    <div style={{ background: '#eee', padding: '10px' }}>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Add</button>
+    </div>
+  );
+}
+
+export default function App() {
+  const [count, setCount] = useState(0);
+
+  function increment() {
+    setCount(count + 1);
+  }
+
+  const counter = useMemo(() => {
+    return { count, increment };
+  }, [count]);
+
+  return (
+    <CounterContext.Provider value={counter}>
+      <div style={{ display: 'flex', gap: '20px' }}>
+        <Counter />
+        <Counter />
+        <Counter />
+      </div>
+    </CounterContext.Provider>
+  )
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+SideEffects:
+
+import { useRef, useEffect } from 'preact/hooks';
+
+export default function App() {
+  const input = useRef()
+
+  // the callback here will run after <App> is rendered:
+  useEffect(() => {
+    // access the associated DOM element:
+    input.current.focus()
+  }, [])
+
+  return <input ref={input} />
+}
+-----------------------------------------------------------------------------------------------------------------------
+import { useEffect, useState } from 'preact/hooks';
+
+export default function App() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    console.log('<App> was just rendered for the first time')
+  }, [])
+
+  useEffect(() => {
+    console.log('count value was changed to: ', count)
+  }, [count])
+  //  ^ run this any time `count` changes, and on the first render
+
+  return <button onClick={() => setCount(count+1)}>{count}</button>
+}
+-------------------------------------------------------------------------------------------------------------
+componentWillMount		just before a component is first rendered
+componentDidMount		after a component is first rendered
+componentWillReceiveProps	before a component is re-rendered
+componentDidUpdate		after a component is re-rendered
+
+--------------------------------------------------------------------------------------------------------------------------
+import { Component } from 'preact';
+
+export default class App extends Component {
+  // this gets called after the component is first rendered:
+  componentDidMount() {
+    // get JSON user info, store in `state.user`:
+    fetch('/api/user')
+      .then(response => response.json())
+      .then(user => {
+        this.setState({ user })
+      })
+  }
+
+  render(props, state) {
+    const { user } = state;
+
+    // if we haven't received data yet, show a loading indicator:
+    if (!user) return <div>Loading...</div>
+
+    // we have data! show the username we got back from the API:
+    return (
+      <div>
+        <h2>Hello, {user.username}!</h2>
+      </div>
+    )
+  }
+}
+------------------------------------------------------------------------------------------------------------
+import { useEffect, useState } from 'preact/hooks';
+
+export default function App() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    console.log('Count is now: ', count)
+  }, [count]);
+  // ^^ start here!
+	
+
+  return <button onClick={() => setCount(count+1)}>{count}</button>
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Keys:
+export default function TodoList() {
+  const [todos, setTodos] = useState(['wake up', 'make bed'])
+
+  function wakeUp() {
+    setTodos(['make bed'])
+  }
+
+  return (
+    <div>
+      <ul>
+        {todos.map(todo => (
+          <li>{todo}</li>
+        ))}
+      </ul>
+      <button onClick={wakeUp}>I'm Awake!</button>
+    </div>
+  )
+}
+------------------------------------------------------------------------------------------------------------------
+The Key to list rendering
+
+export default function TodoList() {
+  const [todos, setTodos] = useState(['wake up', 'make bed'])
+
+  function wakeUp() {
+    setTodos(['make bed'])
+  }
+
+  return (
+    <div>
+      <ul>
+        {todos.map(todo => (
+          <li key={todo}>{todo}</li>
+          //  ^^^^^^^^^^ adding a key prop
+        ))}
+      </ul>
+      <button onClick={wakeUp}>I'm Awake!</button>
+    </div>
+  )
+}
+-----------------------------------------------------------------------------------------------------------------------------
+const todos = [
+  { id: 1, text: 'wake up' },
+  { id: 2, text: 'make bed' }
+]
+
+export default function ToDos() {
+  return (
+    <ul>
+      {todos.map(todo => (
+        <li key={todo.id}>
+          {todo.text}
+        </li>
+      ))}
+    </ul>
+  )
+}
+-----------------------------------------------------------------------------------------------------------------------
+const wait = ms => new Promise(r => setTimeout(r, ms))
+
+const getTodos = async () => {
+  await wait(500);
+  return [
+    { id: 1, text: 'learn Preact', done: false },
+    { id: 2, text: 'make an awesome app', done: false },
+  ]
+}
+
+export default function TodoList() {
+  const [todos, setTodos] = useState([])
+
+  useEffect(() => {
+    getTodos().then(todos => {
+      setTodos(todos)
+    })
+  }, [])
+
+  return (
+    <ul>
+      {todos.map(todo => (
+        <li key={todo.id}>
+          {todo.text}
+        </li>
+      ))}
+    </ul>
+  )
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Error Handling:
+
+import { Component } from 'preact'
+
+class ErrorBoundary extends Component {
+  state = { error: null }
+
+  static getDerivedStateFromError(error) {
+    return { error: error.message }
+  }
+
+  componentDidCatch(error) {
+    console.error(error)
+    this.setState({ error: error.message })
+  }
+
+  render() {
+    if (this.state.error) {
+      return <p>Oh no! We ran into an error: {this.state.error}</p>
+    }
+    return this.props.children
+  }
+}
+-----------------------------------------------------------------------------------------------------------------------
+import { Component } from 'preact';
+import { useState } from 'preact/hooks';
+
+function Clicker() {
+  const [clicked, setClicked] = useState(false);
+
+  if (clicked) {
+    throw new Error('I am erroring');
+  }
+
+  return <button onClick={() => setClicked(true)}>Click Me</button>;
+}
+
+class App extends Component {
+  state = { error: null };
+
+  componentDidCatch(error) {
+    this.setState({ error: error.message });
+  }
+
+  render() {
+    const { error } = this.state;
+    if (error) {
+      return <p>Oh no! There was an error: {error}</p>
+    }
+    return <Clicker />;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
