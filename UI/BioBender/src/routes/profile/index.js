@@ -30,13 +30,13 @@ export default class Profile extends Component {
 		return (
 			<div class={ style.layout }>
 				<Card class={ style.card }>
-					<Head2 headText="Profile"/>
+					<Head2 headText="Profil"/>
 					<div class={ style.container }>
-                    <div class={ style.data }>UserId: { this.state.userId }</div>
-					<div class={ style.data }>User Name: { this.state.userName }</div>
+                    <div class={ style.data }>Benutzer Id: { this.state.userId }</div>
+					<div class={ style.data }>Benutzername: { this.state.userName }</div>
 					<div class={ style.data }>E-Mail: {this.state.email }</div>
                     <div class={ style.center }>
-                        <Button class={ style.btnEnabled } onClick={ this.goToChangeData }>Change E-Mail</Button>
+                        <Button class={ style.btnEnabled } onClick={ this.goToChangeData }>E-Mail ändern</Button>
                     </div>
 					</div>
 				</Card>

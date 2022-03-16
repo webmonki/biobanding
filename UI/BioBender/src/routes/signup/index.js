@@ -14,6 +14,7 @@ import Head1 from '../../components/head/head1.js'
 class Form extends Component {
 	state = { username: ""}
 	state = { password: ""}
+	state = ({ password2: "" })
     state = { email: ""}
 	state = { btnDisabled: true}
     state = { btnClass: undefined}
@@ -25,13 +26,22 @@ class Form extends Component {
 	}
 
 	handleChange = () => {
-		this.setState({ username: document.getElementById("username-input").value})
-		this.setState({ password: document.getElementById("password-input").value})
-        this.setState({ email: document.getElementById("email-input").value})
+		this.setState({ username: document.getElementById("usernameInput").value})
+		this.setState({ password: document.getElementById("passwordInput").value})
+        this.setState({ email: document.getElementById("emailInput").value})
+		this.setState({ password2: document.getElementById("password2Input").value })
+
+		if (this.state.password != this.state.password2) {
+			this.setState({ signupResponse: "Passwörter stimmen nicht überein."})
+		} else {
+			this.setState({ signupResponse: "" })
+		}
+
 
         if (this.state.email.match(
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        ) && this.state.username.length > 2 && this.state.username.length < 33 && this.state.password.length > 3 && this.state.password.length < 17) {
+        ) && this.state.username.length > 2 && this.state.username.length < 33 && this.state.password.length > 3 && this.state.password.length < 17 &&
+		this.state.password == this.state.password2) {
             this.setState({ btnDisabled: false })
             this.setState({ btnClass: style.btnEnabled})
         } else {
@@ -82,17 +92,15 @@ class Form extends Component {
 		return(
 			<div class={style.layout}>
 				<Card class={style.card}>
-					<Head1 headText="Registrierung"></Head1>
-                    <Input inputId="username-input" inputLabel="Benutzername" type="username" onChange={ this.handleChange }/>
-                    <br/>
-                    <br/>
-                    <Input inputId="email-input" inputLabel="E-Mail" type="email" onChange={ this.handleChange}/>
-					<br/>
-					<br/>
-                    <Input inputId="password-input" inputLabel="Passwort" type="password" onChange={ this.handleChange }/>
-                    <div style={{ color:  "#B1262D"}}>{ this.state.signupResponse }</div>
-                    <br/>
-					<Button className={ this.state.btnClass } raised onClick={this.signup} disabled={this.state.btnDisabled}>registrieren</Button>
+				<Head1 headText="Registrierung"></Head1>
+					<div class={ style.inputContainer }>
+						<Input inputId="usernameInput" inputLabel="Benutzername" type="username" onChange={ this.handleChange }/>
+						<Input inputId="emailInput" inputLabel="E-Mail" type="email" onChange={ this.handleChange}/>
+						<Input inputId="passwordInput" inputLabel="Passwort" type="password" onChange={ this.handleChange }/>
+						<Input inputId="password2Input" inputLabel="Passwort wiederholen" type="password" onChange={ this.handleChange }/>
+						<div style={{ color:  "#B1262D"}}>{ this.state.signupResponse }</div>
+						<Button className={ this.state.btnClass } raised onClick={this.signup} disabled={this.state.btnDisabled}>registrieren</Button>
+					</div>
 				</Card>
 			</div>
 		);

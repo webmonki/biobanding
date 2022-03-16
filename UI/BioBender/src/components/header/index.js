@@ -13,6 +13,7 @@ import 'preact-material-components/TopAppBar/style.css';
 import style from './style';
 import Auth from '../state.js';
 
+
 export default class Header extends Component {
 	state = ({ token: undefined });
 	state = ({ homeClass: undefined });
@@ -25,6 +26,7 @@ export default class Header extends Component {
 	state = ({ measureClass: undefined });
 	state = ({ measureIcon: undefined });
 
+
 	componentWillMount = () => {
 		this.setState({ homeClass: style.nav });
 		this.setState({ profileClass: style.nav });
@@ -32,32 +34,37 @@ export default class Header extends Component {
 		this.setState({ homeIcon: style.icon });
 		this.setState({ profileIcon: style.icon });
 		this.setState({ detailsIcon: style.icon });
-		this.setState({navbarClass: style.navbarClosed })
-		this.setState({ measureClass: style.nav })
-		this.setState({ measureIcon: style.icon })
+		this.setState({navbarClass: style.navbarClosed });
+		this.setState({ measureClass: style.nav });
+		this.setState({ measureIcon: style.icon });
+
+
 	}
 
 
 	closeDrawer() {
-		this.setState({ navbarClass: style.navbarClosed })
+		this.setState({ navbarClass: style.navbarClosed });
 		// this.drawer.MDComponent.open = false;
 		// this.state = {
 		// 	darkThemeEnabled: false
 		// };
-	}
+	};
 
-	openDrawer = () => (
+	openDrawer = () => {
 		// this.drawer.MDComponent.open = true
-		this.setState({ navbarClass: style.navbarOpened })
-		);
+		this.setState({ navbarClass: style.navbarOpened });
+	};
 
 	openNavbar = () => {
 		if (this.state.navbarClass == style.navbarOpened) {
-			this.setState({ navbarClass: style.navbarClosed})
+
+			this.setState({ navbarClass: style.navbarClosed});
+
 		} else if (this.state.navbarClass == style.navbarClosed) {
-			this.setState({ navbarClass: style.navbarOpened})
+
+			this.setState({ navbarClass: style.navbarOpened});
 		}
-	}
+	};
 
 	openSettings = () => this.dialog.MDComponent.show();
 
@@ -82,12 +89,12 @@ export default class Header extends Component {
 		this.setState({ homeClass: style.active });
 		this.setState({ profileClass: style.nav });
 		this.setState({ detailsClass: style.nav });
-		this.setState({ measureClass: style.nav })
+		this.setState({ measureClass: style.nav });
 
 		this.setState({homeIcon: style.activeIcon });
 		this.setState({profileIcon: style.icon });
 		this.setState({ detailsIcon: style.icon });
-		this.setState({ measureIcon: style.icon })
+		this.setState({ measureIcon: style.icon });
 	};
 
 	handleClickProfile = () => {
@@ -95,12 +102,12 @@ export default class Header extends Component {
 		this.setState({ homeClass: style.nav });
 		this.setState({ profileClass: style.active });
 		this.setState({ detailsClass: style.nav });
-		this.setState({ measureClass: style.nav })
+		this.setState({ measureClass: style.nav });
 
 		this.setState({homeIcon: style.icon });
 		this.setState({profileIcon: style.activeIcon });
 		this.setState({ detailsIcon: style.icon });
-		this.setState({ measureIcon: style.icon })
+		this.setState({ measureIcon: style.icon });
 	};
 
 	handleClickDetails = () => {
@@ -108,22 +115,22 @@ export default class Header extends Component {
 		this.setState({ homeClass: style.nav });
 		this.setState({ profileClass: style.nav });
 		this.setState({ detailsClass: style.active });
-		this.setState({ measureClass: style.nav })
+		this.setState({ measureClass: style.nav });
 
 		this.setState({homeIcon: style.icon });
 		this.setState({profileIcon: style.icon });
 		this.setState({ detailsIcon: style.activeIcon });
-		this.setState({ measureIcon: style.icon })
+		this.setState({ measureIcon: style.icon });
 	};
 
 	handleClickMeasure = () => {
 		this.goToMeasure();
-		this.setState({ measureClass: style.active })
+		this.setState({ measureClass: style.active });
 		this.setState({ homeClass: style.nav });
 		this.setState({ profileClass: style.nav });
 		this.setState({ detailsClass: style.nav });
 
-		this.setState({ measureIcon: style.activeIcon})
+		this.setState({ measureIcon: style.activeIcon});
 		this.setState({homeIcon: style.icon });
 		this.setState({profileIcon: style.icon });
 		this.setState({ detailsIcon: style.icon });
@@ -146,7 +153,7 @@ export default class Header extends Component {
 			if ([1,2,3,4].includes(this.readyState)) {
 				
 				if (this.status == 200) {
-					Auth.setUser(undefined)
+					Auth.setUser(undefined);
 					route('/login', true);
 				} else {
 					console.log(this.responseText);
@@ -158,14 +165,10 @@ export default class Header extends Component {
 
 
 
-        xhttp.send()
-		that.closeDrawer()
+        xhttp.send();
+		that.closeDrawer();
 	}
 
-	test = () => {
-		console.log("CLICK")
-		this.closeDrawer()
-	}
 
 	render(props) {
 		let auth = Auth.getAuth()

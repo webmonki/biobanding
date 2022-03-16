@@ -97,12 +97,12 @@ export default class ChangeData extends Component {
 		return (
 			<div class={ style.layout }>
 				<Card class={ style.card }>
-					<Head2 headText="Change Profile Data"/>
+					<Head2 headText="Profil ändern"/>
                     <div class={ style.container }>
                         <Input inputId="emailInput" inputLabel="E-Mail" type="email" onChange={ this.handleChange }/>
                         <div class={ this.state.feedbackStyle }>{ this.state.feedback }</div>
                         <div class={ style.center}>
-                            <Button class={ this.state.btnClass } raised disabled={ this.state.btnDisabled } onClick={ this.sendData }>Change E-Mail</Button>
+                            <Button class={ this.state.btnClass } raised disabled={ this.state.btnDisabled } onClick={ this.sendData }>E-Mail ändern</Button>
                         </div>
 					</div>
 				</Card>
