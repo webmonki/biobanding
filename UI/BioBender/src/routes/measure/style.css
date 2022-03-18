@@ -1,6 +1,7 @@
 .btnEnabled {
 	background-color: #34538A !important;
 	color: white !important;
+	height: 50px;
 }
 
 .btnIcon {
@@ -10,6 +11,7 @@
 }
 
 .btnRow {
+	height: 50px;
 	width: 100%;
 	display: flex;
 	justify-content: space-between;

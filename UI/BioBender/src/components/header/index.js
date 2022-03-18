@@ -48,18 +48,8 @@ export default class Header extends Component {
 
 	closeDrawer = () => {
 		this.setState({ navWindowClass: style.navWindowClosed })
-		// this.setState({ navbarClass: style.navbarClosed });
-		// this.drawer.MDComponent.open = false;
-		// this.state = {
-		// 	darkThemeEnabled: false
-		// };
 	};
 
-	// openDrawer = () => {
-	// 	// this.drawer.MDComponent.open = true
-	// 	this.setState({ navbarClass: style.navbarOpened });
-
-	// };
 
 	openNavbar = () => {
 		if (this.state.navWindowClass == style.navWindowOpened) {
@@ -207,15 +197,6 @@ export default class Header extends Component {
 		that.closeDrawer();
 	}
 
-		// if (auth) {
-		// 	console.log("YYYYYYYYYYYYY")
-		// 	this.setState({ iconContainer: style.show })
-		// 	this.setState({ title: style.titleLogged })
-		// } else {
-		// 	console.log("ZZZZZZZZZZZZZZZ")
-		// 	this.setState({ iconContainer: style.dontShow})
-		// 	this.setState({ title: style.titleNotLogged })
-		// }
 	render(props) {
 		let auth = Auth.getAuth()
 

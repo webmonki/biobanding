@@ -29,12 +29,14 @@ export default class Measure extends Component{
     state = ({ navTextEditClass: undefined });
     state = ({ navtextDeleteClass: undefined });
 
+    state = ({ measureId: "" });
     state = ({ height: "" });
     state = ({ sittingHeight: "" });
     state = ({ bodySpan: "" });
     state = ({ weight: "" });
     state = ({ result: "" });
     state = ({ date: "" });
+    state = ({ result: "" });
 
     state = ({ sendBtnDisabled: true });
     state = ({ sendBtnClass: undefined });
@@ -85,7 +87,17 @@ export default class Measure extends Component{
 				
 				if (this.status == 200) {
 					let response = JSON.parse(this.responseText);
+                    console.log(this.responseText)
                     console.log(response.msg);
+
+                    that.setState({ measureId: response.anthropometric_data.id })
+                    that.setState({ date: response.anthropometric_data.date_measured })
+                    that.setState({ height: response.anthropometric_data.height })
+                    that.setState({ sittingHeight: response.anthropometric_data.sitting_height })
+                    that.setState({ bodySpan: response.anthropometric_data.body_span })
+                    that.setState({ weight: response.anthropometric_data.weight })
+                    that.setState({ result: response.anthropometric_data.result })
+
                     that.setState({ feedbackClass: style.feedbackSucc });
                     that.setState({ feedback: response.msg });
                     that.handleClickNew();
@@ -372,12 +384,12 @@ export default class Measure extends Component{
 
         let content = (
             <div class={ style.newContainer }>
+                <div class={ this.state.feedbackClass }>{ this.state.feedback }</div>
                 <Input inputId="inputHeight" inputLabel="Größe" onChange={ this.handleChangeNew }/>
                 <Input inputId="inputSittingHeight" inputLabel="Größe im Sitzen" onChange={ this.handleChangeNew }/>
                 <Input inputId="inputSpan" inputLabel="Körperspannweite" onChange={ this.handleChangeNew }/>
                 <Input inputId="inputWeight" inputLabel="Gewicht" onChange={ this.handleChangeNew }/>
                 <div class={ style.center }>
-                    <div class={ this.state.feedbackClass }>{ this.state.feedback }</div>
                     <Button raised class={ this.state.sendBtnClass } onClick={ this.sendData } disabled={ this.state.sendBtnDisabled }>Abschicken</Button>
                 </div>
             </div>
@@ -420,6 +432,7 @@ export default class Measure extends Component{
                         <List.ItemGraphic class={ style.btnIcon }>arrow_forward</List.ItemGraphic>
                     </Button>
                 </div>
+                <div class={ style.data }>Messung Nr.: { this.state.measureId }</div>
                 <div class={ style.data }>Datum: { this.state.date }</div>
                 <div class={ style.data }>Größe: { this.state.height }</div>
                 <div class={ style.data }>Größe im Sitzen: { this.state.sittingHeight }</div>

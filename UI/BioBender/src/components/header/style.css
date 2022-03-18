@@ -31,7 +31,7 @@
     height: 100%;
     min-width: 180px;
     background-color: white;
-    padding-top: 64px;
+    /* padding-top: 64px; */
     z-index: 1;
     box-shadow: 10px 5px 5px #9C9696;  
 }
@@ -131,7 +131,10 @@
         background-color: #34538A;
         color: white;
         margin-bottom: 20px;
+    }
 
+    .navBar {
+        height: 100%;
     }
 }
 
