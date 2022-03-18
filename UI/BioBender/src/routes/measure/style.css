@@ -1,0 +1,155 @@
+.card {
+    width: 80%;
+    height: 80%;
+    margin: auto auto;
+	padding: 0 5% 0 5%;
+}
+
+.center {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+}
+
+.container {
+	display: flex;
+    flex-direction: column;
+	height: 100%;
+	margin: 10% 0 0 0;
+	padding: 0 0 10% 0;
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+}
+
+.btnRow {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: space-between;
+}
+
+.data {
+	border-bottom: solid 0.5px #C7C1C1;
+
+}
+
+
+.layout {
+    height: 100%;
+	width: 100%;
+    display: flex;
+}
+
+.radio {
+	height: 20px;
+	width: 50px;
+	font-size: 10px;
+	
+} 
+
+.btnDisabled {
+	background-color: #C7C1C1;
+	color: black;
+	width: 50%;
+  }
+  
+  .btnEnabled {
+	background-color: #34538A !important;
+	color: white !important;
+	width: 20%;
+  }
+
+
+.feedbackErr {
+	display: flex;
+	justify-content: center;
+	color: #B1262D;
+}
+
+.feedbackSucc {
+	display: flex;
+	justify-content: center;
+	color: #3C9052;
+}
+
+
+.label {
+	top: 0;
+	/* margin-right: 10%; */
+	position: relative;
+	/* width: 100%; */
+	/* justify-content: start; */
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.feedback {
+	display: flex;
+	justify-content: center;
+	color: #B1262D;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .card{
+        /* margin-top: 10%; */
+        padding-top: 15%;
+        width: 100%;
+        height: 100%;
+    }
+
+	.doubleFieldContainer {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: 100%;
+		margin: 5% 0 5% 0;
+	}
+
+	.doubleField {
+		width: 100%;
+		height: 100%;
+		display: block;
+		flex-direction: column;
+		justify-content: start;
+		padding-right: 10%;
+	}
+
+	.row {
+		width: 100%;
+		height: 30px;
+		display: flex;
+		/* margin-left: 10%; */
+		/* padding: 0 20% 0 20%; */
+	}
+
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+
+
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+
+}

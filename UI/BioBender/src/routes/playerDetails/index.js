@@ -1,0 +1,118 @@
+import { h, Component } from 'preact';
+import Card from 'preact-material-components/Card';
+import Button from 'preact-material-components/Button';
+import 'preact-material-components/Button/style.css';
+import style from './style';
+import Head1 from '../../components/head/head1.js'
+import Head2 from '../../components/head/head2.js'
+import Auth from '../../components/state.js';
+import Input from '../../components/input/input.js'
+import { route, Router } from 'preact-router';
+
+
+
+export default class PlayerDetails extends Component {
+
+	state = ({userId: undefined})
+	state = ({ token: undefined})
+	state = ({ firstName: "" })
+	state = ({ lastName: "" })
+	state = ({ birthday: undefined})
+	state = ({ sex: "" })
+	state = ({ fatherHeight: "" })
+	state = ({ motherHeight: "" })
+	state = ({ feedback: "" })
+	state = ({ feedbackStyle: style.feedbackSucc})
+
+	componentWillMount = () => {
+		this.setState({ userId: Auth.getUser().getId() })
+		this.setState({ token: Auth.getUser().getToken() })
+		this.setState({ btnClass: style.btnDisabled })
+		this.setState({ btnDisabled: true })
+		this.getDetails()
+	}
+
+	getDetails= () => {
+		let that = this
+		let url = "http://127.0.0.1:5000/api/user/" + this.state.userId + "/details" 
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.open("GET", url);
+        xhttp.setRequestHeader("Accept", "application/json");
+        xhttp.setRequestHeader("Content-Type", "application/json");
+		xhttp.setRequestHeader("authorization", that.state.token)
+
+        xhttp.onreadystatechange = function() {
+
+
+
+			if ([1,2,3,4].includes(this.readyState)) {
+				
+				if (this.status == 200) {
+					let response = JSON.parse(this.responseText)
+
+					that.setState({ feedback: response.msg})
+					that.setState({ feedbackStyle: style.feedbackSucc})
+
+					that.setState({ firstName: response["player_details:"].first_name })
+					that.setState({ lastName: response["player_details:"].last_name })
+					that.setState({ birthday: response["player_details:"].birthday })
+
+					let sex = response["player_details:"].sex_m_0_f_1
+
+					if (sex == 0) {
+						that.setState({sex: "male"})
+					} else if (sex == 1) {
+						that.setState({sex: "female"})
+					} else {
+						that.setState({ sex: response["player_details:"].sex_m_0_f_1 })
+					}	
+
+					that.setState({ fatherHeight: response["player_details:"].height_father })
+					that.setState({ motherHeight: response["player_details:"].height_mother })
+
+				} else {
+					let response = JSON.parse(this.responseText)
+					that.setState({ feedback: response.msg })
+					this.setState({ feedbackStyle: style.feedbackErr})
+
+				}
+			} else {
+				that.setState({ loginResponse: "Ups, something went wrong"})
+			}
+		}
+
+
+
+        xhttp.send()
+	}
+
+
+	goToCreateAddPlayer = () => {
+		route('/addPlayer', true)
+	}
+
+	render() {
+		return (
+			<div class={ style.layout }>
+				<Card class={ style.card }>
+					<Head2 headText="Player Details"/>
+					<div class={ this.state.feedbackStyle }>{ this.state.feedback }</div>
+					<div class={ style.container }>
+						<div class={ style.data }>UserId: { this.state.userId }</div>
+						<div class={ style.data }>Firstname: { this.state.firstName }</div>
+						<div class={ style.data }>Lastname: {this.state.lastName }</div>
+						<div class={ style.data }>Birthday: {this.state.birthday }</div>
+						<div class={ style.data }>Sex: {this.state.sex }</div>
+						<div class={ style.data }>Father's Height: { this.state.fatherHeight }</div>
+						<div class={ style.data }>Mother's Height: {this.state.motherHeight }</div>
+						<div class={ style.center}>
+							<Button class={ style.btnEnabled } onClick={ this.goToCreateAddPlayer }>Create Player Details</Button>
+						</div>
+					</div>
+				</Card>
+			</div>
+		);
+	}
+
+}

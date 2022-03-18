@@ -1,0 +1,123 @@
+Design Guide
+
+In this document, you will find guidelines for which colors, fonts and design elements to use in the contect of Bio-Bending.
+
+Since the Material Template is used most design elements are predetermined.
+
+Fonts:
+
+- Roboto(use for long text)
+- Roboto Confused(use for Headlines or UI elements)
+- Roboto Mono(use for tables)
+
+Colors:
+
+Classic Blue (Primary Color)
+
+    #34538A
+    rgb(52,83,138)
+    hsl(218.4,45.3%,37.3%)
+    cmyk(62,40,0,46)
+
+Use for
+
+    main design elements in marketing copy (eg. headlines or backgrounds)
+    primary buttons
+    links/actions
+    highlights (like selections or active navigation item)
+
+Night Sky (Main Dark Color)
+
+    #282832
+    rgb(40,40,50)
+    hsl(240,11.1%,17.6%)
+    cmyk(20,20,0,80)
+
+Use for
+
+    text on light backgrounds
+    dark background
+
+Dark Gray (Secondary Dark Color)
+
+    #484852
+    rgb(72,72,82)
+    hsl(240,6.5%,30.2%)
+    cmyk(12,12,0,68)
+
+Use as a secondary dark color (eg. used as the color of the logo tagline, to contrast with the main dark color).
+Light (Main Light Color)
+
+    #FFFDFC
+    rgb(255,253,252)
+    hsl(20,100%,99.4%)
+    cmyk(0,1,1,0)
+
+Use for
+
+    text on dark backgrounds
+    light background
+
+Opal Gray (Gray Color)
+
+    #9C9696
+    rgb(156,150,150)
+    hsl(0,2.9%,60%)
+    cmyk(12,12,0,68)
+
+Use for UI elements (eg. borders, backgrounds or highlights).
+Opal Gray Light (Light Gray Color)
+
+    #C7C1C1
+    rgb(199,193,193)
+    hsl(0,5.1%,76.9%)
+    cmyk(0,3,3,22)
+
+Use for UI elements (eg. borders, backgrounds or highlights).
+White Gray (Lighter Gray Color)
+
+    #EEEEF1
+    rgb(238,238,241)
+    hsl(240,9.7%,93.9%)
+    cmyk(1,1,0,5)
+
+Use for UI elements (eg. borders, backgrounds or highlights).
+Wate Nymph (Ok Color)
+
+    #3C9052
+    rgb(60,144,82)
+    hsl(135.7,41.2%,40%)
+    cmyk(58,0,43,44)
+
+Use for
+
+    marketing design elements
+    validation ok icon, text or background
+    success icon, text or background
+
+Honey (Warning Color)
+
+    #D0B540
+    rgb(208,181,64)
+    hsl(48.8,60.5%,53.3%)
+    cmyk(0,13,69,18)
+
+Use for
+
+    marketing design elements
+    warning icon, text or background
+
+Space Cherry (Error Color)
+
+    #B1262D
+    rgb(177,38,45)
+    hsl(357,64.7%,42.2%)
+    cmyk(0,79,75,31)
+
+Use for
+
+    marketing design elements
+    validation failed icon, text or background
+    error icon, text or background
+
+
