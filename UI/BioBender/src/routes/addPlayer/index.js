@@ -11,19 +11,19 @@ import { Link } from 'preact-router/match'
 import { route } from 'preact-router';
 
 export default class AddPlayer extends Component{
-    state = ({ btnDisabled: true })
-	state = ({ btnClass: ""})
-    state = ({ feedback: "" })
-    state = ({ feedbackStyle: style.feedbackSucc })
-    state = ({userId: undefined})
-	state = ({ token: undefined})
+    state = ({ btnDisabled: true });
+	state = ({ btnClass: ""});
+    state = ({ feedback: "" });
+    state = ({ feedbackStyle: style.feedbackSucc });
+	state = ({ userId: undefined });
+	state = ({ token: undefined });
 
 
     componentWillMount = () => {
-        this.setState({ userId: Auth.getUser().getId() })
-        this.setState({ token: Auth.getUser().getToken() })
-		this.setState({ btnClass: style.btnDisabled })
-		this.setState({ btnDisabled: true })
+		this.setState({ btnClass: style.btnDisabled });
+		this.setState({ btnDisabled: true });
+		this.setState({ userId: Auth.getUser().id })
+		this.setState({ token: Auth.getUser().token })
 	}
 
 
@@ -35,7 +35,7 @@ export default class AddPlayer extends Component{
         xhttp.open("POST", url);
         xhttp.setRequestHeader("Accept", "application/json");
         xhttp.setRequestHeader("Content-Type", "application/json");
-		xhttp.setRequestHeader("authorization", that.state.token)
+		xhttp.setRequestHeader("authorization", this.state.token);
 
         xhttp.onreadystatechange = function() {
 
@@ -45,12 +45,10 @@ export default class AddPlayer extends Component{
 				
 				if (this.status == 200) {
 					let response = JSON.parse(this.responseText)
-					console.log("R:"+response)
                     that.setState({ feedback: response.msg })
                     that.setState({ feedbackStyle: style.feedbackSucc })
 				} else {
 					let response = JSON.parse(this.responseText)
-					console.log("RE:" + response)
                     that.setState({ feedback: response.msg })
                     that.setState({ feedbackStyle: style.feedbackErr })
 				}
@@ -59,15 +57,7 @@ export default class AddPlayer extends Component{
 			}
 		}
 
-		// console.log("USERID: "+ this.state.userId)
-		// console.log("FIRSTNAME: " + this.state.firstName)
-		// console.log("LASTNAME: " + this.state.lastName )
-		// console.log("BIRTHDAY: " + this.state.birthday)
-		// console.log("SEX: " + this.state.sex)
-		// console.log("FATHER: " + this.state.fatherHeight)
-		// console.log("MOTHER: " + this.state.motherHeight)
 
-		let sex;
 		switch(this.state.sex){
 			case "male":
 				this.sex = 0;
@@ -80,7 +70,7 @@ export default class AddPlayer extends Component{
 		}
 
         let data =  `{
-            "userID": ${this.state.userId},
+            "userID": ${Auth.getUser().getId()},
             "first_name": "${this.state.firstName}",
 			"last_name": "${this.state.lastName}",
 			"birthday": "${this.state.birthday}",
@@ -138,24 +128,25 @@ export default class AddPlayer extends Component{
 		return (
 			<div class={ style.layout }>
 				<Card class={ style.card }>
-					<Head2 headText="Create Player Details"></Head2>
+					<Head2 headText="Spieler Details erstellen"></Head2>
                     <div class={ this.state.feedbackStyle }>{ this.state.feedback }</div>
                     <div class={ style.container }>
                     <div class={ style.row }>
 								<input class={ style.radio } type="radio" name="sex" value="0" id="male" onClick={ this.handleChange }></input>
-								<label class={ style.label } for="male">male</label>
+								<label class={ style.label } for="male">männlich</label>
 								<input class={ style.radio } type="radio" name="sex" value="1" id="female" onClick={ this.handleChange }></input>
-								<label class={ style.label } for="female">female</label>
+								<label class={ style.label } for="female">weiblich</label>
 					</div>
-                    <Input inputId="fnInput" inputLabel="First Name" onChange={ this.handleChange }/>
-                    <Input inputId="lnInput" inputLabel="Last Name" onChange={ this.handleChange }/>
-                    <Input inputId="bDayInput" inputLabel="Birthday" onChange={ this.handleChange }/>
-                    <Input inputId="fhInput" inputLabel="Father's Height" onChange={ this.handleChange }/>
-                    <Input inputId="mhInput" inputLabel="Mother's Height" onChange={ this.handleChange }/>
-					<div class={ style.center }>
-						<Button className={ this.state.btnClass } raised disabled={this.state.btnDisabled} onClick={ this.sendData }>Send</Button>
-						<br/>
-                    	<Button class={ style.btnEnabled } onClick={ this.goToPD }>Player Details</Button>
+					<div class={ style.inputContainer }>
+						<Input inputId="fnInput" inputLabel="Vorname" onChange={ this.handleChange }/>
+						<Input inputId="lnInput" inputLabel="Nachname" onChange={ this.handleChange }/>
+						<Input inputId="bDayInput" inputLabel="Geburtstag" onChange={ this.handleChange }/>
+						<Input inputId="fhInput" inputLabel="Größe des Vaters" onChange={ this.handleChange }/>
+						<Input inputId="mhInput" inputLabel="Größe der Mutter" onChange={ this.handleChange }/>
+					</div>
+					<div class={ style.btnContainer }>
+						<Button className={ this.state.btnClass } raised disabled={this.state.btnDisabled} onClick={ this.sendData }>erstellen</Button>
+                    	<Button class={ style.btnEnabled } onClick={ this.goToPD }>Spieler Details</Button>
 					</div>
                     </div>
 				</Card>

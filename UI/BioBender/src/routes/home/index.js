@@ -13,7 +13,7 @@ export default class Home extends Component {
 
 	componentWillMount = () => {
 		let user = Auth.getUser()
-		this.setState({ username: user.getName()})
+		this.setState({ username: user.name })
 	}
 
 	render() {
@@ -21,7 +21,7 @@ export default class Home extends Component {
 			<div class={ style.layout }>
 				<Card class={ style.card }>
 					<Head2 headText="Home"></Head2>
-					<h1>Hallo, {this.state.username}!</h1>
+					<h2>Hallo, {this.state.username}!</h2>
 				</Card>
 			</div>
 		);

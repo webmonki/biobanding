@@ -22,11 +22,11 @@ export default class PlayerDetails extends Component {
 	state = ({ fatherHeight: "" })
 	state = ({ motherHeight: "" })
 	state = ({ feedback: "" })
-	state = ({ feedbackStyle: style.feedbackSucc})
+	state = ({ feedbackStyle: undefined })
 
 	componentWillMount = () => {
-		this.setState({ userId: Auth.getUser().getId() })
-		this.setState({ token: Auth.getUser().getToken() })
+		this.setState({ userId: Auth.getUser().id })
+		this.setState({ token: Auth.getUser().token })
 		this.setState({ btnClass: style.btnDisabled })
 		this.setState({ btnDisabled: true })
 		this.getDetails()
@@ -74,7 +74,7 @@ export default class PlayerDetails extends Component {
 				} else {
 					let response = JSON.parse(this.responseText)
 					that.setState({ feedback: response.msg })
-					this.setState({ feedbackStyle: style.feedbackErr})
+					that.setState({ feedbackStyle: style.feedbackErr})
 
 				}
 			} else {
@@ -96,18 +96,18 @@ export default class PlayerDetails extends Component {
 		return (
 			<div class={ style.layout }>
 				<Card class={ style.card }>
-					<Head2 headText="Player Details"/>
+					<Head2 headText="Spieler Details"/>
 					<div class={ this.state.feedbackStyle }>{ this.state.feedback }</div>
 					<div class={ style.container }>
-						<div class={ style.data }>UserId: { this.state.userId }</div>
-						<div class={ style.data }>Firstname: { this.state.firstName }</div>
-						<div class={ style.data }>Lastname: {this.state.lastName }</div>
-						<div class={ style.data }>Birthday: {this.state.birthday }</div>
-						<div class={ style.data }>Sex: {this.state.sex }</div>
-						<div class={ style.data }>Father's Height: { this.state.fatherHeight }</div>
-						<div class={ style.data }>Mother's Height: {this.state.motherHeight }</div>
+						<div class={ style.data }>Benutzer Id: { this.state.userId }</div>
+						<div class={ style.data }>Vorname: { this.state.firstName }</div>
+						<div class={ style.data }>Nachname: {this.state.lastName }</div>
+						<div class={ style.data }>Geburtsdatum: {this.state.birthday }</div>
+						<div class={ style.data }>Geschlecht: {this.state.sex }</div>
+						<div class={ style.data }>Größe des Vaters: { this.state.fatherHeight }</div>
+						<div class={ style.data }>Größe der Mutter: {this.state.motherHeight }</div>
 						<div class={ style.center}>
-							<Button class={ style.btnEnabled } onClick={ this.goToCreateAddPlayer }>Create Player Details</Button>
+							<Button class={ style.btnEnabled } onClick={ this.goToCreateAddPlayer }>Spieler Details erstellen</Button>
 						</div>
 					</div>
 				</Card>

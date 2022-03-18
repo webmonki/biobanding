@@ -1,3 +1,7 @@
+install:
+sudo apt install npm
+sudo apt -y install nodejs
+
 create preact app:
 npx preact-cli <usernam>/<repository> <project-name>
 

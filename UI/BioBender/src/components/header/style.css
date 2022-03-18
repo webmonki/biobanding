@@ -1,18 +1,58 @@
-.navbarClosed {
-    display: none;
+.show {
+    display: block;
+    margin-right: 10px;
 }
 
-.navbarOpened {
-    position: fixed;
+.dontShow {
+    display: hidden;
+}
+
+.titleLogged {
+    color: red;
+}
+
+.titleNotLogged {
+    color: green;
+}
+
+.header{
+    width: 100%;
+    background-color: #34538A;
+    color: white;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.navBar {
     display:flex;
     flex-direction: column;
     height: 100%;
-    width: 150px;
+    min-width: 180px;
     background-color: white;
     padding-top: 64px;
-    box-shadow: 5px 0 5px -2px #888;
     z-index: 1;
+    box-shadow: 10px 5px 5px #9C9696;  
+}
+
+.clickShadow {
+    background-color: #C7C1C1;
+    opacity: 0.5;
+    min-height: 90%;
+    min-width: 90%;
+    z-index: 1;
+}
+
+.navWindowOpened {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    display: flex;
     
+}
+
+.navWindowClosed {
+    display: none;
 }
 
 .nav {
@@ -53,15 +93,8 @@
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
 
-    .navbarOpened {
-
-        width: 100px;
-
-        
-    }
-
-    .nav:hover{
-        background-color:  #EEEEF1;
+    .navBar {
+        min-width: 100px;
     }
 
     .icon {
@@ -74,6 +107,8 @@
     .activeIcon {
         color: white;
         background-color: #34538A !important;
+        margin-left: auto;
+        margin-right: auto;
 
     }
 
@@ -94,6 +129,8 @@
         justify-content: center;
         background-color: #34538A;
         color: white;
+        margin-bottom: 20px;
+
     }
 }
 
