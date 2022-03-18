@@ -218,60 +218,91 @@ export default class Header extends Component {
 		// }
 	render(props) {
 		let auth = Auth.getAuth()
-		console.log("XXXXXXXXXXX")
 
-		// if (auth) {
-		// 	console.log("YYYYYYYYYYYYY")
-		// 	this.setState({ iconContainer: style.show })
-		// 	this.setState({ title: style.titleLogged })
-		// } else {
-		// 	console.log("ZZZZZZZZZZZZZZZ")
-		// 	this.setState({ iconContainer: style.dontShow})
-		// 	this.setState({ title: style.titleNotLogged })
-		// }
-
-		console.log(this.state.title)
-
-		return (
-			<div>
-				<div class={ style.header }>
-					<div class={ this.state.iconContainer }>
-						<TopAppBar.Icon menu onCLick={ this.openNavbar }>
-							menu
-						</TopAppBar.Icon>
+		if (auth) {
+			return (
+				<div>
+					<div class={ style.header }>
+						<div class={ style.show }>
+							<TopAppBar.Icon menu onCLick={ this.openNavbar }>
+								menu
+							</TopAppBar.Icon>
+						</div>
+						<TopAppBar.Title class={ style.titleLogged }>BioBending</TopAppBar.Title>
 					</div>
-					<TopAppBar.Title class={ this.state.title }>BioBending</TopAppBar.Title>
-				</div>
-				<div class={ this.state.navWindowClass }>
-					<div class={ style.navBar }>
-						<div class={ this.state.homeClass } onClick={ this.handleClickHome }>
-							<List.ItemGraphic class={ this.state.homeIcon }>home</List.ItemGraphic>
-							Home
+					<div class={ this.state.navWindowClass }>
+						<div class={ style.navBar }>
+							<div class={ this.state.homeClass } onClick={ this.handleClickHome }>
+								<List.ItemGraphic class={ this.state.homeIcon }>home</List.ItemGraphic>
+								Home
+							</div>
+	
+							<div class={ this.state.profileClass } onClick={ this.handleClickProfile }>
+								<List.ItemGraphic class={ this.state.profileIcon }>account_circle</List.ItemGraphic>
+								Profil
+							</div>
+	
+							<div class={ this.state.detailsClass } onclick={ this.handleClickDetails }>
+								<List.ItemGraphic class={ this.state.detailsIcon }>face</List.ItemGraphic>
+								Details
+							</div>
+	
+							<div class={ this.state.measureClass } onCLick={ this.handleClickMeasure }>
+								<List.ItemGraphic class={this.state.measureIcon }>equalizer</List.ItemGraphic>
+								Messung
+							</div>
+	
+							<div class={ style.nav } onClick={ this.logOut }>
+								<List.ItemGraphic class={ style.icon }>close</List.ItemGraphic>
+								Abmelden
+							</div>
 						</div>
-
-						<div class={ this.state.profileClass } onClick={ this.handleClickProfile }>
-							<List.ItemGraphic class={ this.state.profileIcon }>account_circle</List.ItemGraphic>
-							Profil
-						</div>
-
-						<div class={ this.state.detailsClass } onclick={ this.handleClickDetails }>
-							<List.ItemGraphic class={ this.state.detailsIcon }>face</List.ItemGraphic>
-							Details
-						</div>
-
-						<div class={ this.state.measureClass } onCLick={ this.handleClickMeasure }>
-							<List.ItemGraphic class={this.state.measureIcon }>equalizer</List.ItemGraphic>
-							Messung
-						</div>
-
-						<div class={ style.nav } onClick={ this.logOut }>
-							<List.ItemGraphic class={ style.icon }>close</List.ItemGraphic>
-							Abmelden
-						</div>
+						<div class={ style.clickShadow } onClick={ this.closeDrawer }></div>
 					</div>
-					<div class={ style.clickShadow } onClick={ this.closeDrawer }></div>
 				</div>
-			</div>
-		);
+			);
+		} else {
+			return (
+				<div>
+					<div class={ style.header }>
+						<div class={ style.dontShow }>
+							<TopAppBar.Icon menu onCLick={ this.openNavbar }>
+								menu
+							</TopAppBar.Icon>
+						</div>
+						<TopAppBar.Title class={ style.titleNotLogged }>BioBending</TopAppBar.Title>
+					</div>
+					<div class={ this.state.navWindowClass }>
+						<div class={ style.navBar }>
+							<div class={ this.state.homeClass } onClick={ this.handleClickHome }>
+								<List.ItemGraphic class={ this.state.homeIcon }>home</List.ItemGraphic>
+								Home
+							</div>
+	
+							<div class={ this.state.profileClass } onClick={ this.handleClickProfile }>
+								<List.ItemGraphic class={ this.state.profileIcon }>account_circle</List.ItemGraphic>
+								Profil
+							</div>
+	
+							<div class={ this.state.detailsClass } onclick={ this.handleClickDetails }>
+								<List.ItemGraphic class={ this.state.detailsIcon }>face</List.ItemGraphic>
+								Details
+							</div>
+	
+							<div class={ this.state.measureClass } onCLick={ this.handleClickMeasure }>
+								<List.ItemGraphic class={this.state.measureIcon }>equalizer</List.ItemGraphic>
+								Messung
+							</div>
+	
+							<div class={ style.nav } onClick={ this.logOut }>
+								<List.ItemGraphic class={ style.icon }>close</List.ItemGraphic>
+								Abmelden
+							</div>
+						</div>
+						<div class={ style.clickShadow } onClick={ this.closeDrawer }></div>
+					</div>
+				</div>
+			);
+		}
 	}
 }

@@ -70,13 +70,13 @@ export default class Measure extends Component{
 
     sendData = () => {
         let that = this;
-		let url = "http://127.0.0.1:5000/api/user/" + Auth.getUser().getId() + "/anthropometric";
+		let url = "http://127.0.0.1:5000/api/user/" + Auth.getUser().id + "/anthropometric";
         var xhttp = new XMLHttpRequest();
 
         xhttp.open("POST", url);
         xhttp.setRequestHeader("Accept", "application/json");
         xhttp.setRequestHeader("Content-Type", "application/json");
-        xhttp.setRequestHeader("authorization", Auth.getUser().getToken());
+        xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
         xhttp.onreadystatechange = function() {
 
@@ -106,15 +106,12 @@ export default class Measure extends Component{
         var date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
 
         let data = `{
-            "id": ${ Auth.getUser().getId() },
-            "userID": ${ Auth.getUser().getId() },
+            "userID": ${ Auth.getUser().id },
             "date_measured": "${ date }",
             "height": ${ this.state.height },
             "sitting_height": ${ this.state.sittingHeight },
             "body_span": ${ this.state.bodySpan },
-            "weight": ${ this.state.weight },
-            "result": ${ 1 }
-
+            "weight": ${ this.state.weight }
         }`
 
         xhttp.send(data);
@@ -338,7 +335,6 @@ export default class Measure extends Component{
         this.setState({ sittingHeight: document.getElementById("inputSittingHeight").value });
         this.setState({ bodySpan: document.getElementById("inputSpan").value });
         this.setState({ weight: document.getElementById("inputWeight").value });
-        this.setState({ result: document.getElementById("inputResult").value });
 
         if (
             this.state.height != "" && this.state.sittingHeight != "" &&

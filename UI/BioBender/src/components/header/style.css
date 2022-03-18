@@ -1,18 +1,19 @@
 .show {
     display: block;
-    margin-right: 10px;
+    margin-left: 10px;
 }
 
 .dontShow {
-    display: hidden;
+    display: none;
 }
 
 .titleLogged {
-    color: red;
+    color: white;
 }
 
 .titleNotLogged {
-    color: green;
+    color: white;
+    margin-left: 34px;
 }
 
 .header{
