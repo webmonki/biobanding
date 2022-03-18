@@ -49,14 +49,12 @@ player_model = rest_api.model('PlayerModel', {"userID": fields.Integer(required=
                                               })
 
 anthropometric_data_model = rest_api.model('AnthropometricDataModel', {
-        "id": fields.Integer(required=True, min=0),
         "userID": fields.Integer(required=True, min=0),
         "date_measured": fields.Date(required=True),
         "height": fields.Integer(required=True, min=0, max=300),
         "sitting_height": fields.Integer(required=True, min=0, max=300),
         "body_span": fields.Integer(required=True, min=0, max=300),
-        "weight": fields.Float(required=True, min=0, max=300),
-        "result": fields.Float(required=True, min=0, max=300)
+        "weight": fields.Float(required=True, min=0, max=300)
 }
 )
 
@@ -292,7 +290,7 @@ class PlayerDetails(Resource):
         try:
             player_detail = PlayerDetail.get_by_id(userID)
             player_master = PlayerMaster.get_by_id(userID)
-            print(player_detail.height_father)
+            #print(player_detail.height_father)
         except:
             return {"success": False,
                     "msg": "Could not read player details"}, 500
@@ -343,4 +341,14 @@ class Anthropometric(Resource):
                     "msg": "Anthropometric data could not be created"}, 500
 
         return {"success": True,
+                "anthropometric_data": {
+                    "id": _new_anthropometric_data.id,
+                    "userID": userID,
+                    "date_measured": dumps(_date_measured, default=json_serial),
+                    "height": _height,
+                    "sitting_height": _sitting_height,
+                    "body_span": _body_span,
+                    "weight": _weight,
+                    "result": _result
+                },
                 "msg": "Anthropometric data was successfully created"}, 200
