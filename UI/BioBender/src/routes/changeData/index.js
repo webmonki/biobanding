@@ -22,12 +22,13 @@ export default class ChangeData extends Component {
     state = ({ token: "" })
 
     componentWillMount = () => {
-        this.setState({ userId: Auth.getUser().getId() })
-        this.setState({ userName: Auth.getUser().getName() })
-        this.setState({ email: Auth.getUser().getEmail() })
+        this.setState({ userId: Auth.getUser().id })
+        this.setState({ userName: Auth.getUser().name })
+        this.setState({ email: Auth.getUser().email })
         this.setState({ btnDisabled: true })
         this.setState({ btnClass: style.btnDisabled })
-        this.setState({ token: Auth.getUser().getToken() })
+
+        this.setState({ token: Auth.getUser().token })
     }
 
     handleChange = () => {
@@ -66,12 +67,10 @@ export default class ChangeData extends Component {
 				
 				if (this.status == 200) {
 					let response = JSON.parse(this.responseText)
-					console.log("R:"+ this.responseText)
                     that.setState({ feedback: response.msg })
                     that.setState({ feedbackStyle: style.feedbackSucc })
 				} else {
 					let response = JSON.parse(this.responseText)
-					console.log("RE:" + this.responseText)
                     that.setState({ feedback: response.msg })
                     that.setState({ feedbackStyle: style.feedbackErr })
 				}
@@ -80,9 +79,6 @@ export default class ChangeData extends Component {
 			}
 		}
 
-        console.log("ID: " + this.state.userId)
-        console.log("NAME: " + this.state.userName)
-        console.log("EMAIL: " + this.state.email)
 
         let data = `{
             "userID": "${this.state.userId}",

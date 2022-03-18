@@ -133,18 +133,17 @@ export default class Measure extends Component{
     showTable = () => {
 
         let content = (
-            <div>
+            <div class={ style.viewContainer }>
                 <div class={ style.center }>
                     <Button raised class={ style.btnEnabled } onClick={ this.handleClickView }>
                         <div class={ style.btnLabel }>
-                            <List.ItemGraphic class={ style.btnIcon }>list</List.ItemGraphic>
+                            <List.ItemGraphic class={ style.btnIcon }>arrow_back</List.ItemGraphic>
                             <div class={ style.labelText }>Zurück</div>
                         </div>
                     </Button>
                 </div>
                 <div class={ style.tableContainer }>
                     <table>
-                        <caption>Anthropometrische Daten</caption>
                         <thead>
                         <tr>
                             <th>Datum</th>
@@ -376,7 +375,7 @@ export default class Measure extends Component{
 
 
         let content = (
-            <div>
+            <div class={ style.newContainer }>
                 <Input inputId="inputHeight" inputLabel="Größe" onChange={ this.handleChangeNew }/>
                 <Input inputId="inputSittingHeight" inputLabel="Größe im Sitzen" onChange={ this.handleChangeNew }/>
                 <Input inputId="inputSpan" inputLabel="Körperspannweite" onChange={ this.handleChangeNew }/>
@@ -410,7 +409,7 @@ export default class Measure extends Component{
         this.setState({ navTextDeleteClass: style.navTextNotSelected });
 
         let content = (
-            <div class={ style.container }>
+            <div class={ style.viewContainer }>
                 <div class={ style.btnRow }>
                     <Button raised class={ style.btnEnabled } onClick={ this.back }>
                         <List.ItemGraphic class={ style.btnIcon }>arrow_back</List.ItemGraphic>
@@ -480,28 +479,26 @@ export default class Measure extends Component{
 			<div class={ style.layout }>
 				<Card class={ style.card }>
 					<Head2 headText="Messung"></Head2>
-                    <div class={ style.container }>
-                        <div class={ style.navRow }>
-                            <div class={ this.state.navNewClass } onClick={ this.handleClickNew }>
-                                <List.ItemGraphic class={ this.state.navIconNewClass }>add_circle_outline</List.ItemGraphic>
-                                <div class={ this.state.navTextNewClass }>Neu</div>
-                            </div>
-                            <div class={ this.state.navViewClass } onClick={ this.handleClickView }>
-                                <List.ItemGraphic class={ this.state.navIconViewClass }>remove_red_eye</List.ItemGraphic>
-                                <div class={ this.state.navTextViewClass }>anzeigen</div>
-                            </div>
-                            <div class={ this.state.navEditClass } onClick={ this.handleClickEdit }>
-                                <List.ItemGraphic class={ this.state.navIconEditClass }>edit</List.ItemGraphic>
-                                <div class={ this.state.navTextEditClass }>bearbeiten</div>
-                            </div>
-                            <div class={ this.state.navDeleteClass } onClick={ this.handleClickDelete }>
-                                <List.ItemGraphic class={ this.state.navIconDeleteClass }>delete</List.ItemGraphic>
-                                <div class={ this.state.navTextDeleteClass }>löschen</div>
-                            </div>
+                    <div class={ style.navRow }>
+                        <div class={ this.state.navNewClass } onClick={ this.handleClickNew }>
+                            <List.ItemGraphic class={ this.state.navIconNewClass }>add_circle_outline</List.ItemGraphic>
+                            <div class={ this.state.navTextNewClass }>Neu</div>
                         </div>
-                        <div class={style.content }>
-                            { this.state.content }
+                        <div class={ this.state.navViewClass } onClick={ this.handleClickView }>
+                            <List.ItemGraphic class={ this.state.navIconViewClass }>remove_red_eye</List.ItemGraphic>
+                            <div class={ this.state.navTextViewClass }>anzeigen</div>
                         </div>
+                        <div class={ this.state.navEditClass } onClick={ this.handleClickEdit }>
+                            <List.ItemGraphic class={ this.state.navIconEditClass }>edit</List.ItemGraphic>
+                            <div class={ this.state.navTextEditClass }>bearbeiten</div>
+                        </div>
+                        <div class={ this.state.navDeleteClass } onClick={ this.handleClickDelete }>
+                            <List.ItemGraphic class={ this.state.navIconDeleteClass }>delete</List.ItemGraphic>
+                            <div class={ this.state.navTextDeleteClass }>löschen</div>
+                        </div>
+                    </div>
+                    <div class={ style.content }>
+                        { this.state.content }
                     </div>
 				</Card>
 			</div>

@@ -98,7 +98,7 @@ class Form extends Component {
 						<Input inputId="emailInput" inputLabel="E-Mail" type="email" onChange={ this.handleChange}/>
 						<Input inputId="passwordInput" inputLabel="Passwort" type="password" onChange={ this.handleChange }/>
 						<Input inputId="password2Input" inputLabel="Passwort wiederholen" type="password" onChange={ this.handleChange }/>
-						<div style={{ color:  "#B1262D"}}>{ this.state.signupResponse }</div>
+						<div style={{ color:  "#B1262D" }}>{ this.state.signupResponse }</div>
 						<Button className={ this.state.btnClass } raised onClick={this.signup} disabled={this.state.btnDisabled}>registrieren</Button>
 					</div>
 				</Card>

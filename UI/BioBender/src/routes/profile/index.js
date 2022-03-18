@@ -17,9 +17,9 @@ export default class Profile extends Component {
     state = ({ email: "" })
 
     componentWillMount = () => {
-        this.setState({ userId: Auth.getUser().getId() })
-        this.setState({ userName: Auth.getUser().getName() })
-        this.setState({ email: Auth.getUser().getEmail() })
+        this.setState({ userId: Auth.getUser().id })
+        this.setState({ userName: Auth.getUser().name })
+        this.setState({ email: Auth.getUser().email })
     }
 
     goToChangeData = () => {

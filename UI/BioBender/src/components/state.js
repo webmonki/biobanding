@@ -1,66 +1,31 @@
-class User {
-    constructor(id, name, email, token) {
-        this.id = id;
-        this.name = name;
-        this.emai = email;
-        this.token = token
-    }
-
-    setId = (val) => {
-        this.id = val;
-    }
-
-    getId = () => {
-        return this.id;
-    }
-
-    setName = (val) => {
-        this.name = val;
-    }
-
-    getName = () => {
-        return this.name;
-    }
-
-    setEmail = (val) => {
-        this.emai = val;
-    }
-
-    getEmail = () => {
-        return this.emai;
-    }
-
-    setToken = (val) => {
-        this.token = val;
-    }
-
-    getToken = () => {
-        return this.token;
-    }
-}
-
 export default class Auth {
-    static user;
+    // static user;
 
     static createUser = (response) => {
-        // console.log(response.token)
-        this.user = new User(response.user._id, response.user.username, response.user.email, response.token);
+
+        let user = {"id": response.user._id, "name": response.user.username, "email": response.user.email, "token": response.token}
+        sessionStorage.clear();
+        sessionStorage.setItem("user", JSON.stringify(user));
     }
 
     static getAuth = () => {
-        if (this.user != undefined) {
+        if (sessionStorage.user != undefined) {
             return true;
         } else {
             return false;
         }
     }
 
+
     static getUser = () => {
-        return this.user;
+        let user = JSON.parse(sessionStorage.user)
+        return user;
     }
 
-    static setUser = (val) => {
-        this.user = val;
+
+    static logout = () => {
+        sessionStorage.clear();
+        // console.log(sessionStorage)
     }
 }
 

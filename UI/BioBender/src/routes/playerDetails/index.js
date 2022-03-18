@@ -25,8 +25,8 @@ export default class PlayerDetails extends Component {
 	state = ({ feedbackStyle: undefined })
 
 	componentWillMount = () => {
-		this.setState({ userId: Auth.getUser().getId() })
-		this.setState({ token: Auth.getUser().getToken() })
+		this.setState({ userId: Auth.getUser().id })
+		this.setState({ token: Auth.getUser().token })
 		this.setState({ btnClass: style.btnDisabled })
 		this.setState({ btnDisabled: true })
 		this.getDetails()
@@ -107,7 +107,7 @@ export default class PlayerDetails extends Component {
 						<div class={ style.data }>Größe des Vaters: { this.state.fatherHeight }</div>
 						<div class={ style.data }>Größe der Mutter: {this.state.motherHeight }</div>
 						<div class={ style.center}>
-							<Button class={ style.btnEnabled } onClick={ this.goToCreateAddPlayer }>Create Player Details</Button>
+							<Button class={ style.btnEnabled } onClick={ this.goToCreateAddPlayer }>Spieler Details erstellen</Button>
 						</div>
 					</div>
 				</Card>
