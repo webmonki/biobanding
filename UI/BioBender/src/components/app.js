@@ -1,6 +1,5 @@
 import { h, Component } from 'preact';
 import { route, Router } from 'preact-router';
-import { createContext, useContext } from 'preact-context'
 import Header from './header';
 import Home from '../routes/home';
 import Profile from '../routes/profile';
@@ -8,15 +7,14 @@ import NotFound from '../routes/404';
 import Test from '../routes/test';
 import Login from '../routes/login';
 import Signup from '../routes/signup';
-import { useState } from 'preact';
 import Auth from './state.js';
 import PlayerDetails from '../routes/playerDetails';
 import AddPlayer from '../routes/addPlayer';
 import ChangeData from '../routes/changeData';
-import Measure
- from '../routes/measure';
-// import Home from 'async!../routes/home';
-// import Profile from 'async!../routes/profile';
+import Measure from '../routes/measure';
+import Config from '../routes/config';
+import SetConfig from '../routes/setConfig';
+
 
 export default class App extends Component {
 	/** Gets fired when the route changes.
@@ -26,15 +24,17 @@ export default class App extends Component {
 
 
 	handleRoute = async e => {
-		let auth = Auth.getAuth()
-		if (auth == false || auth == undefined) {
-			if (e.url == "/signup"){
-				route('/signup', true)
-			} else {
-				route('login', true)
+		let auth = Auth.getAuth();
+		if (auth === false || auth === undefined) {
+			if (e.url === '/signup'){
+				route('/signup', true);
+			}
+			else
+			{
+				route('login', true);
 			}
 		} else {
-			this.setState({ currentUrl: e.url})
+			this.setState({ currentUrl: e.url});
 		}
 	}
 
@@ -55,6 +55,8 @@ export default class App extends Component {
 					<AddPlayer path="/addPlayer/"/>
 					<ChangeData path="/changeData/"/>
 					<Measure path="/measure"/>
+					<Config path="/config"/>
+					<SetConfig path="/setConfig"/>
 					<NotFound default />
 				</Router>
 			</div>

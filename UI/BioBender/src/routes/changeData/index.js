@@ -43,7 +43,6 @@ export default class ChangeData extends Component {
 			this.setState({ btnDisabled: false})
 			this.setState({ btnClass: style.btnEnabled })
 		} else {
-            console.log("BTN DIS")
 			this.setState({ btnDisabled: true})
 			this.setState({ btnClass: style.btnDisabled })
 		}
