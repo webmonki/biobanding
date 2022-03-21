@@ -1,42 +1,29 @@
 .card {
-	margin-top: 50px;
+    margin-top: 50px;
 	padding: 0 5% 0 5%;
-    grid-column-start: 4;
-    grid-column-end: 10;
-    grid-row-start: 4;
-    grid-row-end: 10;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+    grid-column-start: 6;
+    grid-column-end: 8;
+    grid-row-start: 6;
+    grid-row-end: 8;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
 }
-
-.center {
-	display: flex;
-	justify-content: center;
-}
-
-
-.container {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-	min-height: 450px;
-	margin: 10% 0 0 0;
-	padding: 0 0 10% 0;
-}
-
-.data {
-	border-bottom: solid 0.5px #C7C1C1;
-}
-
 
 .layout {
     height: 90%;
     display: grid;
     grid-template-columns: repeat(12, auto);
     grid-template-rows: repeat(12, auto);
+}
+
+.container {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+    align-items: center;
+	min-height: 450px;
+	margin: 10% 0 0 0;
+	padding: 0 0 10% 0;
 }
 
 .btnEnabled {
@@ -56,39 +43,27 @@
 	color: #3C9052;
 }
 
-.label {
-	top: 0;
-	position: relative;
 
+.data {
+	border-bottom: solid 0.5px #C7C1C1;
 }
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
-
-	.layout {
-		/* min-height: 590px;
-		max-height: 590px; */
-		height: fit-content;
-		width: 100%;
-		display: flex;
-	}
+    .layout {
+        height: fit-content;
+        width: 100%;
+        display: flex;
+    }
 
     .card{
         padding-top: 15%;
         width: 100%;
-        /* min-height: 570px; */
-		height: 100%;
+        min-height: 100%;
+        max-height: 100%;
+        height: 100%;
+        margin: 0 0 0 0;
     }
-
-	.container {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-		min-height: 460px;
-		margin: 10% 0 0 0;
-		padding: 0 0 10% 0;
-	}
-
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */

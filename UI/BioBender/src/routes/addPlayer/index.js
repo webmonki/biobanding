@@ -70,7 +70,7 @@ export default class AddPlayer extends Component{
 		}
 
         let data =  `{
-            "userID": ${Auth.getUser().getId()},
+            "userID": ${this.state.userId},
             "first_name": "${this.state.firstName}",
 			"last_name": "${this.state.lastName}",
 			"birthday": "${this.state.birthday}",

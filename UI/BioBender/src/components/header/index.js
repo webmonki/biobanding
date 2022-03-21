@@ -24,6 +24,8 @@ export default class Header extends Component {
 	state = ({ detailsIcon: undefined });
 	state = ({ navbarClass: undefined });
 	state = ({ measureClass: undefined });
+	state = ({ configClass: undefined });
+	state = ({ configIcon: undefined });
 	state = ({ measureIcon: undefined });
 	state = ({ navWindowClass: undefined });
 	state = ({ iconContainer: undefined });
@@ -37,9 +39,10 @@ export default class Header extends Component {
 		this.setState({ homeIcon: style.icon });
 		this.setState({ profileIcon: style.icon });
 		this.setState({ detailsIcon: style.icon });
-		// this.setState({navbarClass: style.navbarClosed });
 		this.setState({ measureClass: style.nav });
 		this.setState({ measureIcon: style.icon });
+		this.setState({ configClass: style.nav });
+		this.setState({ configIcon: style.icon });
 		this.setState({ navWindowClass: style.navWindowClosed });
 		this.setState({ iconContainer: style.dontShow });
 		this.setState({ title: style.titleLogged });
@@ -48,18 +51,8 @@ export default class Header extends Component {
 
 	closeDrawer = () => {
 		this.setState({ navWindowClass: style.navWindowClosed })
-		// this.setState({ navbarClass: style.navbarClosed });
-		// this.drawer.MDComponent.open = false;
-		// this.state = {
-		// 	darkThemeEnabled: false
-		// };
 	};
 
-	// openDrawer = () => {
-	// 	// this.drawer.MDComponent.open = true
-	// 	this.setState({ navbarClass: style.navbarOpened });
-
-	// };
 
 	openNavbar = () => {
 		if (this.state.navWindowClass == style.navWindowOpened) {
@@ -77,11 +70,13 @@ export default class Header extends Component {
 					this.setState({ profileClass: style.nav });
 					this.setState({ detailsClass: style.nav });
 					this.setState({ measureClass: style.nav });
+					this.setState({ configClass: style.nav });
 			
 					this.setState({homeIcon: style.activeIcon });
 					this.setState({profileIcon: style.icon });
 					this.setState({ detailsIcon: style.icon });
 					this.setState({ measureIcon: style.icon });
+					this.setState({ configIcon: style.icon });
 					break;
 
 				case "/profile":
@@ -89,11 +84,14 @@ export default class Header extends Component {
 					this.setState({ profileClass: style.active });
 					this.setState({ detailsClass: style.nav });
 					this.setState({ measureClass: style.nav });
-			
+					this.setState({ configClass: style.nav });
+
 					this.setState({homeIcon: style.icon });
 					this.setState({profileIcon: style.activeIcon });
 					this.setState({ detailsIcon: style.icon });
 					this.setState({ measureIcon: style.icon });
+					this.setState({ configIcon: style.icon });
+
 					break;
 
 				case "/playerDetails":
@@ -101,11 +99,14 @@ export default class Header extends Component {
 					this.setState({ profileClass: style.nav });
 					this.setState({ detailsClass: style.active });
 					this.setState({ measureClass: style.nav });
-			
+					this.setState({ configClass: style.nav });
+
 					this.setState({homeIcon: style.icon });
 					this.setState({profileIcon: style.icon });
 					this.setState({ detailsIcon: style.activeIcon });
 					this.setState({ measureIcon: style.icon });
+					this.setState({ configIcon: style.icon });
+
 					break;
 
 				case "/measure":
@@ -113,13 +114,28 @@ export default class Header extends Component {
 					this.setState({ homeClass: style.nav });
 					this.setState({ profileClass: style.nav });
 					this.setState({ detailsClass: style.nav });
-			
+					this.setState({ configClass: style.nav });
+
 					this.setState({ measureIcon: style.activeIcon});
 					this.setState({homeIcon: style.icon });
 					this.setState({profileIcon: style.icon });
 					this.setState({ detailsIcon: style.icon });
+					this.setState({ configIcon: style.icon });
+
 					break;
 
+				case "/config":
+					this.setState({ measureClass: style.nav });
+					this.setState({ homeClass: style.nav });
+					this.setState({ profileClass: style.nav });
+					this.setState({ detailsClass: style.nav });
+					this.setState({ configClass: style.active });
+
+					this.setState({ measureIcon: style.icon});
+					this.setState({homeIcon: style.icon });
+					this.setState({profileIcon: style.icon });
+					this.setState({ detailsIcon: style.icon });
+					this.setState({ configIcon: style.activeIcon });
 				default:
 					break;
 			}
@@ -158,6 +174,7 @@ export default class Header extends Component {
 	goToSignUp = this.linkTo('/signup');
 	goToPD = this.linkTo('/playerDetails');
 	goToMeasure = this.linkTo('/measure');
+	goToConfig = this.linkTo('/config');
 
 	handleClickHome = () => {
 		this.goHome();
@@ -173,6 +190,10 @@ export default class Header extends Component {
 
 	handleClickMeasure = () => {
 		this.goToMeasure();
+	};
+
+	handleClickConfig = () => {
+		this.goToConfig();
 	};
 
 	logOut = () => {
@@ -207,71 +228,70 @@ export default class Header extends Component {
 		that.closeDrawer();
 	}
 
-		// if (auth) {
-		// 	console.log("YYYYYYYYYYYYY")
-		// 	this.setState({ iconContainer: style.show })
-		// 	this.setState({ title: style.titleLogged })
-		// } else {
-		// 	console.log("ZZZZZZZZZZZZZZZ")
-		// 	this.setState({ iconContainer: style.dontShow})
-		// 	this.setState({ title: style.titleNotLogged })
-		// }
 	render(props) {
 		let auth = Auth.getAuth()
-		console.log("XXXXXXXXXXX")
 
-		// if (auth) {
-		// 	console.log("YYYYYYYYYYYYY")
-		// 	this.setState({ iconContainer: style.show })
-		// 	this.setState({ title: style.titleLogged })
-		// } else {
-		// 	console.log("ZZZZZZZZZZZZZZZ")
-		// 	this.setState({ iconContainer: style.dontShow})
-		// 	this.setState({ title: style.titleNotLogged })
-		// }
-
-		console.log(this.state.title)
-
-		return (
-			<div>
-				<div class={ style.header }>
-					<div class={ this.state.iconContainer }>
-						<TopAppBar.Icon menu onCLick={ this.openNavbar }>
-							menu
-						</TopAppBar.Icon>
+		if (auth) {
+			return (
+				<div class={style.headContainer }>
+					<div class={ style.header }>
+						<div class={ style.show }>
+							<TopAppBar.Icon menu onCLick={ this.openNavbar }>
+								menu
+							</TopAppBar.Icon>
+						</div>
+						<TopAppBar.Title class={ style.titleLogged }>BioBending</TopAppBar.Title>
 					</div>
-					<TopAppBar.Title class={ this.state.title }>BioBending</TopAppBar.Title>
-				</div>
-				<div class={ this.state.navWindowClass }>
-					<div class={ style.navBar }>
-						<div class={ this.state.homeClass } onClick={ this.handleClickHome }>
-							<List.ItemGraphic class={ this.state.homeIcon }>home</List.ItemGraphic>
-							Home
-						</div>
+					<div class={ this.state.navWindowClass }>
+						<div class={ style.navBar }>
+							<div class={ this.state.homeClass } onClick={ this.handleClickHome }>
+								<List.ItemGraphic class={ this.state.homeIcon }>home</List.ItemGraphic>
+								Home
+							</div>
+	
+							<div class={ this.state.profileClass } onClick={ this.handleClickProfile }>
+								<List.ItemGraphic class={ this.state.profileIcon }>account_circle</List.ItemGraphic>
+								Profil
+							</div>
+	
+							<div class={ this.state.detailsClass } onclick={ this.handleClickDetails }>
+								<List.ItemGraphic class={ this.state.detailsIcon }>face</List.ItemGraphic>
+								Details
+							</div>
+	
+							<div class={ this.state.measureClass } onCLick={ this.handleClickMeasure }>
+								<List.ItemGraphic class={ this.state.measureIcon }>equalizer</List.ItemGraphic>
+								Messung
+							</div>
 
-						<div class={ this.state.profileClass } onClick={ this.handleClickProfile }>
-							<List.ItemGraphic class={ this.state.profileIcon }>account_circle</List.ItemGraphic>
-							Profil
-						</div>
+							<div class={ this.state.configClass } onClick= { this.handleClickConfig }>
+								<List.ItemGraphic class={ this.state.configIcon }>build</List.ItemGraphic>
+								Konfiguration
+							</div>
+	
+							<div class={ style.nav } onClick={ this.logOut }>
+								<List.ItemGraphic class={ style.icon }>close</List.ItemGraphic>
+								Abmelden
+							</div>
 
-						<div class={ this.state.detailsClass } onclick={ this.handleClickDetails }>
-							<List.ItemGraphic class={ this.state.detailsIcon }>face</List.ItemGraphic>
-							Details
 						</div>
-
-						<div class={ this.state.measureClass } onCLick={ this.handleClickMeasure }>
-							<List.ItemGraphic class={this.state.measureIcon }>equalizer</List.ItemGraphic>
-							Messung
-						</div>
-
-						<div class={ style.nav } onClick={ this.logOut }>
-							<List.ItemGraphic class={ style.icon }>close</List.ItemGraphic>
-							Abmelden
-						</div>
+						<div class={ style.clickShadow } onClick={ this.closeDrawer }></div>
 					</div>
-					<div class={ style.clickShadow } onClick={ this.closeDrawer }></div>
 				</div>
-			</div>
-		);
+			);
+		} else {
+			return (
+				<div>
+					<div class={ style.header }>
+						<div class={ style.dontShow }>
+							<TopAppBar.Icon menu onCLick={ this.openNavbar }>
+								menu
+							</TopAppBar.Icon>
+						</div>
+						<TopAppBar.Title class={ style.titleNotLogged }>BioBending</TopAppBar.Title>
+					</div>
+				</div>
+			);
+		}
 	}
 }
