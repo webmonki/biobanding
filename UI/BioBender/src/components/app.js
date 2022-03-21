@@ -4,7 +4,6 @@ import Header from './header';
 import Home from '../routes/home';
 import Profile from '../routes/profile';
 import NotFound from '../routes/404';
-import Test from '../routes/test';
 import Login from '../routes/login';
 import Signup from '../routes/signup';
 import Auth from './state.js';
@@ -48,7 +47,6 @@ export default class App extends Component {
 					<Home path="/" />
 					<Profile path="/profile/" user="me" />
 					<Profile path="/profile/:user" />
-					<Test path="/test/"/>
 					<Login path="/login/"/>
 					<Signup path="/signup/"/>
 					<PlayerDetails path="/playerDetails/"/>
