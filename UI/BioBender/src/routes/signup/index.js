@@ -8,6 +8,7 @@ import style from './style';
 import Input from '../../components/input/input.js';
 import { route } from 'preact-router';
 import Head1 from '../../components/head/head1.js';
+import Auth from '../../components/state';
 
 class Form extends Component {
 	state = ({ username: '' });
@@ -52,7 +53,7 @@ class Form extends Component {
 
 	signup = () => {
 		let that = this;
-		let url = 'http://127.0.0.1:5000/api/users/register';
+		let url = Auth.url + '/api/users/register';
 		let xhttp = new XMLHttpRequest();
 
 		xhttp.open('POST', url);

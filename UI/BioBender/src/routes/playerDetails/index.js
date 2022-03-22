@@ -31,7 +31,7 @@ export default class PlayerDetails extends Component {
 
 	getDetails= () => {
 		let that = this;
-		let url = 'http://127.0.0.1:5000/api/user/' + this.state.userId + '/details';
+		let url = Auth.url + '/api/user/' + this.state.userId + '/details';
 		let xhttp = new XMLHttpRequest();
 
 		xhttp.open('GET', url);

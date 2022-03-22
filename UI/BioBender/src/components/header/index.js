@@ -1,10 +1,7 @@
 import { h, Component } from 'preact';
 import { route } from 'preact-router';
 import TopAppBar from 'preact-material-components/TopAppBar';
-import Drawer from 'preact-material-components/Drawer';
 import List from 'preact-material-components/List';
-import Dialog from 'preact-material-components/Dialog';
-import Switch from 'preact-material-components/Switch';
 import 'preact-material-components/Switch/style.css';
 import 'preact-material-components/Dialog/style.css';
 import 'preact-material-components/Drawer/style.css';
@@ -50,105 +47,110 @@ export default class Header extends Component {
 
 
 	closeDrawer = () => {
-		this.setState({ navWindowClass: style.navWindowClosed })
+		this.setState({ navWindowClass: style.navWindowClosed });
 	};
 
 
 	openNavbar = () => {
-		if (this.state.navWindowClass == style.navWindowOpened) {
+		if (this.state.navWindowClass === style.navWindowOpened) {
 			this.setState({ navWindowClass: style.navWindowClosed });
 
-		} else if (this.state.navWindowClass == style.navWindowClosed) {
+		}
+		else if (this.state.navWindowClass === style.navWindowClosed) {
 			this.setState({ navWindowClass: style.navWindowOpened });
 		}
 
-		if (sessionStorage.path != undefined){
+		if (sessionStorage.path !== undefined){
 			let path = JSON.parse(sessionStorage.path);
 			switch (path) {
-				case "/":
+				case '/':
 					this.setState({ homeClass: style.active });
 					this.setState({ profileClass: style.nav });
 					this.setState({ detailsClass: style.nav });
 					this.setState({ measureClass: style.nav });
 					this.setState({ configClass: style.nav });
 			
-					this.setState({homeIcon: style.activeIcon });
-					this.setState({profileIcon: style.icon });
+					this.setState({ homeIcon: style.activeIcon });
+					this.setState({ profileIcon: style.icon });
 					this.setState({ detailsIcon: style.icon });
 					this.setState({ measureIcon: style.icon });
 					this.setState({ configIcon: style.icon });
 					break;
 
-				case "/profile":
+				case '/profile':
 					this.setState({ homeClass: style.nav });
 					this.setState({ profileClass: style.active });
 					this.setState({ detailsClass: style.nav });
 					this.setState({ measureClass: style.nav });
 					this.setState({ configClass: style.nav });
 
-					this.setState({homeIcon: style.icon });
-					this.setState({profileIcon: style.activeIcon });
+					this.setState({ homeIcon: style.icon });
+					this.setState({ profileIcon: style.activeIcon });
 					this.setState({ detailsIcon: style.icon });
 					this.setState({ measureIcon: style.icon });
 					this.setState({ configIcon: style.icon });
 
 					break;
 
-				case "/playerDetails":
+				case '/playerDetails':
 					this.setState({ homeClass: style.nav });
 					this.setState({ profileClass: style.nav });
 					this.setState({ detailsClass: style.active });
 					this.setState({ measureClass: style.nav });
 					this.setState({ configClass: style.nav });
 
-					this.setState({homeIcon: style.icon });
-					this.setState({profileIcon: style.icon });
+					this.setState({ homeIcon: style.icon });
+					this.setState({ profileIcon: style.icon });
 					this.setState({ detailsIcon: style.activeIcon });
 					this.setState({ measureIcon: style.icon });
 					this.setState({ configIcon: style.icon });
 
 					break;
 
-				case "/measure":
+				case '/measure':
 					this.setState({ measureClass: style.active });
 					this.setState({ homeClass: style.nav });
 					this.setState({ profileClass: style.nav });
 					this.setState({ detailsClass: style.nav });
 					this.setState({ configClass: style.nav });
 
-					this.setState({ measureIcon: style.activeIcon});
-					this.setState({homeIcon: style.icon });
-					this.setState({profileIcon: style.icon });
+					this.setState({ measureIcon: style.activeIcon });
+					this.setState({ homeIcon: style.icon });
+					this.setState({ profileIcon: style.icon });
 					this.setState({ detailsIcon: style.icon });
 					this.setState({ configIcon: style.icon });
 
 					break;
 
-				case "/config":
+				case '/config':
 					this.setState({ measureClass: style.nav });
 					this.setState({ homeClass: style.nav });
 					this.setState({ profileClass: style.nav });
 					this.setState({ detailsClass: style.nav });
 					this.setState({ configClass: style.active });
 
-					this.setState({ measureIcon: style.icon});
-					this.setState({homeIcon: style.icon });
-					this.setState({profileIcon: style.icon });
+					this.setState({ measureIcon: style.icon });
+					this.setState({ homeIcon: style.icon });
+					this.setState({ profileIcon: style.icon });
 					this.setState({ detailsIcon: style.icon });
 					this.setState({ configIcon: style.activeIcon });
+
+					break;
+
 				default:
 					break;
 			}
 
 
-		} else {
+		}
+		else {
 			this.setState({ homeClass: style.active });
 			this.setState({ profileClass: style.nav });
 			this.setState({ detailsClass: style.nav });
 			this.setState({ measureClass: style.nav });
 	
-			this.setState({homeIcon: style.activeIcon });
-			this.setState({profileIcon: style.icon });
+			this.setState({ homeIcon: style.activeIcon });
+			this.setState({ profileIcon: style.icon });
 			this.setState({ detailsIcon: style.icon });
 			this.setState({ measureIcon: style.icon });
 		}
@@ -162,7 +164,7 @@ export default class Header extends Component {
 	dialogRef = dialog => (this.dialog = dialog);
 
 	linkTo = path => () => {
-        sessionStorage.setItem("path", JSON.stringify(path));
+		sessionStorage.setItem('path', JSON.stringify(path));
 		route(path);
 		this.closeDrawer();
 	};
@@ -198,100 +200,97 @@ export default class Header extends Component {
 
 	logOut = () => {
 		let that = this;
-		let url = "http://127.0.0.1:5000/api/users/logout";
-        var xhttp = new XMLHttpRequest();
+		let url = Auth.url + '/api/users/logout';
+		let xhttp = new XMLHttpRequest();
 
-        xhttp.open("POST", url);
-        xhttp.setRequestHeader("Accept", "application/json");
-		xhttp.setRequestHeader("authorization", Auth.getUser().token);
+		xhttp.open('POST', url);
+		xhttp.setRequestHeader('Accept', 'application/json');
+		xhttp.setRequestHeader('authorization', Auth.getUser().token);
 
-        xhttp.onreadystatechange = function() {
-
+		xhttp.onreadystatechange = function() {
 
 
 			if ([1,2,3,4].includes(this.readyState)) {
 				
-				if (this.status == 200) {
+				if (this.status === 200) {
 					Auth.logout();
 					that.goToLogin();
-				} else {
-					console.log(this.responseText);
 				}
-			} else {
-				that.setState({ loginResponse: "Ups, something went wrong"});
 			}
-		}
+			else {
+				that.setState({ loginResponse: 'Ups, something went wrong' });
+			}
+		};
 
 
-
-        xhttp.send();
+		xhttp.send();
 		that.closeDrawer();
 	}
 
 	render(props) {
-		let auth = Auth.getAuth()
+		let auth = Auth.getAuth();
 
 		if (auth) {
 			return (
-				<div class={style.headContainer }>
-					<div class={ style.header }>
-						<div class={ style.show }>
-							<TopAppBar.Icon menu onCLick={ this.openNavbar }>
+				<div class={style.headContainer}>
+					<div class={style.header}>
+						<div class={style.show}>
+							<TopAppBar.Icon menu onCLick={this.openNavbar}>
 								menu
 							</TopAppBar.Icon>
 						</div>
-						<TopAppBar.Title class={ style.titleLogged }>BioBending</TopAppBar.Title>
+						<TopAppBar.Title class={style.titleLogged}>BioBending</TopAppBar.Title>
 					</div>
-					<div class={ this.state.navWindowClass }>
-						<div class={ style.navBar }>
-							<div class={ this.state.homeClass } onClick={ this.handleClickHome }>
-								<List.ItemGraphic class={ this.state.homeIcon }>home</List.ItemGraphic>
+					<div class={this.state.navWindowClass}>
+						<div class={style.navBar}>
+							<div class={this.state.homeClass} onClick={this.handleClickHome}>
+								<List.ItemGraphic class={this.state.homeIcon}>home</List.ItemGraphic>
 								Home
 							</div>
 	
-							<div class={ this.state.profileClass } onClick={ this.handleClickProfile }>
-								<List.ItemGraphic class={ this.state.profileIcon }>account_circle</List.ItemGraphic>
+							<div class={this.state.profileClass} onClick={this.handleClickProfile}>
+								<List.ItemGraphic class={this.state.profileIcon}>account_circle</List.ItemGraphic>
 								Profil
 							</div>
 	
-							<div class={ this.state.detailsClass } onclick={ this.handleClickDetails }>
-								<List.ItemGraphic class={ this.state.detailsIcon }>face</List.ItemGraphic>
+							<div class={this.state.detailsClass} onclick={this.handleClickDetails}>
+								<List.ItemGraphic class={this.state.detailsIcon}>face</List.ItemGraphic>
 								Details
 							</div>
 	
-							<div class={ this.state.measureClass } onCLick={ this.handleClickMeasure }>
-								<List.ItemGraphic class={ this.state.measureIcon }>equalizer</List.ItemGraphic>
+							<div class={this.state.measureClass} onCLick={this.handleClickMeasure}>
+								<List.ItemGraphic class={this.state.measureIcon}>equalizer</List.ItemGraphic>
 								Messung
 							</div>
 
-							<div class={ this.state.configClass } onClick= { this.handleClickConfig }>
-								<List.ItemGraphic class={ this.state.configIcon }>build</List.ItemGraphic>
+							<div class={this.state.configClass} onClick={this.handleClickConfig}>
+								<List.ItemGraphic class={this.state.configIcon}>build</List.ItemGraphic>
 								Konfiguration
 							</div>
 	
-							<div class={ style.nav } onClick={ this.logOut }>
-								<List.ItemGraphic class={ style.icon }>close</List.ItemGraphic>
+							<div class={style.nav} onClick={this.logOut}>
+								<List.ItemGraphic class={style.icon}>close</List.ItemGraphic>
 								Abmelden
 							</div>
 
 						</div>
-						<div class={ style.clickShadow } onClick={ this.closeDrawer }></div>
-					</div>
-				</div>
-			);
-		} else {
-			return (
-				<div>
-					<div class={ style.header }>
-						<div class={ style.dontShow }>
-							<TopAppBar.Icon menu onCLick={ this.openNavbar }>
-								menu
-							</TopAppBar.Icon>
-						</div>
-						<TopAppBar.Title class={ style.titleNotLogged }>BioBending</TopAppBar.Title>
+						<div class={style.clickShadow} onClick={this.closeDrawer} />
 					</div>
 				</div>
 			);
 		}
+		return (
+			<div>
+				<div class={style.header}>
+					<div class={style.dontShow}>
+						<TopAppBar.Icon menu onCLick={this.openNavbar}>
+								menu
+						</TopAppBar.Icon>
+					</div>
+					<TopAppBar.Title class={style.titleNotLogged}>BioBending</TopAppBar.Title>
+				</div>
+			</div>
+		);
+		
 	}
 }

@@ -41,7 +41,7 @@ export default class SetConfig extends Component {
 
 	setConfiguration = () => {
 		let that = this;
-		let url = 'http://127.0.0.1:5000/api/configurations';
+		let url = Auth.url + '/api/configurations';
 		let xhttp = new XMLHttpRequest();
 
 		xhttp.open('PUT', url);

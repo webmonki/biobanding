@@ -28,33 +28,32 @@ export default class App extends Component {
 			if (e.url === '/signup'){
 				route('/signup', true);
 			}
-			else
-			{
+			else {
 				route('login', true);
 			}
-		} else {
-			this.setState({ currentUrl: e.url});
+		}
+		else {
+			this.setState({ currentUrl: e.url });
 		}
 	}
-
 
 
 	render() {
 		return (
 			<div id="app">
-				<Header selectedRoute={this.state.currentUrl}/>
+				<Header selectedRoute={this.state.currentUrl} />
 				<Router onChange={this.handleRoute}>
 					<Home path="/" />
 					<Profile path="/profile/" user="me" />
 					<Profile path="/profile/:user" />
-					<Login path="/login/"/>
-					<Signup path="/signup/"/>
-					<PlayerDetails path="/playerDetails/"/>
-					<AddPlayer path="/addPlayer/"/>
-					<ChangeData path="/changeData/"/>
-					<Measure path="/measure"/>
-					<Config path="/config"/>
-					<SetConfig path="/setConfig"/>
+					<Login path="/login/" />
+					<Signup path="/signup/" />
+					<PlayerDetails path="/playerDetails/" />
+					<AddPlayer path="/addPlayer/" />
+					<ChangeData path="/changeData/" />
+					<Measure path="/measure" />
+					<Config path="/config" />
+					<SetConfig path="/setConfig" />
 					<NotFound default />
 				</Router>
 			</div>

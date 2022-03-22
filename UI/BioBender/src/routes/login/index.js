@@ -49,7 +49,7 @@ class Form extends Component {
 
 	login = () => {
 		let that = this;
-		let url = 'http://127.0.0.1:5000/api/users/login';
+		let url = Auth.url + '/api/users/login';
 		let xhttp = new XMLHttpRequest();
 
 		xhttp.open('POST', url);
