@@ -120,10 +120,26 @@ class AnthropometricData(db.Model):
     weight = db.Column(db.Float(), nullable=False)
     result = db.Column(db.Float(), nullable=False)
 
+    def mirwald(self, a, b, c, d):
+        '''
+            a: Groesse stehend
+            b: Groesse sitzend
+            c: Chronologisches Alter in Jahren
+                := (d2.year-d1.year) + (d2.month-d1.month)/12 + (d2.day-d1.day)/365
+            d: Gewicht
+        '''
+        res = -9.376 + (0.0001882 * ((a-b) * b))+(0.0022 * (c * (a - b))) \
+            + (0.005841 * (c * b))-(0.002658 * (c * d))+(0.07693 * ((d / a) * 100))
+        return res
+
     def save(self):
         db.session.add(self)
         db.session.commit()
 
+    @classmethod
+    def get_by_user_id(cls, _user_id):
+        user_data = cls.query.filter_by(user_id=_user_id).all()
+        return user_data
 
 class AdminConfig(db.Model):
     id = db.Column(db.Integer(), primary_key=True)

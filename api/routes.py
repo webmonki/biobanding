@@ -6,7 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 from datetime import datetime, timezone, timedelta
 from functools import wraps
 from json import dumps
-from flask import request
+from flask import request, jsonify
 from flask_restx import Api, Resource, fields
 
 import jwt
@@ -352,3 +352,27 @@ class Anthropometric(Resource):
                     "result": _result
                 },
                 "msg": "Anthropometric data was successfully created"}, 200
+
+    @token_required
+    def get(self, current_user, userID):
+        """Return players anthropometric data"""
+
+        try:
+            user_data = AnthropometricData.get_by_user_id(userID)
+        except:
+            return {"success": False,
+                    "msg": "Could not read players anthropometric data"}, 500
+        measurements = []
+        for row in user_data:
+            measurements.append(
+                {"id": row.id,
+                "userID": row.user_id,
+                "date_measured": dumps(row.date_measured, default=json_serial),
+                "height": row.height,
+                "sitting_height": row.sitting_height,
+                "body_span": row.body_span,
+                "weight": row.weight,
+                "result": row.result}
+            )
+        return {"success": True,
+                "measurements:": measurements}, 200
