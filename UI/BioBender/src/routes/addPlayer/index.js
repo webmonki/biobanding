@@ -24,6 +24,8 @@ export default class AddPlayer extends Component{
 		this.setState({ token: Auth.getUser().token });
 	}
 
+
+	// Request to post Player Details
 	sendData = () => {
 		let that = this;
 		let url = Auth.url + '/api/user/' + this.state.userId + '/details';
@@ -82,6 +84,7 @@ export default class AddPlayer extends Component{
 	}
 
 
+	// Check Input and Enable Button
 	handleChange = () => {
 		this.setState({ firstName: document.getElementById('fnInput').value });
 		this.setState({ lastName: document.getElementById('lnInput').value });
@@ -118,6 +121,7 @@ export default class AddPlayer extends Component{
 			this.setState({ btnClass: style.btnDisabled });
 		}
 	}
+	
 
 	goToPD = () => {
 		route('/playerDetails', true);

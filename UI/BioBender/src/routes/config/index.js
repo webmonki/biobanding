@@ -12,11 +12,14 @@ export default class Config extends Component {
 	state = ({ reminder: '' });
 	state = ({ feedback: '' });
 
+
 	componentWillMount = () => {
 		this.setState({ token: Auth.getUser().token });
 		this.getConfiguration();
 	}
 
+
+	// Request to Get days_reminder
 	getConfiguration = () => {
 		let that = this;
 		let url = Auth.url + '/api/configurations';
@@ -50,6 +53,7 @@ export default class Config extends Component {
 		xhttp.send();
 	}
 
+	
 	render() {
 		return (
 			<div class={style.layout}>

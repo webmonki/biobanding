@@ -11,6 +11,7 @@ export default class Input extends Component {
     state = { feddbackClass: undefined };
 
 
+	// Set Style if Input is focused
 	focus = () => {
 		this.setState({ labelClass: style.labelFocus });
 		this.setState({ inputClass: style.inputFocus });
@@ -23,6 +24,8 @@ export default class Input extends Component {
 		this.setState({ fieldClass: style.floatLabelField });
 	}
 
+
+	// Validate Input dependet on type
 	onChange = () => {
 		this.setState({ value: document.getElementById(this.props.inputId).value });
 		this.props.onChange();
@@ -83,6 +86,8 @@ export default class Input extends Component {
 		}
 	}
 
+
+	// Set Style if Input is blurred
 	blur = () => {
 		this.setState({ fieldClass: style.floatLabelField });
 		this.setState({ labelClass: style.label });

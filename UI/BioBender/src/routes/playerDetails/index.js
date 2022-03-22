@@ -21,6 +21,7 @@ export default class PlayerDetails extends Component {
 	state = ({ feedback: '' });
 	state = ({ feedbackStyle: undefined });
 
+
 	componentWillMount = () => {
 		this.setState({ userId: Auth.getUser().id });
 		this.setState({ token: Auth.getUser().token });
@@ -29,6 +30,7 @@ export default class PlayerDetails extends Component {
 		this.getDetails();
 	}
 
+	// Request to get Player Details
 	getDetails= () => {
 		let that = this;
 		let url = Auth.url + '/api/user/' + this.state.userId + '/details';
@@ -89,6 +91,7 @@ export default class PlayerDetails extends Component {
 		route('/addPlayer', true);
 	}
 
+	
 	render() {
 		return (
 			<div class={style.layout}>

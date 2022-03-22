@@ -22,6 +22,7 @@ export default class App extends Component {
 	 */
 
 
+	// Handle Routing an go to login or sign up if no user is set in Session Storage
 	handleRoute = async e => {
 		let auth = Auth.getAuth();
 		if (auth === false || auth === undefined) {

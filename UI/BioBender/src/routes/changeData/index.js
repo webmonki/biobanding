@@ -29,6 +29,8 @@ export default class ChangeData extends Component {
 		this.setState({ token: Auth.getUser().token });
 	}
 
+
+	// Request to post new Email
 	sendData = () => {
 		let that = this;
 		let url = Auth.url + '/api/users/edit';
@@ -68,6 +70,8 @@ export default class ChangeData extends Component {
 		xhttp.send(data);
 	}
 
+
+	// Check Input and Enable Button
 	handleChange = () => {
 		this.setState({ email: document.getElementById('emailInput').value });
 		this.setState({ loginResponse: '' });
@@ -84,6 +88,7 @@ export default class ChangeData extends Component {
 			this.setState({ btnClass: style.btnDisabled });
 		}
 	}
+	
 
 	render() {
 		return (

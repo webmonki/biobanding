@@ -51,6 +51,7 @@ export default class Header extends Component {
 	};
 
 
+	// Display Navigation Bar and Highlight active Tab
 	openNavbar = () => {
 		if (this.state.navWindowClass === style.navWindowOpened) {
 			this.setState({ navWindowClass: style.navWindowClosed });
@@ -163,11 +164,14 @@ export default class Header extends Component {
 	drawerRef = drawer => (this.drawer = drawer);
 	dialogRef = dialog => (this.dialog = dialog);
 
+
+	// Route to path and set path in session storage
 	linkTo = path => () => {
 		sessionStorage.setItem('path', JSON.stringify(path));
 		route(path);
 		this.closeDrawer();
 	};
+
 
 	goHome = this.linkTo('/');
 	goToMyProfile = this.linkTo('/profile');
@@ -177,6 +181,7 @@ export default class Header extends Component {
 	goToPD = this.linkTo('/playerDetails');
 	goToMeasure = this.linkTo('/measure');
 	goToConfig = this.linkTo('/config');
+
 
 	handleClickHome = () => {
 		this.goHome();
@@ -198,6 +203,7 @@ export default class Header extends Component {
 		this.goToConfig();
 	};
 
+	// Request to Log out user
 	logOut = () => {
 		let that = this;
 		let url = Auth.url + '/api/users/logout';
@@ -227,6 +233,7 @@ export default class Header extends Component {
 		that.closeDrawer();
 	}
 
+	
 	render(props) {
 		let auth = Auth.getAuth();
 

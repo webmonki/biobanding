@@ -19,16 +19,15 @@ class Form extends Component {
 	state = ({ passwordVal: '' });
     state = ({ btnClass: undefined });
 	state = ({ loginResponse: '' });
-	
-	setLoginResponse = (val) => {
-		this.setState({ loginResponse: val });
-	}
+
 
 	componentWillMount = () => {
 		this.setState({ btnClass: style.btnDisabled });
 		this.setState({ btnDisabled: true });
 	}
 
+
+	// Check Input and Enable Button
 	handleChange = () => {
 		this.setState({ email: document.getElementById('email-input').value });
 		this.setState({ password: document.getElementById('password-input').value });
@@ -47,6 +46,8 @@ class Form extends Component {
 
 	}
 
+
+	// Request to Post Login Data
 	login = () => {
 		let that = this;
 		let url = Auth.url + '/api/users/login';
@@ -63,6 +64,7 @@ class Form extends Component {
 				if (this.status === 200) {
 					let response = JSON.parse(this.responseText);
 					Auth.createUser(response);
+					// If Request Ok go to Home
 					route('/', true);
 				}
 				else {
@@ -82,6 +84,7 @@ class Form extends Component {
 
 		xhttp.send(data);
 	}
+
 
 	render() {
 		return (
@@ -103,6 +106,7 @@ class Form extends Component {
 	}
 
 }
+
 
 export default class Login extends Component {
 	render() {

@@ -20,9 +20,11 @@ export default class Profile extends Component {
 		this.setState({ email: Auth.getUser().email });
 	}
 
+
 	goToChangeData = () => {
 		route('changeData/', true);
 	}
+	
 
 	render() {
 		return (

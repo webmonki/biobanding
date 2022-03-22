@@ -45,7 +45,6 @@ export default class Measure extends Component{
 
 
 		componentWillMount = () => {
-
 			this.setState({ navNewClass: style.navNotSelected });
 			this.setState({ navViewClass: style.navNotSelected });
 			this.setState({ navEditClass: style.navNotSelected });
@@ -65,6 +64,7 @@ export default class Measure extends Component{
 			this.setState({ sendBtnDisabled: true });
 		};
 
+		// Request to post anthropometric data
 		sendData = () => {
 			let that = this;
 			let url = Auth.url + '/api/user/' + Auth.getUser().id + '/anthropometric';
@@ -123,6 +123,7 @@ export default class Measure extends Component{
 			xhttp.send(data);
 		}
 
+	// Chceck Input and Enable Button
 	handleChangeNew = () => {
 		this.setState({ height: document.getElementById('inputHeight').value });
 		this.setState({ sittingHeight: document.getElementById('inputSittingHeight').value });
@@ -145,6 +146,7 @@ export default class Measure extends Component{
 	}
 	
 
+	// Highlight "Neu"-Tab and set content
 	handleClickNew = () => {
 
 		this.setState({ navNewClass: style.navSelected });
@@ -179,6 +181,8 @@ export default class Measure extends Component{
 		this.setState({ content });
 	};
 
+
+	// Highlight "Löschen"-Tab
 	handleClickDelete = () => {
 		this.setState({ navNewClass: style.navNotSelected });
 		this.setState({ navViewClass: style.navNotSelected });
@@ -197,6 +201,7 @@ export default class Measure extends Component{
 		this.setState({ navTextDeleteClass: style.navTextSelected });
 	};
 
+	// Return Table with anthropometric data
 	showTable = () => {
 
 		let content = (
@@ -441,6 +446,8 @@ export default class Measure extends Component{
 
 	};
 
+
+	// Highlicht "bearbeiten"-Tab
 	handleClickEdit = () => {
 		this.setState({ navNewClass: style.navNotSelected });
 		this.setState({ navViewClass: style.navNotSelected });
@@ -460,6 +467,7 @@ export default class Measure extends Component{
 	};
 
 
+	// Highlight "anzeigen"-Tab and set content
 	handleClickView = () => {
 
 		this.setState({ navNewClass: style.navNotSelected });
@@ -494,18 +502,21 @@ export default class Measure extends Component{
 						<List.ItemGraphic class={style.btnIcon}>arrow_forward</List.ItemGraphic>
 					</Button>
 				</div>
-				<div class={style.data}>Messung Nr.: {this.state.measureId}</div>
-				<div class={style.data}>Datum: {this.state.date}</div>
-				<div class={style.data}>Größe: {this.state.height}</div>
-				<div class={style.data}>Größe im Sitzen: {this.state.sittingHeight}</div>
-				<div class={style.data}>Körperspannweite: {this.state.bodySpan}</div>
-				<div class={style.data}>Gewicht: {this.state.weight}</div>
+				<div class={style.viewData}>
+					<div class={style.data}>Messung Nr.: {this.state.measureId}</div>
+					<div class={style.data}>Datum: {this.state.date}</div>
+					<div class={style.data}>Größe: {this.state.height}</div>
+					<div class={style.data}>Größe im Sitzen: {this.state.sittingHeight}</div>
+					<div class={style.data}>Körperspannweite: {this.state.bodySpan}</div>
+					<div class={style.data}>Gewicht: {this.state.weight}</div>
+				</div>
 			</div>
 		);
 
 		this.setState({ content });
 	};
 
+	
 	render() {
 		return (
 			<div class={style.layout}>

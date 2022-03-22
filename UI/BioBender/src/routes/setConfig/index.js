@@ -17,14 +17,16 @@ export default class SetConfig extends Component {
     state = ({ feedback: '' });
     state = ({ feedbackStyle: '' });
 
+	
 	componentWillMount = () => {
 		this.setState({ token: Auth.getUser().token });
 		this.setState({ btnDisabled: true });
 		this.setState({ btnClass: style.btnDisabled });
 	};
 
+
+	// Check Input and Enable Button
 	handleChange = () => {
-		
 		this.setState({ reminder: document.getElementById('configInput').value });
 		this.setState({ loginResponse: '' });
         
@@ -39,6 +41,8 @@ export default class SetConfig extends Component {
 		}
 	}
 
+
+	// Send Request
 	setConfiguration = () => {
 		let that = this;
 		let url = Auth.url + '/api/configurations';
