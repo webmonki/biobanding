@@ -149,8 +149,8 @@ export default class AddPlayer extends Component{
 							<Input inputId="mhInput" inputLabel="Größe der Mutter" onChange={this.handleChange} />
 						</div>
 						<div class={style.btnContainer}>
-							<Button className={this.state.btnClass} raised disabled={this.state.btnDisabled} onClick={this.sendData}>erstellen</Button>
-							<Button class={style.btnEnabled} onClick={this.goToPD}>Spieler Details</Button>
+							<Button class={this.state.btnClass} raised disabled={this.state.btnDisabled} onClick={this.sendData}>erstellen</Button>
+							<Button class={style.btnEnabled} raised onClick={this.goToPD}>Spieler Details</Button>
 						</div>
 					</div>
 				</Card>

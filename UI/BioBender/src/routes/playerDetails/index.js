@@ -107,7 +107,7 @@ export default class PlayerDetails extends Component {
 						<div class={style.data}>Größe des Vaters: {this.state.fatherHeight}</div>
 						<div class={style.data}>Größe der Mutter: {this.state.motherHeight}</div>
 						<div class={style.center}>
-							<Button class={style.btnEnabled} onClick={this.goToCreateAddPlayer}>Spieler Details erstellen</Button>
+							<Button raised class={style.btnEnabled} onClick={this.goToCreateAddPlayer}>Spieler Details erstellen</Button>
 						</div>
 					</div>
 				</Card>

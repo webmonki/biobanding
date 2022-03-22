@@ -82,6 +82,10 @@ export default class SetConfig extends Component {
 		xhttp.send(data);
 	}
 
+	goToConfig = () => {
+		route('/config', true);
+	}
+
 
 	render() {
 		return (
@@ -93,6 +97,7 @@ export default class SetConfig extends Component {
 						<Input inputId="configInput" inputLabel="Erinnern in X Tagen" onChange={this.handleChange} />
 						<div class={style.center}>
 							<Button class={this.state.btnClass} raised disabled={this.state.btnDisabled} onClick={this.setConfiguration}>Konfiguration senden</Button>
+							<Button class={style.btnEnabled} raised onCLick={this.goToConfig}>Konfiguration zeigen</Button>
 						</div>
 					</div>
 				</Card>

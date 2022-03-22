@@ -48,6 +48,14 @@
 	color: #3C9052;
 }
 
+.center {
+	height: 100px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+}
+
 
 .data {
 	border-bottom: solid 0.5px #C7C1C1;

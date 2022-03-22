@@ -6,6 +6,8 @@ import style from './style';
 import Auth from '../../components/state.js';
 import Head2 from '../../components/head/head2.js';
 import { Link } from 'preact-router/match';
+import Button from 'preact-material-components/Button';
+import { route } from 'preact-router';
 
 
 export default class Config extends Component {
@@ -53,6 +55,10 @@ export default class Config extends Component {
 		xhttp.send();
 	}
 
+	goToSetConfig = () => {
+		route('/setConfig', true);
+	}
+
 	
 	render() {
 		return (
@@ -62,7 +68,7 @@ export default class Config extends Component {
 					<div class={this.state.feedbackStyle}>{this.state.feedback}</div>
 					<div class={style.container}>
 						<div class={style.data}>Erinnern in: {this.state.reminder}</div>
-						<Link href="/setConfig" data-native>Konfiguration setzten</Link>
+						<Button class={style.btnEnabled} raised onCLick={this.goToSetConfig}>Konfiguration setzten</Button>
 					</div>
 				</Card>
 			</div>

@@ -1,16 +1,11 @@
 .card {
-    grid-column-start: 4;
-    grid-column-end: 9;
-    grid-row-start: 3;
-    grid-row-end: 12;
+	margin-top: 50px;
+    grid-column-start: 6;
+    grid-column-end: 18;
+    grid-row-start: 4;
+    grid-row-end: 20;
 	padding: 0 5% 0 5%;
-	margin-top: 10%;
 	box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
-}
-
-.center {
-    display: flex;
-    justify-content: center;
 }
 
 
@@ -20,32 +15,28 @@
 	justify-content: space-around;
 	min-height: 350px;
 	margin: 10% 0 0 0;
-	padding: 0 0 10% 0;
+	padding: 0 20% 10% 20%;
 }
 
 .data {
 	border-bottom: solid 0.5px #C7C1C1;
-
 }
-
 
 .layout {
     height: 100%;
     display: grid;
-    grid-template-columns: repeat(12, auto);
-    grid-template-rows: repeat(12, auto);
+    grid-template-columns: repeat(24, 1fr);
+    grid-template-rows: repeat(24, 1fr);
 }
 
 .btnEnabled {
 	background-color: #34538A !important;
 	color: white !important;
-    width: 50%;
 }
 
 .btnDisabled {
 	background-color: #C7C1C1 !important;
 	color: black;
-    width: 50%
   }
 
 .feedbackErr {
@@ -71,7 +62,6 @@
 @media only screen and (max-width: 600px) {
 
     .card{
-        padding-top: 15%;
         width: 100%;
         height: 100%;
 		box-shadow: none;

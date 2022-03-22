@@ -6,6 +6,7 @@ import style from './style';
 import Head2 from '../../components/head/head2.js';
 import Auth from '../../components/state.js';
 import Input from '../../components/input/input.js';
+import { route } from 'preact-router';
 
 
 export default class ChangeData extends Component {
@@ -88,6 +89,10 @@ export default class ChangeData extends Component {
 			this.setState({ btnClass: style.btnDisabled });
 		}
 	}
+
+	goToProfile = () => {
+		route('/profile', true);
+	}
 	
 
 	render() {
@@ -98,9 +103,8 @@ export default class ChangeData extends Component {
 					<div class={style.container}>
 						<Input inputId="emailInput" inputLabel="E-Mail" type="email" onChange={this.handleChange} />
 						<div class={this.state.feedbackStyle}>{this.state.feedback}</div>
-						<div class={style.center}>
-							<Button class={this.state.btnClass} raised disabled={this.state.btnDisabled} onClick={this.sendData}>E-Mail ändern</Button>
-						</div>
+						<Button class={this.state.btnClass} raised disabled={this.state.btnDisabled} onClick={this.sendData}>E-Mail ändern</Button>
+						<Button class={style.btnEnabled} raised onClick={this.goToProfile}>Profil</Button>
 					</div>
 				</Card>
 			</div>

@@ -9,6 +9,8 @@ import Input from '../../components/input/input.js';
 import { route } from 'preact-router';
 import Head1 from '../../components/head/head1.js';
 import Auth from '../../components/state';
+import { Link } from 'preact-router/match';
+
 
 class Form extends Component {
 	state = ({ username: '' });
@@ -105,7 +107,10 @@ class Form extends Component {
 						<Input inputId="passwordInput" inputLabel="Passwort" type="password" onChange={this.handleChange} />
 						<Input inputId="password2Input" inputLabel="Passwort wiederholen" type="password" onChange={this.handleChange} />
 						<div style={{ color: '#B1262D' }}>{this.state.signupResponse }</div>
-						<Button className={this.state.btnClass} raised onClick={this.signup} disabled={this.state.btnDisabled}>registrieren</Button>
+						<div class={style.btnContainer}>
+							<Button className={this.state.btnClass} raised onClick={this.signup} disabled={this.state.btnDisabled}>registrieren</Button>
+							<Link href="/login" data-native>anmelden</Link>
+						</div>
 					</div>
 				</Card>
 			</div>
