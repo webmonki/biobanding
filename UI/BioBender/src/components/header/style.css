@@ -27,15 +27,6 @@
     position: fixed;
 }
 
-.headContainer {
-}
-
-.placeHolder {
-    background-color: red;
-    height: 50px;
-    width: 180px;
-}
-
 .navBar {
     padding-top: 50px;
     display:flex;
@@ -111,11 +102,11 @@
 @media only screen and (max-width: 600px) {
 
     .navBar {
-        min-width: 90px;
+        min-width: 110px;
     }
 
     .clickShadow {
-        margin-left: 90px;
+        margin-left: 110px;
     }
 
     .icon {
