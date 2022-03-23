@@ -1,4 +1,18 @@
+tr:hover {
+	background-color: #EEEEF1;
+}
+
 .btnEnabled {
+	background-color: #34538A !important;
+	color: white !important;
+}
+
+.btnDisabled {
+	background-color: rgb(224, 224, 224) !important;
+	color: rgb(141,141,141) !important;
+  }
+
+.navBtn {
 	background-color: #34538A !important;
 	color: white !important;
 	height: 50px;
@@ -6,6 +20,12 @@
 
 .btnIcon {
 	color: white;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.btnIconDisabled {
+	color: rgb(141,141,141) !important;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -24,6 +44,17 @@
     grid-column-end: 25;
     grid-row-start: 3;
     grid-row-end: 5;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+}
+
+.centerFB {
+	grid-column-start: 1;
+    grid-column-end: 25;
+    grid-row-start: 1;
+    grid-row-end: 3;
 	display: flex;
 	justify-content: center;
 	flex-direction: column;

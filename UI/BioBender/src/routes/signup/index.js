@@ -64,8 +64,8 @@ class Form extends Component {
 		let xhttp = new XMLHttpRequest();
 
 		xhttp.open('POST', url);
-		xhttp.setRequestHeader('Accept", "application/json');
-		xhttp.setRequestHeader('Content-Type", "application/json');
+		xhttp.setRequestHeader('Accept', 'application/json');
+		xhttp.setRequestHeader('Content-Type', 'application/json');
 
 		xhttp.onreadystatechange = function() {
 

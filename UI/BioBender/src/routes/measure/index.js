@@ -35,13 +35,22 @@ export default class Measure extends Component{
     state = ({ date: '' });
     state = ({ result: '' });
 
-    state = ({ sendBtnDisabled: true });
+    state = ({ sendBtnDisabled: undefined });
     state = ({ sendBtnClass: undefined });
+
+	state = ({ backBtnClass : undefined });
+	state = ({ backBtnDisabled : undefined });
+	state = ({ forwardBtnClass : undefined });
+	state = ({ forwardBtnDisabled : undefined })
+
+	state = ({ backIconClass : undefined });
+	state = ({ forwardIconClass : undefined });
 
     state = ({ feedback: '' });
     state = ({ feedbackClass: undefined });
 
-    state = ({ currentPage: '' });
+    state = ({ currentPage : undefined });
+	state = ({ measurements : undefined });
 
 
 		componentWillMount = () => {
@@ -60,12 +69,63 @@ export default class Measure extends Component{
 			this.setState({ navTextEditClass: style.navTextNotSelected });
 			this.setState({ navTextDeleteClass: style.navTextNotSelected });
 	
-			this.setState({ sendBtnClass: style.sendBtnDisabled });
+			this.setState({ sendBtnClass: style.btnDisabled });
 			this.setState({ sendBtnDisabled: true });
+
+			this.setState({ backBtnClass: style.btnDisabled });
+			this.setState({ backBtnDisabled: true });
+
+			this.setState({ forwardBtnClass : style.btnDisabled });
+			this.setState({ forwardBtnDisabled : true });
+
+			this.setState({ backIconClass : style.btnIconDisabled });
+			this.setState({ forwardIconClass : style.btnIconDisabled });
+
+			this.setState({ currentPage : undefined });
+			this.setState({ measurements : [] });
+
+			this.getData();
 		};
+
+		// Request to get anthropometric data
+		getData = () => {
+			let that = this;
+			let url = Auth.url + '/api/user/' + Auth.getUser().id + '/anthropometric';
+			let xhttp = new XMLHttpRequest();
+
+			xhttp.open('GET', url);
+			xhttp.setRequestHeader('Accept', 'application/json');
+			xhttp.setRequestHeader('authorization',  Auth.getUser().token);
+
+			xhttp.onreadystatechange = function() {
+
+
+				if([0,1,2,3,4].includes(this.readyState)) {
+
+					if (this.status === 200) {
+						let response = JSON.parse(this.responseText);
+						sessionStorage.setItem('measurements', JSON.stringify(response['measurements:']));
+						that.setState({ measurements : response['measurements:'] });
+						that.setState({ feedbackClass: style.feedbackSucc });
+						that.setState({ feedback: response.msg });
+					}
+					else {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+						that.setState({ feedbackClass: style.feedbackErr });
+					}
+				}
+				else {
+					this.setState({ loginResponse: 'Ups, something went wrong' });
+				}
+			}
+
+			xhttp.send();
+		}
 
 		// Request to post anthropometric data
 		sendData = () => {
+
 			let that = this;
 			let url = Auth.url + '/api/user/' + Auth.getUser().id + '/anthropometric';
 			let xhttp = new XMLHttpRequest();
@@ -83,20 +143,17 @@ export default class Measure extends Component{
 					if (this.status === 200) {
 						let response = JSON.parse(this.responseText);
 
-						that.setState({ measureId: response.anthropometric_data.id });
-						that.setState({ date: response.anthropometric_data.date_measured });
-						that.setState({ height: response.anthropometric_data.height });
-						that.setState({ sittingHeight: response.anthropometric_data.sitting_height });
-						that.setState({ bodySpan: response.anthropometric_data.body_span });
-						that.setState({ weight: response.anthropometric_data.weight });
-						that.setState({ result: response.anthropometric_data.result });
-
 						that.setState({ feedbackClass: style.feedbackSucc });
 						that.setState({ feedback: response.msg });
+						that.setState({ currentPage : undefined });
+						that.getData();
 						that.handleClickNew();
+
+
 					}
 					else {
 						let response = JSON.parse(this.responseText);
+						console.log(response.msg)
 						that.setState({ feedback: response.msg });
 						that.setState({ feedbackClass: style.feedbackErr });
 						that.handleClickNew();
@@ -139,7 +196,7 @@ export default class Measure extends Component{
 		}
 		else {
 			this.setState({ sendBtnDisabled: true });
-			this.setState({ sendBtnClass: style.sendBtnDisabled });
+			this.setState({ sendBtnClass: style.btnDisabled });
 		}
 		
 		this.handleClickNew();
@@ -168,7 +225,7 @@ export default class Measure extends Component{
 		let content = (
 			<div class={style.newContainer}>
 				<div class={this.state.feedbackClass}>{this.state.feedback}</div>
-				<Input inputId="inputHeight" inputLabel="Größe" onChange={this.handleChangeNew} />
+				<Input inputId="inputHeight" inputLabel="Größe" onChange={this.handleChangeNew}/>
 				<Input inputId="inputSittingHeight" inputLabel="Größe im Sitzen" onChange={this.handleChangeNew} />
 				<Input inputId="inputSpan" inputLabel="Körperspannweite" onChange={this.handleChangeNew} />
 				<Input inputId="inputWeight" inputLabel="Gewicht" onChange={this.handleChangeNew} />
@@ -201,13 +258,55 @@ export default class Measure extends Component{
 		this.setState({ navTextDeleteClass: style.navTextSelected });
 	};
 
+	handleTableClick = (row) => {
+		this.setState({ currentPage : row.id - 1 });
+		this.handleClickView();
+	}
+
+
 	// Return Table with anthropometric data
-	showTable = () => {
+	showTable = () => {;
+		
+		let cols = ['Messung Nr.', 'Datum', 'Größe', 'Größe sitzend', 'Körper Spannweite', 'Gewicht', 'Ergebnis']
+
+		let tableHeader = (
+				<tr>
+					{cols.map((name) => <th>{name}</th>)}
+				</tr>
+		)
+
+		let data = JSON.parse(sessionStorage.measurements);
+
+		let tableBody = (
+			<tbody>
+				{data.map((row) => 
+					<tr onClick={() => this.handleTableClick(row)}>
+						<td>{row.id}</td>
+						<td>{row.date_measured}</td>
+						<td>{row.height}</td>
+						<td>{row.sitting_height}</td>
+						<td>{row.body_span}</td>
+						<td>{row.weight}</td>
+						<td>{row.result}</td>
+					</tr>
+				)}
+			</tbody>
+		)
+
+		let table = (
+			<table id="measureTable">
+				<thead>
+					{tableHeader}
+				</thead>
+				{tableBody}
+			</table>
+		)
+
 
 		let content = (
 			<div class={style.viewContainer}>
 				<div class={style.center}>
-					<Button raised class={style.btnEnabled} onClick={this.handleClickView}>
+					<Button raised class={style.navBtn} onClick={this.handleClickView}>
 						<div class={style.btnLabel}>
 							<List.ItemGraphic class={style.btnIcon}>arrow_back</List.ItemGraphic>
 							<div class={style.labelText}>Zurück</div>
@@ -215,239 +314,15 @@ export default class Measure extends Component{
 					</Button>
 				</div>
 				<div class={style.tableContainer}>
-					<table>
-						<thead>
-							<tr>
-								<th>Datum</th>
-								<th>Größe</th>
-								<th>Größe im Sitzen</th>
-								<th>Körperspannweite</th>
-								<th>Gewicht</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-							<tr>
-								<td>Gestern</td>
-								<td>180</td>
-								<td>90</td>
-								<td>180</td>
-								<td>90</td>
-							</tr>
-						</tbody>
-					</table>
+					{table}
 				</div>
 			</div>
 		);
-
 		this.setState({ content });
-
 	};
 
 
-	// Highlicht "bearbeiten"-Tab
+	// Highlight "bearbeiten"-Tab
 	handleClickEdit = () => {
 		this.setState({ navNewClass: style.navNotSelected });
 		this.setState({ navViewClass: style.navNotSelected });
@@ -466,10 +341,44 @@ export default class Measure extends Component{
 		this.setState({ navTextDeleteClass: style.navTextNotSelected });
 	};
 
+	back = () => {
+		this.setState({ currentPage : this.state.currentPage - 1});
+		this.handleClickView();
+	}
+
+	forward = () => {
+		this.setState({ currentPage : this.state.currentPage + 1});
+		this.handleClickView();
+	}
+
+	disableBackBtn = () => {
+		this.setState({ backBtnClass : style.btnDisabled });
+		this.setState({ backBtnDisabled : true });
+		this.setState({ backIconClass : style.btnIconDisabled });
+	}
+
+	enableBackBtn = () => {
+		this.setState({ backBtnClass : style.btnEnabled });
+		this.setState({ backBtnDisabled : false });
+		this.setState({ backIconClass : style.btnIcon });
+	}
+
+	disableForwardBtn = () => {
+		this.setState({ forwardBtnClass : style.btnDisabled });
+		this.setState({ forwardBtnDisabled : true });
+		this.setState({ forwardIconClass : style.btnIconDisabled });
+	}
+
+	enableForwardBtn = () => {
+		this.setState({ forwardBtnClass : style.btnEnabled });
+		this.setState({ forwardBtnDisabled : false });
+		this.setState({ forwardIconClass : style.btnIcon });
+	}
+
 
 	// Highlight "anzeigen"-Tab and set content
-	handleClickView = () => {
 
+	enableViewTab = () => {
 		this.setState({ navNewClass: style.navNotSelected });
 		this.setState({ navViewClass: style.navSelected });
 		this.setState({ navEditClass: style.navNotSelected });
@@ -485,21 +394,87 @@ export default class Measure extends Component{
 		this.setState({ navTextViewClass: style.navTextSelected });
 		this.setState({ navTextEditClass: style.navTextNotSelected });
 		this.setState({ navTextDeleteClass: style.navTextNotSelected });
+	}
+
+
+	handleClickView = () => {
+
+		this.enableViewTab();
+
+
+		if (this.state.measurements.length == 0){
+			try {
+				this.setState({ measurements : JSON.parse(sessionStorage.measurements) });
+				that.setState({ feedbackClass: style.feedbackSucc });
+				that.setState({ feedback: "Daten erfolgreich geladen." });
+			}
+			catch(err) {
+				this.setState({ feedback: "Fehler beim Laden der Daten." });
+				this.setState({ feedbackClass: style.feedbackErr });
+				this.setState({ measurements : JSON.parse(sessionStorage.measurements) });
+			}
+		}
+
+
+		let measurements = this.state.measurements
+
+		if (this.state.currentPage == undefined && measurements.length > 0) {
+			this.setState({ currentPage : measurements.length -1 })
+		}
+		if (measurements.lenght == 1) {
+			this.disableBackBtn();
+			this.disableForwardBtn();
+		}
+		else if (this.state.currentPage == 0 && measurements.length != 1) {
+			this.disableBackBtn();
+			this.enableForwardBtn();
+		}
+		else if(this.state.currentPage == measurements.length - 1 && measurements.length != 1) {
+			this.enableBackBtn();
+			this.disableForwardBtn();
+		} else if (this.state.currentPage > 0 && this.state.currentPage < measurements.length - 1 && measurements.length != 1) {
+			this.enableBackBtn();
+			this.enableForwardBtn();
+		}
+
+
+		if (this.state.currentPage != undefined) {
+			this.setState({ measureId : measurements[this.state.currentPage].id});
+			this.setState({ date : measurements[this.state.currentPage].date_measured });
+			this.setState({ height: measurements[this.state.currentPage].height });
+			this.setState({ sittingHeight : measurements[this.state.currentPage].sitting_height });
+			this.setState({ bodySpan : measurements[this.state.currentPage].body_span });
+			this.setState({ weigth : measurements[this.state.currentPage].weight });
+			this.setState({ result : measurements[this.state.currentPage].result });
+		}
+		else {
+			this.setState({ measureId : ''});
+			this.setState({ date : '' });
+			this.setState({ height: '' });
+			this.setState({ sittingHeight : '' });
+			this.setState({ bodySpan : '' });
+			this.setState({ weigth : '' });
+			this.setState({ result : '' });
+		}
+
 
 		let content = (
 			<div class={style.viewContainer}>
+				<div class={style.centerFB}>
+					<div class={this.state.feedbackClass}>{this.state.feedback}</div>
+				</div>
 				<div class={style.btnRow}>
-					<Button raised class={style.btnEnabled} onClick={this.back}>
-						<List.ItemGraphic class={style.btnIcon}>arrow_back</List.ItemGraphic>
+					<Button raised class={this.state.backBtnClass} disabled={this.state.backBtnDisabled} onClick={this.back}>
+						<List.ItemGraphic class={this.state.backIconClass}>arrow_back</List.ItemGraphic>
 					</Button>
-					<Button raised class={style.btnEnabled} onClick={this.showTable}>
+					<Button raised class={style.navBtn} onClick={this.showTable}>
 						<div class={style.btnLabel}>
 							<List.ItemGraphic class={style.btnIcon}>list</List.ItemGraphic>
 							<div class={style.labelText}>Tabelle</div>
 						</div>
 					</Button>
-					<Button raised class={style.btnEnabled} onClick={this.forward}>
-						<List.ItemGraphic class={style.btnIcon}>arrow_forward</List.ItemGraphic>
+					<Button raised class={this.state.forwardBtnClass} disabled={this.state.forwardBtnDisabled} onClick={this.forward}>
+						<List.ItemGraphic class={this.state.forwardIconClass}>arrow_forward</List.ItemGraphic>
 					</Button>
 				</div>
 				<div class={style.viewData}>
@@ -509,6 +484,7 @@ export default class Measure extends Component{
 					<div class={style.data}>Größe im Sitzen: {this.state.sittingHeight}</div>
 					<div class={style.data}>Körperspannweite: {this.state.bodySpan}</div>
 					<div class={style.data}>Gewicht: {this.state.weight}</div>
+					<div class={style.data}>Ergebnis: {this.state.result}</div>
 				</div>
 			</div>
 		);
