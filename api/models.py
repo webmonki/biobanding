@@ -141,6 +141,11 @@ class AnthropometricData(db.Model):
         user_data = cls.query.filter_by(user_id=_user_id).all()
         return user_data
 
+    @classmethod
+    def get_by_id(cls, _id):
+        user_data = cls.query.filter_by(id=_id).first()
+        return user_data
+
 class AdminConfig(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     days_reminder = db.Column(db.Integer(), default=90)
