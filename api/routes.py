@@ -389,7 +389,6 @@ class Anthropometric(Resource):
                 "measurements:": measurements}, 200
 
 @rest_api.route('/api/measurement/<int:id>')
-
 class Measurement(Resource):
     @token_required
     def get(self, current_user, id):
@@ -413,3 +412,18 @@ class Measurement(Resource):
                     "weight": measurement_data.weight,
                     "result": measurement_data.result}
                 }, 200
+
+    @token_required
+    def delete(self, current_user, id):
+        """Delete anthropometric measurement"""
+
+        try:
+            measurement_data = AnthropometricData.get_by_id(id)
+            measurement_data.delete()
+        except:
+            return {
+                "success": False,
+                "msg": "Could not delete players anthropometric data"}, 500
+
+        return {"success": True,
+                "msg": "Measurement successfully deleted"}, 200
