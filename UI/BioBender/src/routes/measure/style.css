@@ -129,7 +129,19 @@ tr:hover {
 }
 
 .data {
+	font-size: 18px;
 	border-bottom: solid 0.5px #C7C1C1;
+	display: flex;
+}
+
+.dataLabel {
+	width: 18%;
+	text-align: right;
+	padding-right: 2%;
+}
+
+.dataContent {
+	color: #34538A;
 }
 
 .navSelected {

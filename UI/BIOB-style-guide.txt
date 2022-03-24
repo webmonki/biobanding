@@ -25,6 +25,12 @@ Use for
     primary buttons
     links/actions
     highlights (like selections or active navigation item)
+    
+Blue 50 (light blue)
+
+	#E3F2FD
+	
+User for Backgrounds like dropdown
 
 Night Sky (Main Dark Color)
 

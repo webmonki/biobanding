@@ -7,7 +7,7 @@ import Head2 from '../../components/head/head2.js';
 import Auth from '../../components/state.js';
 import Input from '../../components/input/input.js';
 import List from 'preact-material-components/List';
-
+import Dropdown from '../../components/dropdown/dropdown';
 
 export default class Measure extends Component{
     
@@ -103,16 +103,24 @@ export default class Measure extends Component{
 				if([0,1,2,3,4].includes(this.readyState)) {
 
 					if (this.status === 200) {
-						let response = JSON.parse(this.responseText);
-						sessionStorage.setItem('measurements', JSON.stringify(response['measurements:']));
-						that.setState({ measurements : response['measurements:'] });
-						that.setState({ feedbackClass: style.feedbackSucc });
-						that.setState({ feedback: response.msg });
+						try {
+							let response = JSON.parse(this.responseText);
+							sessionStorage.setItem('measurements', JSON.stringify(response['measurements:']));
+							that.setState({ measurements : response['measurements:'] });
+							that.setState({ feedbackClass: style.feedbackSucc });
+							that.setState({ feedback: response.msg });
+						}
+						catch(err) {}
+
 					}
 					else {
-						let response = JSON.parse(this.responseText);
-						that.setState({ feedback: response.msg });
-						that.setState({ feedbackClass: style.feedbackErr });
+						try {
+							let response = JSON.parse(this.responseText);
+							that.setState({ feedback: response.msg });
+							that.setState({ feedbackClass: style.feedbackErr });
+						}
+						catch(err) {}
+
 					}
 				}
 				else {
@@ -376,8 +384,6 @@ export default class Measure extends Component{
 	}
 
 
-	// Highlight "anzeigen"-Tab and set content
-
 	enableViewTab = () => {
 		this.setState({ navNewClass: style.navNotSelected });
 		this.setState({ navViewClass: style.navSelected });
@@ -396,8 +402,27 @@ export default class Measure extends Component{
 		this.setState({ navTextDeleteClass: style.navTextNotSelected });
 	}
 
+	handleDropDownClick = (id) => {
+		this.setState({ currentPage : id -1 })
+		this.handleClickView();
+	}
 
+	setDropDown = (val) => {
+		try{
+			let dropdown = document.getElementById('measureIdDropdown');
+			dropdown.value = val;
+		}
+		catch(err) {
+
+		}
+
+	}
+
+
+	// Highlight "anzeigen"-Tab and set content
 	handleClickView = () => {
+
+
 
 		this.enableViewTab();
 
@@ -421,21 +446,9 @@ export default class Measure extends Component{
 		if (this.state.currentPage == undefined && measurements.length > 0) {
 			this.setState({ currentPage : measurements.length -1 })
 		}
-		if (measurements.lenght == 1) {
-			this.disableBackBtn();
-			this.disableForwardBtn();
-		}
-		else if (this.state.currentPage == 0 && measurements.length != 1) {
-			this.disableBackBtn();
-			this.enableForwardBtn();
-		}
-		else if(this.state.currentPage == measurements.length - 1 && measurements.length != 1) {
-			this.enableBackBtn();
-			this.disableForwardBtn();
-		} else if (this.state.currentPage > 0 && this.state.currentPage < measurements.length - 1 && measurements.length != 1) {
-			this.enableBackBtn();
-			this.enableForwardBtn();
-		}
+
+		this.state.currentPage > 0 ? this.enableBackBtn() : this.disableBackBtn();
+		this.state.currentPage < this.state.measurements.length - 1 ? this.enableForwardBtn() : this.disableForwardBtn();
 
 
 		if (this.state.currentPage != undefined) {
@@ -444,7 +457,7 @@ export default class Measure extends Component{
 			this.setState({ height: measurements[this.state.currentPage].height });
 			this.setState({ sittingHeight : measurements[this.state.currentPage].sitting_height });
 			this.setState({ bodySpan : measurements[this.state.currentPage].body_span });
-			this.setState({ weigth : measurements[this.state.currentPage].weight });
+			this.setState({ weight : measurements[this.state.currentPage].weight });
 			this.setState({ result : measurements[this.state.currentPage].result });
 		}
 		else {
@@ -457,6 +470,12 @@ export default class Measure extends Component{
 			this.setState({ result : '' });
 		}
 
+		let idList = []
+
+		measurements.forEach(measurement => {
+			idList.push(measurement.id)
+		});
+		
 
 		let content = (
 			<div class={style.viewContainer}>
@@ -478,18 +497,45 @@ export default class Measure extends Component{
 					</Button>
 				</div>
 				<div class={style.viewData}>
-					<div class={style.data}>Messung Nr.: {this.state.measureId}</div>
-					<div class={style.data}>Datum: {this.state.date}</div>
-					<div class={style.data}>Größe: {this.state.height}</div>
-					<div class={style.data}>Größe im Sitzen: {this.state.sittingHeight}</div>
-					<div class={style.data}>Körperspannweite: {this.state.bodySpan}</div>
-					<div class={style.data}>Gewicht: {this.state.weight}</div>
-					<div class={style.data}>Ergebnis: {this.state.result}</div>
+					<div class={style.data}>
+						<div class={style.dataLabel}>Messung Nr.: </div>
+						{/* <div class={style.dataContent}>{this.state.measureId}</div> */}
+						<Dropdown
+							ddId={'measureIdDropdown'}
+							data={idList}
+							dropdownClick={this.handleDropDownClick}
+							selected={this.state.currentPage + 1}/>
+					</div>
+					<div class={style.data}>
+						<div class={style.dataLabel}>Datum: </div>
+						<div class={style.dataContent}>{this.state.date}</div>
+					</div>
+					<div class={style.data}>
+						<div class={style.dataLabel}>Größe: </div>
+						<div class={style.dataContent}>{this.state.height}</div>
+					</div>
+					<div class={style.data}>
+						<div class={style.dataLabel}>Größe im Sitzen: </div>
+						<div class={style.dataContent}>{this.state.sittingHeight}</div>
+					</div>
+					<div class={style.data}>
+						<div class={style.dataLabel}>Körperspannweite: </div>
+						<div class={style.dataContent}>{this.state.bodySpan}</div>
+					</div>
+					<div class={style.data}>
+						<div class={style.dataLabel}>Gewicht: </div>
+						<div class={style.dataContent}>{this.state.weight}</div>
+					</div>
+					<div class={style.data}>
+						<div class={style.dataLabel}>Ergebnis: </div>
+						<div class={style.dataContent}>{this.state.result}</div>
+					</div>
 				</div>
 			</div>
 		);
 
 		this.setState({ content });
+		this.setDropDown(this.state.currentPage + 1);
 	};
 
 	
