@@ -52,6 +52,10 @@ export default class Measure extends Component{
     state = ({ currentPage : undefined });
 	state = ({ measurements : undefined });
 
+	state = ({ currentDelete : undefined });
+
+	state = ({ currentIds : undefined });
+
 
 		componentWillMount = () => {
 			this.setState({ navNewClass: style.navNotSelected });
@@ -84,6 +88,10 @@ export default class Measure extends Component{
 			this.setState({ currentPage : undefined });
 			this.setState({ measurements : [] });
 
+			this.setState({ currentDelete : '' });
+
+			this.setState({ currentIds : [] });
+
 			this.getData();
 		};
 
@@ -107,6 +115,11 @@ export default class Measure extends Component{
 							let response = JSON.parse(this.responseText);
 							sessionStorage.setItem('measurements', JSON.stringify(response['measurements:']));
 							that.setState({ measurements : response['measurements:'] });
+							let idList = [];
+							that.state.measurements.forEach(measurement => {
+								idList.push(measurement.id)
+							});
+							that.setState({ currentIds : idList });
 							that.setState({ feedbackClass: style.feedbackSucc });
 							that.setState({ feedback: response.msg });
 						}
@@ -161,7 +174,6 @@ export default class Measure extends Component{
 					}
 					else {
 						let response = JSON.parse(this.responseText);
-						console.log(response.msg)
 						that.setState({ feedback: response.msg });
 						that.setState({ feedbackClass: style.feedbackErr });
 						that.handleClickNew();
@@ -246,9 +258,7 @@ export default class Measure extends Component{
 		this.setState({ content });
 	};
 
-
-	// Highlight "Löschen"-Tab
-	handleClickDelete = () => {
+	enableDeleteTab = () => {
 		this.setState({ navNewClass: style.navNotSelected });
 		this.setState({ navViewClass: style.navNotSelected });
 		this.setState({ navEditClass: style.navNotSelected });
@@ -264,6 +274,96 @@ export default class Measure extends Component{
 		this.setState({ navTextViewClass: style.navTextNotSelected });
 		this.setState({ navTextEditClass: style.navTextNotSelected });
 		this.setState({ navTextDeleteClass: style.navTextSelected });
+	}
+
+	delete = () => {
+
+		this.setState({ currentIds : this.state.currentIds.filter(e => e !== this.state.currentDelete )});
+
+		let that = this;
+		let url = Auth.url + '/api/measurement/' + this.state.currentDelete;
+		let xhttp = new XMLHttpRequest();
+
+		xhttp.open('DELETE', url);
+		xhttp.setRequestHeader('Accept', 'application/json');
+		xhttp.setRequestHeader('authorization', Auth.getUser().token);
+
+		xhttp.onreadystatechange = function() {
+
+			if ([0,1,2,3,4].includes(this.readyState)) {
+					
+				if (this.status === 200) {
+					let response = JSON.parse(this.responseText);
+
+					that.setState({ feedbackClass: style.feedbackSucc });
+					that.setState({ feedback: response.msg });
+
+
+					that.setState({ currentDelete : '' });
+					that.getData();
+					that.handleClickDelete();
+
+
+				}
+				else {
+					let response = JSON.parse(this.responseText);
+					that.setState({ feedback: response.msg });
+					that.setState({ feedbackClass: style.feedbackErr });
+					that.handleClickDelete();
+				}
+			}
+			else {
+				this.setState({ loginResponse: 'Ups, something went wrong' });
+			}
+		};
+
+		xhttp.send();
+	}
+
+	handleDeleteDropDownClick = (id) => {
+		this.setState({ currentDelete : id });
+		this.handleClickDelete();
+
+	}
+
+
+	// Highlight "Löschen"-Tab
+	handleClickDelete = () => {
+		this.enableDeleteTab();
+
+		this.getData();
+
+
+		if (this.state.currentDelete == '') {
+			this.setState({ currentDelete : this.state.currentIds.slice(-1)[0] });
+
+			if (this.state.currentDelete == undefined){
+				this.setState({ currentDelete : '' })
+			}
+		}
+
+
+		let content = (
+			<div class={style.deleteContainer}>
+				<div class={style.centerFB}>
+					<div class={this.state.feedbackClass}>{this.state.feedback}</div>
+				</div>
+				<div class={style.deleteData}>
+					<Dropdown
+						class={style.deleteDropDown}
+						ddId={'deleteIdDropdown'}
+						data={this.state.currentIds}
+						dropdownClick={this.handleDeleteDropDownClick}
+						selected={this.state.currentDelete}
+						/>
+					<Button raised class={style.deleteBtn} onClick={this.delete}>
+						Nummer: {this.state.currentDelete} löschen
+					</Button>
+				</div>
+			</div>
+		)
+
+		this.setState({ content });
 	};
 
 	handleTableClick = (row) => {
@@ -403,7 +503,7 @@ export default class Measure extends Component{
 	}
 
 	handleDropDownClick = (id) => {
-		this.setState({ currentPage : id -1 })
+		this.setState({ currentPage : this.state.currentIds.indexOf(id) })
 		this.handleClickView();
 	}
 
@@ -422,10 +522,7 @@ export default class Measure extends Component{
 	// Highlight "anzeigen"-Tab and set content
 	handleClickView = () => {
 
-
-
 		this.enableViewTab();
-
 
 		if (this.state.measurements.length == 0){
 			try {
@@ -444,7 +541,7 @@ export default class Measure extends Component{
 		let measurements = this.state.measurements
 
 		if (this.state.currentPage == undefined && measurements.length > 0) {
-			this.setState({ currentPage : measurements.length -1 })
+			this.setState({ currentPage : measurements.length - 1 })
 		}
 
 		this.state.currentPage > 0 ? this.enableBackBtn() : this.disableBackBtn();
@@ -470,11 +567,11 @@ export default class Measure extends Component{
 			this.setState({ result : '' });
 		}
 
-		let idList = []
+		// let idList = []
 
-		measurements.forEach(measurement => {
-			idList.push(measurement.id)
-		});
+		// measurements.forEach(measurement => {
+		// 	idList.push(measurement.id)
+		// });
 		
 
 		let content = (
@@ -502,9 +599,9 @@ export default class Measure extends Component{
 						{/* <div class={style.dataContent}>{this.state.measureId}</div> */}
 						<Dropdown
 							ddId={'measureIdDropdown'}
-							data={idList}
+							data={this.state.currentIds}
 							dropdownClick={this.handleDropDownClick}
-							selected={this.state.currentPage + 1}/>
+							selected={this.state.currentIds[this.state.currentPage]}/>
 					</div>
 					<div class={style.data}>
 						<div class={style.dataLabel}>Datum: </div>

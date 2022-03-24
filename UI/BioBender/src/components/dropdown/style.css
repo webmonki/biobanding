@@ -30,6 +30,7 @@
 	width: 100%;
 	border-bottom: 3px solid #34538A;
 	color: #34538A;
+	background-color: #E3F2FD;
 	display: inline-block;
 	text-align: center;
 }
@@ -43,6 +44,7 @@
 }
 
 .placeholderActive:hover {
+	background-color: #E3F2FD;
 	position: absolute;
 	color: #34538A;
 	border-bottom: 3px solid #34538A;

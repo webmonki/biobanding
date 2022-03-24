@@ -89,6 +89,35 @@ tr:hover {
     grid-template-rows: repeat(24, 29.33px);
 }
 
+.deleteContainer {
+	padding: 10% 0 10% 0;
+	width: 100%;
+    height: 100%;
+	display: flex;
+	align-items: center;
+}
+
+.deleteData {
+	width: 100%;
+	font-size: 18px;
+	border-bottom: solid 0.5px #C7C1C1;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.deleteBtn {
+	background-color: #34538A !important;
+	color: white !important;
+}
+
+.deleteDropdown {
+	grid-column-start: 1;
+    grid-column-end: 25;
+    grid-row-start: 7;
+    grid-row-end: 25;
+}
+
 .layout {
 	padding-top: 50px;
     height: 100%;
