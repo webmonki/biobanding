@@ -136,9 +136,18 @@ class AnthropometricData(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
     @classmethod
     def get_by_user_id(cls, _user_id):
         user_data = cls.query.filter_by(user_id=_user_id).all()
+        return user_data
+
+    @classmethod
+    def get_by_id(cls, _id):
+        user_data = cls.query.filter_by(id=_id).first()
         return user_data
 
 class AdminConfig(db.Model):

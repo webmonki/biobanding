@@ -6,7 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 from datetime import datetime, timezone, timedelta
 from functools import wraps
 from json import dumps
-from flask import request, jsonify
+from flask import request
 from flask_restx import Api, Resource, fields
 
 import jwt
@@ -57,6 +57,17 @@ anthropometric_data_model = rest_api.model('AnthropometricDataModel', {
         "weight": fields.Float(required=True, min=0, max=300)
 }
 )
+
+anthropometric_data_model = rest_api.model('AnthropometricDataModel', {
+        "userID": fields.Integer(required=True, min=0),
+        "date_measured": fields.Date(required=True),
+        "height": fields.Integer(required=True, min=0, max=300),
+        "sitting_height": fields.Integer(required=True, min=0, max=300),
+        "body_span": fields.Integer(required=True, min=0, max=300),
+        "weight": fields.Float(required=True, min=0, max=300)
+}
+)
+
 
 """
    Helper function for JWT token required
@@ -376,3 +387,43 @@ class Anthropometric(Resource):
             )
         return {"success": True,
                 "measurements:": measurements}, 200
+
+@rest_api.route('/api/measurement/<int:id>')
+class Measurement(Resource):
+    @token_required
+    def get(self, current_user, id):
+        """Return anthropometric measurement"""
+
+        try:
+            measurement_data = AnthropometricData.get_by_id(id)
+        except:
+            return {
+                "success": False,
+                "msg": "Could not read players anthropometric data"}, 500
+
+        return {"success": True,
+                "measurement:": {
+                    "id": measurement_data.id,
+                    "userID": measurement_data.user_id,
+                    "date_measured": dumps(measurement_data.date_measured, default=json_serial),
+                    "height": measurement_data.height,
+                    "sitting_height": measurement_data.sitting_height,
+                    "body_span": measurement_data.body_span,
+                    "weight": measurement_data.weight,
+                    "result": measurement_data.result}
+                }, 200
+
+    @token_required
+    def delete(self, current_user, id):
+        """Delete anthropometric measurement"""
+
+        try:
+            measurement_data = AnthropometricData.get_by_id(id)
+            measurement_data.delete()
+        except:
+            return {
+                "success": False,
+                "msg": "Could not delete players anthropometric data"}, 500
+
+        return {"success": True,
+                "msg": "Measurement successfully deleted"}, 200
