@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from datetime import datetime
+from xmlrpc.client import DateTime
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -139,6 +140,22 @@ class AnthropometricData(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    def update_date_measured(self, new_date):
+        date = datetime.fromisoformat(new_date)
+        self.date_measured = date
+
+    def update_height(self, new_height):
+        self.height = new_height
+
+    def update_sitting_height(self, new_sitting_height):
+        self.sitting_height = new_sitting_height
+
+    def update_body_span(self, new_body_span):
+        self.body_span = new_body_span
+
+    def update_weight(self, new_weight):
+        self.weight = new_weight
 
     @classmethod
     def get_by_user_id(cls, _user_id):
