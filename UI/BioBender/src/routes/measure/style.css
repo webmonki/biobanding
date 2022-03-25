@@ -61,6 +61,12 @@ tr:hover {
 	align-items: center;
 }
 
+.editDropdown {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
 .viewData {
 	grid-column-start: 1;
     grid-column-end: 25;

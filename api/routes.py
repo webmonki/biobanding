@@ -438,7 +438,7 @@ class Measurement(Resource):
 
     @rest_api.expect(anthropometric_data_edit_model)
     @token_required
-    def post(self, id):
+    def put(self, current_user, id):
 
         req_data = request.get_json()
 

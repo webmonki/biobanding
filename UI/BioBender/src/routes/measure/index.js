@@ -54,165 +54,174 @@ export default class Measure extends Component{
 
 	state = ({ currentDelete : undefined });
 
+	state = ({ currentEdit : undefined });
+
 	state = ({ currentIds : undefined });
 
 	state = ({ deleteBtnClass: undefined });
 	state = ({ deleteBtnDisabled : undefined });
 
-
-		componentWillMount = () => {
-			this.setState({ navNewClass: style.navNotSelected });
-			this.setState({ navViewClass: style.navNotSelected });
-			this.setState({ navEditClass: style.navNotSelected });
-			this.setState({ navDeleteClass: style.navNotSelected });
-	
-			this.setState({ navIconNewClass: style.navIconNotSelected });
-			this.setState({ navIconViewClass: style.navIconNotSelected });
-			this.setState({ navIconEditClass: style.navIconNotSelected });
-			this.setState({ navIconDeleteClass: style.navIconNotSelected });
-	
-			this.setState({ navTextNewClass: style.navTextNotSelected });
-			this.setState({ navTextViewClass: style.navTextNotSelected });
-			this.setState({ navTextEditClass: style.navTextNotSelected });
-			this.setState({ navTextDeleteClass: style.navTextNotSelected });
-	
-			this.setState({ sendBtnClass: style.btnDisabled });
-			this.setState({ sendBtnDisabled: true });
-
-			this.setState({ backBtnClass: style.btnDisabled });
-			this.setState({ backBtnDisabled: true });
-
-			this.setState({ forwardBtnClass : style.btnDisabled });
-			this.setState({ forwardBtnDisabled : true });
-
-			this.setState({ backIconClass : style.btnIconDisabled });
-			this.setState({ forwardIconClass : style.btnIconDisabled });
-
-			this.setState({ currentPage : undefined });
-			this.setState({ measurements : [] });
-
-			this.setState({ currentDelete : '' });
-
-			this.setState({ currentIds : [] });
-
-			this.getData();
-		};
-
-		// Request to get anthropometric data
-		getData = () => {
-			let that = this;
-			let url = Auth.url + '/api/user/' + Auth.getUser().id + '/anthropometric';
-			let xhttp = new XMLHttpRequest();
-
-			xhttp.open('GET', url);
-			xhttp.setRequestHeader('Accept', 'application/json');
-			xhttp.setRequestHeader('authorization',  Auth.getUser().token);
-
-			xhttp.onreadystatechange = function() {
+	state = ({ editBtnClass : undefined });
+	state = ({ editBtnDisabled : undefined });
 
 
-				if([0,1,2,3,4].includes(this.readyState)) {
+	componentWillMount = () => {
+		this.setState({ navNewClass: style.navNotSelected });
+		this.setState({ navViewClass: style.navNotSelected });
+		this.setState({ navEditClass: style.navNotSelected });
+		this.setState({ navDeleteClass: style.navNotSelected });
 
-					if (this.status === 200) {
-						try {
-							let response = JSON.parse(this.responseText);
-							sessionStorage.setItem('measurements', JSON.stringify(response['measurements:']));
-							that.setState({ measurements : response['measurements:'] });
-							that.setState({ feedback: response.msg });
-						}
-						catch(err) {}
+		this.setState({ navIconNewClass: style.navIconNotSelected });
+		this.setState({ navIconViewClass: style.navIconNotSelected });
+		this.setState({ navIconEditClass: style.navIconNotSelected });
+		this.setState({ navIconDeleteClass: style.navIconNotSelected });
 
-						let idList = [];
-						that.state.measurements.forEach(measurement => {
-							idList.push(measurement.id)
-						});
-						that.setState({ currentIds : idList });
-						that.setState({ feedbackClass: style.feedbackSucc });
+		this.setState({ navTextNewClass: style.navTextNotSelected });
+		this.setState({ navTextViewClass: style.navTextNotSelected });
+		this.setState({ navTextEditClass: style.navTextNotSelected });
+		this.setState({ navTextDeleteClass: style.navTextNotSelected });
 
+		this.setState({ sendBtnClass: style.btnDisabled });
+		this.setState({ sendBtnDisabled: true });
+
+		this.setState({ editBtnClass : style.btnDisabled });
+		this.setState({ editBtnDisabled : true });
+
+		this.setState({ backBtnClass: style.btnDisabled });
+		this.setState({ backBtnDisabled: true });
+
+		this.setState({ forwardBtnClass : style.btnDisabled });
+		this.setState({ forwardBtnDisabled : true });
+
+		this.setState({ backIconClass : style.btnIconDisabled });
+		this.setState({ forwardIconClass : style.btnIconDisabled });
+
+		this.setState({ currentPage : undefined });
+		this.setState({ measurements : [] });
+
+		this.setState({ currentDelete : '' });
+
+		this.setState({ currentEdit: '' });
+
+		this.setState({ currentIds : [] });
+
+		this.getData();
+	};
+
+	// Request to get anthropometric data
+	getData = () => {
+		let that = this;
+		let url = Auth.url + '/api/user/' + Auth.getUser().id + '/anthropometric';
+		let xhttp = new XMLHttpRequest();
+
+		xhttp.open('GET', url);
+		xhttp.setRequestHeader('Accept', 'application/json');
+		xhttp.setRequestHeader('authorization',  Auth.getUser().token);
+
+		xhttp.onreadystatechange = function() {
+
+
+			if([0,1,2,3,4].includes(this.readyState)) {
+
+				if (this.status === 200) {
+					try {
+						let response = JSON.parse(this.responseText);
+						sessionStorage.setItem('measurements', JSON.stringify(response['measurements:']));
+						that.setState({ measurements : response['measurements:'] });
+						that.setState({ feedback: response.msg });
 					}
-					else {
-						try {
-							let response = JSON.parse(this.responseText);
-							that.setState({ feedback: response.msg });
-							that.setState({ feedbackClass: style.feedbackErr });
-						}
-						catch(err) {}
+					catch(err) {}
 
-					}
+					let idList = [];
+					that.state.measurements.forEach(measurement => {
+						idList.push(measurement.id)
+					});
+					that.setState({ currentIds : idList });
+					that.setState({ feedbackClass: style.feedbackSucc });
+
 				}
 				else {
-					this.setState({ loginResponse: 'Ups, something went wrong' });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+						that.setState({ feedbackClass: style.feedbackErr });
+					}
+					catch(err) {}
+
 				}
 			}
-
-			xhttp.send();
-
+			else {
+				this.setState({ loginResponse: 'Ups, something went wrong' });
+			}
 		}
 
-		// Request to post anthropometric data
-		sendData = () => {
+		xhttp.send();
 
-			let that = this;
-			let url = Auth.url + '/api/user/' + Auth.getUser().id + '/anthropometric';
-			let xhttp = new XMLHttpRequest();
-	
-			xhttp.open('POST', url);
-			xhttp.setRequestHeader('Accept', 'application/json');
-			xhttp.setRequestHeader('Content-Type', 'application/json');
-			xhttp.setRequestHeader('authorization', Auth.getUser().token);
-	
-			xhttp.onreadystatechange = function() {
-	
-	
-				if ([0,1,2,3,4].includes(this.readyState)) {
-						
-					if (this.status === 200) {
+	}
 
-						try{
-							let response = JSON.parse(this.responseText);
-							that.setState({ feedback: response.msg });
-						}
-						catch(err) {}
+	// Request to post anthropometric data
+	sendData = () => {
 
-						that.setState({ feedbackClass: style.feedbackSucc });
-						that.setState({ currentPage : undefined });
-						that.getData();
-						that.handleClickNew();
+		let that = this;
+		let url = Auth.url + '/api/user/' + Auth.getUser().id + '/anthropometric';
+		let xhttp = new XMLHttpRequest();
+
+		xhttp.open('POST', url);
+		xhttp.setRequestHeader('Accept', 'application/json');
+		xhttp.setRequestHeader('Content-Type', 'application/json');
+		xhttp.setRequestHeader('authorization', Auth.getUser().token);
+
+		xhttp.onreadystatechange = function() {
 
 
+			if ([0,1,2,3,4].includes(this.readyState)) {
+					
+				if (this.status === 200) {
+
+					try{
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
 					}
-					else {
-						try {
-							let response = JSON.parse(this.responseText);
-							that.setState({ feedback: response.msg });
-						}
-						catch(err) {}
+					catch(err) {}
 
-						that.setState({ feedbackClass: style.feedbackErr });
-						that.handleClickNew();
-					}
+					that.setState({ feedbackClass: style.feedbackSucc });
+					that.setState({ currentPage : undefined });
+					that.getData();
+					that.handleClickNew();
+
+
 				}
 				else {
-					this.setState({ loginResponse: 'Ups, something went wrong' });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+					}
+					catch(err) {}
+
+					that.setState({ feedbackClass: style.feedbackErr });
+					that.handleClickNew();
 				}
-			};
+			}
+			else {
+				this.setState({ loginResponse: 'Ups, something went wrong' });
+			}
+		};
 
-			let today = new Date();
+		let today = new Date();
 
-			let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+		let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 
-			let data = `{
-				"userID": ${ Auth.getUser().id },
-				"date_measured": "${ date }",
-				"height": ${ this.state.height },
-				"sitting_height": ${ this.state.sittingHeight },
-				"body_span": ${ this.state.bodySpan },
-				"weight": ${ this.state.weight }
-			}`;
+		let data = `{
+			"userID": ${ Auth.getUser().id },
+			"date_measured": "${ date }",
+			"height": ${ this.state.height },
+			"sitting_height": ${ this.state.sittingHeight },
+			"body_span": ${ this.state.bodySpan },
+			"weight": ${ this.state.weight }
+		}`;
 
-			xhttp.send(data);
-
-		}
+		xhttp.send(data);
+	}
 
 	// Chceck Input and Enable Button
 	handleChangeNew = () => {
@@ -235,11 +244,8 @@ export default class Measure extends Component{
 		
 		this.handleClickNew();
 	}
-	
 
-	// Highlight "Neu"-Tab and set content
-	handleClickNew = () => {
-
+	enableNewTab = () => {
 		this.setState({ navNewClass: style.navSelected });
 		this.setState({ navViewClass: style.navNotSelected });
 		this.setState({ navEditClass: style.navNotSelected });
@@ -254,7 +260,13 @@ export default class Measure extends Component{
 		this.setState({ navTextViewClass: style.navTextNotSelected });
 		this.setState({ navTextEditClass: style.navTextNotSelected });
 		this.setState({ navTextDeleteClass: style.navTextNotSelected });
+	};
+	
 
+	// Highlight "Neu"-Tab and set content
+	handleClickNew = () => {
+
+		this.enableNewTab();
 
 		let content = (
 			<div class={style.newContainer}>
@@ -466,9 +478,7 @@ export default class Measure extends Component{
 		this.setState({ content });
 	};
 
-
-	// Highlight "bearbeiten"-Tab
-	handleClickEdit = () => {
+	enableEditTab = () => {
 		this.setState({ navNewClass: style.navNotSelected });
 		this.setState({ navViewClass: style.navNotSelected });
 		this.setState({ navEditClass: style.navSelected });
@@ -484,6 +494,145 @@ export default class Measure extends Component{
 		this.setState({ navTextViewClass: style.navTextNotSelected });
 		this.setState({ navTextEditClass: style.navTextSelected });
 		this.setState({ navTextDeleteClass: style.navTextNotSelected });
+	};
+
+	handleChangeEdit = () => {
+		this.setState({ height: document.getElementById('inputEditHeight').value });
+		this.setState({ sittingHeight: document.getElementById('inputEditSittingHeight').value });
+		this.setState({ bodySpan: document.getElementById('inputEditSpan').value });
+		this.setState({ weight: document.getElementById('inputEditWeight').value });
+
+
+		if (
+			this.state.height !== '' && this.state.sittingHeight !== '' &&
+			this.state.bodySpan !== '' && this.state.weight !== '' && this.state.currentIds.length != 0
+		) {
+			this.setState({ editBtnDisabled: false });
+			this.setState({ editBtnClass: style.btnEnabled });
+		}
+		else {
+			this.setState({ editBtnDisabled: true });
+			this.setState({ editBtnClass: style.btnDisabled });
+		}
+		
+		this.handleClickEdit();
+	};
+
+	// Request to edit anthropometric data
+	editData = () => {
+		let that = this;
+		let url = Auth.url + '/api/measurement/' + this.state.currentEdit;
+		let xhttp = new XMLHttpRequest();
+
+		xhttp.open('PUT', url);
+		xhttp.setRequestHeader('Accept', 'application/json');
+		xhttp.setRequestHeader('Content-Type', 'application/json');
+		xhttp.setRequestHeader('authorization', Auth.getUser().token);
+
+		xhttp.onreadystatechange = function() {
+
+
+			if ([0,1,2,3,4].includes(this.readyState)) {
+					
+				if (this.status === 200) {
+
+					try{
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+					}
+					catch(err) {}
+
+					that.setState({ feedbackClass: style.feedbackSucc });
+					that.setState({ currentEdit : '' });
+					that.getData();
+					that.handleClickEdit();
+
+
+				}
+				else {
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+					}
+					catch(err) {}
+
+					that.setState({ feedbackClass: style.feedbackErr });
+					that.handleClickEdit();
+				}
+			}
+			else {
+				this.setState({ loginResponse: 'Ups, something went wrong' });
+			}
+		};
+
+		let today = new Date();
+
+		let month = '';
+
+		if ((today.getMonth() + 1) < 10) {
+			month = '0' + (today.getMonth() + 1)
+		}
+		else {
+			month = today.getMonth() + 1
+		}
+
+		let date = today.getFullYear() + '-' + month + '-' + today.getDate();
+
+		let data = `{
+			"date_measured": "${ date }",
+			"height": ${ this.state.height },
+			"sitting_height": ${ this.state.sittingHeight },
+			"body_span": ${ this.state.bodySpan },
+			"weight": ${ this.state.weight }
+		}`;
+
+		xhttp.send(data);
+	};
+
+	handleEditDropDownClick = (id) => {
+		this.setState({ currentEdit : id });
+		this.handleClickEdit();
+	};
+
+
+	// Highlight "bearbeiten"-Tab
+	handleClickEdit = () => {
+		this.enableEditTab();
+
+		this.getData();
+
+
+		if (this.state.currentEdit == '') {
+			console.log("EDIT", this.state.currentEdit)
+			this.setState({ currentEdit : this.state.currentIds.slice(-1)[0] });
+			if (this.state.currentDelete == undefined){
+				this.setState({ currentEdit : '' })
+			}
+		}
+
+		let content = (
+			<div class={style.newContainer}>
+				<div class={this.state.feedbackClass}>{this.state.feedback}</div>
+				<div class={style.editDropdown}>
+					<Dropdown
+						class={style.deleteDropDown}
+						ddId={'editIdDropdown'}
+						data={this.state.currentIds}
+						dropdownClick={this.handleEditDropDownClick}
+						selected={this.state.currentEdit}
+						/>
+				</div>
+				<Input inputId="inputEditHeight" inputLabel="Größe" onChange={this.handleChangeEdit}/>
+				<Input inputId="inputEditSittingHeight" inputLabel="Größe im Sitzen" onChange={this.handleChangeEdit} />
+				<Input inputId="inputEditSpan" inputLabel="Körperspannweite" onChange={this.handleChangeEdit} />
+				<Input inputId="inputEditWeight" inputLabel="Gewicht" onChange={this.handleChangeEdit} />
+				<div class={style.center}>
+					<Button raised class={this.state.editBtnClass} onClick={this.editData} disabled={this.state.editBtnDisabled}>Ändern</Button>
+				</div>
+			</div>
+		)
+
+		this.setState({ content });
 	};
 
 	back = () => {
