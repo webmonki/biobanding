@@ -90,24 +90,23 @@ tr:hover {
 }
 
 .deleteContainer {
-	padding: 10% 0 10% 0;
 	width: 100%;
     height: 100%;
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	justify-content: space-around;
 }
 
 .deleteData {
-	width: 100%;
 	font-size: 18px;
 	border-bottom: solid 0.5px #C7C1C1;
 	display: flex;
-	justify-content: space-around;
-	align-items: center;
+	justify-content: center;
 }
 
+
 .deleteBtn {
-	background-color: #34538A !important;
+	background-color: #B1262D !important;
 	color: white !important;
 }
 
@@ -164,9 +163,10 @@ tr:hover {
 }
 
 .dataLabel {
-	width: 18%;
+	width: 200px;
 	text-align: right;
-	padding-right: 2%;
+	word-wrap: break-word;
+	padding-right: 20px;
 }
 
 .dataContent {
@@ -213,21 +213,17 @@ tr:hover {
 }
 
 .feedbackErr {
+	height: 50px;
 	display: flex;
 	justify-content: center;
 	color: #B1262D;
 }
 
 .feedbackSucc {
+	height: 50px;
 	display: flex;
 	justify-content: center;
 	color: #3C9052;
-}
-
-.feedback {
-	display: flex;
-	justify-content: center;
-	color: #B1262D;
 }
 
 .tableFixHead, thead, th {
@@ -260,7 +256,6 @@ th {
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
-
 
 	.layout {
 		height: 100%;
@@ -320,6 +315,10 @@ th {
 
 	.viewContainer{
 		height: 450px;
+	}
+
+	.deleteContainer {
+		height: 300px;
 	}
 
 	.btnRow {

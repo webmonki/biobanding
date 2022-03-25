@@ -56,6 +56,9 @@ export default class Measure extends Component{
 
 	state = ({ currentIds : undefined });
 
+	state = ({ deleteBtnClass: undefined });
+	state = ({ deleteBtnDisabled : undefined });
+
 
 		componentWillMount = () => {
 			this.setState({ navNewClass: style.navNotSelected });
@@ -115,15 +118,16 @@ export default class Measure extends Component{
 							let response = JSON.parse(this.responseText);
 							sessionStorage.setItem('measurements', JSON.stringify(response['measurements:']));
 							that.setState({ measurements : response['measurements:'] });
-							let idList = [];
-							that.state.measurements.forEach(measurement => {
-								idList.push(measurement.id)
-							});
-							that.setState({ currentIds : idList });
-							that.setState({ feedbackClass: style.feedbackSucc });
 							that.setState({ feedback: response.msg });
 						}
 						catch(err) {}
+
+						let idList = [];
+						that.state.measurements.forEach(measurement => {
+							idList.push(measurement.id)
+						});
+						that.setState({ currentIds : idList });
+						that.setState({ feedbackClass: style.feedbackSucc });
 
 					}
 					else {
@@ -141,7 +145,10 @@ export default class Measure extends Component{
 				}
 			}
 
-			xhttp.send();
+			try {
+				xhttp.send();
+			}
+			catch (err) {}
 		}
 
 		// Request to post anthropometric data
@@ -162,10 +169,14 @@ export default class Measure extends Component{
 				if ([0,1,2,3,4].includes(this.readyState)) {
 						
 					if (this.status === 200) {
-						let response = JSON.parse(this.responseText);
+
+						try{
+							let response = JSON.parse(this.responseText);
+							that.setState({ feedback: response.msg });
+						}
+						catch(err) {}
 
 						that.setState({ feedbackClass: style.feedbackSucc });
-						that.setState({ feedback: response.msg });
 						that.setState({ currentPage : undefined });
 						that.getData();
 						that.handleClickNew();
@@ -173,8 +184,12 @@ export default class Measure extends Component{
 
 					}
 					else {
-						let response = JSON.parse(this.responseText);
-						that.setState({ feedback: response.msg });
+						try {
+							let response = JSON.parse(this.responseText);
+							that.setState({ feedback: response.msg });
+						}
+						catch(err) {}
+
 						that.setState({ feedbackClass: style.feedbackErr });
 						that.handleClickNew();
 					}
@@ -197,7 +212,10 @@ export default class Measure extends Component{
 				"weight": ${ this.state.weight }
 			}`;
 
-			xhttp.send(data);
+			try {
+				xhttp.send(data);
+			}
+			catch (err) {}
 		}
 
 	// Chceck Input and Enable Button
@@ -276,6 +294,7 @@ export default class Measure extends Component{
 		this.setState({ navTextDeleteClass: style.navTextSelected });
 	}
 
+	// Request to delete anthropometric data
 	delete = () => {
 
 		this.setState({ currentIds : this.state.currentIds.filter(e => e !== this.state.currentDelete )});
@@ -293,21 +312,31 @@ export default class Measure extends Component{
 			if ([0,1,2,3,4].includes(this.readyState)) {
 					
 				if (this.status === 200) {
-					let response = JSON.parse(this.responseText);
+
+					try{
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+					}
+					catch(err) {}
 
 					that.setState({ feedbackClass: style.feedbackSucc });
-					that.setState({ feedback: response.msg });
 
 
 					that.setState({ currentDelete : '' });
+					that.setState({ currentPage : undefined });
 					that.getData();
 					that.handleClickDelete();
 
 
 				}
 				else {
-					let response = JSON.parse(this.responseText);
-					that.setState({ feedback: response.msg });
+
+					try{
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+					}
+					catch(err) {}
+
 					that.setState({ feedbackClass: style.feedbackErr });
 					that.handleClickDelete();
 				}
@@ -317,9 +346,13 @@ export default class Measure extends Component{
 			}
 		};
 
-		xhttp.send();
+		try {
+			xhttp.send();
+		}
+		catch (err) {}
 	}
 
+	// Get the id to delete from dropdown
 	handleDeleteDropDownClick = (id) => {
 		this.setState({ currentDelete : id });
 		this.handleClickDelete();
@@ -336,10 +369,18 @@ export default class Measure extends Component{
 
 		if (this.state.currentDelete == '') {
 			this.setState({ currentDelete : this.state.currentIds.slice(-1)[0] });
-
 			if (this.state.currentDelete == undefined){
 				this.setState({ currentDelete : '' })
 			}
+		}
+
+		if (this.state.currentIds.length == 0) {
+			this.setState({ deleteBtnClass : style.btnDisabled });
+			this.setState({ deleteBtnDisabled : true });
+		}
+		else {
+			this.setState({ deleteBtnClass : style.deleteBtn });
+			this.setState({ deleteBtnDisabled : false });
 		}
 
 
@@ -356,7 +397,9 @@ export default class Measure extends Component{
 						dropdownClick={this.handleDeleteDropDownClick}
 						selected={this.state.currentDelete}
 						/>
-					<Button raised class={style.deleteBtn} onClick={this.delete}>
+				</div>
+				<div class={style.deleteData}>
+					<Button raised class={this.state.deleteBtnClass} disabled={this.state.deleteBtnDisabled} onClick={this.delete}>
 						Nummer: {this.state.currentDelete} löschen
 					</Button>
 				</div>
@@ -507,18 +550,6 @@ export default class Measure extends Component{
 		this.handleClickView();
 	}
 
-	setDropDown = (val) => {
-		try{
-			let dropdown = document.getElementById('measureIdDropdown');
-			dropdown.value = val;
-		}
-		catch(err) {
-
-		}
-
-	}
-
-
 	// Highlight "anzeigen"-Tab and set content
 	handleClickView = () => {
 
@@ -531,7 +562,7 @@ export default class Measure extends Component{
 				that.setState({ feedback: "Daten erfolgreich geladen." });
 			}
 			catch(err) {
-				this.setState({ feedback: "Fehler beim Laden der Daten." });
+				this.setState({ feedback: "Keine Daten zum laden." });
 				this.setState({ feedbackClass: style.feedbackErr });
 				this.setState({ measurements : JSON.parse(sessionStorage.measurements) });
 			}
@@ -566,12 +597,6 @@ export default class Measure extends Component{
 			this.setState({ weigth : '' });
 			this.setState({ result : '' });
 		}
-
-		// let idList = []
-
-		// measurements.forEach(measurement => {
-		// 	idList.push(measurement.id)
-		// });
 		
 
 		let content = (
@@ -596,12 +621,13 @@ export default class Measure extends Component{
 				<div class={style.viewData}>
 					<div class={style.data}>
 						<div class={style.dataLabel}>Messung Nr.: </div>
-						{/* <div class={style.dataContent}>{this.state.measureId}</div> */}
-						<Dropdown
-							ddId={'measureIdDropdown'}
-							data={this.state.currentIds}
-							dropdownClick={this.handleDropDownClick}
-							selected={this.state.currentIds[this.state.currentPage]}/>
+						<div class={style.dataContent}>
+							<Dropdown
+								ddId={'measureIdDropdown'}
+								data={this.state.currentIds}
+								dropdownClick={this.handleDropDownClick}
+								selected={this.state.currentIds[this.state.currentPage]}/>
+						</div>
 					</div>
 					<div class={style.data}>
 						<div class={style.dataLabel}>Datum: </div>
@@ -632,7 +658,7 @@ export default class Measure extends Component{
 		);
 
 		this.setState({ content });
-		this.setDropDown(this.state.currentPage + 1);
+		// this.setDropDown(this.state.currentPage + 1);
 	};
 
 	

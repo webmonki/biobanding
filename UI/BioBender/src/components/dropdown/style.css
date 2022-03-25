@@ -16,6 +16,7 @@
 }
 
 .contentActive {
+	height: 200px;
 	width: 100%;
 	margin-top: 25px;
 	text-align: left;
@@ -24,34 +25,39 @@
 	top: 0;
 	left: 0;
 	display: block;
+	z-index: 1;
+	overflow-y: auto;
 }
 
 .placeholderInactive{
 	width: 100%;
 	border-bottom: 3px solid #34538A;
 	color: #34538A;
-	background-color: #E3F2FD;
+	background-color: white;
 	display: inline-block;
 	text-align: center;
 }
 
 .placeholderActive{
-	color: white;
-	position: absolute;
 	width: 100%;
-	border-radius: none;
+	border-bottom: 3px solid white;
+	background-color: white;
+	display: inline-block;
 	text-align: center;
 }
 
 .placeholderActive:hover {
-	background-color: #E3F2FD;
-	position: absolute;
-	color: #34538A;
+	width: 100%;
 	border-bottom: 3px solid #34538A;
+	color: #34538A;
+	background-color: white;
+	display: inline-block;
+	text-align: center;
 }
 
 .data {
-	background-color: #E3F2FD;
+	height: 25px;
+	background-color: white;
 	text-align: center;
 }
 

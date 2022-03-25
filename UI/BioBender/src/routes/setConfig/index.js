@@ -59,14 +59,22 @@ export default class SetConfig extends Component {
 			if ([1,2,3,4].includes(this.readyState)) {
 				
 				if (this.status === 200) {
-					let response = JSON.parse(this.responseText);
-					that.setState({ feedback: response.msg });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+					}
+					catch (err) {}
+
 					that.setState({ feedbackStyle: style.feedbackSucc });
 					route('/config', true);
 				}
 				else {
-					let response = JSON.parse(this.responseText);
-					that.setState({ feedback: response.msg });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+					}
+					catch (err) {}
+
 					that.setState({ feedbackStyle: style.feedbackErr });
 				}
 			}
@@ -79,7 +87,10 @@ export default class SetConfig extends Component {
             "days_reminder": ${that.state.reminder}
         }`;
 
-		xhttp.send(data);
+		try {
+			xhttp.send(data);
+		}
+		catch (err) {}
 	}
 
 	goToConfig = () => {

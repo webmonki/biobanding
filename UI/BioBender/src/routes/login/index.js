@@ -62,14 +62,20 @@ class Form extends Component {
 			if ([1,2,3,4].includes(this.readyState)) {
 				
 				if (this.status === 200) {
-					let response = JSON.parse(this.responseText);
-					Auth.createUser(response);
+					try {
+						let response = JSON.parse(this.responseText);
+						Auth.createUser(response);
+					}
+					catch (err) {}
 					// If Request Ok go to Home
 					route('/', true);
 				}
 				else {
-					let response = JSON.parse(this.responseText);
-					that.setState({ loginResponse: response.msg });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ loginResponse: response.msg });
+					}
+					catch (err) {}
 				}
 			}
 			else {
@@ -82,7 +88,10 @@ class Form extends Component {
             "password": "${this.state.password}"
         }`;
 
-		xhttp.send(data);
+		try {
+			xhttp.send(data);
+		}
+		catch (err) {}
 	}
 
 

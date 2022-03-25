@@ -42,13 +42,21 @@ export default class AddPlayer extends Component{
 			if ([1,2,3,4].includes(this.readyState)) {
 				
 				if (this.status === 200) {
-					let response = JSON.parse(this.responseText);
-					that.setState({ feedback: response.msg });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+					}
+					catch (err) {}
+
 					that.setState({ feedbackStyle: style.feedbackSucc });
 				}
 				else {
-					let response = JSON.parse(this.responseText);
-					that.setState({ feedback: response.msg });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+					}
+					catch (err) {}
+
 					that.setState({ feedbackStyle: style.feedbackErr });
 				}
 			}
@@ -79,8 +87,10 @@ export default class AddPlayer extends Component{
 			"height_mother": ${this.state.motherHeight}
         }`;
 
-
-		xhttp.send(data);
+		try {
+			xhttp.send(data);
+		}
+		catch (err) {}
 	}
 
 

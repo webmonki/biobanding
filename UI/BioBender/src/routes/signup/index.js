@@ -77,8 +77,12 @@ class Form extends Component {
 					route('/login', true);
 				}
 				else {
-					let response = JSON.parse(this.responseText);
-					that.setState({ signupResponse: response.msg });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ signupResponse: response.msg });
+					}
+					catch (err) {}
+
 				}
 			}
 			else {
@@ -92,7 +96,10 @@ class Form extends Component {
             "password": "${this.state.password}"
         }`;
 
-		xhttp.send(data);
+		try {
+			xhttp.send(data);
+		}
+		catch (err) {}
 	}
 
 

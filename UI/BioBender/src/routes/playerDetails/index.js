@@ -46,9 +46,13 @@ export default class PlayerDetails extends Component {
 			if ([1,2,3,4].includes(this.readyState)) {
 				
 				if (this.status === 200) {
-					let response = JSON.parse(this.responseText);
 
-					that.setState({ feedback: response.msg });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+					}
+					catch(err) {}
+
 					that.setState({ feedbackStyle: style.feedbackSucc });
 
 					that.setState({ firstName: response['player_details:'].first_name });
@@ -72,8 +76,12 @@ export default class PlayerDetails extends Component {
 
 				}
 				else {
-					let response = JSON.parse(this.responseText);
-					that.setState({ feedback: response.msg });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg })
+					}
+					catch (err) {}
+;
 					that.setState({ feedbackStyle: style.feedbackErr });
 
 				}
@@ -83,7 +91,10 @@ export default class PlayerDetails extends Component {
 			}
 		};
 
-		xhttp.send();
+		try {
+			xhttp.send();
+		}
+		catch (err) {}
 	}
 
 
