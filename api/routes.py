@@ -68,6 +68,14 @@ anthropometric_data_model = rest_api.model('AnthropometricDataModel', {
 }
 )
 
+anthropometric_data_edit_model = rest_api.model('AnthropometricDataEditModel', {
+	    "date_measured": fields.Date(required=True),
+        "height": fields.Integer(required=True, min=0, max=300),
+        "sitting_height": fields.Integer(required=True, min=0, max=300),
+        "body_span": fields.Integer(required=True, min=0, max=300),
+        "weight": fields.Float(required=True, min=0, max=300)
+})
+
 
 """
    Helper function for JWT token required
@@ -427,3 +435,37 @@ class Measurement(Resource):
 
         return {"success": True,
                 "msg": "Measurement successfully deleted"}, 200
+
+    @rest_api.expect(anthropometric_data_edit_model)
+    # @token_required
+    def post(self, id):
+
+        req_data = request.get_json()
+
+        _new_date_measured = req_data.get("date_measured")
+        _new_height = req_data.get("height")
+        _new_sitting_height = req_data.get("sitting_height")
+        _new_body_span = req_data.get("body_span")
+        _new_weight = req_data.get("weight")
+
+        measurement_data = AnthropometricData.get_by_id(id)
+
+        if _new_date_measured:
+            measurement_data.update_date_measured(_new_date_measured)
+
+        if _new_height:
+            measurement_data.update_height(_new_height)
+
+        if _new_sitting_height:
+            measurement_data.update_sitting_height(_new_sitting_height)
+
+        if _new_body_span:
+            measurement_data.update_body_span(_new_body_span)
+
+        if _new_weight:
+            measurement_data.update_weight(_new_weight)
+
+        measurement_data.save()
+
+        return {"success": True}, 200
+
