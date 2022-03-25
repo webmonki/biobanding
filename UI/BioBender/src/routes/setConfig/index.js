@@ -87,10 +87,8 @@ export default class SetConfig extends Component {
             "days_reminder": ${that.state.reminder}
         }`;
 
-		try {
-			xhttp.send(data);
-		}
-		catch (err) {}
+		xhttp.send(data);
+
 	}
 
 	goToConfig = () => {

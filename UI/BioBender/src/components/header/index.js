@@ -228,8 +228,8 @@ export default class Header extends Component {
 			}
 		};
 
-
 		xhttp.send();
+
 		that.closeDrawer();
 	}
 

@@ -91,10 +91,8 @@ export default class PlayerDetails extends Component {
 			}
 		};
 
-		try {
-			xhttp.send();
-		}
-		catch (err) {}
+		xhttp.send();
+
 	}
 
 

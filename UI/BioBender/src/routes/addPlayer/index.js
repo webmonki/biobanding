@@ -87,10 +87,7 @@ export default class AddPlayer extends Component{
 			"height_mother": ${this.state.motherHeight}
         }`;
 
-		try {
 			xhttp.send(data);
-		}
-		catch (err) {}
 	}
 
 

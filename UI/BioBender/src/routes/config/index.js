@@ -60,10 +60,8 @@ export default class Config extends Component {
 			}
 		};
 
-		try {
-			xhttp.send();
-		}
-		catch (err) {}
+		xhttp.send();
+
 	}
 
 	goToSetConfig = () => {

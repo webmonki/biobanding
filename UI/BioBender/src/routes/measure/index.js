@@ -145,10 +145,8 @@ export default class Measure extends Component{
 				}
 			}
 
-			try {
-				xhttp.send();
-			}
-			catch (err) {}
+			xhttp.send();
+
 		}
 
 		// Request to post anthropometric data
@@ -212,10 +210,8 @@ export default class Measure extends Component{
 				"weight": ${ this.state.weight }
 			}`;
 
-			try {
-				xhttp.send(data);
-			}
-			catch (err) {}
+			xhttp.send(data);
+
 		}
 
 	// Chceck Input and Enable Button
@@ -346,10 +342,8 @@ export default class Measure extends Component{
 			}
 		};
 
-		try {
-			xhttp.send();
-		}
-		catch (err) {}
+		xhttp.send();
+
 	}
 
 	// Get the id to delete from dropdown

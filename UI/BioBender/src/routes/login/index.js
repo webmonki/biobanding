@@ -88,10 +88,8 @@ class Form extends Component {
             "password": "${this.state.password}"
         }`;
 
-		try {
-			xhttp.send(data);
-		}
-		catch (err) {}
+		xhttp.send(data);
+
 	}
 
 

@@ -75,10 +75,8 @@ export default class ChangeData extends Component {
 			"email": "${this.state.email}"
         }`;
 
-		try {
-			xhttp.send(data);
-		}
-		catch (err) {}
+		xhttp.send(data);
+
 	}
 
 
