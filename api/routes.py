@@ -437,7 +437,7 @@ class Measurement(Resource):
                 "msg": "Measurement successfully deleted"}, 200
 
     @rest_api.expect(anthropometric_data_edit_model)
-    # @token_required
+    @token_required
     def post(self, id):
 
         req_data = request.get_json()
