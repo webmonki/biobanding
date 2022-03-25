@@ -1,7 +1,7 @@
 .card {
 	margin-top: 50px;
 	padding: 0 5% 0 5%;
-    grid-column-start: 4;
+    grid-column-start: 5;
     grid-column-end: 20;
     grid-row-start: 3;
     grid-row-end: 20;
