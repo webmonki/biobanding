@@ -13,6 +13,7 @@ import ChangeData from '../routes/changeData';
 import Measure from '../routes/measure';
 import Config from '../routes/config';
 import SetConfig from '../routes/setConfig';
+import Admin from	'../routes/userAdmin';
 
 
 export default class App extends Component {
@@ -34,7 +35,17 @@ export default class App extends Component {
 			}
 		}
 		else {
-			this.setState({ currentUrl: e.url });
+			if (Auth.check_admin()) {
+				this.setState({ currentUrl: e.url });
+			}
+			else {
+				if (e.url === '/config' || e.url === '/setConfig' || e.url === '/userAdmin') {
+					route('404', true)
+				}
+				else {
+					this.setState({ currentUrl : e.url });
+				}
+			}
 		}
 	}
 
@@ -55,6 +66,7 @@ export default class App extends Component {
 					<Measure path="/measure" />
 					<Config path="/config" />
 					<SetConfig path="/setConfig" />
+					<Admin path="/userAdmin" />
 					<NotFound default />
 				</Router>
 			</div>

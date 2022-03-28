@@ -19,6 +19,7 @@ class Users(db.Model):
     password = db.Column(db.String(64), nullable=False)
     date_joined = db.Column(db.DateTime(), default=datetime.utcnow)
     jwt_auth_active = db.Column(db.Boolean())
+    is_admin = db.Column(db.Boolean())
 
     def __repr__(self):
         return f"User {self.username}"
@@ -45,6 +46,21 @@ class Users(db.Model):
     def set_jwt_auth_active(self, set_status):
         self.jwt_auth_active = set_status
 
+    def check_is_admin(self):
+        return self.is_admin
+
+    def set_is_admin(self, set_status):
+        self.is_admin = set_status
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    @classmethod
+    def get_all_users(cls):
+        users = cls.query.all()
+        return users
+
     @classmethod
     def get_by_id(cls, id):
         return cls.query.get_or_404(id)
@@ -59,6 +75,7 @@ class Users(db.Model):
         cls_dict['_id'] = self.id
         cls_dict['username'] = self.username
         cls_dict['email'] = self.email
+        cls_dict['is_admin'] = self.is_admin
 
         return cls_dict
 

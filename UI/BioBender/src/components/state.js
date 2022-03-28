@@ -5,7 +5,7 @@ export default class Auth {
 
 	// Save User Data in Session Storage
 	static createUser = (response) => {
-		let user = { id: response.user._id, name: response.user.username, email: response.user.email, token: response.token };
+		let user = { id: response.user._id, name: response.user.username, email: response.user.email, token: response.token, is_admin: response.user.is_admin };
 		sessionStorage.clear();
 		sessionStorage.setItem('user', JSON.stringify(user));
 	}
@@ -21,6 +21,17 @@ export default class Auth {
 	// Delete Session Storage
 	static logout = () => {
 		sessionStorage.clear();
+	}
+
+	static check_admin = () => {
+		try {
+			let user = JSON.parse(sessionStorage.user);
+			return user.is_admin;
+		}
+		catch (err) {
+			return false;
+		}
+
 	}
 
 

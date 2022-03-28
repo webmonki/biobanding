@@ -9,7 +9,7 @@ from flask import Flask
 from flask_cors import CORS
 
 from .routes import rest_api
-from .models import db, AdminConfig
+from .models import db, AdminConfig, Users
 
 app = Flask(__name__)
 
@@ -28,6 +28,14 @@ def initialize_database():
     if not db.session.query(AdminConfig).first():
         config = AdminConfig(days_reminder=90)
         db.session.add(config)
+        db.session.commit()
+
+    if not db.session.query(Users).first():
+        new_user = Users(username='admin', email='admin@admin.de')
+
+        new_user.set_password('12345')
+        new_user.set_is_admin(True)
+        db.session.add(new_user)
         db.session.commit()
 
 

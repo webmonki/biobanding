@@ -3,9 +3,11 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+from dataclasses import field
 from datetime import datetime, timezone, timedelta
 from functools import wraps
 from json import dumps
+import string
 from flask import request
 from flask_restx import Api, Resource, fields
 
@@ -24,7 +26,8 @@ rest_api = Api(version="1.0", title="Users API")
 
 signup_model = rest_api.model('SignUpModel', {"username": fields.String(required=True, min_length=2, max_length=32),
                                               "email": fields.String(required=True, min_length=4, max_length=64),
-                                              "password": fields.String(required=True, min_length=4, max_length=16)
+                                              "password": fields.String(required=True, min_length=4, max_length=16),
+											  "is_admin": fields.Boolean()
                                               })
 
 login_model = rest_api.model('LoginModel', {"email": fields.String(required=True, min_length=4, max_length=64),
@@ -35,7 +38,6 @@ user_edit_model = rest_api.model('UserEditModel', {"userID": fields.String(requi
                                                    "username": fields.String(required=True, min_length=2, max_length=32),
                                                    "email": fields.String(required=True, min_length=4, max_length=64)
                                                    })
-
 
 config_model = rest_api.model('ConfigModel', {"days_reminder": fields.Integer(min=0, max=120, description='Interval in days in which the players are reminded by mail for a new measurement.')})
 
@@ -122,6 +124,65 @@ def token_required(f):
     Flask-Restx routes
 """
 
+@rest_api.route('/api/users')
+class AllUsers(Resource):
+
+    @token_required
+    def get(self, current_user):
+        """Return players anthropometric data"""
+        try:
+            users = Users.get_all_users()
+        except:
+            return {"success": False,
+                    "msg": "Could not read players anthropometric data"}, 500
+        userList = []
+        for row in users:
+            userList.append(
+                {
+                "userID": row.id,
+                "username": row.username,
+                "email": row.email}
+            )
+        return {"success": True,
+                "users:": userList}, 200
+
+# @rest_api.expect(login_model)
+@rest_api.route('/api/user/<int:id>')
+
+class EditUser(Resource):
+    @token_required
+    def put(self, current_user, id):
+
+        req_data = request.get_json()
+        
+        _new_username = req_data.get("username")
+        _new_email = req_data.get("email")
+        user = Users.get_by_id(id)
+
+        if _new_username:
+            user.update_username(_new_username)
+
+        if _new_email:
+            user.update_email(_new_email)
+
+        user.save()
+
+        return {"success": True}, 200
+
+    @token_required
+    def delete(self, current_user, id):
+        
+        try:
+            user = Users.get_by_id(id)
+            user.delete()
+        except:
+            return {
+                "success": False,
+                "msg": "Could not delete User"}, 500
+
+        return {"success": True}, 200
+
+
 
 @rest_api.route('/api/users/register')
 class Register(Resource):
@@ -137,6 +198,7 @@ class Register(Resource):
         _username = req_data.get("username")
         _email = req_data.get("email")
         _password = req_data.get("password")
+        _is_admin = req_data.get("is_admin")
 
         user_exists = Users.get_by_email(_email)
         if user_exists:
@@ -146,6 +208,7 @@ class Register(Resource):
         new_user = Users(username=_username, email=_email)
 
         new_user.set_password(_password)
+        new_user.set_is_admin(_is_admin)
         new_user.save()
 
         return {"success": True,
@@ -309,7 +372,6 @@ class PlayerDetails(Resource):
         try:
             player_detail = PlayerDetail.get_by_id(userID)
             player_master = PlayerMaster.get_by_id(userID)
-            #print(player_detail.height_father)
         except:
             return {"success": False,
                     "msg": "Could not read player details"}, 500

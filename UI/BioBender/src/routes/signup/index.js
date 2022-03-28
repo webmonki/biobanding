@@ -93,7 +93,8 @@ class Form extends Component {
 		let data =  `{
             "username": "${this.state.username}",
             "email": "${this.state.email}",
-            "password": "${this.state.password}"
+            "password": "${this.state.password}",
+			"is_admin": ${false}
         }`;
 
 		xhttp.send(data);

@@ -603,7 +603,6 @@ export default class Measure extends Component{
 
 
 		if (this.state.currentEdit == '') {
-			console.log("EDIT", this.state.currentEdit)
 			this.setState({ currentEdit : this.state.currentIds.slice(-1)[0] });
 			if (this.state.currentDelete == undefined){
 				this.setState({ currentEdit : '' })
