@@ -187,7 +187,6 @@ class AnthropometricData(db.Model):
     @classmethod
     def get_latest_by_user_id(cls, _id):
         user_data = cls.query.filter_by(user_id=_id).all()
-        print("DATA", user_data, "LENGHT", len(user_data))
         return user_data[len(user_data) - 1]
 
 class AdminConfig(db.Model):

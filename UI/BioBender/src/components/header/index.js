@@ -46,6 +46,8 @@ export default class Header extends Component {
 		this.setState({ configIcon: style.icon });
 		this.setState({ adminClass : style.nav });
 		this.setState({ adminIcon : style.icon });
+		this.setState({ overviewClass : style.nav });
+		this.setState({ overviewIcon : style.icon });
 		this.setState({ navWindowClass: style.navWindowClosed });
 		this.setState({ iconContainer: style.dontShow });
 		this.setState({ title: style.titleLogged });
@@ -291,11 +293,11 @@ export default class Header extends Component {
 					this.hightlightConfigTab();
 					break;
 
-				case 'userAdmin':
+				case '/userAdmin':
 					this.hightlightAdminTab();
 					break;
 
-				case 'overview':
+				case '/overview':
 					this.highlightOverviewTab();
 					break;
 
