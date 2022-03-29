@@ -94,7 +94,6 @@ tr:hover {
     grid-row-start: 7;
     grid-row-end: 25;
 	overflow-y: auto;
-	border-bottom: 1px solid #C7C1C1;
 	border-top: 20px solid white;
 }
 

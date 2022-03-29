@@ -240,13 +240,14 @@ tr:hover {
 
 
 table {
+	word-wrap: break-word;
 	border-collapse: collapse;
+	table-layout: fixed;
 	width: 100%;
 }
 
 th, td {
 	padding: 8px 16px;
-	/* border: 1px solid #C7C1C1; */
 	text-align: center;
 }
 

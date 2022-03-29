@@ -30,16 +30,6 @@ def initialize_database():
         db.session.add(config)
         db.session.commit()
 
-    if not db.session.query(Users).first():
-        new_user = Users(username='admin', email='admin@admin.de')
-
-        new_user.set_password('12345')
-        new_user.set_is_admin(True)
-        db.session.add(new_user)
-        db.session.commit()
-
-
-
 """
    Custom responses
 """

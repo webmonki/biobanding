@@ -13,8 +13,11 @@ export default class Auth {
 
 	// Get User from Session Storage
 	static getUser = () => {
-		let user = JSON.parse(sessionStorage.user);
-		return user;
+		try {
+			let user = JSON.parse(sessionStorage.user);
+			return user;
+		}
+		catch (err) {}
 	}
 
 
