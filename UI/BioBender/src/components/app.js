@@ -14,7 +14,7 @@ import Measure from '../routes/measure';
 import Config from '../routes/config';
 import SetConfig from '../routes/setConfig';
 import Admin from	'../routes/userAdmin';
-
+import Overview from '../routes/overview';
 
 export default class App extends Component {
 	/** Gets fired when the route changes.
@@ -39,7 +39,7 @@ export default class App extends Component {
 				this.setState({ currentUrl: e.url });
 			}
 			else {
-				if (e.url === '/config' || e.url === '/setConfig' || e.url === '/userAdmin') {
+				if (e.url === '/config' || e.url === '/setConfig' || e.url === '/userAdmin' || e.url === '/overview') {
 					route('404', true)
 				}
 				else {
@@ -67,6 +67,7 @@ export default class App extends Component {
 					<Config path="/config" />
 					<SetConfig path="/setConfig" />
 					<Admin path="/userAdmin" />
+					<Overview path="/overview" />
 					<NotFound default />
 				</Router>
 			</div>

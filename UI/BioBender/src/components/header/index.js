@@ -138,6 +138,7 @@ export default class Header extends Component {
 		this.setState({ measureClass: style.nav });
 		this.setState({ configClass: style.nav });
 		this.setState({ adminClass : style.nav });
+		this.setState({ overviewClass: style.nav });
 
 		this.setState({ homeIcon: style.activeIcon });
 		this.setState({ profileIcon: style.icon });
@@ -145,6 +146,7 @@ export default class Header extends Component {
 		this.setState({ measureIcon: style.icon });
 		this.setState({ configIcon: style.icon });
 		this.setState({ adminIcon : style.icon });
+		this.setState({ overviewIcon : style.icon });
 	}
 
 	hightlightProgileTab = () => {
@@ -154,6 +156,7 @@ export default class Header extends Component {
 		this.setState({ measureClass: style.nav });
 		this.setState({ configClass: style.nav });
 		this.setState({ adminClass : style.nav });
+		this.setState({ overviewClass: style.nav });
 
 		this.setState({ homeIcon: style.icon });
 		this.setState({ profileIcon: style.activeIcon });
@@ -161,6 +164,7 @@ export default class Header extends Component {
 		this.setState({ measureIcon: style.icon });
 		this.setState({ configIcon: style.icon });
 		this.setState({ adminIcon : style.icon });
+		this.setState({ overviewIcon : style.icon });
 	}
 
 	hightlightPlayerDetailsTab = () => {
@@ -170,6 +174,7 @@ export default class Header extends Component {
 		this.setState({ measureClass: style.nav });
 		this.setState({ configClass: style.nav });
 		this.setState({ adminClass : style.nav });
+		this.setState({ overviewClass: style.nav });
 
 		this.setState({ homeIcon: style.icon });
 		this.setState({ profileIcon: style.icon });
@@ -177,6 +182,7 @@ export default class Header extends Component {
 		this.setState({ measureIcon: style.icon });
 		this.setState({ configIcon: style.icon });
 		this.setState({ adminIcon : style.icon });
+		this.setState({ overviewIcon : style.icon });
 	}
 
 	hightlightMeasureTab = () => {
@@ -186,6 +192,7 @@ export default class Header extends Component {
 		this.setState({ detailsClass: style.nav });
 		this.setState({ configClass: style.nav });
 		this.setState({ adminClass : style.nav });
+		this.setState({ overviewClass: style.nav });
 
 		this.setState({ measureIcon: style.activeIcon });
 		this.setState({ homeIcon: style.icon });
@@ -193,6 +200,7 @@ export default class Header extends Component {
 		this.setState({ detailsIcon: style.icon });
 		this.setState({ configIcon: style.icon });
 		this.setState({ adminIcon : style.icon });
+		this.setState({ overviewIcon : style.icon });
 	}
 
 	hightlightConfigTab = () => {
@@ -202,6 +210,7 @@ export default class Header extends Component {
 		this.setState({ detailsClass: style.nav });
 		this.setState({ configClass: style.active });
 		this.setState({ adminClass : style.nav });
+		this.setState({ overviewClass: style.nav });
 
 		this.setState({ measureIcon: style.icon });
 		this.setState({ homeIcon: style.icon });
@@ -209,6 +218,7 @@ export default class Header extends Component {
 		this.setState({ detailsIcon: style.icon });
 		this.setState({ configIcon: style.activeIcon });
 		this.setState({ adminIcon : style.icon });
+		this.setState({ overviewIcon : style.icon });
 	}
 
 	hightlightAdminTab = () => {
@@ -218,6 +228,7 @@ export default class Header extends Component {
 		this.setState({ detailsClass: style.nav });
 		this.setState({ configClass: style.nav });
 		this.setState({ adminClass : style.active });
+		this.setState({ overviewClass: style.nav });
 
 		this.setState({ measureIcon: style.icon });
 		this.setState({ homeIcon: style.icon });
@@ -225,6 +236,25 @@ export default class Header extends Component {
 		this.setState({ detailsIcon: style.icon });
 		this.setState({ configIcon: style.icon });
 		this.setState({ adminIcon : style.activeIcon });
+		this.setState({ overviewIcon : style.icon });
+	}
+
+	highlightOverviewTab = () => {
+		this.setState({ measureClass: style.nav });
+		this.setState({ homeClass: style.nav });
+		this.setState({ profileClass: style.nav });
+		this.setState({ detailsClass: style.nav });
+		this.setState({ configClass: style.nav });
+		this.setState({ adminClass : style.nav });
+		this.setState({ overviewClass: style.active });
+
+		this.setState({ measureIcon: style.icon });
+		this.setState({ homeIcon: style.icon });
+		this.setState({ profileIcon: style.icon });
+		this.setState({ detailsIcon: style.icon });
+		this.setState({ configIcon: style.icon });
+		this.setState({ adminIcon : style.icon });
+		this.setState({ overviewIcon : style.activeIcon });
 	}
 
 
@@ -263,6 +293,10 @@ export default class Header extends Component {
 
 				case 'userAdmin':
 					this.hightlightAdminTab();
+					break;
+
+				case 'overview':
+					this.highlightOverviewTab();
 					break;
 
 				default:
@@ -309,7 +343,7 @@ export default class Header extends Component {
 	goToMeasure = this.linkTo('/measure');
 	goToConfig = this.linkTo('/config');
 	goToAdmin = this.linkTo('/userAdmin');
-
+	goToOverview = this.linkTo('/overview');
 
 	handleClickHome = () => {
 		this.goHome();
@@ -333,6 +367,10 @@ export default class Header extends Component {
 
 	handleClickAdmin = () => {
 		this.goToAdmin();
+	}
+
+	handleClickOverview = () => {
+		this.goToOverview();
 	}
 
 	// Request to Log out user
@@ -404,7 +442,12 @@ export default class Header extends Component {
 						<List.ItemGraphic class={this.state.adminIcon}>group</List.ItemGraphic>
 						Benutzer
 					</div>
-	
+
+					<div class={this.state.overviewClass} onClick={this.handleClickOverview}>
+						<List.ItemGraphic class={this.state.overviewIcon}>directions_run</List.ItemGraphic>
+						Spieler Übersicht
+					</div>
+
 					<div class={style.nav} onClick={this.logOut}>
 						<List.ItemGraphic class={style.icon}>close</List.ItemGraphic>
 						Abmelden

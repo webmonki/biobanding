@@ -184,6 +184,12 @@ class AnthropometricData(db.Model):
         user_data = cls.query.filter_by(id=_id).first()
         return user_data
 
+    @classmethod
+    def get_latest_by_user_id(cls, _id):
+        user_data = cls.query.filter_by(user_id=_id).all()
+        print("DATA", user_data, "LENGHT", len(user_data))
+        return user_data[len(user_data) - 1]
+
 class AdminConfig(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     days_reminder = db.Column(db.Integer(), default=90)

@@ -8,6 +8,7 @@ from datetime import datetime, timezone, timedelta
 from functools import wraps
 from json import dumps
 import string
+# from tkinter.tix import Tree
 from flask import request
 from flask_restx import Api, Resource, fields
 
@@ -123,6 +124,61 @@ def token_required(f):
 """
     Flask-Restx routes
 """
+
+@rest_api.route('/api/users/details')
+class AllUserDetails(Resource):
+
+    @token_required
+    def get(self, current_user):
+        try:
+            users = Users.get_all_users()
+        except:
+            return {"success": False,
+                "msg": "Could not read users"}, 500
+
+        detailsList = []
+
+        for user in users:
+            try:
+                player_details = PlayerDetail.get_by_id(user.id)
+                birthday = dumps(player_details.birthday, default=json_serial)
+                sex = player_details.sex_m_0_f_1
+            except:
+                birthday = "nicht vorhanden"
+                sex = "nicht vorhanden"
+
+            try:
+                player_master = PlayerMaster.get_by_id(user.id)
+                first_name = player_master.first_name
+                last_name = player_master.last_name
+            except:
+                first_name = "nicht vorhanden"
+                last_name = "nicht vorhanden"
+
+            try:
+                anthro_data = AnthropometricData.get_latest_by_user_id(user.id)
+                height = anthro_data.height
+                result = anthro_data.result
+            except:
+                height = "nicht vorhanden"
+                result = "nicht vorhanden"
+
+
+            detailsList.append(
+                {
+				"userID": user.id,
+				"username": user.username,
+				"firstname": first_name,
+				"lastname": last_name,
+				"email": user.email,
+				"birthday": birthday,
+				"sex_m_0_f_1": sex,
+				"height": height,
+				"result": result
+				}
+			)
+        return {"success": True,
+		        "userdetails": detailsList}
 
 @rest_api.route('/api/users')
 class AllUsers(Resource):
@@ -348,7 +404,7 @@ class PlayerDetails(Resource):
         _first_name = req_data.get("first_name")
         _last_name = req_data.get("last_name")
         _birthday = datetime.strptime(req_data.get("birthday"), '%Y-%m-%d')
-        _sex_m_0_f_1 = req_data.get('height_father')
+        _sex_m_0_f_1 = req_data.get('sex_m_0_f_1')
         _height_father = req_data.get("height_father")
         _height_mother = req_data.get("height_mother")
 

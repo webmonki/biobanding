@@ -48,7 +48,7 @@ export default class PlayerDetails extends Component {
 				if (this.status === 200) {
 
 					try {
-						let response = JSON.parse(this.responseText);
+						var response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
 					}
 					catch(err) {}
