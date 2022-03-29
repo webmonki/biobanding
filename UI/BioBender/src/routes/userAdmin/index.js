@@ -332,8 +332,6 @@ export default class Admin extends Component{
 			}
 		};
 
-		console.log("NAME: ", this.state.name)
-		console.log("EMAIL: ", this.state.email)
 		let data = `{
 			"username": "${ this.state.name }",
 			"email": "${ this.state.email }"

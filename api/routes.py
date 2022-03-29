@@ -125,6 +125,19 @@ def token_required(f):
     Flask-Restx routes
 """
 
+@rest_api.route('/api/usercount')
+class UserCount(Resource):
+
+    def get(self):
+        try:
+            users = Users.get_all_users()
+        except:
+            return {"success": False,
+                "msg": "Could not count users"}, 500
+
+        return {"success": True,
+                "length": len(users)}, 200
+
 @rest_api.route('/api/users/details')
 class AllUserDetails(Resource):
 
