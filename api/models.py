@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from datetime import datetime
+from xmlrpc.client import DateTime
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -18,6 +19,7 @@ class Users(db.Model):
     password = db.Column(db.String(64), nullable=False)
     date_joined = db.Column(db.DateTime(), default=datetime.utcnow)
     jwt_auth_active = db.Column(db.Boolean())
+    is_admin = db.Column(db.Boolean())
 
     def __repr__(self):
         return f"User {self.username}"
@@ -44,6 +46,21 @@ class Users(db.Model):
     def set_jwt_auth_active(self, set_status):
         self.jwt_auth_active = set_status
 
+    def check_is_admin(self):
+        return self.is_admin
+
+    def set_is_admin(self, set_status):
+        self.is_admin = set_status
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    @classmethod
+    def get_all_users(cls):
+        users = cls.query.all()
+        return users
+
     @classmethod
     def get_by_id(cls, id):
         return cls.query.get_or_404(id)
@@ -58,6 +75,7 @@ class Users(db.Model):
         cls_dict['_id'] = self.id
         cls_dict['username'] = self.username
         cls_dict['email'] = self.email
+        cls_dict['is_admin'] = self.is_admin
 
         return cls_dict
 
@@ -120,10 +138,51 @@ class AnthropometricData(db.Model):
     weight = db.Column(db.Float(), nullable=False)
     result = db.Column(db.Float(), nullable=False)
 
+    def mirwald(self, a, b, c, d):
+        '''
+            a: Groesse stehend
+            b: Groesse sitzend
+            c: Chronologisches Alter in Jahren
+                := (d2.year-d1.year) + (d2.month-d1.month)/12 + (d2.day-d1.day)/365
+            d: Gewicht
+        '''
+        res = -9.376 + (0.0001882 * ((a-b) * b))+(0.0022 * (c * (a - b))) \
+            + (0.005841 * (c * b))-(0.002658 * (c * d))+(0.07693 * ((d / a) * 100))
+        return res
+
     def save(self):
         db.session.add(self)
         db.session.commit()
 
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def update_date_measured(self, new_date):
+        date = datetime.fromisoformat(new_date)
+        self.date_measured = date
+
+    def update_height(self, new_height):
+        self.height = new_height
+
+    def update_sitting_height(self, new_sitting_height):
+        self.sitting_height = new_sitting_height
+
+    def update_body_span(self, new_body_span):
+        self.body_span = new_body_span
+
+    def update_weight(self, new_weight):
+        self.weight = new_weight
+
+    @classmethod
+    def get_by_user_id(cls, _user_id):
+        user_data = cls.query.filter_by(user_id=_user_id).all()
+        return user_data
+
+    @classmethod
+    def get_by_id(cls, _id):
+        user_data = cls.query.filter_by(id=_id).first()
+        return user_data
 
 class AdminConfig(db.Model):
     id = db.Column(db.Integer(), primary_key=True)

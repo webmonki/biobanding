@@ -13,6 +13,7 @@ import ChangeData from '../routes/changeData';
 import Measure from '../routes/measure';
 import Config from '../routes/config';
 import SetConfig from '../routes/setConfig';
+import Admin from	'../routes/userAdmin';
 
 
 export default class App extends Component {
@@ -22,39 +23,50 @@ export default class App extends Component {
 	 */
 
 
+	// Handle Routing an go to login or sign up if no user is set in Session Storage
 	handleRoute = async e => {
 		let auth = Auth.getAuth();
 		if (auth === false || auth === undefined) {
 			if (e.url === '/signup'){
 				route('/signup', true);
 			}
-			else
-			{
+			else {
 				route('login', true);
 			}
-		} else {
-			this.setState({ currentUrl: e.url});
+		}
+		else {
+			if (Auth.check_admin()) {
+				this.setState({ currentUrl: e.url });
+			}
+			else {
+				if (e.url === '/config' || e.url === '/setConfig' || e.url === '/userAdmin') {
+					route('404', true)
+				}
+				else {
+					this.setState({ currentUrl : e.url });
+				}
+			}
 		}
 	}
-
 
 
 	render() {
 		return (
 			<div id="app">
-				<Header selectedRoute={this.state.currentUrl}/>
+				<Header selectedRoute={this.state.currentUrl} />
 				<Router onChange={this.handleRoute}>
 					<Home path="/" />
 					<Profile path="/profile/" user="me" />
 					<Profile path="/profile/:user" />
-					<Login path="/login/"/>
-					<Signup path="/signup/"/>
-					<PlayerDetails path="/playerDetails/"/>
-					<AddPlayer path="/addPlayer/"/>
-					<ChangeData path="/changeData/"/>
-					<Measure path="/measure"/>
-					<Config path="/config"/>
-					<SetConfig path="/setConfig"/>
+					<Login path="/login/" />
+					<Signup path="/signup/" />
+					<PlayerDetails path="/playerDetails/" />
+					<AddPlayer path="/addPlayer/" />
+					<ChangeData path="/changeData/" />
+					<Measure path="/measure" />
+					<Config path="/config" />
+					<SetConfig path="/setConfig" />
+					<Admin path="/userAdmin" />
 					<NotFound default />
 				</Router>
 			</div>

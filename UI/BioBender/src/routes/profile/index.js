@@ -20,9 +20,11 @@ export default class Profile extends Component {
 		this.setState({ email: Auth.getUser().email });
 	}
 
+
 	goToChangeData = () => {
-		route('changeData/', true);
+		route('/changeData', true);
 	}
+	
 
 	render() {
 		return (
@@ -33,9 +35,7 @@ export default class Profile extends Component {
 						<div class={style.data}>Benutzer Id: {this.state.userId}</div>
 						<div class={style.data}>Benutzername: {this.state.userName}</div>
 						<div class={style.data}>E-Mail: {this.state.email}</div>
-						<div class={style.center}>
-							<Button class={style.btnEnabled} onClick={this.goToChangeData}>E-Mail ändern</Button>
-						</div>
+						<Button raised class={style.btnEnabled} onClick={this.goToChangeData}>E-Mail ändern</Button>
 					</div>
 				</Card>
 			</div>

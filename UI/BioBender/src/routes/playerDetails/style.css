@@ -1,10 +1,10 @@
 .card {
 	margin-top: 50px;
 	padding: 0 5% 0 5%;
-    grid-column-start: 4;
-    grid-column-end: 10;
-    grid-row-start: 4;
-    grid-row-end: 10;
+    grid-column-start: 5;
+    grid-column-end: 20;
+    grid-row-start: 3;
+    grid-row-end: 20;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -33,10 +33,10 @@
 
 
 .layout {
-    height: 90%;
+    height: 100%;
     display: grid;
-    grid-template-columns: repeat(12, auto);
-    grid-template-rows: repeat(12, auto);
+    grid-template-columns: repeat(24, 1fr);
+    grid-template-rows: repeat(24, 1fr);
 }
 
 .btnEnabled {
@@ -66,8 +66,6 @@
 @media only screen and (max-width: 600px) {
 
 	.layout {
-		/* min-height: 590px;
-		max-height: 590px; */
 		height: fit-content;
 		width: 100%;
 		display: flex;
@@ -76,15 +74,15 @@
     .card{
         padding-top: 15%;
         width: 100%;
-        /* min-height: 570px; */
 		height: 100%;
+		box-shadow: none;
     }
 
 	.container {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-around;
-		min-height: 460px;
+		min-height: 430px;
 		margin: 10% 0 0 0;
 		padding: 0 0 10% 0;
 	}

@@ -21,6 +21,7 @@ export default class PlayerDetails extends Component {
 	state = ({ feedback: '' });
 	state = ({ feedbackStyle: undefined });
 
+
 	componentWillMount = () => {
 		this.setState({ userId: Auth.getUser().id });
 		this.setState({ token: Auth.getUser().token });
@@ -29,9 +30,10 @@ export default class PlayerDetails extends Component {
 		this.getDetails();
 	}
 
+	// Request to get Player Details
 	getDetails= () => {
 		let that = this;
-		let url = 'http://127.0.0.1:5000/api/user/' + this.state.userId + '/details';
+		let url = Auth.url + '/api/user/' + this.state.userId + '/details';
 		let xhttp = new XMLHttpRequest();
 
 		xhttp.open('GET', url);
@@ -44,9 +46,13 @@ export default class PlayerDetails extends Component {
 			if ([1,2,3,4].includes(this.readyState)) {
 				
 				if (this.status === 200) {
-					let response = JSON.parse(this.responseText);
 
-					that.setState({ feedback: response.msg });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+					}
+					catch(err) {}
+
 					that.setState({ feedbackStyle: style.feedbackSucc });
 
 					that.setState({ firstName: response['player_details:'].first_name });
@@ -70,8 +76,12 @@ export default class PlayerDetails extends Component {
 
 				}
 				else {
-					let response = JSON.parse(this.responseText);
-					that.setState({ feedback: response.msg });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg })
+					}
+					catch (err) {}
+;
 					that.setState({ feedbackStyle: style.feedbackErr });
 
 				}
@@ -82,6 +92,7 @@ export default class PlayerDetails extends Component {
 		};
 
 		xhttp.send();
+
 	}
 
 
@@ -89,6 +100,7 @@ export default class PlayerDetails extends Component {
 		route('/addPlayer', true);
 	}
 
+	
 	render() {
 		return (
 			<div class={style.layout}>
@@ -104,7 +116,7 @@ export default class PlayerDetails extends Component {
 						<div class={style.data}>Größe des Vaters: {this.state.fatherHeight}</div>
 						<div class={style.data}>Größe der Mutter: {this.state.motherHeight}</div>
 						<div class={style.center}>
-							<Button class={style.btnEnabled} onClick={this.goToCreateAddPlayer}>Spieler Details erstellen</Button>
+							<Button raised class={style.btnEnabled} onClick={this.goToCreateAddPlayer}>Spieler Details erstellen</Button>
 						</div>
 					</div>
 				</Card>

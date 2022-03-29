@@ -19,16 +19,15 @@ class Form extends Component {
 	state = ({ passwordVal: '' });
     state = ({ btnClass: undefined });
 	state = ({ loginResponse: '' });
-	
-	setLoginResponse = (val) => {
-		this.setState({ loginResponse: val });
-	}
+
 
 	componentWillMount = () => {
 		this.setState({ btnClass: style.btnDisabled });
 		this.setState({ btnDisabled: true });
 	}
 
+
+	// Check Input and Enable Button
 	handleChange = () => {
 		this.setState({ email: document.getElementById('email-input').value });
 		this.setState({ password: document.getElementById('password-input').value });
@@ -47,9 +46,11 @@ class Form extends Component {
 
 	}
 
+
+	// Request to Post Login Data
 	login = () => {
 		let that = this;
-		let url = 'http://127.0.0.1:5000/api/users/login';
+		let url = Auth.url + '/api/users/login';
 		let xhttp = new XMLHttpRequest();
 
 		xhttp.open('POST', url);
@@ -61,13 +62,20 @@ class Form extends Component {
 			if ([1,2,3,4].includes(this.readyState)) {
 				
 				if (this.status === 200) {
-					let response = JSON.parse(this.responseText);
-					Auth.createUser(response);
+					try {
+						let response = JSON.parse(this.responseText);
+						Auth.createUser(response);
+					}
+					catch (err) {}
+					// If Request Ok go to Home
 					route('/', true);
 				}
 				else {
-					let response = JSON.parse(this.responseText);
-					that.setState({ loginResponse: response.msg });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ loginResponse: response.msg });
+					}
+					catch (err) {}
 				}
 			}
 			else {
@@ -81,7 +89,9 @@ class Form extends Component {
         }`;
 
 		xhttp.send(data);
+
 	}
+
 
 	render() {
 		return (
@@ -103,6 +113,7 @@ class Form extends Component {
 	}
 
 }
+
 
 export default class Login extends Component {
 	render() {

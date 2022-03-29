@@ -17,14 +17,16 @@ export default class SetConfig extends Component {
     state = ({ feedback: '' });
     state = ({ feedbackStyle: '' });
 
+	
 	componentWillMount = () => {
 		this.setState({ token: Auth.getUser().token });
 		this.setState({ btnDisabled: true });
 		this.setState({ btnClass: style.btnDisabled });
 	};
 
+
+	// Check Input and Enable Button
 	handleChange = () => {
-		
 		this.setState({ reminder: document.getElementById('configInput').value });
 		this.setState({ loginResponse: '' });
         
@@ -39,9 +41,11 @@ export default class SetConfig extends Component {
 		}
 	}
 
+
+	// Send Request
 	setConfiguration = () => {
 		let that = this;
-		let url = 'http://127.0.0.1:5000/api/configurations';
+		let url = Auth.url + '/api/configurations';
 		let xhttp = new XMLHttpRequest();
 
 		xhttp.open('PUT', url);
@@ -55,14 +59,22 @@ export default class SetConfig extends Component {
 			if ([1,2,3,4].includes(this.readyState)) {
 				
 				if (this.status === 200) {
-					let response = JSON.parse(this.responseText);
-					that.setState({ feedback: response.msg });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+					}
+					catch (err) {}
+
 					that.setState({ feedbackStyle: style.feedbackSucc });
 					route('/config', true);
 				}
 				else {
-					let response = JSON.parse(this.responseText);
-					that.setState({ feedback: response.msg });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+					}
+					catch (err) {}
+
 					that.setState({ feedbackStyle: style.feedbackErr });
 				}
 			}
@@ -76,6 +88,11 @@ export default class SetConfig extends Component {
         }`;
 
 		xhttp.send(data);
+
+	}
+
+	goToConfig = () => {
+		route('/config', true);
 	}
 
 
@@ -89,6 +106,7 @@ export default class SetConfig extends Component {
 						<Input inputId="configInput" inputLabel="Erinnern in X Tagen" onChange={this.handleChange} />
 						<div class={style.center}>
 							<Button class={this.state.btnClass} raised disabled={this.state.btnDisabled} onClick={this.setConfiguration}>Konfiguration senden</Button>
+							<Button class={style.btnEnabled} raised onCLick={this.goToConfig}>Konfiguration zeigen</Button>
 						</div>
 					</div>
 				</Card>

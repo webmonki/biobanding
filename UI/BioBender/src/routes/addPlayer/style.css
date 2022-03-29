@@ -2,9 +2,12 @@
 	margin-top: 50px;
 	padding: 0 5% 0 5%;
     grid-column-start: 4;
-    grid-column-end: 10;
-    grid-row-start: 4;
-    grid-row-end: 10;
+    grid-column-end: 20;
+    grid-row-start: 3;
+    grid-row-end: 20;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
 }
 
@@ -39,10 +42,10 @@
 
 
 .layout {
-    height: 90%;
+    height: 100%;
     display: grid;
-    grid-template-columns: repeat(12, auto);
-    grid-template-rows: repeat(12, auto);
+    grid-template-columns: repeat(24, 1fr);
+    grid-template-rows: repeat(24, 1fr);
 }
 
 .radio {
@@ -116,6 +119,7 @@
         padding-top: 15%;
         width: 100%;
 		height: 100%;
+		box-shadow: none;
 
     }
 
@@ -123,8 +127,8 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: space-around;
-		max-height: 460px;
-		min-height: 460px;
+		max-height: 400px;
+		min-height: 400px;
 		padding: 0 0 10% 0;
 	}
 

@@ -8,6 +8,9 @@ import style from './style';
 import Input from '../../components/input/input.js';
 import { route } from 'preact-router';
 import Head1 from '../../components/head/head1.js';
+import Auth from '../../components/state';
+import { Link } from 'preact-router/match';
+
 
 class Form extends Component {
 	state = ({ username: '' });
@@ -18,11 +21,14 @@ class Form extends Component {
     state = ({ btnClass: undefined });
     state = ({ signupResponse: '' });
 
+
 	componentWillMount = () => {
 		this.setState({ btnClass: style.btnDisabled });
 		this.setState({ btnDisabled: true });
 	}
 
+
+	// Check Inputs and Enable Button
 	handleChange = () => {
 		this.setState({ username: document.getElementById('usernameInput').value });
 		this.setState({ password: document.getElementById('passwordInput').value });
@@ -50,14 +56,16 @@ class Form extends Component {
 		}
 	}
 
+
+	// Send Request
 	signup = () => {
 		let that = this;
-		let url = 'http://127.0.0.1:5000/api/users/register';
+		let url = Auth.url + '/api/users/register';
 		let xhttp = new XMLHttpRequest();
 
 		xhttp.open('POST', url);
-		xhttp.setRequestHeader('Accept", "application/json');
-		xhttp.setRequestHeader('Content-Type", "application/json');
+		xhttp.setRequestHeader('Accept', 'application/json');
+		xhttp.setRequestHeader('Content-Type', 'application/json');
 
 		xhttp.onreadystatechange = function() {
 
@@ -65,11 +73,16 @@ class Form extends Component {
 			if ([1,2,3,4].includes(this.readyState)) {
 				
 				if (this.status === 200) {
-					route('/', true);
+					// If Request is Ok go to Login
+					route('/login', true);
 				}
 				else {
-					let response = JSON.parse(this.responseText);
-					that.setState({ signupResponse: response.msg });
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ signupResponse: response.msg });
+					}
+					catch (err) {}
+
 				}
 			}
 			else {
@@ -80,11 +93,14 @@ class Form extends Component {
 		let data =  `{
             "username": "${this.state.username}",
             "email": "${this.state.email}",
-            "password": "${this.state.password}"
+            "password": "${this.state.password}",
+			"is_admin": ${false}
         }`;
 
 		xhttp.send(data);
+
 	}
+
 
 	render() {
 		return (
@@ -97,7 +113,10 @@ class Form extends Component {
 						<Input inputId="passwordInput" inputLabel="Passwort" type="password" onChange={this.handleChange} />
 						<Input inputId="password2Input" inputLabel="Passwort wiederholen" type="password" onChange={this.handleChange} />
 						<div style={{ color: '#B1262D' }}>{this.state.signupResponse }</div>
-						<Button className={this.state.btnClass} raised onClick={this.signup} disabled={this.state.btnDisabled}>registrieren</Button>
+						<div class={style.btnContainer}>
+							<Button className={this.state.btnClass} raised onClick={this.signup} disabled={this.state.btnDisabled}>registrieren</Button>
+							<Link href="/login" data-native>anmelden</Link>
+						</div>
 					</div>
 				</Card>
 			</div>
