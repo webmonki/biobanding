@@ -1,29 +1,79 @@
-
-
-.titleLogged {
-    color: white;
-	margin-left: 120px;
-	font-size: 50px;
+.navBar {
+	background-color: white;
+	height: 100%;
+	width: 170px;
+	position: fixed;
+	z-index: 2;
+	/* margin-bottom: 200px; */
+	top: 0;
+	border-right: 1px solid #9C9696;
 }
 
-.titleNotLogged {
-    color: white;
-    margin-left: 34px;
-	font-size: 500px;
+.logo {
+	background-color: #34538A;
+	height: 170px;
+	width: 170px;
 }
 
-.header{
-    width: 91%;
+
+/* .navBar {
+    padding-top: 50px;
+    display:flex;
+    flex-direction: column;
+    height: 200%;
+    min-width: 180px;
+    background-color: white;
+    z-index: 1;
+    box-shadow: 10px 5px 5px #9C9696;  
+    position: relative;
+    overflow-y: auto;
+} */
+
+.navWindowOpened {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    display: flex;
+    
+}
+
+.navWindowClosed {
+    display: none;
+}
+
+.nav {
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 5%;
+    color: #484852;
+}
+
+
+.active {
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 5%;
     background-color: #34538A;
     color: white;
-    height: 170px;
-    display: flex;
-    align-items: center;
-    z-index: 1;
-    /* position: fixed; */
-	margin-left: 170px;
+
 }
 
+.nav:hover{
+    background-color:  #EEEEF1;
+}
+
+.icon {
+    color: #484852;
+}
+
+.activeIcon {
+    color: white;
+    background-color: #34538A !important;
+}
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {

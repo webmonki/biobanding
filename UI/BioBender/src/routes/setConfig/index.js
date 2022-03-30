@@ -98,19 +98,13 @@ export default class SetConfig extends Component {
 
 	render() {
 		return (
-			<div class={style.layout}>
-				<Card class={style.card}>
-					<Head2 headText="Konfiguration" />
-					<div class={this.state.feedbackStyle}>{this.state.feedback}</div>
-					<div class={style.container}>
-						<Input inputId="configInput" inputLabel="Erinnern in X Tagen" onChange={this.handleChange} />
-						<div class={style.center}>
-							<Button class={this.state.btnClass} raised disabled={this.state.btnDisabled} onClick={this.setConfiguration}>Konfiguration senden</Button>
-							<Button class={style.btnEnabled} raised onCLick={this.goToConfig}>Konfiguration zeigen</Button>
-						</div>
-					</div>
-				</Card>
-			</div>
+			<Card class={style.card}>
+				<div class={this.state.feedbackStyle}>{this.state.feedback}</div>
+				<div class={style.container}>
+					<Input inputId="configInput" inputLabel="Erinnern in X Tagen" onChange={this.handleChange} />
+					<Button class={this.state.btnClass} raised disabled={this.state.btnDisabled} onClick={this.setConfiguration}>Konfiguration senden</Button>
+				</div>
+			</Card>
 		);
 	}
 }

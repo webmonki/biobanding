@@ -157,24 +157,24 @@ class AllUserDetails(Resource):
                 birthday = dumps(player_details.birthday, default=json_serial)
                 sex = player_details.sex_m_0_f_1
             except:
-                birthday = "nicht vorhanden"
-                sex = "nicht vorhanden"
+                birthday = "/"
+                sex = "/"
 
             try:
                 player_master = PlayerMaster.get_by_id(user.id)
                 first_name = player_master.first_name
                 last_name = player_master.last_name
             except:
-                first_name = "nicht vorhanden"
-                last_name = "nicht vorhanden"
+                first_name = "/"
+                last_name = "/"
 
             try:
                 anthro_data = AnthropometricData.get_latest_by_user_id(user.id)
                 height = anthro_data.height
                 result = anthro_data.result
             except:
-                height = "nicht vorhanden"
-                result = "nicht vorhanden"
+                height = "/"
+                result = "/"
 
 
             detailsList.append(

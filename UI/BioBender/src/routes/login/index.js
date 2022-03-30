@@ -68,7 +68,7 @@ class Form extends Component {
 					}
 					catch (err) {}
 					// If Request Ok go to Home
-					route('/', true);
+					route('/admin', true);
 				}
 				else {
 					try {

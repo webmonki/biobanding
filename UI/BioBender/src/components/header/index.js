@@ -395,9 +395,7 @@ export default class Header extends Component {
 					that.goToLogin();
 				}
 			}
-			else {
-				that.setState({ loginResponse: 'Ups, something went wrong' });
-			}
+
 		};
 
 		xhttp.send();
@@ -407,153 +405,13 @@ export default class Header extends Component {
 
 	
 	render(props) {
-		let auth = Auth.getAuth();
 
-		if (auth) {
-			
-
-			if (Auth.check_admin()) {
-				var content = (
-					<div class={style.navBar}>
-					<div class={this.state.homeClass} onClick={this.handleClickHome}>
-						<List.ItemGraphic class={this.state.homeIcon}>home</List.ItemGraphic>
-						Home
-					</div>
-	
-					<div class={this.state.profileClass} onClick={this.handleClickProfile}>
-						<List.ItemGraphic class={this.state.profileIcon}>account_circle</List.ItemGraphic>
-						Profil
-					</div>
-	
-					<div class={this.state.detailsClass} onclick={this.handleClickDetails}>
-						<List.ItemGraphic class={this.state.detailsIcon}>face</List.ItemGraphic>
-						Details
-					</div>
-	
-					<div class={this.state.measureClass} onCLick={this.handleClickMeasure}>
-						<List.ItemGraphic class={this.state.measureIcon}>equalizer</List.ItemGraphic>
-						Messung
-					</div>
-	
-					<div class={this.state.configClass} onClick={this.handleClickConfig}>
-						<List.ItemGraphic class={this.state.configIcon}>build</List.ItemGraphic>
-						Konfiguration
-					</div>
-
-					<div class={this.state.adminClass} onClick={this.handleClickAdmin}>
-						<List.ItemGraphic class={this.state.adminIcon}>group</List.ItemGraphic>
-						Benutzer
-					</div>
-
-					<div class={this.state.overviewClass} onClick={this.handleClickOverview}>
-						<List.ItemGraphic class={this.state.overviewIcon}>directions_run</List.ItemGraphic>
-						Spieler Übersicht
-					</div>
-
-					<div class={style.nav} onClick={this.logOut}>
-						<List.ItemGraphic class={style.icon}>close</List.ItemGraphic>
-						Abmelden
-					</div>
-	
-				</div>
-				)	
-			}
-			else {
-				var content = (
-					<div class={style.navBar}>
-					<div class={this.state.homeClass} onClick={this.handleClickHome}>
-						<List.ItemGraphic class={this.state.homeIcon}>home</List.ItemGraphic>
-						Home
-					</div>
-	
-					<div class={this.state.profileClass} onClick={this.handleClickProfile}>
-						<List.ItemGraphic class={this.state.profileIcon}>account_circle</List.ItemGraphic>
-						Profil
-					</div>
-	
-					<div class={this.state.detailsClass} onclick={this.handleClickDetails}>
-						<List.ItemGraphic class={this.state.detailsIcon}>face</List.ItemGraphic>
-						Details
-					</div>
-	
-					<div class={this.state.measureClass} onCLick={this.handleClickMeasure}>
-						<List.ItemGraphic class={this.state.measureIcon}>equalizer</List.ItemGraphic>
-						Messung
-					</div>
-	
-					<div class={style.nav} onClick={this.logOut}>
-						<List.ItemGraphic class={style.icon}>close</List.ItemGraphic>
-						Abmelden
-					</div>
-	
-				</div>
-				)	
-			}
-
-
-
-
+		if (Auth.getAuth()) {
 			return (
-				<div class={style.headContainer}>
-					<div class={style.header}>
-						<div class={style.show}>
-							<TopAppBar.Icon menu onCLick={this.openNavbar}>
-								menu
-							</TopAppBar.Icon>
-						</div>
-						<TopAppBar.Title class={style.titleLogged}>BioBending</TopAppBar.Title>
-					</div>
-					<div class={this.state.navWindowClass}>
-						{content}
-						{/* <div class={style.navBar}>
-							<div class={this.state.homeClass} onClick={this.handleClickHome}>
-								<List.ItemGraphic class={this.state.homeIcon}>home</List.ItemGraphic>
-								Home
-							</div>
-	
-							<div class={this.state.profileClass} onClick={this.handleClickProfile}>
-								<List.ItemGraphic class={this.state.profileIcon}>account_circle</List.ItemGraphic>
-								Profil
-							</div>
-	
-							<div class={this.state.detailsClass} onclick={this.handleClickDetails}>
-								<List.ItemGraphic class={this.state.detailsIcon}>face</List.ItemGraphic>
-								Details
-							</div>
-	
-							<div class={this.state.measureClass} onCLick={this.handleClickMeasure}>
-								<List.ItemGraphic class={this.state.measureIcon}>equalizer</List.ItemGraphic>
-								Messung
-							</div>
-
-							<div class={this.state.configClass} onClick={this.handleClickConfig}>
-								<List.ItemGraphic class={this.state.configIcon}>build</List.ItemGraphic>
-								Konfiguration
-							</div>
-	
-							<div class={style.nav} onClick={this.logOut}>
-								<List.ItemGraphic class={style.icon}>close</List.ItemGraphic>
-								Abmelden
-							</div>
-
-						</div> */}
-						<div class={style.clickShadow} onClick={this.closeDrawer} />
-					</div>
-				</div>
-			);
-		}
-		return (
-			<div>
 				<div class={style.header}>
-					<div class={style.dontShow}>
-						<TopAppBar.Icon menu onCLick={this.openNavbar}>
-								menu
-						</TopAppBar.Icon>
-					</div>
-					<TopAppBar.Title class={style.titleNotLogged}>BioBending</TopAppBar.Title>
+					<div class={style.titleLogged}>Astrostars biobanding</div>
 				</div>
-			</div>
-		);
-		
-	}
+			)
+		}
+	}	
 }

@@ -1,0 +1,30 @@
+.playerView {
+	width: 100%;
+	height: fit-content;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.content {
+	width: 100%;
+	height: fit-content;
+	margin-left: 200px;
+	padding: 0 5% 0 5%;
+}
+
+.homeContainer {
+	height: 700px;
+}
+
+.configContainer {
+	height: 650px;
+}
+
+.userContainer {
+	height: 700px;
+}
+
+.evalContainer {
+	height: 700px;
+}

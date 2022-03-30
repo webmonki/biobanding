@@ -17,15 +17,12 @@ export default class Home extends Component {
 
 	render() {
 		return (
-			<div class={style.layout}>
 				<Card class={style.card}>
-					<Head2 headText="Home" />
 					<h2>Hallo, {this.state.username}!</h2>
 					<div class={style.textContainer}>
 						Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 					</div>
 				</Card>
-			</div>
 		);
 	}
 }

@@ -9,7 +9,7 @@ import Input from '../../components/input/input.js';
 import List from 'preact-material-components/List';
 import Dropdown from '../../components/dropdown/dropdown';
 
-export default class Admin extends Component{
+export default class UserAdmin extends Component{
 	state = ({ navNewClass : undefined });
 	state = ({ navViewClass: undefined });
 	state = ({ navEditClass : undefined });
@@ -83,6 +83,9 @@ export default class Admin extends Component{
 		this.setState({ sendBtnDisabled : true });
 
 		this.getData();
+
+		this.handleClickView();
+		this.showTable();
 	}
 
 	getData = () => {
@@ -199,22 +202,38 @@ export default class Admin extends Component{
 		this.handleClickView();
 	}
 
+	
+
 	showTable = () => {;
 		
 		let cols = ['Benutzer ID', 'Benutzername', 'Email']
 
 		let tableHeader = (
 				<tr>
+					<th class={style.thIconContainer} onClick={this.handleClickNew}>
+						<List.ItemGraphic class={style.thIcon}>add_circle_outline</List.ItemGraphic>
+					</th>
 					{cols.map((name) => <th>{name}</th>)}
 				</tr>
 		)
+		
+		if (this.state.users.length == 0) {
+			var data = JSON.parse(sessionStorage.users);
+		}
+		else {
+			var data = this.state.users
+		}
 
-		let data = JSON.parse(sessionStorage.users);
+		console.log("DATA: ", data)
 
 		let tableBody = (
 			<tbody>
 				{data.map((row) => 
 					<tr onClick={() => this.handleTableClick(row)}>
+						<td class={style.tdIconContainer}>
+							<List.ItemGraphic class={style.tdIcon}>edit</List.ItemGraphic>
+							<List.ItemGraphic onClick={() => this.delete(row.userID)} class={style.tdIcon}>delete</List.ItemGraphic>
+						</td>
 						<td>{row.userID}</td>
 						<td>{row.username}</td>
 						<td>{row.email}</td>
@@ -615,12 +634,12 @@ export default class Admin extends Component{
 
 	}
 
-	delete = () => {
+	delete = (id) => {
 
-		this.setState({ currentIds : this.state.currentIds.filter(e => e !== this.state.currentDelete )});
+		// this.setState({ currentIds : this.state.currentIds.filter(e => e !== this.state.currentDelete )});
 
 		let that = this;
-		let url = Auth.url + '/api/user/' + this.state.currentDelete;
+		let url = Auth.url + '/api/user/' + id
 		let xhttp = new XMLHttpRequest();
 
 		xhttp.open('DELETE', url);
@@ -644,8 +663,12 @@ export default class Admin extends Component{
 
 					that.setState({ currentDelete : '' });
 					that.setState({ currentPage : undefined });
-					that.getData();
-					that.handleClickDelete();
+					that.setState({ users : that.state.users.splice(id, 1)})
+					sessionStorage.setItem('users', JSON.stringify(that.state.users));
+
+					console.log("STATE: ", that.state.users)
+					// that.getData();
+					that.showTable();
 
 
 				}
@@ -720,9 +743,7 @@ export default class Admin extends Component{
 
 	render() {
 		return (
-			<div class={style.layout}>
 				<Card class={style.card}>
-					<Head2 headText="Benutzer bearbeiten" />
 					<div class={style.navRow}>
 						<div class={this.state.navNewClass} onClick={this.handleClickNew}>
 							<List.ItemGraphic class={this.state.navIconNewClass}>add_circle_outline</List.ItemGraphic>
@@ -736,16 +757,11 @@ export default class Admin extends Component{
 							<List.ItemGraphic class={this.state.navIconEditClass}>edit</List.ItemGraphic>
 							<div class={this.state.navTextEditClass}>bearbeiten</div>
 						</div>
-						<div class={this.state.navDeleteClass} onClick={this.handleClickDelete}>
-							<List.ItemGraphic class={this.state.navIconDeleteClass}>delete</List.ItemGraphic>
-							<div class={this.state.navTextDeleteClass}>löschen</div>
-						</div>
 					</div>
 					<div class={style.content}>
 						{this.state.content}
 					</div>
 				</Card>
-			</div>
 		);
 	}
 }

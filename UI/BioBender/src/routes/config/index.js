@@ -71,16 +71,10 @@ export default class Config extends Component {
 	
 	render() {
 		return (
-			<div class={style.layout}>
 				<Card class={style.card}>
-					<Head2 headText="Konfiguration" />
 					<div class={this.state.feedbackStyle}>{this.state.feedback}</div>
-					<div class={style.container}>
-						<div class={style.data}>Erinnern in: {this.state.reminder}</div>
-						<Button class={style.btnEnabled} raised onCLick={this.goToSetConfig}>Konfiguration setzten</Button>
-					</div>
+					<div class={style.data}>Erinnern in: {this.state.reminder}</div>
 				</Card>
-			</div>
 		);
 	}
 }

@@ -13,8 +13,10 @@ import ChangeData from '../routes/changeData';
 import Measure from '../routes/measure';
 import Config from '../routes/config';
 import SetConfig from '../routes/setConfig';
-import Admin from	'../routes/userAdmin';
+import UserAdmin from	'../routes/userAdmin';
 import Overview from '../routes/overview';
+import Admin from '../routes/admin';
+
 
 export default class App extends Component {
 	/** Gets fired when the route changes.
@@ -66,8 +68,9 @@ export default class App extends Component {
 					<Measure path="/measure" />
 					<Config path="/config" />
 					<SetConfig path="/setConfig" />
-					<Admin path="/userAdmin" />
+					<UserAdmin path="/userAdmin" />
 					<Overview path="/overview" />
+					<Admin path="/admin" />
 					<NotFound default />
 				</Router>
 			</div>

@@ -2,15 +2,37 @@ tr:hover {
 	background-color: #EEEEF1;
 }
 
-.checkbox {
+.thIcon {
+	color: white;
+	margin-left: 30px;
+}
+
+.thIconContainer {
+	width: 120px;
+}
+
+.tdIconContainer {
+	width: 120px;
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
+}
+
+.tdIcon {
+	color: #34538A;
+}
+
+.checkbox {
+	width: 33%;
+	display: flex;
+	flex-direction: row;
+	/* justify-content: center; */
 	align-items: center;
+	margin-left: 30%;
 }
 
 .checkboxLabel {
 	position: relative;
+	margin-bottom: 20px;
+	/* margin-right: 100px; */
 }
 
 .btnEnabled {
@@ -133,21 +155,12 @@ tr:hover {
     grid-row-end: 25;
 }
 
-.layout {
-	padding-top: 50px;
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(24, 1fr);
-    grid-template-rows: repeat(24, 38.3px);
-}
-
 .card {
+	width: 100%;
+	height: 500px;
 	padding: 0 5% 0 5%;
-    grid-column-start: 2;
-    grid-column-end: 24;
-    grid-row-start: 2;
-    grid-row-end: 25;
-	box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+	margin-top: 50px;
 }
 
 .content {
@@ -156,7 +169,7 @@ tr:hover {
 }
 
 .newContainer {
-	width: 100%;
+	width: 20%;
     height: 100%;
 	display: flex;
 	flex-direction: column;
