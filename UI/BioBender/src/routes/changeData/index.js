@@ -105,17 +105,13 @@ export default class ChangeData extends Component {
 
 	render() {
 		return (
-			<div class={style.layout}>
-				<Card class={style.card}>
-					<Head2 headText="Profil ändern" />
-					<div class={style.container}>
-						<Input inputId="emailInput" inputLabel="E-Mail" type="email" onChange={this.handleChange} />
-						<div class={this.state.feedbackStyle}>{this.state.feedback}</div>
-						<Button class={this.state.btnClass} raised disabled={this.state.btnDisabled} onClick={this.sendData}>E-Mail ändern</Button>
-						<Button class={style.btnEnabled} raised onClick={this.goToProfile}>Profil</Button>
-					</div>
-				</Card>
-			</div>
+			<Card class={style.card}>
+				<div class={style.container}>
+					<Input inputId="emailInput" inputLabel="E-Mail" type="email" onChange={this.handleChange} />
+					<div class={this.state.feedbackStyle}>{this.state.feedback}</div>
+					<Button class={this.state.btnClass} raised disabled={this.state.btnDisabled} onClick={this.sendData}>E-Mail ändern</Button>
+				</div>
+			</Card>
 		);
 	}
 

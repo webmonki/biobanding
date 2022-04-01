@@ -16,7 +16,7 @@ import SetConfig from '../routes/setConfig';
 import UserAdmin from	'../routes/userAdmin';
 import Overview from '../routes/overview';
 import Admin from '../routes/admin';
-
+import Player from '../routes/player'
 
 export default class App extends Component {
 	/** Gets fired when the route changes.
@@ -38,15 +38,10 @@ export default class App extends Component {
 		}
 		else {
 			if (Auth.check_admin()) {
-				this.setState({ currentUrl: e.url });
+				this.setState({ currentUrl: '/admin' });
 			}
 			else {
-				if (e.url === '/config' || e.url === '/setConfig' || e.url === '/userAdmin' || e.url === '/overview') {
-					route('404', true)
-				}
-				else {
-					this.setState({ currentUrl : e.url });
-				}
+				this.setState({ currentUrl : '/player' });
 			}
 		}
 	}
@@ -62,15 +57,16 @@ export default class App extends Component {
 					<Profile path="/profile/:user" />
 					<Login path="/login/" />
 					<Signup path="/signup/" />
-					<PlayerDetails path="/playerDetails/" />
+					{/* <PlayerDetails path="/playerDetails/" />
 					<AddPlayer path="/addPlayer/" />
 					<ChangeData path="/changeData/" />
 					<Measure path="/measure" />
 					<Config path="/config" />
 					<SetConfig path="/setConfig" />
 					<UserAdmin path="/userAdmin" />
-					<Overview path="/overview" />
+					<Overview path="/overview" /> */}
 					<Admin path="/admin" />
+					<Player path="/player" />
 					<NotFound default />
 				</Router>
 			</div>

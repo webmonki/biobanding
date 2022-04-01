@@ -10,14 +10,11 @@ import 'preact-material-components/TopAppBar/style.css';
 import style from './style';
 import Navbar from '../../components/navbar';
 import Head2 from '../../components/head/head2';
-import Home from '../home';
-import Config from '../config';
-import SetConfig from '../setConfig';
-import UserAdmin from '../userAdmin';
-import UserEdit from '../userEdit';
-import Evaluation from '../evaluation';
+import Measure from '../measure';
+import PlayerDetails from '../playerDetails';
+import AddPlayer from '../addPlayer';
 
-export default class Admin extends Component {
+export default class Player extends Component {
 
 	componentWillMount = () => {
 		this.setState({ contentClass : style.content});
@@ -37,18 +34,16 @@ export default class Admin extends Component {
 			<div class={style.view}>
 			<Navbar toogleNavbar={this.toogleNavbar}/>
 			<div class={this.state.contentClass}>
-				<div class={style.userContainer} id='userContainer'>
-					<Head2 headText='Benutzer' />
-					<UserEdit />
+				<div class={style.measureContainer} id='measureContainer'>
+					<Head2 headText='Messungen' />
+					<Measure />
 				</div>
-				<div class={style.evalContainer} id='evalContainer'>
-					<Head2 headText='Auswertung' />
-					<Evaluation />
-				</div>
-				<div class={style.configContainer} id='configContainer'>
-					<Head2 headText='Konfiguration' />
-					<Config />
-					<SetConfig />
+				<div class={style.detailsContainer} id='detailsContainer'>
+					<Head2 headText='Details' />
+					<div class={style.rowContainer}>
+						<PlayerDetails />
+						<AddPlayer />
+					</div>
 				</div>
 			</div>
 		</div>

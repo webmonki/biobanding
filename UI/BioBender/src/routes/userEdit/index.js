@@ -14,7 +14,6 @@ export default class UserEdit extends Component{
 
 	
 	componentWillMount = () => {
-		console.log("USEREDIT")
 		this.setState({ users : [] });
 
 		this.setState({ username : '' });
@@ -363,7 +362,7 @@ export default class UserEdit extends Component{
 		let tableHeader = (
 				<tr>
 					<th class={style.thIconContainer} onClick={this.handleClickNew}>
-						<List.ItemGraphic class={style.thIcon}>add_circle_outline</List.ItemGraphic>
+						<List.ItemGraphic class={style.thIcon}>group_add</List.ItemGraphic>
 					</th>
 					{cols.map((name) => <th>{name}</th>)}
 				</tr>
@@ -406,11 +405,9 @@ export default class UserEdit extends Component{
 
 
 		let content = (
-			<div class={style.viewContainer}>
 				<div class={style.tableContainer}>
 					{table}
 				</div>
-			</div>
 		);
 		this.setState({ content });
 	};

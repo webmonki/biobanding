@@ -50,44 +50,35 @@ export default class PlayerDetails extends Component {
 					try {
 						var response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
+
+						if (response['player_details:'] != undefined) {
+							that.setState({ firstName: response['player_details:'].first_name });
+							that.setState({ lastName: response['player_details:'].last_name });
+							that.setState({ birthday: response['player_details:'].birthday });
+
+
+							let sex = response['player_details:'].sex_m_0_f_1;
+
+							if (sex === 0) {
+								that.setState({ sex: 'male' });
+							}
+							else if (sex === 1) {
+								that.setState({ sex: 'female' });
+							}
+							else {
+								that.setState({ sex: response['player_details:'].sex_m_0_f_1 });
+							}
+
+							that.setState({ fatherHeight: response['player_details:'].height_father });
+							that.setState({ motherHeight: response['player_details:'].height_mother });
+						}
+
 					}
 					catch(err) {}
 
 					that.setState({ feedbackStyle: style.feedbackSucc });
 
-					that.setState({ firstName: response['player_details:'].first_name });
-					that.setState({ lastName: response['player_details:'].last_name });
-					that.setState({ birthday: response['player_details:'].birthday });
-
-					let sex = response['player_details:'].sex_m_0_f_1;
-
-					if (sex === 0) {
-						that.setState({ sex: 'male' });
-					}
-					else if (sex === 1) {
-						that.setState({ sex: 'female' });
-					}
-					else {
-						that.setState({ sex: response['player_details:'].sex_m_0_f_1 });
-					}
-
-					that.setState({ fatherHeight: response['player_details:'].height_father });
-					that.setState({ motherHeight: response['player_details:'].height_mother });
-
 				}
-				else {
-					try {
-						let response = JSON.parse(this.responseText);
-						that.setState({ feedback: response.msg })
-					}
-					catch (err) {}
-;
-					that.setState({ feedbackStyle: style.feedbackErr });
-
-				}
-			}
-			else {
-				that.setState({ loginResponse: 'Ups, something went wrong' });
 			}
 		};
 
@@ -103,9 +94,7 @@ export default class PlayerDetails extends Component {
 	
 	render() {
 		return (
-			<div class={style.layout}>
 				<Card class={style.card}>
-					<Head2 headText="Spieler Details" />
 					<div class={this.state.feedbackStyle}>{this.state.feedback}</div>
 					<div class={style.container}>
 						<div class={style.data}>Benutzer Id: {this.state.userId}</div>
@@ -115,12 +104,8 @@ export default class PlayerDetails extends Component {
 						<div class={style.data}>Geschlecht: {this.state.sex}</div>
 						<div class={style.data}>Größe des Vaters: {this.state.fatherHeight}</div>
 						<div class={style.data}>Größe der Mutter: {this.state.motherHeight}</div>
-						<div class={style.center}>
-							<Button raised class={style.btnEnabled} onClick={this.goToCreateAddPlayer}>Spieler Details erstellen</Button>
-						</div>
 					</div>
 				</Card>
-			</div>
 		);
 	}
 

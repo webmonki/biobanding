@@ -15,6 +15,7 @@ export default class Evaluation extends Component{
 	
 	componentWillMount = () => {
 		this.getData();
+		this.setState({ details : [] });
 	}
 
 	getData = () => {
@@ -104,10 +105,8 @@ export default class Evaluation extends Component{
 
 
 		let content = (
-			<div class={style.viewContainer}>
-				<div class={style.tableContainer}>
-					{table}
-				</div>
+			<div class={style.tableContainer}>
+				{table}
 			</div>
 		);
 		this.setState({ content });

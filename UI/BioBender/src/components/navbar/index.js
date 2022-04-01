@@ -9,102 +9,265 @@ import 'preact-material-components/List/style.css';
 import 'preact-material-components/TopAppBar/style.css';
 import style from './style';
 import Auth from '../state.js';
+import Button from 'preact-material-components/Button';
 
 
 export default class Navbar extends Component {
 
-	state = ({ content : undefined });
-	state = ({ navWindowClass : undefined });
-
-	state = ({ homeClass: undefined });
-	state = ({ profileClass: undefined });
-	state = ({ detailsClass: undefined });
-	state = ({ homeIcon: undefined });
-	state = ({ profileIcon: undefined });
-	state = ({ detailsIcon: undefined });
-	state = ({ navbarClass: undefined });
-	state = ({ measureClass: undefined });
-	state = ({ configClass: undefined });
-	state = ({ configIcon: undefined });
-	state = ({ measureIcon: undefined });
-	state = ({ navWindowClass: undefined });
-	state = ({ adminClass : undefined });
-	state = ({ adminIcon : undefined });
 
 	componentWillMount = () => {
 		this.setState({ homeClass: style.nav });
 		this.setState({ profileClass: style.nav });
+
 		this.setState({ detailsClass: style.nav });
 		this.setState({ homeIcon: style.icon });
+
 		this.setState({ profileIcon: style.icon });
 		this.setState({ detailsIcon: style.icon });
+
 		this.setState({ measureClass: style.nav });
 		this.setState({ measureIcon: style.icon });
+
 		this.setState({ configClass: style.nav });
 		this.setState({ configIcon: style.icon });
-		this.setState({ adminClass : style.nav });
-		this.setState({ adminIcon : style.icon });
-		this.setState({ overviewClass : style.nav });
-		this.setState({ overviewIcon : style.icon });
 
-		this.setState({ navWindowClass : style.navWindowOpened })
+		// for user tab
+		this.highlightUser();
 
+		this.highlightMeasure();
+
+
+		this.setState({ evalClass : style.nav });
+		this.setState({ evalIcon : style.icon });
+
+
+		this.setState({ navbarClass : style.navBar });
+
+
+		if (this.state.navbarClass == style.dontShow) {
+			this.setState({ btnContent : <List.ItemGraphic class={style.btnIcon}>arrow_forward</List.ItemGraphic> })
+		}
+		else if (this.state.navbarClass == style.navBar) {
+			this.setState({ btnContent : <List.ItemGraphic class={style.btnIcon}>arrow_back</List.ItemGraphic> })
+		}
+
+		this.setState({ navBtnClass : style.navBtnOpen })
+
+		var that = this;
+
+		window.addEventListener('scroll', function(event){
+			let top = this.pageYOffset || this.screenY
+
+			if (Auth.check_admin()) {
+				let userContainer = document.getElementById('userContainer');
+				let userRec = userContainer.getBoundingClientRect();
+	
+				let evalContainer = document.getElementById('evalContainer');
+				let evalRec = evalContainer.getBoundingClientRect();
+	
+				let configContainer = document.getElementById('configContainer');
+				let configRec = configContainer.getBoundingClientRect();
+	
+				if (top > userRec.top && top < userRec.bottom) {
+					that.highlightUser();
+				}
+	
+				if (top > evalRec.top && top < evalRec.bottom) {
+					that.highlightEval();
+				}
+	
+				if (top > configRec.top && top < configRec.bottom) {
+					that.highlightConfig();
+				}
+			}
+			else {
+				let measureContainer = document.getElementById('measureContainer');
+				let measureRec = measureContainer.getBoundingClientRect();
+
+				let detailsContainer = this.document.getElementById('detailsContainer');
+				let detailsRec = detailsContainer.getBoundingClientRect();
+
+				if (top > 0 && top < measureRec.top) {
+					that.highlightMeasure();
+				}
+
+				if (top > measureRec.bottom && top < detailsRec.bottom) {
+					that.highlightDetails();
+				}
+			}
+			
+
+
+			that.getContent();
+		}, false);
+
+		that.getContent();
+
+	}
+
+	highlightDetails = () => {
+		this.setState({ detailsClass : style.activePlayer });
+		this.setState({ detailsIcon : style.activeIcon });
+
+		this.setState({ measureClass : style.navPlayer});
+		this.setState({ measureIcon : style.icon });
+	}
+
+	highlightMeasure = () => {
+		this.setState({ detailsClass : style.navPlayer });
+		this.setState({ detailsIcon : style.icon });
+
+		this.setState({ measureClass : style.activePlayer });
+		this.setState({ measureIcon : style.activeIcon });
+	}
+
+	highlightUser = () => {
+		this.setState({ userClass : style.active });
+		this.setState({ userIcon : style.activeIcon });
+
+		this.setState({ evalClass : style.nav });
+		this.setState({ evalIcon : style.icon})
+
+		this.setState({ configClass : style.nav });
+		this.setState({ configIcon : style.icon });
+	}
+
+	highlightEval = () =>  {
+		this.setState({ userClass : style.nav });
+		this.setState({ userIcon : style.icon });
+
+		this.setState({ evalClass : style.active });
+		this.setState({ evalIcon : style.activeIcon });
+
+		this.setState({ configClass : style.nav });
+		this.setState({ configIcon : style.icon });
+	}
+
+	highlightConfig = ()  => {
+		this.setState({ userClass : style.nav });
+		this.setState({ userIcon : style.icon });
+
+		this.setState({ evalClass : style.nav });
+		this.setState({ evalIcon : style.icon });
+
+		this.setState({ configClass : style.active });
+		this.setState({ configIcon : style.activeIcon });
+	}
+
+	handleClickUser = () => {
+		this.highlightUser();
+		this.getContent();
+		let container = document.getElementById('userContainer');
+		let rec = container.getBoundingClientRect();
+		let top = window.screenY || window.pageYOffset
+
+		if (top < rec.top || top > rec.bottom) {
+			window.scrollTo({
+				top: rec.top,
+				behavior: 'smooth'
+			})
+		}
+	}
+
+	handleClickEvaluation = () => {
+		this.highlightEval();
+		this.getContent();
+		let container = document.getElementById('evalContainer');
+		let rec = container.getBoundingClientRect();
+		let top = window.screenY || window.pageYOffset
+
+		if (top < rec.top || top > rec.bottom) {
+			window.scrollTo({
+				top: rec.top,
+				behavior: 'smooth'
+			})
+		}
+	}
+
+	handleClickConfig = () => {
+		this.highlightConfig();
+		this.getContent();
+		let container = document.getElementById('configContainer');
+		let rec = container.getBoundingClientRect();
+		let top = window.screenY || window.pageYOffset
+
+		if (top < rec.top || top > rec.bottom) {
+			window.scrollTo({
+				top: rec.top,
+				behavior: 'smooth'
+			})
+		}
+	}
+
+	handleClickMeasure = () => {
+		this.highlightMeasure();
+		this.getContent();
+		let container = document.getElementById('measureContainer');
+		let rec = container.getBoundingClientRect();
+		let top = window.screenY || window.pageYOffset
+
+		if (top < rec.top || top > rec.bottom) {
+			window.scrollTo({
+				top: rec.top,
+				behavior: 'smooth'
+			})
+		}
+	}
+
+	handleClickDetails = () => {
+		this.highlightDetailsTab
+		this.getContent();
+		let container = document.getElementById('detailsContainer');
+		let rec = container.getBoundingClientRect();
+		let top = window.screenY || window.pageYOffset
+
+		if (top < rec.top || top > rec.bottom) {
+			window.scrollTo({
+				top: rec.top,
+				behavior: 'smooth'
+			})
+		}
+	}
+
+	getContent = () => {
 		if (Auth.getAuth()){
 			if (Auth.check_admin()) {
 				var content = (
-					<div class={style.navBar}>
+					<div class={this.state.navbarClass}>
 						<img class={style.logo} src='../../logo/StarsLogoTrans.png' />
-						<div class={this.state.adminClass} onClick={this.handleClickAdmin}>
-							<List.ItemGraphic class={this.state.adminIcon}>group</List.ItemGraphic>
-							Benutzer
+
+						<div class={this.state.userClass} onClick={this.handleClickUser}>
+							<List.ItemGraphic class={this.state.userIcon}>group</List.ItemGraphic>
+							<div class={style.label}>Benutzer</div>
 						</div>
 
-						<div class={this.state.overviewClass} onClick={this.handleClickOverview}>
-							<List.ItemGraphic class={this.state.overviewIcon}>directions_run</List.ItemGraphic>
-							Auswertung
+						<div class={this.state.evalClass} onClick={this.handleClickEvaluation}>
+							<List.ItemGraphic class={this.state.evalIcon}>equalizer</List.ItemGraphic>
+							<div class={style.label}>Auswertung</div>
 						</div>
 		
 						<div class={this.state.configClass} onClick={this.handleClickConfig}>
 							<List.ItemGraphic class={this.state.configIcon}>build</List.ItemGraphic>
-							Konfiguration
-						</div>
-
-						<div class={style.nav} onClick={this.logOut}>
-							<List.ItemGraphic class={style.icon}>close</List.ItemGraphic>
-							Abmelden
+							<div class={style.label}>Konfiguration</div>
 						</div>
 					</div>
 				)
 			}
 			else {
 				var content = (
-					<div class={style.navBar}>
-					<div class={this.state.homeClass} onClick={this.handleClickHome}>
-						<List.ItemGraphic class={this.state.homeIcon}>home</List.ItemGraphic>
-						Home
+					<div class={this.state.navbarClass}>
+						<img class={style.logo} src='../../logo/StarsLogoTrans.png' />
+
+						<div class={this.state.measureClass} onCLick={this.handleClickMeasure}>
+							<List.ItemGraphic class={this.state.measureIcon}>equalizer</List.ItemGraphic>
+							<div class={style.label}>Messungen</div>
+						</div>
+		
+						<div class={this.state.detailsClass} onclick={this.handleClickDetails}>
+							<List.ItemGraphic class={this.state.detailsIcon}>face</List.ItemGraphic>
+							<div class={style.label}>Details</div>
+						</div>
 					</div>
-	
-					<div class={this.state.profileClass} onClick={this.handleClickProfile}>
-						<List.ItemGraphic class={this.state.profileIcon}>account_circle</List.ItemGraphic>
-						Profil
-					</div>
-	
-					<div class={this.state.detailsClass} onclick={this.handleClickDetails}>
-						<List.ItemGraphic class={this.state.detailsIcon}>face</List.ItemGraphic>
-						Details
-					</div>
-	
-					<div class={this.state.measureClass} onCLick={this.handleClickMeasure}>
-						<List.ItemGraphic class={this.state.measureIcon}>equalizer</List.ItemGraphic>
-						Messung
-					</div>
-	
-					<div class={style.nav} onClick={this.logOut}>
-						<List.ItemGraphic class={style.icon}>close</List.ItemGraphic>
-						Abmelden
-					</div>
-	
-				</div>
 				)	
 			}
 			this.setState({ content });
@@ -114,128 +277,33 @@ export default class Navbar extends Component {
 		}
 	}
 
-	render(props) {
+	toogleNavbar = () => {
+		this.props.toogleNavbar();
 
-		return (
-				this.state.content
-		)
+
+		if (this.state.navbarClass == style.dontShow) {
+			this.setState({ btnContent : <List.ItemGraphic class={style.btnIcon}>arrow_back</List.ItemGraphic> })
+			this.setState({ navBtnClass : style.navBtnOpen })
+			this.setState({ navbarClass : style.navBar })
+		}
+		else if (this.state.navbarClass == style.navBar) {
+			this.setState({ btnContent : <List.ItemGraphic class={style.btnIcon}>arrow_forward</List.ItemGraphic> })
+			this.setState({ navBtnClass : style.navBtnClosed })
+			this.setState({ navbarClass : style.dontShow })
+		}
+
+		this.getContent();
 	}
 
-	// render(props) {
-	// 	let auth = Auth.getAuth();
+	render(props) {
+		return (
+			<div>
+				<Button raised class={this.state.navBtnClass} onClick={this.toogleNavbar}>
+					{this.state.btnContent}
+				</Button>
+				{this.state.content}
+			</div>
 
-	// 	if (auth) {
-			
-
-	// 		if (Auth.check_admin()) {
-	// 			var content = (
-	// 				<div class={style.navBar}>
-	// 				<div class={this.state.homeClass} onClick={this.handleClickHome}>
-	// 					<List.ItemGraphic class={this.state.homeIcon}>home</List.ItemGraphic>
-	// 					Home
-	// 				</div>
-	
-	// 				<div class={this.state.profileClass} onClick={this.handleClickProfile}>
-	// 					<List.ItemGraphic class={this.state.profileIcon}>account_circle</List.ItemGraphic>
-	// 					Profil
-	// 				</div>
-	
-	// 				<div class={this.state.detailsClass} onclick={this.handleClickDetails}>
-	// 					<List.ItemGraphic class={this.state.detailsIcon}>face</List.ItemGraphic>
-	// 					Details
-	// 				</div>
-	
-	// 				<div class={this.state.measureClass} onCLick={this.handleClickMeasure}>
-	// 					<List.ItemGraphic class={this.state.measureIcon}>equalizer</List.ItemGraphic>
-	// 					Messung
-	// 				</div>
-	
-	// 				<div class={this.state.configClass} onClick={this.handleClickConfig}>
-	// 					<List.ItemGraphic class={this.state.configIcon}>build</List.ItemGraphic>
-	// 					Konfiguration
-	// 				</div>
-
-	// 				<div class={this.state.adminClass} onClick={this.handleClickAdmin}>
-	// 					<List.ItemGraphic class={this.state.adminIcon}>group</List.ItemGraphic>
-	// 					Benutzer
-	// 				</div>
-
-	// 				<div class={this.state.overviewClass} onClick={this.handleClickOverview}>
-	// 					<List.ItemGraphic class={this.state.overviewIcon}>directions_run</List.ItemGraphic>
-	// 					Spieler Übersicht
-	// 				</div>
-
-	// 				<div class={style.nav} onClick={this.logOut}>
-	// 					<List.ItemGraphic class={style.icon}>close</List.ItemGraphic>
-	// 					Abmelden
-	// 				</div>
-	
-	// 			</div>
-	// 			)	
-	// 		}
-	// 		else {
-	// 			var content = (
-	// 				<div class={style.navBar}>
-	// 				<div class={this.state.homeClass} onClick={this.handleClickHome}>
-	// 					<List.ItemGraphic class={this.state.homeIcon}>home</List.ItemGraphic>
-	// 					Home
-	// 				</div>
-	
-	// 				<div class={this.state.profileClass} onClick={this.handleClickProfile}>
-	// 					<List.ItemGraphic class={this.state.profileIcon}>account_circle</List.ItemGraphic>
-	// 					Profil
-	// 				</div>
-	
-	// 				<div class={this.state.detailsClass} onclick={this.handleClickDetails}>
-	// 					<List.ItemGraphic class={this.state.detailsIcon}>face</List.ItemGraphic>
-	// 					Details
-	// 				</div>
-	
-	// 				<div class={this.state.measureClass} onCLick={this.handleClickMeasure}>
-	// 					<List.ItemGraphic class={this.state.measureIcon}>equalizer</List.ItemGraphic>
-	// 					Messung
-	// 				</div>
-	
-	// 				<div class={style.nav} onClick={this.logOut}>
-	// 					<List.ItemGraphic class={style.icon}>close</List.ItemGraphic>
-	// 					Abmelden
-	// 				</div>
-	
-	// 			</div>
-	// 			)	
-	// 		}
-
-
-
-
-	// 		return (
-	// 			<div class={style.headContainer}>
-	// 				<div class={style.header}>
-	// 					<div class={style.show}>
-	// 						<TopAppBar.Icon menu onCLick={this.openNavbar}>
-	// 							menu
-	// 						</TopAppBar.Icon>
-	// 					</div>
-	// 					<TopAppBar.Title class={style.titleLogged}>BioBending</TopAppBar.Title>
-	// 				</div>
-	// 				<div class={this.state.navWindowClass}>
-	// 					{content}
-	// 				</div>
-	// 			</div>
-	// 		);
-	// 	}
-	// 	return (
-	// 		<div>
-	// 			<div class={style.header}>
-	// 				<div class={style.dontShow}>
-	// 					<TopAppBar.Icon menu onCLick={this.openNavbar}>
-	// 							menu
-	// 					</TopAppBar.Icon>
-	// 				</div>
-	// 				<TopAppBar.Title class={style.titleNotLogged}>BioBending</TopAppBar.Title>
-	// 			</div>
-	// 		</div>
-	// 	);
-		
-	// }
+		)
+	}
 }

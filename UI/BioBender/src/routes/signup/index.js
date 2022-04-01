@@ -104,9 +104,10 @@ class Form extends Component {
 
 	render() {
 		return (
-			<div class={style.layout}>
 				<Card class={style.card}>
-					<Head1 headText="Registrierung" />
+					<div class={style.logoContainer}>
+						<img class={style.logo} src='../../logo/StarsLogoTrans.png' />
+					</div>
 					<div class={style.inputContainer}>
 						<Input inputId="usernameInput" inputLabel="Benutzername" type="username" onChange={this.handleChange} />
 						<Input inputId="emailInput" inputLabel="E-Mail" type="email" onChange={this.handleChange} />
@@ -119,7 +120,6 @@ class Form extends Component {
 						</div>
 					</div>
 				</Card>
-			</div>
 		);
 	}
 

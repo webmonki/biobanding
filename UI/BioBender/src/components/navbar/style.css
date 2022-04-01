@@ -4,41 +4,51 @@
 	width: 170px;
 	position: fixed;
 	z-index: 2;
-	/* margin-bottom: 200px; */
 	top: 0;
-	border-right: 1px solid #9C9696;
+	/* border-right: 1px solid #9C9696; */
+	border-right: 1px solid #34538A;
+	/* overflow-y: auto; */
 }
+
+.dontShow {
+	display: none;
+} 
+
+.navBtnOpen {
+	background-color: #34538A !important;
+	width: 30px !important;
+	height: 30px !important;
+	border-radius: 110px !important;
+	cursor: pointer;
+	position: fixed !important;
+	margin-left: 140px;
+	top: 500px !important;
+	z-index: 3;
+}
+
+.navBtnClosed {
+	background-color: #34538A !important;
+	width: 30px !important;
+	height: 30px !important;
+	border-radius: 110px !important;
+	cursor: pointer;
+	position: fixed !important;
+	margin-left: -20px;
+	top: 500px !important;
+	z-index: 3;
+}
+
+.btnIcon {
+	margin-left: auto;
+	margin-right: auto;
+	color: white !important;
+}
+
 
 .logo {
 	background-color: #34538A;
-	height: 170px;
+	height: auto;
 	width: 170px;
-}
-
-
-/* .navBar {
-    padding-top: 50px;
-    display:flex;
-    flex-direction: column;
-    height: 200%;
-    min-width: 180px;
-    background-color: white;
-    z-index: 1;
-    box-shadow: 10px 5px 5px #9C9696;  
-    position: relative;
-    overflow-y: auto;
-} */
-
-.navWindowOpened {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    display: flex;
-    
-}
-
-.navWindowClosed {
-    display: none;
 }
 
 .nav {
@@ -48,6 +58,21 @@
     align-items: center;
     padding-left: 5%;
     color: #484852;
+	cursor: pointer;
+}
+
+.navPlayer{
+	height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 5%;
+    color: #484852;
+	cursor: pointer;
+}
+
+.nav:active {
+	border: 1px solid #34538A;
 }
 
 
@@ -59,7 +84,16 @@
     padding-left: 5%;
     background-color: #34538A;
     color: white;
+}
 
+.activePlayer {
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 5%;
+    background-color: #34538A;
+    color: white;
 }
 
 .nav:hover{
@@ -75,56 +109,92 @@
     background-color: #34538A !important;
 }
 
+@media only screen and (max-width: 989px) {
+
+	.titleLogged {
+		display: none;
+	}
+
+	.logo {
+		width: 150px;
+	}
+
+	.navBar {
+		width: 150px;
+	}
+
+	.label {
+		font-size: 15px;
+	}
+
+	.navBtnOpen {
+		margin-left: 120px;
+	}
+}
+
+@media only screen and (max-width: 867px) {
+
+
+}
+
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
 
-    .navBar {
-        min-width: 110px;
-    }
+	.label {
+		display: none;
+	}
 
-    .clickShadow {
-        margin-left: 110px;
-    }
+	.logo {
+		display: none;
+	}
 
-    .icon {
-        color: #484852;
-        margin-left: auto;
-        margin-right: auto;
+	.navBtnOpen {
+		display: none;
+	}
 
-    }
+	.navBtnClosed {
+		display: none;
+	}
 
-    .activeIcon {
-        color: white;
-        background-color: #34538A !important;
-        margin-left: auto;
-        margin-right: auto;
+	.navBar {
+		height: fit-content;
+		width: 100%;
+		min-width: 100%;
+		max-width: 100%;
+		position: fixed !important;
+		top: 100vh;
+		bottom: 10px !important;
+		z-index: 2;
+		border-right: 1px solid #9C9696;
+		display:flex;
+		flex-direction: row;
+		transform: translate(0, -50px);
+	}
 
-    }
+	.nav {
+		border-top: 5px solid #34538A;
+		width: 33.33333333%;
+		justify-content: center;
+	}
 
-    .nav {
-        height: 50px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        color: #484852;
-        margin-bottom: 20px;
+	.active{
+		width: 33.33333333%;
+		justify-content: center;
+	}
 
-    }
+	.navPlayer {
+		width: 50%;
+		justify-content: center;
+	}
 
-    .active {
-        height: 50px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        background-color: #34538A;
-        color: white;
-        margin-bottom: 20px;
-    }
+	.activePlayer {
+		width: 50%;
+		justify-content: center;
+	}
 
-    .navBar {
-        height: 100%;
-    }
 }
+
+
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {

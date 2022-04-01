@@ -68,7 +68,11 @@ class Form extends Component {
 					}
 					catch (err) {}
 					// If Request Ok go to Home
-					route('/admin', true);
+					if (Auth.check_admin()) {
+						route('/admin', true);
+					} else {
+						route('player', true);
+					}
 				}
 				else {
 					try {
@@ -95,9 +99,10 @@ class Form extends Component {
 
 	render() {
 		return (
-			<div class={style.layout}>
 				<Card class={style.card}>
-					<Head1 headText="Anmeldung" />
+					<div class={style.logoContainer}>
+						<img class={style.logo} src='../../logo/StarsLogoTrans.png' />
+					</div>
 					<div class={style.inputContainer}>
 						<Input inputId="email-input" inputLabel="E-Mail" type="email" onChange={this.handleChange} />
 						<Input inputId="password-input" inputLabel="Passwort" type="password" onChange={this.handleChange} />
@@ -108,7 +113,6 @@ class Form extends Component {
 						</div>
 					</div>
 				</Card>
-			</div>
 		);
 	}
 

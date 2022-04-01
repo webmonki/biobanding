@@ -3,19 +3,10 @@ import Card from 'preact-material-components/Card';
 import Button from 'preact-material-components/Button';
 import 'preact-material-components/Button/style.css';
 import style from './style';
-import Head2 from '../../components/head/head2.js';
 import Auth from '../../components/state.js';
 import Input from '../../components/input/input.js';
-import { route } from 'preact-router';
 
 export default class AddPlayer extends Component{
-    state = ({ btnDisabled: true });
-	state = ({ btnClass: '' });
-    state = ({ feedback: '' });
-    state = ({ feedbackStyle: style.feedbackSucc });
-	state = ({ userId: undefined });
-	state = ({ token: undefined });
-
 
 	componentWillMount = () => {
 		this.setState({ btnClass: style.btnDisabled });
@@ -49,6 +40,7 @@ export default class AddPlayer extends Component{
 					catch (err) {}
 
 					that.setState({ feedbackStyle: style.feedbackSucc });
+					location.reload();
 				}
 				else {
 					try {
@@ -130,16 +122,9 @@ export default class AddPlayer extends Component{
 	}
 	
 
-	goToPD = () => {
-		route('/playerDetails', true);
-	}
-
-
 	render() {
 		return (
-			<div class={style.layout}>
 				<Card class={style.card}>
-					<Head2 headText="Spieler Details erstellen" />
 					<div class={this.state.feedbackStyle}>{this.state.feedback}</div>
 					<div class={style.container}>
 						<div class={style.row}>
@@ -157,11 +142,9 @@ export default class AddPlayer extends Component{
 						</div>
 						<div class={style.btnContainer}>
 							<Button class={this.state.btnClass} raised disabled={this.state.btnDisabled} onClick={this.sendData}>erstellen</Button>
-							<Button class={style.btnEnabled} raised onClick={this.goToPD}>Spieler Details</Button>
 						</div>
 					</div>
 				</Card>
-			</div>
 		);
 	}
 }

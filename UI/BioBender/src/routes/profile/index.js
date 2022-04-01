@@ -6,7 +6,7 @@ import style from './style';
 import Head2 from '../../components/head/head2.js';
 import Auth from '../../components/state.js';
 import { route } from 'preact-router';
-
+import ChangeData from '../changeData';
 
 export default class Profile extends Component {
     state = ({ userId: '' });
@@ -29,15 +29,23 @@ export default class Profile extends Component {
 	render() {
 		return (
 			<div class={style.layout}>
-				<Card class={style.card}>
-					<Head2 headText="Profil" />
-					<div class={style.container}>
-						<div class={style.data}>Benutzer Id: {this.state.userId}</div>
-						<div class={style.data}>Benutzername: {this.state.userName}</div>
-						<div class={style.data}>E-Mail: {this.state.email}</div>
-						<Button raised class={style.btnEnabled} onClick={this.goToChangeData}>E-Mail ändern</Button>
+				<img class={style.logo} src='../../logo/StarsLogoTrans.png' />
+				<div class={style.container}>
+					<div class={style.profileContainer}>
+						<Head2 headText="Profil" />
+						<Card class={style.card}>
+							<div class={style.contentContainer}>
+								<div class={style.data}>Benutzer Id: {this.state.userId}</div>
+								<div class={style.data}>Benutzername: {this.state.userName}</div>
+								<div class={style.data}>E-Mail: {this.state.email}</div>
+							</div>
+						</Card>
 					</div>
-				</Card>
+					<div class={style.cdContainer}>
+						<Head2 headText="E-Mail ändern" />
+						<ChangeData />
+					</div>
+				</div>
 			</div>
 		);
 	}
