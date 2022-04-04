@@ -20,6 +20,33 @@ export default class Auth {
 		catch (err) {}
 	}
 
+	static setToken = (token) => {
+		try {
+			let user = JSON.parse(sessionStorage.user);
+			user.token = token;
+			sessionStorage.setItem('user', JSON.stringify(user));
+		}
+		catch (err) {}
+	}
+
+	static setUsername = (userName) => {
+		try {
+			let user = JSON.parse(sessionStorage.user);
+			user.name = userName;
+			sessionStorage.setItem('user', JSON.stringify(user));
+		}
+		catch (err) {}
+	}
+
+	static setEmail = (email) => {
+		try {
+			let user = JSON.parse(sessionStorage.user);
+			user.email = email;
+			sessionStorage.setItem('user', JSON.stringify(user));
+		}
+		catch (err) {}
+	}
+
 
 	// Delete Session Storage
 	static logout = () => {

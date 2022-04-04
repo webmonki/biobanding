@@ -109,6 +109,7 @@ class Form extends Component {
 						<img class={style.logo} src='../../logo/StarsLogoTrans.png' />
 					</div>
 					<div class={style.inputContainer}>
+						<div class={style.loginLabel}>Registrierung</div>
 						<Input inputId="usernameInput" inputLabel="Benutzername" type="username" onChange={this.handleChange} />
 						<Input inputId="emailInput" inputLabel="E-Mail" type="email" onChange={this.handleChange} />
 						<Input inputId="passwordInput" inputLabel="Passwort" type="password" onChange={this.handleChange} />

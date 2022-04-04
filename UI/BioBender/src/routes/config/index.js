@@ -4,15 +4,9 @@ import 'preact-material-components/Card/style.css';
 import 'preact-material-components/Button/style.css';
 import style from './style';
 import Auth from '../../components/state.js';
-import Head2 from '../../components/head/head2.js';
-import { Link } from 'preact-router/match';
-import Button from 'preact-material-components/Button';
-import { route } from 'preact-router';
 
 
 export default class Config extends Component {
-	state = ({ reminder: '' });
-	state = ({ feedback: '' });
 
 
 	componentWillMount = () => {
@@ -49,14 +43,15 @@ export default class Config extends Component {
 					try {
 						let response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
+
+						if (response.msg == 'Token is invalid'){
+							route('/login', true)
+						}
 					}
 					catch (err) {}
 
 					that.setState({ feedbackStyle: style.feedbackErr });
 				}
-			}
-			else {
-				this.setState({ feedback: 'Ups, something went wrong' });
 			}
 		};
 
@@ -64,11 +59,6 @@ export default class Config extends Component {
 
 	}
 
-	goToSetConfig = () => {
-		route('/setConfig', true);
-	}
-
-	
 	render() {
 		return (
 				<Card class={style.card}>

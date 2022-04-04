@@ -79,6 +79,18 @@ export default class PlayerDetails extends Component {
 					that.setState({ feedbackStyle: style.feedbackSucc });
 
 				}
+				else {
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+						that.setState({ feedbackClass: style.feedbackErr });
+
+						if (response.msg == 'Token is invalid'){
+							route('/login', true)
+						}
+					}
+					catch(err) {}
+				}
 			}
 		};
 

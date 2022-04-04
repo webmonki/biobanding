@@ -7,7 +7,7 @@ import Head2 from '../../components/head/head2.js';
 import Auth from '../../components/state.js';
 import Input from '../../components/input/input.js';
 import List from 'preact-material-components/List';
-import Dropdown from '../../components/dropdown/dropdown';
+import resize from '../../components/resize';
 
 export default class Evaluation extends Component{
 
@@ -48,6 +48,10 @@ export default class Evaluation extends Component{
 						let response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
 						that.setState({ feedbackClass: style.feedbackErr });
+
+						if (response.msg == 'Token is invalid'){
+							route('/login', true)
+						}
 					}
 					catch(err) {}
 
@@ -112,11 +116,17 @@ export default class Evaluation extends Component{
 		this.setState({ content });
 	};
 
+	start_resizeEvent = () => {
+		resize('evalContainer', 'evalResizeBtn')
+	};
 
 	render() {
 		return (
 				<Card class={style.card}>
 						{this.state.content}
+						<div class={style.resizeUI} id='evalResizeBtn' onMouseDown={this.start_resizeEvent}>
+							<List.ItemGraphic class={style.resizeIcon}>unfold_more</List.ItemGraphic>
+						</div>
 				</Card>
 		);
 	}

@@ -37,11 +37,20 @@ export default class App extends Component {
 			}
 		}
 		else {
+			try {
+				var path = JSON.parse(sessionStorage.path);
+			}
+			catch (err) {
+				path = undefined;
+			}
 			if (Auth.check_admin()) {
-				this.setState({ currentUrl: '/admin' });
+
+				path != undefined ? this.setState({ currentUrl: '/admin'}) : this.setState({ currentUrl : path })
+
 			}
 			else {
-				this.setState({ currentUrl : '/player' });
+				path != undefined ? this.setState({ currentUrl: '/player'}) : this.setState({ currentUrl : path })
+
 			}
 		}
 	}
@@ -56,7 +65,7 @@ export default class App extends Component {
 					<Profile path="/profile/" user="me" />
 					<Profile path="/profile/:user" />
 					<Login path="/login/" />
-					<Signup path="/signup/" />
+					<Signup path="/signup" />
 					{/* <PlayerDetails path="/playerDetails/" />
 					<AddPlayer path="/addPlayer/" />
 					<ChangeData path="/changeData/" />

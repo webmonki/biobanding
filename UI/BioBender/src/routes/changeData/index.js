@@ -3,7 +3,6 @@ import Card from 'preact-material-components/Card';
 import Button from 'preact-material-components/Button';
 import 'preact-material-components/Button/style.css';
 import style from './style';
-import Head2 from '../../components/head/head2.js';
 import Auth from '../../components/state.js';
 import Input from '../../components/input/input.js';
 import { route } from 'preact-router';
@@ -26,13 +25,12 @@ export default class ChangeData extends Component {
 		this.setState({ email: Auth.getUser().email });
 		this.setState({ btnDisabled: true });
 		this.setState({ btnClass: style.btnDisabled });
-
-		this.setState({ token: Auth.getUser().token });
 	}
 
 
 	// Request to post new Email
 	sendData = () => {
+		console.log("XXX: ", Auth.getUser().token)
 		let that = this;
 		let url = Auth.url + '/api/users/edit';
 		let xhttp = new XMLHttpRequest();
@@ -40,7 +38,7 @@ export default class ChangeData extends Component {
 		xhttp.open('POST', url);
 		xhttp.setRequestHeader('Accept', 'application/json');
 		xhttp.setRequestHeader('Content-Type', 'application/json');
-		xhttp.setRequestHeader('authorization', that.state.token);
+		xhttp.setRequestHeader('authorization', Auth.getUser().token);
 
 		xhttp.onreadystatechange = function() {
 
@@ -50,6 +48,7 @@ export default class ChangeData extends Component {
 					try {
 						let response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
+						Auth.setToken(response.token)
 					}
 					catch (err) {}
 
@@ -59,13 +58,14 @@ export default class ChangeData extends Component {
 					try {
 						let response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
+
+						if (response.msg == 'Token is invalid'){
+							route('/login', true)
+						}
 					}
 					catch (err) {}
 					that.setState({ feedbackStyle: style.feedbackErr });
 				}
-			}
-			else {
-				this.setState({ loginResponse: 'Ups, something went wrong' });
 			}
 		};
 
@@ -97,12 +97,7 @@ export default class ChangeData extends Component {
 			this.setState({ btnClass: style.btnDisabled });
 		}
 	}
-
-	goToProfile = () => {
-		route('/profile', true);
-	}
 	
-
 	render() {
 		return (
 			<Card class={style.card}>

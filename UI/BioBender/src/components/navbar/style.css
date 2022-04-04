@@ -16,34 +16,40 @@
 
 .navBtnOpen {
 	background-color: #34538A !important;
-	width: 30px !important;
-	height: 30px !important;
+	width: 100px !important;
+	height: 100px !important;
 	border-radius: 110px !important;
 	cursor: pointer;
 	position: fixed !important;
-	margin-left: 140px;
+	margin-left: 120px;
 	top: 500px !important;
 	z-index: 3;
+	transform: scale(0.3);
 }
 
 .navBtnClosed {
 	background-color: #34538A !important;
-	width: 30px !important;
-	height: 30px !important;
+	width: 100px !important;
+	height: 100px !important;
 	border-radius: 110px !important;
 	cursor: pointer;
 	position: fixed !important;
-	margin-left: -20px;
+	margin-left: -45px;
 	top: 500px !important;
 	z-index: 3;
+	transform: scale(0.3);
 }
 
 .btnIcon {
-	margin-left: auto;
-	margin-right: auto;
-	color: white !important;
+	color: white;
+	font-family: 'Material Icons' !important;
+    font-style: normal;
+	font-size: 100px;
 }
 
+.mdc-button {
+	text-transform: none !important;
+}
 
 .logo {
 	background-color: #34538A;

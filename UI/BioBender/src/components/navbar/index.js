@@ -45,10 +45,10 @@ export default class Navbar extends Component {
 
 
 		if (this.state.navbarClass == style.dontShow) {
-			this.setState({ btnContent : <List.ItemGraphic class={style.btnIcon}>arrow_forward</List.ItemGraphic> })
+			this.setState({ btnContent : <i class={style.btnIcon}>arrow_forward</i> })
 		}
 		else if (this.state.navbarClass == style.navBar) {
-			this.setState({ btnContent : <List.ItemGraphic class={style.btnIcon}>arrow_back</List.ItemGraphic> })
+			this.setState({ btnContent : <i class={style.btnIcon}>arrow_back</i> })
 		}
 
 		this.setState({ navBtnClass : style.navBtnOpen })
@@ -155,7 +155,7 @@ export default class Navbar extends Component {
 	}
 
 	handleClickUser = () => {
-		this.highlightUser();
+		// this.highlightUser();
 		this.getContent();
 		let container = document.getElementById('userContainer');
 		let rec = container.getBoundingClientRect();
@@ -170,7 +170,7 @@ export default class Navbar extends Component {
 	}
 
 	handleClickEvaluation = () => {
-		this.highlightEval();
+		// this.highlightEval();
 		this.getContent();
 		let container = document.getElementById('evalContainer');
 		let rec = container.getBoundingClientRect();
@@ -185,7 +185,7 @@ export default class Navbar extends Component {
 	}
 
 	handleClickConfig = () => {
-		this.highlightConfig();
+		// this.highlightConfig();
 		this.getContent();
 		let container = document.getElementById('configContainer');
 		let rec = container.getBoundingClientRect();
@@ -200,7 +200,7 @@ export default class Navbar extends Component {
 	}
 
 	handleClickMeasure = () => {
-		this.highlightMeasure();
+		// this.highlightMeasure();
 		this.getContent();
 		let container = document.getElementById('measureContainer');
 		let rec = container.getBoundingClientRect();
@@ -215,7 +215,7 @@ export default class Navbar extends Component {
 	}
 
 	handleClickDetails = () => {
-		this.highlightDetailsTab
+		// this.highlightDetailsTab
 		this.getContent();
 		let container = document.getElementById('detailsContainer');
 		let rec = container.getBoundingClientRect();
@@ -282,12 +282,12 @@ export default class Navbar extends Component {
 
 
 		if (this.state.navbarClass == style.dontShow) {
-			this.setState({ btnContent : <List.ItemGraphic class={style.btnIcon}>arrow_back</List.ItemGraphic> })
+			this.setState({ btnContent : <i class={style.btnIcon}>arrow_back</i> })
 			this.setState({ navBtnClass : style.navBtnOpen })
 			this.setState({ navbarClass : style.navBar })
 		}
 		else if (this.state.navbarClass == style.navBar) {
-			this.setState({ btnContent : <List.ItemGraphic class={style.btnIcon}>arrow_forward</List.ItemGraphic> })
+			this.setState({ btnContent : <i class={style.btnIcon}>arrow_forward</i> })
 			this.setState({ navBtnClass : style.navBtnClosed })
 			this.setState({ navbarClass : style.dontShow })
 		}
@@ -298,9 +298,9 @@ export default class Navbar extends Component {
 	render(props) {
 		return (
 			<div>
-				<Button raised class={this.state.navBtnClass} onClick={this.toogleNavbar}>
+				<div class={this.state.navBtnClass} onClick={this.toogleNavbar}>
 					{this.state.btnContent}
-				</Button>
+				</div>
 				{this.state.content}
 			</div>
 

@@ -66,20 +66,21 @@ export default class SetConfig extends Component {
 					catch (err) {}
 
 					that.setState({ feedbackStyle: style.feedbackSucc });
-					route('/config', true);
+					location.reload();
 				}
 				else {
 					try {
 						let response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
+
+						if (response.msg == 'Token is invalid'){
+							route('/login', true)
+						}
 					}
 					catch (err) {}
 
 					that.setState({ feedbackStyle: style.feedbackErr });
 				}
-			}
-			else {
-				this.setState({ feedback: 'Ups, something went wrong' });
 			}
 		};
 
@@ -90,11 +91,6 @@ export default class SetConfig extends Component {
 		xhttp.send(data);
 
 	}
-
-	goToConfig = () => {
-		route('/config', true);
-	}
-
 
 	render() {
 		return (

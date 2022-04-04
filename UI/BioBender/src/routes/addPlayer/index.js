@@ -5,6 +5,7 @@ import 'preact-material-components/Button/style.css';
 import style from './style';
 import Auth from '../../components/state.js';
 import Input from '../../components/input/input.js';
+import { route } from 'preact-router';
 
 export default class AddPlayer extends Component{
 
@@ -45,16 +46,18 @@ export default class AddPlayer extends Component{
 				else {
 					try {
 						let response = JSON.parse(this.responseText);
+						that.setState({ feedbackStyle: style.feedbackErr });
+						console.log("ERROR")
 						that.setState({ feedback: response.msg });
+
+						if (response.msg == 'Token is invalid'){
+							route('/login', true)
+						}
 					}
 					catch (err) {}
-
-					that.setState({ feedbackStyle: style.feedbackErr });
 				}
 			}
-			else {
-				this.setState({ loginResponse: 'Ups, something went wrong' });
-			}
+
 		};
 
 

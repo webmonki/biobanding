@@ -105,6 +105,10 @@ export default class Overview extends Component{
 						let response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
 						that.setState({ feedbackClass: style.feedbackErr });
+
+						if (response.msg == 'Token is invalid'){
+							route('/login', true)
+						}
 					}
 					catch(err) {}
 

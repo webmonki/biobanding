@@ -8,6 +8,7 @@ import Auth from '../../components/state.js';
 import Input from '../../components/input/input.js';
 import List from 'preact-material-components/List';
 import Dropdown from '../../components/dropdown/dropdown';
+import resize from '../../components/resize';
 
 export default class UserEdit extends Component{
 
@@ -74,6 +75,10 @@ export default class UserEdit extends Component{
 						let response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
 						that.setState({ feedbackClass: style.feedbackErr });
+
+						if (response.msg == 'Token is invalid'){
+							route('/login', true)
+						}
 					}
 					catch(err) {}
 
@@ -112,8 +117,18 @@ export default class UserEdit extends Component{
 					that.setState({ currentPage : undefined });
 					that.getData();
 					that.showTable();
+				}
+				else {
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+						that.setState({ feedbackClass: style.feedbackErr });
 
-
+						if (response.msg == 'Token is invalid'){
+							route('/login', true)
+						}
+					}
+					catch(err) {}
 				}
 			}
 		};
@@ -214,25 +229,23 @@ export default class UserEdit extends Component{
 					}
 					catch(err) {}
 
-					// that.state.measurements.forEach(measure => {
-					// 	if (measure.id == that.state.currentEdit) {
 
-					// 		measure.height = that.state.height;
-					// 		measure.sittingHeight = that.state.sittingHeight;
-					// 		measure.bodySpan = that.state.bodySpan;
-					// 		measure.weight = that.state.weight;
-					// 		measure.result = that.state.result;
-					// 		measure.date = that.state.date;
-
-					// 	}
-					// })
 
 					that.setState({ feedbackClass: style.feedbackSucc });
 					that.setState({ currentEdit : undefined });
 					that.getData();
-					// that.showTable();
+				}
+				else {
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ feedback: response.msg });
+						that.setState({ feedbackClass: style.feedbackErr });
 
-
+						if (response.msg == 'Token is invalid'){
+							route('/login', true)
+						}
+					}
+					catch(err) {}
 				}
 
 			}
@@ -342,15 +355,7 @@ export default class UserEdit extends Component{
 		let content = (
 			<div class={style.newContainer}>
 				<div class={this.state.feedbackClass}>{this.state.feedback}</div>
-				<div class={style.editDropdown}>
-					<Dropdown
-						class={style.deleteDropDown}
-						ddId={'editIdDropdown'}
-						data={this.state.currentIds}
-						dropdownClick={this.handleEditDropDownClick}
-						selected={this.state.currentEdit}
-						/>
-				</div>
+				<div class={style.changeLabel}>MessungsId: {this.state.currentEdit}</div>
 				<Input inputId="inputEditHeight" inputLabel="Größe" onChange={this.handleChangeEdit}/>
 				<Input inputId="inputEditSittingHeight" inputLabel="Größe im Sitzen" onChange={this.handleChangeEdit} />
 				<Input inputId="inputEditSpan" inputLabel="Körperspannweite" onChange={this.handleChangeEdit} />
@@ -429,10 +434,17 @@ export default class UserEdit extends Component{
 		this.setState({ content });
 	};
 
+	start_resizeEvent = () => {
+		resize('measureContainer', 'measureResizeBtn')
+	};
+
 	render() {
 		return (
 				<Card class={style.card}>
 						{this.state.content}
+						<div class={style.resizeUI} id='measureResizeBtn' onMouseDown={this.start_resizeEvent}>
+							<List.ItemGraphic class={style.resizeIcon}>unfold_more</List.ItemGraphic>
+						</div>
 				</Card>
 		);
 	}

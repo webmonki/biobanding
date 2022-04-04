@@ -82,11 +82,11 @@
     justify-content: center;
 }
 
-.feedback {
+/* .feedback {
 	display: flex;
 	justify-content: center;
 	color: #B1262D;
-}
+} */
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {

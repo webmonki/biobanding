@@ -104,6 +104,7 @@ class Form extends Component {
 						<img class={style.logo} src='../../logo/StarsLogoTrans.png' />
 					</div>
 					<div class={style.inputContainer}>
+						<div class={style.loginLabel}>Anmeldung</div>
 						<Input inputId="email-input" inputLabel="E-Mail" type="email" onChange={this.handleChange} />
 						<Input inputId="password-input" inputLabel="Passwort" type="password" onChange={this.handleChange} />
 						<div style={{ color: '#B1262D' }}>{this.state.loginResponse}</div>

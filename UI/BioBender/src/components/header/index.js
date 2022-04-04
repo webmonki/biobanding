@@ -14,14 +14,47 @@ import Auth from '../state.js';
 export default class Header extends Component {
 
 	componentWillMount = () => {
-		this.setState({ profileClass: style.nav });
-		this.setState({ profileIcon: style.icon });
+		
+		try {
+			let path = JSON.parse(sessionStorage.path);
 
-		this.setState({ adminClass : style.active });
-		this.setState({ adminIcon : style.activeIcon });
+			if (path == '/profile') {
+				this.setState({ profileClass: style.active });
+				this.setState({ profileIcon: style.activeIcon });
+	
+				this.setState({ adminClass : style.nav });
+				this.setState({ adminIcon : style.icon });
+		
+				this.setState({ playerClass : style.nav });
+				this.setState({ playerIcon : style.icon });
+			}
+			else {
+				this.setState({ profileClass: style.nav });
+				this.setState({ profileIcon: style.icon });
+	
+				this.setState({ adminClass : style.active });
+				this.setState({ adminIcon : style.activeIcon });
+		
+				this.setState({ playerClass : style.active });
+				this.setState({ playerIcon : style.activeIcon });
+			}
+		}
+		catch (err) {
+			this.setState({ profileClass: style.nav });
+			this.setState({ profileIcon: style.icon });
 
-		this.setState({ playerClass : style.active });
-		this.setState({ playerIcon : style.activeIcon });
+			this.setState({ adminClass : style.active });
+			this.setState({ adminIcon : style.activeIcon });
+	
+			this.setState({ playerClass : style.active });
+			this.setState({ playerIcon : style.activeIcon });
+		}
+
+
+
+
+
+
 
 		this.setState({ settingsClass : style.settingsContainer })
 	}
@@ -97,7 +130,8 @@ export default class Header extends Component {
 				
 				if (this.status === 200) {
 					Auth.logout();
-					that.goToLogin();
+					route('/login', true)
+					location.reload();
 				}
 			}
 
@@ -116,7 +150,6 @@ export default class Header extends Component {
 	}
 	
 	render(props) {
-
 		if (Auth.getAuth()) {
 			if (Auth.check_admin()) {
 				return (
@@ -132,7 +165,7 @@ export default class Header extends Component {
 							</div>
 	
 							<div class={this.state.adminClass} onClick={this.handleClickAdmin}>
-								<List.ItemGraphic class={this.state.adminIcon}>directions_run</List.ItemGraphic>
+								<List.ItemGraphic class={this.state.adminIcon}>perm_data_settings</List.ItemGraphic>
 								<div class={style.label}>Admin</div>
 							</div>
 	
@@ -164,7 +197,7 @@ export default class Header extends Component {
 							</div>
 	
 							<div class={style.nav} onClick={this.logOut}>
-								<List.ItemGraphic class={style.icon}>close</List.ItemGraphic>
+								<List.ItemGraphic class={style.icon}>exit_to_app</List.ItemGraphic>
 								<div class={style.label}>Abmelden</div>
 							</div>
 						</div>

@@ -8,6 +8,7 @@ import Auth from '../../components/state.js';
 import Input from '../../components/input/input.js';
 import List from 'preact-material-components/List';
 import Dropdown from '../../components/dropdown/dropdown';
+import resize from '../../components/resize';
 
 export default class UserEdit extends Component{
 
@@ -27,9 +28,12 @@ export default class UserEdit extends Component{
 		this.setState({ editBtnClass : style.btnDisabled });
 		this.setState({ editBtnDisabled : true });
 
-
 		this.getData();
 	}
+	
+	start_resizeEvent = () => {
+		resize('userContainer', 'userResizeBtn')
+	};
 
 	getData = () => {
 		let that = this;
@@ -69,6 +73,10 @@ export default class UserEdit extends Component{
 						let response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
 						that.setState({ feedbackClass: style.feedbackErr });
+
+						if (response.msg == 'Token is invalid'){
+							route('/login', true)
+						}
 					}
 					catch(err) {}
 	
@@ -114,6 +122,10 @@ export default class UserEdit extends Component{
 						let response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
 						that.setState({ feedbackClass : style.feedbackErr });
+
+						if (response.msg == 'Token is invalid'){
+							route('/login', true)
+						}
 					}
 					catch (err) {}
 
@@ -179,15 +191,16 @@ export default class UserEdit extends Component{
 					try{
 						let response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
+
+						if (response.msg == 'Token is invalid'){
+							route('/login', true)
+						}
 					}
 					catch(err) {}
 
 					that.setState({ feedbackClass: style.feedbackErr });
 					that.handleClickDelete();
 				}
-			}
-			else {
-				this.setState({ loginResponse: 'Ups, something went wrong' });
 			}
 		};
 		xhttp.send();
@@ -233,6 +246,10 @@ export default class UserEdit extends Component{
 					try {
 						let response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
+
+						if (response.msg == 'Token is invalid'){
+							route('/login', true)
+						}
 					}
 					catch(err) {}
 
@@ -331,15 +348,7 @@ export default class UserEdit extends Component{
 		let content = (
 			<div class={style.newContainer}>
 				<div class={this.state.feedbackClass}>{this.state.feedback}</div>
-				<div class={style.editDropdown}>
-					<Dropdown
-						class={style.deleteDropDown}
-						ddId={'editIdDropdown'}
-						data={this.state.currentIds}
-						dropdownClick={this.handleEditDropDownClick}
-						selected={id}
-						/>
-				</div>
+				<div class={style.changeLabel}>BenutzerId: {id}</div>
 				<Input inputId="inputEditName" inputLabel="Benutzername" type="username" onChange={this.handleChangeEdit}/>
 				<Input inputId="inputEditEmail" inputLabel="E-mail" type="email" onChange={this.handleChangeEdit} />
 				<div class={style.btnContainer}>
@@ -369,7 +378,10 @@ export default class UserEdit extends Component{
 		)
 		
 		if (this.state.users.length == 0) {
-			var data = JSON.parse(sessionStorage.users);
+			try {
+				var data = JSON.parse(sessionStorage.users);
+			}
+			catch (err) {}
 		}
 		else {
 			var data = this.state.users
@@ -417,6 +429,9 @@ export default class UserEdit extends Component{
 		return (
 				<Card class={style.card}>
 						{this.state.content}
+						<div class={style.resizeUI} id='userResizeBtn' onMouseDown={this.start_resizeEvent}>
+							<List.ItemGraphic class={style.resizeIcon}>unfold_more</List.ItemGraphic>
+						</div>
 				</Card>
 		);
 	}
