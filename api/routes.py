@@ -343,7 +343,15 @@ class EditUser(Resource):
 
         self.save()
 
-        return {"success": True}, 200
+
+
+
+        token = jwt.encode({'email': _new_email, 'exp': datetime.utcnow() + timedelta(minutes=30)}, BaseConfig.SECRET_KEY)
+        self.set_jwt_auth_active(True)
+        self.save()
+
+        return {"success": True,
+				"token": token}, 200
 
 
 @rest_api.route('/api/users/logout')
