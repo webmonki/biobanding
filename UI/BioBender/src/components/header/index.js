@@ -50,12 +50,6 @@ export default class Header extends Component {
 			this.setState({ playerIcon : style.activeIcon });
 		}
 
-
-
-
-
-
-
 		this.setState({ settingsClass : style.settingsContainer })
 	}
 
@@ -130,8 +124,6 @@ export default class Header extends Component {
 				
 				if (this.status === 200) {
 					Auth.logout();
-					route('/login', true)
-					location.reload();
 				}
 			}
 
@@ -165,7 +157,7 @@ export default class Header extends Component {
 							</div>
 	
 							<div class={this.state.adminClass} onClick={this.handleClickAdmin}>
-								<List.ItemGraphic class={this.state.adminIcon}>perm_data_settings</List.ItemGraphic>
+								<List.ItemGraphic class={this.state.adminIcon}>manage_accounts</List.ItemGraphic>
 								<div class={style.label}>Admin</div>
 							</div>
 	

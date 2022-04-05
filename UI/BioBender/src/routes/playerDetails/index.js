@@ -50,6 +50,7 @@ export default class PlayerDetails extends Component {
 					try {
 						var response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
+						that.setState({ feedbackStyle: style.feedbackSucc });
 
 						if (response['player_details:'] != undefined) {
 							that.setState({ firstName: response['player_details:'].first_name });
@@ -76,17 +77,16 @@ export default class PlayerDetails extends Component {
 					}
 					catch(err) {}
 
-					that.setState({ feedbackStyle: style.feedbackSucc });
 
 				}
 				else {
 					try {
 						let response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
-						that.setState({ feedbackClass: style.feedbackErr });
+						that.setState({ feedbackStyle: style.feedbackErr });
 
 						if (response.msg == 'Token is invalid'){
-							route('/login', true)
+							Auth.logout();
 						}
 					}
 					catch(err) {}

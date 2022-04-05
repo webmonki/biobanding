@@ -47,11 +47,10 @@ export default class AddPlayer extends Component{
 					try {
 						let response = JSON.parse(this.responseText);
 						that.setState({ feedbackStyle: style.feedbackErr });
-						console.log("ERROR")
 						that.setState({ feedback: response.msg });
 
 						if (response.msg == 'Token is invalid'){
-							route('/login', true)
+							Auth.logout();
 						}
 					}
 					catch (err) {}

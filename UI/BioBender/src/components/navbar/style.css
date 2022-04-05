@@ -130,11 +130,11 @@
 	}
 
 	.label {
-		font-size: 15px;
+		font-size: 13px;
 	}
 
 	.navBtnOpen {
-		margin-left: 120px;
+		margin-left: 100px;
 	}
 }
 
@@ -171,14 +171,14 @@
 		top: 100vh;
 		bottom: 10px !important;
 		z-index: 2;
-		border-right: 1px solid #9C9696;
+		/* border-right: 1px solid #9C9696; */
 		display:flex;
 		flex-direction: row;
 		transform: translate(0, -50px);
 	}
 
 	.nav {
-		border-top: 5px solid #34538A;
+		border-top: 1px solid #34538A;
 		width: 33.33333333%;
 		justify-content: center;
 	}

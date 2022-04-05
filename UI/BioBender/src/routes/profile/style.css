@@ -6,11 +6,10 @@
 }
 
 .container {
-	height: calc(100% - 170px);
+	width: 100%;
+	height: fit-content;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-around;
-	padding: 0 10% 0 10%;
 }
 
 .inputContainer {
@@ -30,13 +29,11 @@
 }
 
 .profileContainer{
-	height: 350px;
-	padding-bottom: 10px;
+	height: fit-content;
 }
 
 .cdContainer{
 	height: fit-content;
-	padding-bottom: 10px;
 }
 
 .logo {

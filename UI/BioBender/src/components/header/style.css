@@ -1,7 +1,7 @@
 .titleLogged {
     color: white;
 	position: absolute;
-	left: 220px;
+	left: 180px;
 	font-size: 30px;
 }
 
@@ -31,7 +31,7 @@
     font-size: 40px;
 	position: absolute;
 	top: 63px;
-	right: 15px
+	right: 15px;
 }
 
 .iconInactive {
@@ -101,6 +101,10 @@
 
 @media only screen and (max-width: 989px) {
 
+	.setIcon {
+		top: 55px;
+	}
+
 	.titleLogged {
 		display: none;
 	}
@@ -122,14 +126,14 @@
 
 @media only screen and (max-width: 600px) {
 
-	.titleLogged {
-		display: none;
-	}
-
 	.settingsContainer {
 		width: fit-content;
 		display: flex;
 		flex-direction: column;
+	}
+
+	.titleLogged {
+		display: none;
 	}
 
 	.label {

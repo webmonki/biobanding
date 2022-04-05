@@ -3,12 +3,11 @@ import Card from 'preact-material-components/Card';
 import Button from 'preact-material-components/Button';
 import 'preact-material-components/Button/style.css';
 import style from './style';
-import Head2 from '../../components/head/head2.js';
 import Auth from '../../components/state.js';
 import Input from '../../components/input/input.js';
 import List from 'preact-material-components/List';
-import Dropdown from '../../components/dropdown/dropdown';
 import resize from '../../components/resize';
+import createTable from '../../components/table/table';
 
 export default class UserEdit extends Component{
 
@@ -75,7 +74,7 @@ export default class UserEdit extends Component{
 						that.setState({ feedbackClass: style.feedbackErr });
 
 						if (response.msg == 'Token is invalid'){
-							route('/login', true)
+							Auth.logout();
 						}
 					}
 					catch(err) {}
@@ -124,7 +123,7 @@ export default class UserEdit extends Component{
 						that.setState({ feedbackClass : style.feedbackErr });
 
 						if (response.msg == 'Token is invalid'){
-							route('/login', true)
+							Auth.logout();
 						}
 					}
 					catch (err) {}
@@ -145,8 +144,6 @@ export default class UserEdit extends Component{
 	}
 
 	delete = (id) => {
-
-		// this.setState({ currentIds : this.state.currentIds.filter(e => e !== this.state.currentDelete )});
 
 		let that = this;
 		let url = Auth.url + '/api/user/' + id
@@ -193,7 +190,7 @@ export default class UserEdit extends Component{
 						that.setState({ feedback: response.msg });
 
 						if (response.msg == 'Token is invalid'){
-							route('/login', true)
+							Auth.logout();
 						}
 					}
 					catch(err) {}
@@ -248,7 +245,7 @@ export default class UserEdit extends Component{
 						that.setState({ feedback: response.msg });
 
 						if (response.msg == 'Token is invalid'){
-							route('/login', true)
+							Auth.logout();
 						}
 					}
 					catch(err) {}
@@ -366,17 +363,6 @@ export default class UserEdit extends Component{
 
 	showTable = () => {;
 		
-		let cols = ['Benutzer ID', 'Benutzername', 'Email']
-
-		let tableHeader = (
-				<tr>
-					<th class={style.thIconContainer} onClick={this.handleClickNew}>
-						<List.ItemGraphic class={style.thIcon}>group_add</List.ItemGraphic>
-					</th>
-					{cols.map((name) => <th>{name}</th>)}
-				</tr>
-		)
-		
 		if (this.state.users.length == 0) {
 			try {
 				var data = JSON.parse(sessionStorage.users);
@@ -388,37 +374,9 @@ export default class UserEdit extends Component{
 		}
 
 
-		let tableBody = (
-			<tbody>
-				{data.map((row) => 
-					<tr>
-						<td>
-							<div class={style.tdIconContainer}>
-								<List.ItemGraphic onClick={() => this.handleClickEdit(row.userID)} class={style.tdIcon}>edit</List.ItemGraphic>
-								<List.ItemGraphic onClick={() => this.delete(row.userID)} class={style.tdIcon}>delete</List.ItemGraphic>
-							</div>
-						</td>
-						<td>{row.userID}</td>
-						<td>{row.username}</td>
-						<td>{row.email}</td>
-					</tr>
-				)}
-			</tbody>
-		)
-
-		let table = (
-			<table id="measureTable">
-				<thead>
-					{tableHeader}
-				</thead>
-				{tableBody}
-			</table>
-		)
-
-
 		let content = (
 				<div class={style.tableContainer}>
-					{table}
+					{createTable(data, true, this.handleClickNew, this.handleClickEdit, this.delete)}
 				</div>
 		);
 		this.setState({ content });

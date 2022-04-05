@@ -8,6 +8,7 @@ import Auth from '../../components/state.js';
 import Input from '../../components/input/input.js';
 import List from 'preact-material-components/List';
 import resize from '../../components/resize';
+import createTable from '../../components/table/table';
 
 export default class Evaluation extends Component{
 
@@ -37,7 +38,6 @@ export default class Evaluation extends Component{
 						let response = JSON.parse(this.responseText);
 						sessionStorage.setItem('details', JSON.stringify(response['userdetails']));
 						that.setState({ details : response['userdetails'] });
-						that.setState({ feedback: response.msg });
 					}
 					catch(err) {}
 
@@ -46,11 +46,9 @@ export default class Evaluation extends Component{
 				else {
 					try {
 						let response = JSON.parse(this.responseText);
-						that.setState({ feedback: response.msg });
-						that.setState({ feedbackClass: style.feedbackErr });
 
 						if (response.msg == 'Token is invalid'){
-							route('/login', true)
+							Auth.logout();
 						}
 					}
 					catch(err) {}
@@ -63,54 +61,17 @@ export default class Evaluation extends Component{
 
 	
 	showTable = () => {;
-		
-		let cols = ['BenutzerId', 'Benutzername', 'Vorname', 'Nachname', 'E-Mail', 'Geburtstag', 'Geschlecht', 'Größe', 'Ergebnis']
-
-		let tableHeader = (
-				<tr>
-					{cols.map((name) => <th>{name}</th>)}
-				</tr>
-		)
-		
+			
 		if (this.state.details.length == 0) {
 			var data = JSON.parse(sessionStorage.details);
 		}
 		else {
 			var data = this.state.details
-		}
-
-
-		let tableBody = (
-			<tbody>
-				{data.map((row) => 
-					<tr>
-						<td>{row.userID}</td>
-						<td>{row.username}</td>
-						<td>{row.firstname}</td>
-						<td>{row.lastname}</td>
-						<td>{row.email}</td>
-						<td>{row.birthday}</td>
-						<td>{row.sex_m_0_f_1}</td>
-						<td>{row.height}</td>
-						<td>{row.result}</td>
-					</tr>
-				)}
-			</tbody>
-		)
-
-		let table = (
-			<table id="measureTable">
-				<thead>
-					{tableHeader}
-				</thead>
-				{tableBody}
-			</table>
-		)
-
+		}	
 
 		let content = (
 			<div class={style.tableContainer}>
-				{table}
+				{createTable(data, false)}
 			</div>
 		);
 		this.setState({ content });

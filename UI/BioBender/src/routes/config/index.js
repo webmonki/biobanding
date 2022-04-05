@@ -45,7 +45,7 @@ export default class Config extends Component {
 						that.setState({ feedback: response.msg });
 
 						if (response.msg == 'Token is invalid'){
-							route('/login', true)
+							Auth.logout();
 						}
 					}
 					catch (err) {}

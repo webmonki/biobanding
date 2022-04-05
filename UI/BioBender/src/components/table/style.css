@@ -1,0 +1,51 @@
+.thIcon {
+	color: white;
+	margin-left: 30px;
+}
+
+.thIconContainer {
+	width: 120px;
+}
+
+.tdIconContainer {
+	width: 120px;
+	display: flex;
+	justify-content: space-around;
+	padding-left: 20px;
+}
+
+.tdIcon {
+	color: #34538A;
+}
+
+.tableFixHead, thead, th {
+	position: sticky;
+	top: 0;
+	background: #34538A;
+	color: white;
+}
+
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th, td {
+	padding: 8px 16px;
+	/* border: 1px solid #C7C1C1; */
+	text-align: center;
+}
+
+td {
+	border: 1px solid #C7C1C1;
+}
+
+th {
+	border-left: 1px solid #C7C1C1;
+	border-right: 1px solid #C7C1C1;
+}
+
+tr:hover {
+	background-color: #EEEEF1;
+}

@@ -56,13 +56,13 @@ export default class Profile extends Component {
 					try {
 						let response = JSON.parse(this.responseText);
 						that.setState({ feedback: response.msg });
+						that.setState({ feedbackStyle : style.feedbackErr });
 
 						if (response.msg == 'Token is invalid'){
-							route('/login', true)
+							Auth.logout();
 						}
 					}
 					catch (err) {}
-					that.setState({ feedbackStyle: style.feedbackErr });
 				}
 			}
 		};

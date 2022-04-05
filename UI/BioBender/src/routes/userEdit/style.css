@@ -10,9 +10,10 @@
 
 .resizeUI {
 	background-color: #EEEEF1;
-	width: calc(100% - 10%);
+	width: 100%;
 	position: absolute;
 	bottom: 0;
+	left: 0;
 	cursor: row-resize;
 	display: flex;
 	justify-content: center;
@@ -41,7 +42,6 @@
 	width: 33%;
 	display: flex;
 	flex-direction: row;
-	/* justify-content: center; */
 	align-items: center;
 	margin-left: 30%;
 }
@@ -49,7 +49,6 @@
 .checkboxLabel {
 	position: relative;
 	margin-bottom: 20px;
-	/* margin-right: 100px; */
 }
 .btnEnabled {
 	background-color: #34538A !important;
@@ -61,64 +60,13 @@
 	color: rgb(141,141,141) !important;
 }
 
-tr:hover {
-	background-color: #EEEEF1;
-}
-
-.thIcon {
-	color: white;
-	margin-left: 30px;
-}
-
-.thIconContainer {
-	width: 120px;
-}
-
-.tdIconContainer {
-	width: 120px;
-	display: flex;
-	justify-content: space-around;
-	padding-left: 20px;
-}
-
-.tdIcon {
-	color: #34538A;
-}
-
 .tableContainer {
-	/* height: 10%; */
 	width: 100%;
 	overflow-y: auto;
 	border-top: 20px solid white;
 }
 
-.tableFixHead, thead, th {
-	position: sticky;
-	top: 0;
-	background: #34538A;
-	color: white;
-}
 
-
-table {
-	border-collapse: collapse;
-	width: 100%;
-}
-
-th, td {
-	padding: 8px 16px;
-	/* border: 1px solid #C7C1C1; */
-	text-align: center;
-}
-
-td {
-	border: 1px solid #C7C1C1;
-}
-
-th {
-	border-left: 1px solid #C7C1C1;
-	border-right: 1px solid #C7C1C1;
-}
 
 .btnIcon {
 	color: white !important;

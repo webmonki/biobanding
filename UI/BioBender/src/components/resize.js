@@ -5,13 +5,14 @@ export default function resize(containerId, triggerId) {
 	rec = container.getBoundingClientRect(),
 	ht = rec.bottom-rec.top;
 
+
 	trigger.addEventListener('mousedown', (evt) => {
 		startResize(evt);
 
-		container.addEventListener('mousemove', resize);
-		container.addEventListener('mouseup', () => {
+		document.body.addEventListener('mousemove', resize);
+		document.body.addEventListener('mouseup', () => {
 			trigger.removeEventListener('mousedown', resize);
-			container.removeEventListener('mousemove', resize);
+			document.body.removeEventListener('mousemove', resize);
 		})
 	})
 
@@ -25,6 +26,8 @@ export default function resize(containerId, triggerId) {
 
 		ht = y-rec.top-50;
 
-		container.style.height = ht + 'px';
+		if (ht > 300) {
+			container.style.height = ht + 'px';
+		}
 	}
 }
