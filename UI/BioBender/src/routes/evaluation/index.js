@@ -9,6 +9,7 @@ import Input from '../../components/input/input.js';
 import List from 'preact-material-components/List';
 import createTable from '../../components/table/table';
 import resizeWithMouse from '../../components/resizeMouse';
+import resizeWithTouch from '../../components/resizeTouch';
 
 export default class Evaluation extends Component{
 
@@ -77,15 +78,19 @@ export default class Evaluation extends Component{
 		this.setState({ content });
 	};
 
-	start_resizeEvent = () => {
+	startResizeWithMouseEvent = () => {
 		resizeWithMouse('evalContainer', 'evalResizeBtn')
+	};
+
+	startResizeWithTouchEvent = () =>  {
+		resizeWithTouch('evalContainer', 'evalResizeBtn');
 	};
 
 	render() {
 		return (
 				<Card class={style.card}>
 						{this.state.content}
-						<div class={style.resizeUI} id='evalResizeBtn' onMouseDown={this.start_resizeEvent}>
+						<div class={style.resizeUI} id='evalResizeBtn' onMouseDown={this.startResizeWithMouseEvent} onTouchStart={this.startResizeWithTouchEvent}>
 							<List.ItemGraphic class={style.resizeIcon}>unfold_more</List.ItemGraphic>
 						</div>
 				</Card>
