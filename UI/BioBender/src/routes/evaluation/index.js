@@ -7,8 +7,8 @@ import Head2 from '../../components/head/head2.js';
 import Auth from '../../components/state.js';
 import Input from '../../components/input/input.js';
 import List from 'preact-material-components/List';
-import resize from '../../components/resize';
 import createTable from '../../components/table/table';
+import resizeWithMouse from '../../components/resizeMouse';
 
 export default class Evaluation extends Component{
 
@@ -78,7 +78,7 @@ export default class Evaluation extends Component{
 	};
 
 	start_resizeEvent = () => {
-		resize('evalContainer', 'evalResizeBtn')
+		resizeWithMouse('evalContainer', 'evalResizeBtn')
 	};
 
 	render() {

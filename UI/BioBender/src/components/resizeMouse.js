@@ -1,4 +1,5 @@
-export default function resize(containerId, triggerId) {
+export default function resizeWithMouse(containerId, triggerId) {
+
 	var container = document.getElementById(containerId),
 	trigger = document.getElementById(triggerId),
 	y,
@@ -31,3 +32,5 @@ export default function resize(containerId, triggerId) {
 		}
 	}
 }
+
+

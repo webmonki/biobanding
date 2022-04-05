@@ -6,7 +6,8 @@ import style from './style';
 import Auth from '../../components/state.js';
 import Input from '../../components/input/input.js';
 import List from 'preact-material-components/List';
-import resize from '../../components/resize';
+import resizeWithMouse from '../../components/resizeMouse';
+import resizeWithTouch from '../../components/resizeTouch';
 import createTable from '../../components/table/table';
 
 export default class UserEdit extends Component{
@@ -30,9 +31,13 @@ export default class UserEdit extends Component{
 		this.getData();
 	}
 	
-	start_resizeEvent = () => {
-		resize('userContainer', 'userResizeBtn')
+	startResizeWithMouseEvent = () => {
+		resizeWithMouse('userContainer', 'userResizeBtn');
 	};
+
+	startResizeWithTouchEvent = () => {
+		resizeWithTouch('userContainer', 'userResizeBtn');
+	}
 
 	getData = () => {
 		let that = this;
@@ -387,7 +392,7 @@ export default class UserEdit extends Component{
 		return (
 				<Card class={style.card}>
 						{this.state.content}
-						<div class={style.resizeUI} id='userResizeBtn' onMouseDown={this.start_resizeEvent}>
+						<div class={style.resizeUI} id='userResizeBtn' onMouseDown={this.startResizeWithMouseEvent} onTouchStart={this.startResizeWithTouchEvent}>
 							<List.ItemGraphic class={style.resizeIcon}>unfold_more</List.ItemGraphic>
 						</div>
 				</Card>

@@ -6,8 +6,8 @@ import style from './style';
 import Auth from '../../components/state.js';
 import Input from '../../components/input/input.js';
 import List from 'preact-material-components/List';
-import resize from '../../components/resize';
 import createTable from '../../components/table/table';
+import resizeWithMouse from '../../components/resizeMouse';
 
 export default class UserEdit extends Component{
 
@@ -394,7 +394,7 @@ export default class UserEdit extends Component{
 	};
 
 	start_resizeEvent = () => {
-		resize('measureContainer', 'measureResizeBtn')
+		resizeWithMouse('measureContainer', 'measureResizeBtn')
 	};
 
 	render() {
