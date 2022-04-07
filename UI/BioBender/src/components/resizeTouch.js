@@ -5,29 +5,17 @@ export default function resizeWithTouch(containerId, triggerId) {
 	rec = container.getBoundingClientRect(),
 	ht = rec.bottom-rec.top;
 
-
-	trigger.addEventListener('touchstart', (evt) => {
-		startResize(evt);
-
-		document.body.addEventListener('touchmove', resize);
-		document.body.addEventListener('touchend', () => {
-			trigger.removeEventListener('touchend', resize);
-			document.body.removeEventListener('touchmove', resize);
-		})
-	})
-
-	var startResize = (evt) => {
+	document.body.addEventListener('touchmove', function resize(evt) {
 		y = evt.changedTouches[0].clientY
 
-	}
-
-	var resize = (evt) => {
-		y = evt.changedTouches[0].clientY
-
-		ht = y-rec.top;
+		ht = y-rec.top-50;
 
 		if (ht > 300) {
 			container.style.height = ht + 'px';
 		}
-	}
+
+		document.body.addEventListener('touchend', () => {
+			document.body.removeEventListener('touchmove', resize)
+		})
+	})
 }

@@ -145,7 +145,7 @@ export default class Header extends Component {
 		if (Auth.getAuth()) {
 			if (Auth.check_admin()) {
 				return (
-					<div class={style.header}>
+					<div class={style.header} id='header'>
 						<img class={style.logo} src='../../logo/StarsLogoTrans.png' />
 	
 						<div class={style.titleLogged}>Astrostars biobanding</div>
@@ -172,7 +172,7 @@ export default class Header extends Component {
 			}
 			else {
 				return (
-					<div class={style.header}>
+					<div class={style.header} id='header'>
 						<img class={style.logo} src='../../logo/StarsLogoTrans.png' />
 	
 						<div class={style.titleLogged}>Astrostars biobanding</div>

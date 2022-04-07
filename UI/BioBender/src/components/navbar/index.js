@@ -14,7 +14,6 @@ import Button from 'preact-material-components/Button';
 
 export default class Navbar extends Component {
 
-
 	componentWillMount = () => {
 		this.setState({ homeClass: style.nav });
 		this.setState({ profileClass: style.nav });
@@ -31,7 +30,6 @@ export default class Navbar extends Component {
 		this.setState({ configClass: style.nav });
 		this.setState({ configIcon: style.icon });
 
-		// for user tab
 		this.highlightUser();
 
 		this.highlightMeasure();
@@ -57,6 +55,7 @@ export default class Navbar extends Component {
 
 		window.addEventListener('scroll', function(event){
 			let top = this.pageYOffset || this.screenY
+			let bottom = top + window.innerHeight;
 
 			if (Auth.check_admin()) {
 				let userContainer = document.getElementById('userContainer');
@@ -67,18 +66,29 @@ export default class Navbar extends Component {
 	
 				let configContainer = document.getElementById('configContainer');
 				let configRec = configContainer.getBoundingClientRect();
-	
-				if (top > userRec.top && top < userRec.bottom) {
+
+				let headerContaienr = document.getElementById('header');
+				let headerRec = headerContaienr.getBoundingClientRect();
+
+				let userContainerHeight = Math.abs(userRec.top - userRec.bottom)
+				let evalContainerHeight = Math.abs(evalRec.top - evalRec.bottom)
+				let headerContaienrHeight = Math.abs(headerRec.top - headerRec.bottom)
+				let configContainerHeight = Math.abs(configRec.top - configRec.bottom)
+
+				if (top < headerContaienrHeight + userContainerHeight * 0.7){
 					that.highlightUser();
 				}
-	
-				if (top > evalRec.top && top < evalRec.bottom) {
-					that.highlightEval();
+				else {
+					if (bottom > headerContaienrHeight + userContainerHeight + evalContainerHeight + configContainerHeight * 0.7) {
+						that.highlightConfig();
+					}
+					else {
+						that.highlightEval();
+					}
 				}
-	
-				if (top > configRec.top && top < configRec.bottom) {
-					that.highlightConfig();
-				}
+
+
+
 			}
 			else {
 				let measureContainer = document.getElementById('measureContainer');
@@ -87,17 +97,21 @@ export default class Navbar extends Component {
 				let detailsContainer = this.document.getElementById('detailsContainer');
 				let detailsRec = detailsContainer.getBoundingClientRect();
 
-				if (top > 0 && top < measureRec.top) {
+				let headerHeight = document.getElementById('header').style.height;
+
+				let measureContainerHeight = Math.abs(measureRec.top - measureRec.bottom)
+				let detailsContainerHeight = Math.abs(detailsRec.top - detailsRec.bottom)
+
+
+				if (top > headerHeight && top < measureContainerHeight) {
 					that.highlightMeasure();
 				}
 
-				if (top > measureRec.bottom && top < detailsRec.bottom) {
+				if (top > measureContainerHeight && top < detailsContainerHeight) {
 					that.highlightDetails();
 				}
 			}
 			
-
-
 			that.getContent();
 		}, false);
 
@@ -154,79 +168,9 @@ export default class Navbar extends Component {
 		this.setState({ configIcon : style.activeIcon });
 	}
 
-	handleClickUser = () => {
-		// this.highlightUser();
-		this.getContent();
-		let container = document.getElementById('userContainer');
-		let rec = container.getBoundingClientRect();
-		let top = window.screenY || window.pageYOffset
 
-		if (top < rec.top || top > rec.bottom) {
-			window.scrollTo({
-				top: rec.top,
-				behavior: 'smooth'
-			})
-		}
-	}
-
-	handleClickEvaluation = () => {
-		// this.highlightEval();
-		this.getContent();
-		let container = document.getElementById('evalContainer');
-		let rec = container.getBoundingClientRect();
-		let top = window.screenY || window.pageYOffset
-
-		if (top < rec.top || top > rec.bottom) {
-			window.scrollTo({
-				top: rec.top,
-				behavior: 'smooth'
-			})
-		}
-	}
-
-	handleClickConfig = () => {
-		// this.highlightConfig();
-		this.getContent();
-		let container = document.getElementById('configContainer');
-		let rec = container.getBoundingClientRect();
-		let top = window.screenY || window.pageYOffset
-
-		if (top < rec.top || top > rec.bottom) {
-			window.scrollTo({
-				top: rec.top,
-				behavior: 'smooth'
-			})
-		}
-	}
-
-	handleClickMeasure = () => {
-		// this.highlightMeasure();
-		this.getContent();
-		let container = document.getElementById('measureContainer');
-		let rec = container.getBoundingClientRect();
-		let top = window.screenY || window.pageYOffset
-
-		if (top < rec.top || top > rec.bottom) {
-			window.scrollTo({
-				top: rec.top,
-				behavior: 'smooth'
-			})
-		}
-	}
-
-	handleClickDetails = () => {
-		// this.highlightDetailsTab
-		this.getContent();
-		let container = document.getElementById('detailsContainer');
-		let rec = container.getBoundingClientRect();
-		let top = window.screenY || window.pageYOffset
-
-		if (top < rec.top || top > rec.bottom) {
-			window.scrollTo({
-				top: rec.top,
-				behavior: 'smooth'
-			})
-		}
+	jumpTo = (id) => {
+		document.getElementById(id).scrollIntoView({behavior: 'smooth'});
 	}
 
 	getContent = () => {
@@ -236,17 +180,17 @@ export default class Navbar extends Component {
 					<div class={this.state.navbarClass}>
 						<img class={style.logo} src='../../logo/StarsLogoTrans.png' />
 
-						<div class={this.state.userClass} onClick={this.handleClickUser}>
+						<div class={this.state.userClass} onClick={() => {this.jumpTo('userContainer')}}>
 							<List.ItemGraphic class={this.state.userIcon}>group</List.ItemGraphic>
 							<div class={style.label}>Benutzer</div>
 						</div>
 
-						<div class={this.state.evalClass} onClick={this.handleClickEvaluation}>
+						<div class={this.state.evalClass} onClick={() => {this.jumpTo('evalContainer')}}>
 							<List.ItemGraphic class={this.state.evalIcon}>equalizer</List.ItemGraphic>
 							<div class={style.label}>Auswertung</div>
 						</div>
 		
-						<div class={this.state.configClass} onClick={this.handleClickConfig}>
+						<div class={this.state.configClass} onClick={() => {this.jumpTo('configContainer')}}>
 							<List.ItemGraphic class={this.state.configIcon}>build</List.ItemGraphic>
 							<div class={style.label}>Konfiguration</div>
 						</div>
