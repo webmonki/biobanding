@@ -8,6 +8,7 @@ from xmlrpc.client import DateTime
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
+from api.formulas import mirwald
 
 db = SQLAlchemy()
 
@@ -151,6 +152,18 @@ class AnthropometricData(db.Model):
         return res
 
     def save(self):
+        playerDetail = PlayerDetail.get_by_id(self.user_id)
+        gender = playerDetail.sex_m_0_f_1
+        # Strip Time from Datetime if exists
+        birthdate = str(playerDetail.birthday).split(' ')[0]
+        date_measured = str(self.date_measured).split(' ')[0]
+        # Calculate PHV age
+        self.result = mirwald(self.sitting_height,
+                                      self.height,
+                                      date_measured,
+                                      birthdate,
+                                      self.weight,
+                                      gender)
         db.session.add(self)
         db.session.commit()
 
