@@ -7,16 +7,21 @@ import json
 
 from flask import Flask
 from flask_cors import CORS
+from flask_mail import Mail
 
 from .routes import rest_api
 from .models import db, AdminConfig, Users
+from .errors import errors
+
+mail = Mail()
 
 app = Flask(__name__)
-
+mail = Mail(app)
 app.config.from_object('api.config.BaseConfig')
 
 db.init_app(app)
-rest_api.init_app(app)
+rest_api.init_app(app, errors=errors)
+mail.init_app(app)
 CORS(app)
 
 # Setup database

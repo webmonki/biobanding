@@ -3,15 +3,16 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from xmlrpc.client import DateTime
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from api.formulas import mirwald
+from .config import BaseConfig
+import os, jwt
 
 db = SQLAlchemy()
-
 
 class Users(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -56,6 +57,18 @@ class Users(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    def get_reset_token(self, expires=500):
+        return jwt.encode({'reset_password': self.username, 'exp': datetime.utcnow() + timedelta(minutes=5)}, BaseConfig.SECRET_KEY)
+
+    @staticmethod
+    def verify_reset_token(token):
+        try:
+            username = jwt.decode(token, key=BaseConfig.SECRET_KEY, algorithms=["HS256"])['reset_password']
+        except Exception as e:
+            print(e)
+            return
+        return Users.query.filter_by(username=username).first()
 
     @classmethod
     def get_all_users(cls):

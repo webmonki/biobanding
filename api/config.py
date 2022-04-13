@@ -16,3 +16,14 @@ class BaseConfig():
     SECRET_KEY = "flask-app-secret-key-change-it"
     JWT_SECRET_KEY = "jwt-app-secret-key-change-it"
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=10)
+
+    # Mail Configuration
+    MAIL_SERVER = 'smtp.strato.de'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = "test@vp-services.de"
+    MAIL_PASSWORD = "!Sklarja_93"
+
+    # Frontend routes for unique links creation
+    FRONTEND_URI = "localhost:8080"
+
