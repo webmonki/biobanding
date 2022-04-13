@@ -1,0 +1,12 @@
+.pageSmall {
+	margin-left: var(--global-navrail-width);
+	height: calc(100% - var(--global-header-height));
+	padding: 5% 5% 5% 5%;
+}
+
+.pageLarge {
+	margin-left: var(--global-navbar-width);
+	height: calc(100% - var(--global-header-height));
+	padding: 5% 5% 5% 5%;
+}
+

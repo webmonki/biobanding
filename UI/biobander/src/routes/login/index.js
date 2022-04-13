@@ -1,0 +1,138 @@
+import { h, Component } from 'preact';
+import Card from 'preact-material-components/Card';
+import 'preact-material-components/Card/style.css';
+import Button from 'preact-material-components/Button';
+import 'preact-material-components/Button/style.css';
+import style from './style';
+import { route } from 'preact-router';
+import Auth from '../../components/state.js';
+import { Link } from 'preact-router/match';
+import TextField from 'preact-material-components/TextField';
+import 'preact-material-components/TextField/style.css';
+
+
+class Form extends Component {
+
+	componentWillMount = () => {
+		this.setState({ btnDisabled: true });
+	}
+
+	componentDidMount = () => {
+		this.handleChange();
+		let that = this;
+		document.addEventListener('keyup', function(event){
+			that.handleKey(event);
+		})
+	}
+
+	componentWillUnmount = () => {
+		document.removeEventListener('keyup', this.handleKey)
+	}
+
+	handleKey = (event) => {
+		if(this.state.btnDisabled == false && event.code == 'Enter') {
+			this.login();
+			document.removeEventListener('keyup', this.handleKey)
+		}
+	}
+
+
+	// Check Input and Enable Button
+	handleChange = () => {
+		this.setState({ email: document.getElementById('emailInput').value });
+		this.setState({ password: document.getElementById('passwordInput').value });
+		this.setState({ loginResponse: '' });
+
+		if (this.state.email.match(
+			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+		) && this.state.password.length > 3 && this.state.password.length < 17){
+			this.setState({ btnDisabled: false });
+		}
+		else {
+			this.setState({ btnDisabled: true });
+		}
+
+	}
+
+
+	// Request to Post Login Data
+	login = () => {
+		let that = this;
+		let url = Auth.url + '/api/users/login';
+		let xhttp = new XMLHttpRequest();
+
+		xhttp.open('POST', url);
+		xhttp.setRequestHeader('Accept', 'application/json');
+		xhttp.setRequestHeader('Content-Type', 'application/json');
+
+		xhttp.onreadystatechange = function() {
+
+			if ([1,2,3,4].includes(this.readyState)) {
+				
+				if (this.status === 200) {
+					try {
+						let response = JSON.parse(this.responseText);
+						Auth.createUser(response);
+					}
+					catch (err) {}
+					// If Request Ok go to Home
+					if (Auth.check_admin()) {
+						route('/measurements', true);
+					} else {
+						route('/measurements', true);
+					}
+				}
+				else {
+					try {
+						let response = JSON.parse(this.responseText);
+						that.setState({ loginResponse: response.msg });
+					}
+					catch (err) {}
+				}
+			}
+			else {
+				this.setState({ loginResponse: 'Ups, something went wrong' });
+			}
+		};
+
+		let data =  `{
+            "email": "${this.state.email}",
+            "password": "${this.state.password}"
+        }`;
+
+		xhttp.send(data);
+
+	}
+
+
+	render() {
+		return (
+				<Card class={style.card}>
+					<div class={style.logoContainer}>
+						<img class={style.logo} src='../../logo/StarsLogoTrans.png' />
+					</div>
+					<div class={style.inputContainer}>
+						<div class={style.loginLabel}>Anmeldung</div>
+						<TextField type='email' class={style.input} label="E-Mail" outlined  id="emailInput" onKeyUp={this.handleChange}/>
+						<TextField type='password'class={style.input} label="Passwort" outlined id = "passwordInput" onKeyUp={this.handleChange}/>
+						<div class={style.input} style={{ color: '#B1262D' }}>{this.state.loginResponse}</div>
+						<div class={style.btnContainer}>
+							<Button class={style.input} raised onClick={this.login} disabled={this.state.btnDisabled}>anmelden</Button>
+							<Link class={style.input} href="/signup" data-native>registrieren</Link>
+						</div>
+					</div>
+				</Card>
+		);
+	}
+
+}
+
+
+export default class Login extends Component {
+	render() {
+		return (
+			<Form />
+		);
+	}
+}
+
