@@ -1,0 +1,89 @@
+.roundBtn {
+	border-radius: 100px;
+}
+
+.white {
+	color: white;
+}
+
+.appTitle {
+	position: absolute;
+	left: calc(var(--global-topbar-margin) + 90px);
+	font-size: 20px;
+}
+
+.topAppBar{
+	height: var(--global-header-height);
+	display: flex;
+	align-items: center;
+}
+
+.btnContainer {
+	width: var(--global-topbar-btnContainer-width);
+	display: flex;
+	justify-content: space-between;
+	position: absolute;
+	right: var(--global-topbar-margin);
+}
+
+.inputContainer {
+	padding-top: var(--global-line-space);
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.subHeader {
+	position: absolute;
+	top: 50px;
+	left : 25px;
+}
+
+.fullWidth{
+	width: 100%;
+}
+
+.input {
+	width: var(--global-input-width);
+}
+
+.width {
+	width: var(--global-input-width);
+}
+
+.fullWidth {
+	width: 100%;
+}
+
+.selectId {
+	width: 100%;
+	margin-bottom: var(--global-line-space);
+}
+
+.row {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: var(--global-line-space);
+}
+
+.dialog {
+	background-color: var(--global-dialog-background);
+	z-index: 7;
+	padding: var(--global-dialog-padding);
+}
+
+.footer {
+	padding: 0 24px 0 24px;
+}
+
+.feedbackErr {
+	color: var(--global-error-color);
+	font-size: var(--global-feedback-size);
+}
+
+.feedbackSucc {
+	color: var(--global-success-color);
+	font-size: var(--global-feedback-size);
+}
