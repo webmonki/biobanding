@@ -86,6 +86,7 @@ export default class Header extends Component {
 	}
 
 	sendMeasurement = () => {
+		console.log("SEND")
 
 		let id;
 		Auth.check_admin() ? id = this.state.userIds[this.state.chosenIndex] : id = Auth.getUser().id;
@@ -101,8 +102,14 @@ export default class Header extends Component {
 
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
+				let response = JSON.parse(this.responseText);
+				console.log(response)
+				location.reload();
+
 			}
 			else {
+				let response = JSON.parse(this.responseText);
+				console.log(response)
 			}
 		};
 
@@ -142,9 +149,10 @@ export default class Header extends Component {
 							</Select>
 							<div class={style.row}>
 							<div class={style.input}>
-									<TextField class={style.fullWidth} min={0} max={300} type='number' outlined label='Größe' onKeyUp={e => {
-										this.setState({ height: e.target.value });
+									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe' onKeyUp={e => {
 										let val = e.target.value;
+										this.setState({ height: e.target.val });
+
 										if (val < 0) {
 											this.setState({ heightFBClass : style.feedbackErr });
 											this.setState({ heightFB : 'Mindestens 0'})
@@ -162,9 +170,10 @@ export default class Header extends Component {
 									<span class={this.state.heightFBClass}>{this.state.heightFB}</span>
 								</div>
 								<div class={style.input}>
-									<TextField class={style.fullWidth} min={0} max={300} outlined label='Größe im Sitzen' onKeyUp={e => {
-										this.setState({ sittingHeight : e.target.value });
+									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe im Sitzen' onKeyUp={e => {
 										let val = e.target.value;
+										this.setState({ sittingHeight : val });
+
 										if (val < 0) {
 											this.setState({ sittingFBClass : style.feedbackErr });
 											this.setState({ sittingFB : 'Mindestens 0'})
@@ -184,9 +193,10 @@ export default class Header extends Component {
 							</div>
 							<div class={style.row}>
 							<div class={style.input}>
-									<TextField class={style.fullWidth} min={0} max={300} outlined label='Arm Spannweite' onKeyUp={e => {
-											this.setState({ span : e.target.value });
+									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Arm Spannweite' onKeyUp={e => {
 											let val = e.target.value;
+											this.setState({ span : val });
+
 											if (val < 0) {
 												this.setState({ spanFBClass : style.feedbackErr });
 												this.setState({ spanFB : 'Mindestens 0'})
@@ -204,8 +214,10 @@ export default class Header extends Component {
 									<span class={this.state.spanFBClass}>{this.state.spanFB}</span>
 								</div>
 								<div class={style.input}>
-									<TextField class={style.fullWidth} min={0} max={300} outlined label='Gewicht' onKeyUp={e => {
-										this.setState({ weight : e.target.value });
+									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Gewicht' onKeyUp={e => {
+										let val = e.target.value
+										this.setState({ weight : val });
+
 										if (val < 0) {
 											this.setState({ weightFBClass : style.feedbackErr });
 											this.setState({ weightFB : 'Mindestens 0'})
@@ -227,7 +239,7 @@ export default class Header extends Component {
 					</Dialog.Body>
 					<Dialog.Footer class={style.footer}>
 						<Dialog.FooterButton cancel={true}>Abbrechen</Dialog.FooterButton>
-						<Dialog.FooterButton raised accept={true}>Speichern</Dialog.FooterButton>
+						<Dialog.FooterButton style={{color : 'white'}} class="mdc-button mdc-theme--primary-bg" raised accept={true}>Speichern</Dialog.FooterButton>
 					</Dialog.Footer>
 				</Dialog>
 			)
@@ -245,9 +257,10 @@ export default class Header extends Component {
 							<span class={style.subHeader}>Anthropometrische Daten</span>
 							<div class={style.row}>
 								<div class={style.input}>
-									<TextField class={style.fullWidth} min={0} max={300} type='number' outlined label='Größe' onKeyUp={e => {
-										this.setState({ height: e.target.value });
+									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe' onKeyUp={e => {
 										let val = e.target.value;
+										this.setState({ height: val });
+
 										if (val < 0) {
 											this.setState({ heightFBClass : style.feedbackErr });
 											this.setState({ heightFB : 'Mindestens 0'})
@@ -265,9 +278,10 @@ export default class Header extends Component {
 									<span class={this.state.heightFBClass}>{this.state.heightFB}</span>
 								</div>
 								<div class={style.input}>
-									<TextField class={style.fullWidth} min={0} max={300} outlined label='Größe im Sitzen' onKeyUp={e => {
-										this.setState({ sittingHeight : e.target.value });
+									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe im Sitzen' onKeyUp={e => {
 										let val = e.target.value;
+										this.setState({ sittingHeight : val });
+
 										if (val < 0) {
 											this.setState({ sittingFBClass : style.feedbackErr });
 											this.setState({ sittingFB : 'Mindestens 0'})
@@ -287,9 +301,10 @@ export default class Header extends Component {
 							</div>
 							<div class={style.row}>
 								<div class={style.input}>
-									<TextField class={style.fullWidth} min={0} max={300} outlined label='Arm Spannweite' onKeyUp={e => {
-											this.setState({ span : e.target.value });
+									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Arm Spannweite' onKeyUp={e => {
 											let val = e.target.value;
+											this.setState({ span : val });
+
 											if (val < 0) {
 												this.setState({ spanFBClass : style.feedbackErr });
 												this.setState({ spanFB : 'Mindestens 0'})
@@ -307,8 +322,10 @@ export default class Header extends Component {
 									<span class={this.state.spanFBClass}>{this.state.spanFB}</span>
 								</div>
 								<div class={style.input}>
-									<TextField class={style.fullWidth} min={0} max={300} outlined label='Gewicht' onKeyUp={e => {
-										this.setState({ weight : e.target.value });
+									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Gewicht' onKeyUp={e => {
+										let val = e.target.value
+										this.setState({ weight : val });
+
 										if (val < 0) {
 											this.setState({ weightFBClass : style.feedbackErr });
 											this.setState({ weightFB : 'Mindestens 0'})
@@ -328,9 +345,9 @@ export default class Header extends Component {
 							</div>
 						</div>
 					</Dialog.Body>
-					<Dialog.Footer>
+					<Dialog.Footer class={style.footer}>
 						<Dialog.FooterButton cancel={true}>Abbrechen</Dialog.FooterButton>
-						<Dialog.FooterButton raised accept={true}>Speichern</Dialog.FooterButton>
+						<Dialog.FooterButton style={{color : 'white'}} class="mdc-button mdc-theme--primary-bg" raised accept={true}>Speichern</Dialog.FooterButton>
 					</Dialog.Footer>
 				</Dialog>
 			)
@@ -340,8 +357,9 @@ export default class Header extends Component {
 	}
 
 	handleKey = (event) => {
+		console.log("EVENT")
 		if(event.code == 'Enter') {
-			this.sendMeasurement;
+			this.sendMeasurement();
 			document.removeEventListener('keyup', this.handleKey)
 		}
 	}
@@ -358,10 +376,7 @@ export default class Header extends Component {
 						<Button raised class={`${"mdc-button mdc-theme--secondary-bg"} ${style.roundBtn}`} onClick={() => {
 							this.getPlayerDetails();
 							this.newMeasurementsDialog.MDComponent.show();
-							let that = this;
-							document.addEventListener('keyup', function(event){
-								that.handleKey(event);
-							})
+							document.addEventListener('keyup', this.handleKey)
 						}}>
 							  <i class="material-icons mdc-button__icon mdc-theme--text-secondary-on-light" aria-hidden="true">add</i>
 							  <span class="mdc-button__label mdc-theme--text-secondary-on-light">Messung</span>

@@ -16,6 +16,7 @@ import 'preact-material-components/List/style.css';
 import List from 'preact-material-components/List';
 import Drawer from 'preact-material-components/Drawer';
 import 'preact-material-components/Drawer/style.css';
+import Table from '../../components/table';
 
 export default class Measurements extends Component {
 
@@ -55,7 +56,7 @@ export default class Measurements extends Component {
 
 		let content = (
 			<div class={style.tableContainer}>
-				{createTable(data, editable, this.showDialog, this.checkDelete)}
+				<Table editable={editable} data={data} pageSize={11} clickEdit={this.showDialog} idKey='id' />
 			</div>
 		);
 		this.setState({ content });
@@ -75,8 +76,19 @@ export default class Measurements extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
+				that.setState({ responseFBClass : style.feedbackSucc });
+				that.setState({ responseFB : 'Messung erfolgreich geändert' });
+				location.reload();
 			}
 			else {
+				try {
+					let response = JSON.parse(this.responseText);
+					if (response.msg == 'Token is invalid') {
+						Auth.logout();
+						location.reload();
+					}
+				}
+				catch (err) {}
 			}
 		};
 
@@ -124,10 +136,20 @@ export default class Measurements extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
+				that.setState({ responseFBClass : style.feedbackSucc });
+				that.setState({ responseFB : 'Übersicht erfolgreich geladen' });
 				that.setState({ measurements : response['userdetails'] });
 				that.showTable(false);
 			}
 			else {
+				try {
+					let response = JSON.parse(this.responseText);
+					if (response.msg == 'Token is invalid') {
+						Auth.logout();
+						location.reload();
+					}
+				}
+				catch (err) {}
 			}
 		};
 		xhttp.send();
@@ -146,10 +168,20 @@ export default class Measurements extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
+				that.setState({ responseFBClass : style.feedbackSucc });
+				that.setState({ responseFB : 'Messungen erfolgreich geladen' });
 				that.setState({ measurements : response['measurements:'] });
 				that.showTable(true);
 			}
 			else {
+				try {
+					let response = JSON.parse(this.responseText);
+					if (response.msg == 'Token is invalid') {
+						Auth.logout();
+						location.reload();
+					}
+				}
+				catch (err) {}
 			}
 		};
 		xhttp.send();
@@ -167,6 +199,9 @@ export default class Measurements extends Component {
 
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
+				let response = JSON.parse(this.responseText);
+				that.setState({ responseFBClass : style.feedbackSucc });
+				that.setState({ responseFB : 'Messung erfolgreich gelöscht' });
 				
 				let newMeasureList = []
 				that.state.measurements.forEach(measure => {
@@ -178,6 +213,14 @@ export default class Measurements extends Component {
 				that.showTable(true);
 			}
 			else {
+				try {
+					let response = JSON.parse(this.responseText);
+					if (response.msg == 'Token is invalid') {
+						Auth.logout();
+						location.reload();
+					}
+				}
+				catch (err) {}
 			}
 		};
 
@@ -196,8 +239,29 @@ export default class Measurements extends Component {
 	}
 
 	showDialog = (id) => {
+		document.addEventListener('keyup', this.handleKey)
+
 		this.setState({ editId : id });
+		
+		this.state.measurements.forEach(measurement => {
+			if (measurement.id == id) {
+				this.setState({ height : measurement.height })
+				this.setState({ sittingHeight : measurement.sitting_height })
+				this.setState({ span : measurement.body_span })
+				this.setState({ weight : measurement.weight })
+			}
+		})
+
+		this.getDialog();
 		this.editDialog.MDComponent.show();
+	}
+
+	handleKey = (event) => {
+		console.log("EVENT")
+		if(event.code == 'Enter') {
+			this.editData();
+			document.removeEventListener('keyup', this.handleKey)
+		}
 	}
 
 	getDialog = () => {
@@ -208,31 +272,103 @@ export default class Measurements extends Component {
 			}} onCancel={() => {
 				document.removeEventListener('keyup', this.handleKey)
 			}}>
-				<Dialog.Header>Neue Messung erstellen</Dialog.Header>
+				<Dialog.Header>Messung bearbeiten</Dialog.Header>
 				<Dialog.Body>
 					<div class={style.inputContainer}>
 						<span class={style.subHeader}>Anthropometrische Daten</span>
 						<div class={style.row}>
-							<TextField outlined label='Größe' class={style.input} onKeyUp={e => {
-								this.setState({ height: e.target.value });
-							}}/>
-							<TextField outlined label='Größe im Sitzen' class={style.input} onKeyUp={e => {
-								this.setState({ sittingHeight : e.target.value });
-							}}/>
-						</div>
-						<div class={style.row}>
-							<TextField outlined label='Arm Spannweite' class={style.input} onKeyUp={e => {
-								this.setState({ span : e.target.value });
-							}}/>
-							<TextField outlined label='Gewicht' class={style.input} onKeyUp={e => {
-								this.setState({ weight : e.target.value });
-							}}/>
-						</div>
+								<div class={style.input}>
+									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe' value={this.state.height} onKeyUp={e => {
+										let val = e.target.value;
+										this.setState({ height: val });
+
+										if (val < 0) {
+											this.setState({ heightFBClass : style.feedbackErr });
+											this.setState({ heightFB : 'Mindestens 0'})
+										}
+										if (val > 300) {
+											this.setState({ heightFBClass : style.feedbackErr });
+											this.setState({ heightFB : 'Maximal 300' });
+										}
+										if (val >= 0 && val <= 300) {
+											this.setState({ heightFBClass : style.feedbackSucc });
+											this.setState({ heightFB : 'okay' });
+										}
+										this.getDialog();
+									}}/>
+									<span class={this.state.heightFBClass}>{this.state.heightFB}</span>
+								</div>
+								<div class={style.input}>
+									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe im Sitzen' value={this.state.sittingHeight} onKeyUp={e => {
+										let val = e.target.value;
+										this.setState({ sittingHeight : val });
+
+										if (val < 0) {
+											this.setState({ sittingFBClass : style.feedbackErr });
+											this.setState({ sittingFB : 'Mindestens 0'})
+										}
+										if (val > 300) {
+											this.setState({ sittingFBClass : style.feedbackErr });
+											this.setState({ sittingFB : 'Maximal 300'})
+										}
+										if (val >= 0 && val <= 300) {
+											this.setState({ sittingFBClass : style.feedbackSucc });
+											this.setState({ sittingFB : 'okay' });
+										}
+										this.getDialog();
+									}}/>
+									<span class={this.state.sittingFBClass}>{this.state.sittingFB}</span>
+								</div>
+							</div>
+							<div class={style.row}>
+								<div class={style.input}>
+									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Arm Spannweite' value={this.state.span} onKeyUp={e => {
+											let val = e.target.value;
+											this.setState({ span : val });
+
+											if (val < 0) {
+												this.setState({ spanFBClass : style.feedbackErr });
+												this.setState({ spanFB : 'Mindestens 0'})
+											}
+											if (val > 300) {
+												this.setState({ spanFBClass : style.feedbackErr });
+												this.setState({ spanFB : 'Maximal 300'})
+											}
+											if (val >= 0 && val <= 300) {
+												this.setState({ spanFBClass : style.feedbackSucc });
+												this.setState({ spanFB : 'okay' });
+											}
+											this.getDialog();
+										}}/>
+									<span class={this.state.spanFBClass}>{this.state.spanFB}</span>
+								</div>
+								<div class={style.input}>
+									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Gewicht' value={this.state.weight} onKeyUp={e => {
+										let val = e.target.value
+										this.setState({ weight : val });
+
+										if (val < 0) {
+											this.setState({ weightFBClass : style.feedbackErr });
+											this.setState({ weightFB : 'Mindestens 0'})
+										}
+										if (val > 300) {
+											this.setState({ weightFBClass : style.feedbackErr });
+											this.setState({ weightFB : 'Maximal 300'})
+										}
+										if (val >= 0 && val <= 300) {
+											this.setState({ weightFBClass : style.feedbackSucc });
+											this.setState({ weightFB : 'okay' });
+										}
+										this.getDialog();
+									}}/>
+									<span class={this.state.weightFBClass}>{this.state.weightFB}</span>
+								</div>
+							</div>
 					</div>
 				</Dialog.Body>
 				<Dialog.Footer class={style.footer}>
 					<Dialog.FooterButton cancel={true}>Abbrechen</Dialog.FooterButton>
-					<Dialog.FooterButton raised accept={true}>Speichern</Dialog.FooterButton>
+					<Dialog.FooterButton style={{color : 'white'}} class="mdc-button mdc-theme--primary-bg" raised accept={true}>Speichern</Dialog.FooterButton>
 				</Dialog.Footer>
 			</Dialog>
 		)
@@ -244,12 +380,16 @@ export default class Measurements extends Component {
 		return (
 			<div class={this.state.pageClass}>
 				<Navbar selectedRoute='/measurements' fitPageSize={this.fitPageSize}/>
-				<div>
+				<span class={style.pageHeader}>Messungen</span>
+				<div class={style.btnContainer}>
 					{this.state.btn}
 				</div>
 				<Card class={style.card}>
 					{this.state.content}
 				</Card>
+				<div class={style.feedbackContainer}>
+					<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
+				</div>
 				{this.state.dialog}
 			</div>
 		);

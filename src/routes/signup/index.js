@@ -20,10 +20,7 @@ class Form extends Component {
 
 	componentDidMount = () => {
 		this.handleChange();
-		var that = this;
-		document.addEventListener('keyup', function(event){
-			that.handleKey(event);
-		})
+		document.addEventListener('keyup', this.handleKey)
 	}
 
 	componentWillUnmount = () => {
@@ -44,13 +41,6 @@ class Form extends Component {
 		this.setState({ password: document.getElementById('passwordInput').value });
 		this.setState({ email: document.getElementById('emailInput').value });
 		this.setState({ password2: document.getElementById('password2Input').value });
-
-		if (this.state.password !== this.state.password2) {
-			this.setState({ signupResponse: 'Passwörter stimmen nicht überein.' });
-		}
-		else {
-			this.setState({ signupResponse: '' });
-		}
 
 
 		if (this.state.email.match(
@@ -87,7 +77,12 @@ class Form extends Component {
 				else {
 					try {
 						let response = JSON.parse(this.responseText);
-						that.setState({ signupResponse: response.msg });
+						if (response.msg == 'Token is invalid') {
+							Auth.logout();
+							location.reload();
+						}
+						that.setState({ responseFBClass : style.feedbackErr });
+						that.setState({ responseFB : response.msg });
 					}
 					catch (err) {}
 
@@ -118,21 +113,112 @@ class Form extends Component {
 					</div>
 					<div class={style.inputContainer}>
 						<div class={style.loginLabel}>Registrierung</div>
-						<TextField class={style.input} outlined id="usernameInput" label="Benutzername" onKeyUp={this.handleChange} />
-						<TextField type='email' class={style.input} outlined id="emailInput" label="E-Mail" onKeyUp={this.handleChange} />
-						<TextField type='password' class={style.input} outlined id="passwordInput" label="Passwort" onKeyUp={this.handleChange} />
-						<TextField type='password' class={style.input} outlined id="password2Input" label="Passwort wiederholen" onKeyUp={this.handleChange} />
-						<div class={style.input} style={{ color: '#B1262D' }}>{this.state.signupResponse }</div>
-						<div class={style.btnContainer}>
-							<Button class={style.input} raised onClick={this.signup} disabled={this.state.btnDisabled}>registrieren</Button>
-							<Link class={style.input} href="/login" data-native>anmelden</Link>
+						<div class={style.input}>
+								<TextField id='usernameInput' outlined label='Benutzername' value={this.state.editUsername} onKeyUp={e => {
+									this.handleChange();
+									this.setState({ editUsername : e.target.value })
+									let val = e.target.value
+									if (val.length < 1) {
+										this.setState({usernameFBClass : style.feedbackErr})
+										this.setState({ usernameFB : 'Mindestens 1 Zeichen'})
+									}
+									if (val.length > 32) {
+										this.setState({usernameFBClass : style.feedbackErr })
+										this.setState({ usernameFB : 'Maximal 32 Zeichen'})
+									}
+									if (val.length > 0 && val.length < 33) {
+										this.setState({usernameFBClass : style.feedbackSucc })
+										this.setState({usernameFB : 'okay'})
+									}
+								}}/>
+								<span class={this.state.usernameFBClass}>{this.state.usernameFB}</span>
+							</div>
+							<div class={style.input}>
+								<TextField id='emailInput' outlined label='E-Mail' value={this.state.email} onInput={e =>{
+									this.handleChange();
+									this.setState({ email : e.target.value });
+									let val = e.target.value
+									if (val.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+										this.setState({ emailFBClass : style.feedbackSucc });
+										this.setState({ emailFB : 'okay'})
+									}
+									else {
+										this.setState({ emailFBClass : style.feedbackErr });
+										this.setState({ emailFB : 'keine E-Mail'})
+									}
+								}}/>
+								<span class={this.state.emailFBClass}>{this.state.emailFB}</span>
+							</div>
+							<div class={style.input}>
+								<TextField id='passwordInput' type='password' outlined label='Passwort' onKeyUp={e => {
+									this.handleChange();
+									this.setState({ password : e.target.value })
+									let val = e.target.value;
+									if (val.length < 4) {
+										this.setState({ passwordFBClass : style.feedbackErr });
+										this.setState({ passwordFB : 'Mindetsens 4 Zeichen'})
+									}
+									if (val.length > 16) {
+										this.setState({ passwordFBClass : style.feedbackErr });
+										this.setState({ passwordFB : 'Maximal 16 Zeichen'})
+									}
+									if (val.length > 3 && val.length < 17) {
+										this.setState({ passwordFBClass : style.feedbackSucc });
+										this.setState({ passwordFB : 'Länge okay'})
+									}
+									if (this.state.password == this.state.password2) {
+										this.setState({ passwordSameFBClass : style.feedbackSucc })
+										this.setState({ passwordSameFB : 'Passwörter stimmen überein'})
+									}
+									else {
+										this.setState({ passwordSameFBClass : style.feedbackErr })
+										this.setState({ passwordSameFB : 'Passwörter stimmen nicht überein'})
+									}
+								}}/>
+								<span class={this.state.passwordFBClass}>{this.state.passwordFB}</span>
+							</div>
+							<div class={style.input}>
+								<TextField id='password2Input' type='password' outlined label='Passwort wiederholen' onKeyUp={e => {
+									this.handleChange();
+									this.setState({ password2 : e.target.value })
+									let val = e.target.value;
+									if (val.length < 4) {
+										this.setState({ password2FBClass : style.feedbackErr });
+										this.setState({ password2FB : 'Mindetsens 4 Zeichen'})
+									}
+									if (val.length > 16) {
+										this.setState({ password2FBClass : style.feedbackErr });
+										this.setState({ password2FB : 'Maximal 16 Zeichen'})
+									}
+									if (val.length > 3 && val.length < 17) {
+										this.setState({ password2FBClass : style.feedbackSucc });
+										this.setState({ password2FB : 'Länge okay'})
+									}
+									if (this.state.password == this.state.password2) {
+										this.setState({ passwordSameFBClass : style.feedbackSucc })
+										this.setState({ passwordSameFB : 'Passwörter stimmen überein'})
+									}
+									else {
+										this.setState({ passwordSameFBClass : style.feedbackErr })
+										this.setState({ passwordSameFB : 'Passwörter stimmen nicht überein'})
+									}
+								}}/>
+								<span class={this.state.password2FBClass}>{this.state.password2FB}</span>
+							</div>
+							<div class={style.pwVal}>
+								<span class={this.state.passwordSameFBClass}>{this.state.passwordSameFB}</span>
+							</div>
+							<div class={style.btnContainer}>
+								<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
+								<Button class={style.input} raised onClick={this.signup} disabled={this.state.btnDisabled}>registrieren</Button>
+								<Link class={style.input} href="/login" data-native>anmelden</Link>
+							</div>
 						</div>
-					</div>
-				</Card>
-		);
-	}
+					</Card>
+			);
+		}
 
-}
+	}
 
 export default class Signup extends Component {
 	render() {

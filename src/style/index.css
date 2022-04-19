@@ -63,6 +63,11 @@ html, body {
 	--global-feedback-size: small;
 	--global-error-color: #B1262D;
 	--global-success-color: #3C9052;
+	--global-header-size: 25px;
+	--global-header-line-size: 1px;
+	--global-header-line-color: rgba(0, 0, 0, 0.6);
+	--global-header-color: black;
+	--global-table-page-container-size: 30px;
 }
 
 

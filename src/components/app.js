@@ -2,7 +2,6 @@ import { h, Component } from 'preact';
 import { Router } from 'preact-router';
 import { route } from 'preact-router';
 import Header from './header';
-import Home from '../routes/home';
 import Profile from '../routes/profile';
 import NotFound from '../routes/404';
 import Measurements from '../routes/measurements';
@@ -30,21 +29,7 @@ export default class App extends Component {
 			}
 		}
 		else {
-			try {
-				var path = JSON.parse(sessionStorage.path);
-			}
-			catch (err) {
-				path = undefined;
-			}
-			if (Auth.check_admin()) {
-
-				path != undefined ? this.setState({ currentUrl: '/home'}) : this.setState({ currentUrl : path })
-
-			}
-			else {
-				path != undefined ? this.setState({ currentUrl: '/home'}) : this.setState({ currentUrl : path })
-
-			}
+			this.setState({ currentUrl : e.url })
 		}
 	}
 
@@ -55,7 +40,6 @@ export default class App extends Component {
 				<Router onChange={this.handleRoute}>
 					<Login path='/login' />
 					<Signup path='/signup' />
-					<Home path="/" />
 					<Profile path="/profile/" user="me" />
 					<Profile path="/profile/:user" />
 					<Measurements path="/measurements" />

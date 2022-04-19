@@ -18,6 +18,7 @@ import Drawer from 'preact-material-components/Drawer';
 import 'preact-material-components/Drawer/style.css';
 import Switch from 'preact-material-components/Switch';
 import 'preact-material-components/Switch/style.css';
+import Table from '../../components/table';
 
 export default class Users extends Component {
 
@@ -37,18 +38,6 @@ export default class Users extends Component {
 		large ? this.setState({pageClass : style.pageLarge }) : this.setState({pageClass : style.pageSmall})
 	}
 
-	showTable = (editable) => {
-		
-		let data = this.state.users
-
-		let content = (
-			<div class={style.tableContainer}>
-				{createTable(data, editable, this.showDialog, this.checkDelete)}
-			</div>
-		);
-		this.setState({ content });
-	};
-
 	getData = () => {
 		let that = this;
 		let url = Auth.url + '/api/users';
@@ -61,13 +50,19 @@ export default class Users extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
+				that.setState({ responseFBClass : style.feedbackSucc });
+				that.setState({ responseFB : 'Benutzer erfolgreich geladen' });
 				that.setState({ users : response['users:'] });
-				that.state.users.forEach(user => {
-					user.id = user.userID
-				})
-				that.showTable(true);
 			}
 			else {
+				try {
+					let response = JSON.parse(this.responseText);
+					if (response.msg == 'Token is invalid') {
+						Auth.logout();
+						location.reload();
+					}
+				}
+				catch (err) {}
 			}
 		};
 		xhttp.send();
@@ -85,16 +80,25 @@ export default class Users extends Component {
 
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
+				that.setState({ responseFBClass : style.feedbackSucc });
+				that.setState({ responseFB : 'Benutzer erflogreich gelöscht' });
 				let newUserList = []
 				that.state.users.forEach(user => {
-					if (user.id != id) {
+					if (user.userID != id) {
 						newUserList.push(user)
 					}
 				})
 				that.setState({ users : newUserList });
-				that.showTable(true);
 			}
 			else {
+				try {
+					let response = JSON.parse(this.responseText);
+					if (response.msg == 'Token is invalid') {
+						Auth.logout();
+						location.reload();
+					}
+				}
+				catch (err) {}
 			}
 		};
 		
@@ -114,6 +118,8 @@ export default class Users extends Component {
 	}
 
 	showDialog = (id) => {
+		document.addEventListener('keyup', this.handleKeyEdit)
+
 		this.setState({ editId : id });
 
 		this.state.users.forEach(user => {
@@ -141,15 +147,41 @@ export default class Users extends Component {
 
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				let response = JSON.parse(this.responseText);
+				that.setState({ responseFBClass : style.feedbackSucc });
+				that.setState({ responseFB : 'Benutzer erfolgreich geändert' });
+
+				let newUserList = []
+				let editId = that.state.editId
+				that.state.users.forEach(user => {
+					if (user.userID != editId) {
+						newUserList.push(user)
+					}
+					else {
+						user.username = that.state.editUsername;
+						user.email = that.state.editEmail;
+						newUserList.push(user);
+					}
+				})
+				that.setState({ users : newUserList });
+				that.editUserDialog.MDComponent.close()
+
+
 			}
 			else {
+				try {
+					let response = JSON.parse(this.responseText);
+					if (response.msg == 'Token is invalid') {
+						Auth.logout();
+						location.reload();
+					}
+				}
+				catch (err) {}
 			}
 		};
 
 		let data = `{
-			"username": "${ this.state.username }",
-			"email": "${ this.state.email }"
+			"username": "${ this.state.editUsername }",
+			"email": "${ this.state.editEmail }"
 		}`;
 
 		xhttp.send(data);
@@ -166,12 +198,20 @@ export default class Users extends Component {
 
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				let response = JSON.parse(this.responseText);
-				console.log(response)
+				that.setState({ responseFBClass : style.feedbackSucc });
+				that.setState({ responseFB : 'Benutzer erfolgreich angelegt' });
+
+				location.reload();
 			}
 			else {
-				let response = JSON.parse(this.responseText);
-				console.log(response)
+				try {
+					let response = JSON.parse(this.responseText);
+					if (response.msg == 'Token is invalid') {
+						Auth.logout();
+						location.reload();
+					}
+				}
+				catch (err) {}
 			}
 		};
 
@@ -221,8 +261,8 @@ export default class Users extends Component {
 								<span class={this.state.usernameFBClass}>{this.state.usernameFB}</span>
 							</div>
 							<div class={style.input}>
-								<TextField outlined label='E-Mail' class={style.fullWidth} value={this.state.email} onInput={e =>{
-									this.setState({ email : e.target.value });
+								<TextField outlined label='E-Mail' class={style.fullWidth} value={this.state.editEmail} onInput={e =>{
+									this.setState({ editEmail : e.target.value });
 									let val = e.target.value
 									if (val.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
 										this.setState({ emailFBClass : style.feedbackSucc });
@@ -241,7 +281,7 @@ export default class Users extends Component {
 				</Dialog.Body>
 				<Dialog.Footer class={style.footer}>
 					<Dialog.FooterButton cancel={true}>Abbrechen</Dialog.FooterButton>
-					<Dialog.FooterButton raised accept={true}>Speichern</Dialog.FooterButton>
+					<Dialog.FooterButton style={{color : 'white'}} class="mdc-button mdc-theme--primary-bg" raised accept={true}>Speichern</Dialog.FooterButton>
 				</Dialog.Footer>
 			</Dialog>
 			<Dialog class={style.dialog} ref={newUserDialog=>{this.newUserDialog=newUserDialog}} onAccept={() => {
@@ -255,9 +295,9 @@ export default class Users extends Component {
 					<div class={style.inputContainer}>
 						<span class={style.subHeader}>Login Daten</span>
 						<div class={style.row}>
-						<div class={style.input}>
-								<TextField outlined label='Benutzername' class={style.fullWidth} value={this.state.editUsername} onKeyUp={e => {
-									this.setState({ editUsername : e.target.value })
+							<div class={style.input}>
+								<TextField outlined label='Benutzername' class={style.fullWidth} value={this.state.username} onKeyUp={e => {
+									this.setState({ username : e.target.value })
 									let val = e.target.value
 									if (val.length < 1) {
 										this.setState({usernameFBClass : style.feedbackErr})
@@ -363,7 +403,7 @@ export default class Users extends Component {
 				</Dialog.Body>
 				<Dialog.Footer class={style.footer}>
 					<Dialog.FooterButton cancel={true}>Abbrechen</Dialog.FooterButton>
-					<Dialog.FooterButton raised accept={true}>Erstellen</Dialog.FooterButton>
+					<Dialog.FooterButton style={{color : 'white'}} class="mdc-button mdc-theme--primary-bg" raised accept={true}>Speichern</Dialog.FooterButton>
 				</Dialog.Footer>
 			</Dialog>
 			</div>
@@ -375,10 +415,7 @@ export default class Users extends Component {
 
 	showNewUserDialog = () => {
 		this.newUserDialog.MDComponent.show();
-		let that = this;
-		document.addEventListener('keyup', function(event){
-			that.handleKey(event);
-		})
+		document.addEventListener('keyup', this.handleKey)
 	}
 
 	handleKey = (event) => {
@@ -388,22 +425,33 @@ export default class Users extends Component {
 		}
 	}
 
+	handleKeyEdit = (event) => {
+		if(event.code == 'Enter') {
+			this.editData();
+			document.removeEventListener('keyup', this.handleKey)
+		}
+	}
+
 	render() {
 		return (
 			<div class={this.state.pageClass}>
 				<Navbar selectedRoute='/users' fitPageSize={this.fitPageSize}/>
+				<span class={style.pageHeader}>Benutzer</span>
 				<div class={style.btnContainer}>
 					<Button class={style.deleteBtn} onClick={this.checkDelete}>
 						<List.ItemGraphic class={`${"mdc-theme--primary"} ${style.icon}`}>delete</List.ItemGraphic>
 					</Button>
 					<Button raised class={`${"mdc-button mdc-theme--primary-bg"} ${style.roundBtn}`} onClick={this.showNewUserDialog}>
-							  <i class="material-icons mdc-button__icon mdc-theme-on-primary" aria-hidden="true">add</i>
-							  <span class="mdc-button__label mdc-theme-on-primary">erstellen</span>
-						</Button>
+						<i class="material-icons mdc-button__icon mdc-theme-on-primary" aria-hidden="true">add</i>
+						<span class="mdc-button__label mdc-theme-on-primary">erstellen</span>
+					</Button>
 				</div>
 				<Card class={style.card}>
-					{this.state.content}
+					<Table editable={true} data={this.state.users} pageSize={11} clickEdit={this.showDialog} idKey='userID'/>
 				</Card>
+				<div class={style.feedbackContainer}>
+					<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
+				</div>
 				{this.state.dialog}
 			</div>
 		);

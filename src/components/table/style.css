@@ -24,7 +24,6 @@ table {
 
 th, td {
 	padding: 8px 16px;
-	/* border: 1px solid #C7C1C1; */
 	text-align: center;
 }
 
@@ -47,4 +46,56 @@ tr:hover {
 
 .deleteBtn {
 	margin-left: 50px;
+}
+
+.paginationBar {
+	display: flex;
+	width: 100%;
+	justify-content: end;
+}
+
+.btn {
+	color: var(--mdc-theme-primary);
+	width: var(--global-table-page-container-size) !important;
+	height: var(--global-table-page-container-size);
+	border: none;
+	padding: 5px 5px 5px 5px;
+	background: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 100px;
+}
+
+.btnSelected {
+	background-color: #ede1fd;
+	color: var(--mdc-theme-primary);
+	width: var(--global-table-page-container-size) !important;
+	height: var(--global-table-page-container-size);
+	border: none;
+	padding: 5px 5px 5px 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 100px;
+}
+
+.btnSelected:active {
+	background-color: rgba(90, 0, 238, 0.45);
+}
+
+.btn:disabled {
+	color : rgba(0, 0, 0, 0.38);
+}
+
+.btn:hover {
+	background-color: rgba(0, 0, 0, 0.10);
+}
+
+.btn:active {
+	background-color: rgba(0, 0, 0, 0.38);
+}
+
+.pageBtnContainer:hover {
+	background-color: #C7C1C1;
 }

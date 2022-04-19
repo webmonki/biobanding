@@ -72,6 +72,8 @@
 }
 
 .footer {
+	position: relative;
+	top: calc(var(--global-line-space) * -1);
 	padding: 0 24px 0 24px;
 }
 
@@ -88,4 +90,17 @@
 .pwVal {
 	position: relative;
 	top: -30px;
+}
+
+
+.pageHeader {
+	color: var(--global-header-color);	width: 100%;
+	display: inline-block;
+	margin-bottom: var(--global-line-space);
+	font-size: var(--global-header-size);
+	border-bottom: var(--global-header-line-size) solid var(--global-header-line-color);
+}
+
+.feedbackContainer {
+	width: 100%;
 }

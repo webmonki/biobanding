@@ -23,6 +23,15 @@
 	flex-direction: column;
 }
 
+.pageHeader {
+	color: var(--global-header-color);
+	width: 100%;
+	display: inline-block;
+	margin-bottom: var(--global-line-space);
+	font-size: var(--global-header-size);
+	border-bottom: var(--global-header-line-size) solid var(--global-header-line-color);
+}
+
 .header {
 	font-size: 20px;
 }
@@ -68,6 +77,10 @@
 	flex-direction: column;
 }
 
+.dateInput {
+	padding-left: 15px;
+}
+
 .feedbackErr {
 	color: var(--global-error-color);
 	font-size: var(--global-feedback-size);
@@ -79,10 +92,20 @@
 }
 
 .bDayLabel {
+	padding-left: 5px;
+	padding-right: 5px;
 	width: fit-content;
 	position: relative;
 	top: -64px;
 	left: 10px;
 	font-size: small;
 	background-color: white;
+	color: rgba(0, 0, 0, 0.6);;
+}
+
+.btnContainer {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }

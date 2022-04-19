@@ -19,10 +19,8 @@ class Form extends Component {
 
 	componentDidMount = () => {
 		this.handleChange();
-		let that = this;
-		document.addEventListener('keyup', function(event){
-			that.handleKey(event);
-		})
+		document.addEventListener('keyup', this.handleKey)
+
 	}
 
 	componentWillUnmount = () => {
@@ -85,13 +83,15 @@ class Form extends Component {
 				else {
 					try {
 						let response = JSON.parse(this.responseText);
-						that.setState({ loginResponse: response.msg });
+						if (response.msg == 'Token is invalid') {
+							Auth.logout();
+							location.reload();
+						}
+						that.setState({ responseFBClass : style.feedbackErr });
+						that.setState({ responseFB : response.msg });
 					}
 					catch (err) {}
 				}
-			}
-			else {
-				this.setState({ loginResponse: 'Ups, something went wrong' });
 			}
 		};
 
@@ -113,10 +113,52 @@ class Form extends Component {
 					</div>
 					<div class={style.inputContainer}>
 						<div class={style.loginLabel}>Anmeldung</div>
-						<TextField type='email' class={style.input} label="E-Mail" outlined  id="emailInput" onKeyUp={this.handleChange}/>
-						<TextField type='password'class={style.input} label="Passwort" outlined id = "passwordInput" onKeyUp={this.handleChange}/>
-						<div class={style.input} style={{ color: '#B1262D' }}>{this.state.loginResponse}</div>
+						<div class={style.input}>
+							<TextField id='emailInput' outlined label='E-Mail' value={this.state.email} onKeyUp={e =>{
+								this.handleChange();
+								this.setState({ email : e.target.value });
+								let val = e.target.value
+								if (val.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+									this.setState({ emailFBClass : style.feedbackSucc });
+									this.setState({ emailFB : 'okay'})
+								}
+								else {
+									this.setState({ emailFBClass : style.feedbackErr });
+									this.setState({ emailFB : 'keine E-Mail'})
+								}
+							}}/>				
+							<span class={this.state.emailFBClass}>{this.state.emailFB}</span>
+						</div>
+						<div class={style.input}>
+							<TextField id='passwordInput' type='password' outlined label='Passwort' onKeyUp={e => {
+								this.handleChange();
+								this.setState({ password : e.target.value })
+								let val = e.target.value;
+								if (val.length < 4) {
+									this.setState({ passwordFBClass : style.feedbackErr });
+									this.setState({ passwordFB : 'Mindetsens 4 Zeichen'})
+								}
+								if (val.length > 16) {
+									this.setState({ passwordFBClass : style.feedbackErr });
+									this.setState({ passwordFB : 'Maximal 16 Zeichen'})
+								}
+								if (val.length > 3 && val.length < 17) {
+									this.setState({ passwordFBClass : style.feedbackSucc });
+									this.setState({ passwordFB : 'Länge okay'})
+								}
+								if (this.state.password == this.state.password2) {
+									this.setState({ passwordSameFBClass : style.feedbackSucc })
+									this.setState({ passwordSameFB : 'Passwörter stimmen überein'})
+								}
+								else {
+									this.setState({ passwordSameFBClass : style.feedbackErr })
+									this.setState({ passwordSameFB : 'Passwörter stimmen nicht überein'})
+								}
+							}}/>
+							<span class={this.state.passwordFBClass}>{this.state.passwordFB}</span>	
+						</div>					
 						<div class={style.btnContainer}>
+							<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
 							<Button class={style.input} raised onClick={this.login} disabled={this.state.btnDisabled}>anmelden</Button>
 							<Link class={style.input} href="/signup" data-native>registrieren</Link>
 						</div>

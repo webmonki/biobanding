@@ -86,7 +86,7 @@ export default class Navbar extends Component {
 						</Drawer.DrawerItem>
 						<Drawer.DrawerItem selected={props.selectedRoute === '/profile'} onClick={this.goToMyProfile}>
 							<List.ItemGraphic>account_circle</List.ItemGraphic>
-							<span>Profile</span>
+							<span>Profil</span>
 						</Drawer.DrawerItem>
 					</Drawer.DrawerContent>
 				</Drawer>
@@ -119,7 +119,7 @@ export default class Navbar extends Component {
 						</Drawer.DrawerItem>
 						<Drawer.DrawerItem selected={props.selectedRoute === '/profile'} onClick={this.goToMyProfile}>
 							<List.ItemGraphic>account_circle</List.ItemGraphic>
-							<span>Profile</span>
+							<span>Profil</span>
 						</Drawer.DrawerItem>
 					</Drawer.DrawerContent>
 				</Drawer>

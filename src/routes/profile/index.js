@@ -21,14 +21,12 @@ export default class Profile extends Component {
 	}
 
 	componentDidMount = () => {
-		let that = this;
-		document.addEventListener('keyup', function(event){
-			that.handleKey(event);
-		})
+		document.addEventListener('keyup', this.handleKey)
 	}
 
 	handleKey = (event) => {
-		if(this.state.btnDisabled == false && event.code == 'Enter') {
+		console.log("EVENT")
+		if(event.code == 'Enter') {
 			this.sendData();
 			document.removeEventListener('keyup', this.handleKey)
 		}
@@ -43,6 +41,7 @@ export default class Profile extends Component {
 	}
 
 	sendNewLogin = () => {
+		console.log("NEW LOGIN")
 		let that = this;
 		let url = Auth.url + '/api/users/edit';
 		let xhttp = new XMLHttpRequest();
@@ -55,9 +54,25 @@ export default class Profile extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
+
+				that.setState({ responseFBClass : style.feedbackSucc });
+				that.setState({ responseFB : 'Login erfolgreich geändert' });
+
+				Auth.setEmail(that.state.email);
+				Auth.setUsername(that.state.username);
+				location.reload();
 			}
 			else {
-				let response = JSON.parse(this.responseText);
+				try {
+					let response = JSON.parse(this.responseText);
+					if (response.msg == 'Token is invalid') {
+						Auth.logout();
+						location.reload();
+					}
+					that.setState({ responseFBClass : style.feedbackErr });
+					that.setState({ responseFB : response.msg });
+				}
+				catch (err) {}
 			}
 		};
 
@@ -74,6 +89,7 @@ export default class Profile extends Component {
 	sendData = () => {
 
 		if (this.state.username != Auth.getUser().name || this.state.email != Auth.getUser().email) {
+			console.log("NEW")
 			this.sendNewLogin();
 		}
 
@@ -93,6 +109,9 @@ export default class Profile extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
+
+				that.setState({ responseFBClass : style.feedbackSucc });
+				that.setState({ responseFB : 'Spieler Details erfolgreich geladen' });
 				
 				that.setState({ firstname : response['player_details:'].first_name });
 				that.setState({ lastname : response['player_details:'].last_name });
@@ -118,7 +137,16 @@ export default class Profile extends Component {
 
 			}
 			else {
-				let response = JSON.parse(this.responseText);
+				try {
+					let response = JSON.parse(this.responseText);
+					if (response.msg == 'Token is invalid') {
+						Auth.logout();
+						location.reload();
+					}
+					that.setState({ responseFBClass : style.feedbackErr });
+					that.setState({ responseFB : response.msg });
+				}
+				catch (err) {}
 			}
 		};
 
@@ -142,11 +170,20 @@ export default class Profile extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
-				console.log(this.responseText)
+				that.setState({ responseFBClass : style.feedbackSucc });
+				that.setState({ responseFB : 'Spieler Details erfolgreich angelegt'});
 			}
 			else {
-				let response = JSON.parse(this.responseText);
-				console.log(this.responseText)
+				try {
+					let response = JSON.parse(this.responseText);
+					if (response.msg == 'Token is invalid') {
+						Auth.logout();
+						location.reload();
+					}
+					that.setState({ responseFBClass : style.feedbackErr });
+					that.setState({ responseFB : response.msg });
+				}
+				catch (err) {}
 			}
 		};
 
@@ -196,6 +233,7 @@ export default class Profile extends Component {
 		return (
 			<div class={this.state.pageClass}>
 				<Navbar selectedRoute='/profile' fitPageSize={this.fitPageSize}/>
+				<span class={style.pageHeader}>Profil</span>
 				<div class={style.profileContainer}>
 					<div class={style.headerContainer}>
 						<span class={style.header}>Benutzerdaten</span>
@@ -283,7 +321,7 @@ export default class Profile extends Component {
 					</div>
 					<div class={style.row}>
 						<div class={style.dateContainer}>
-							<TextField fullwidth={true} outlined type="date" value={this.state.birthday} onInput={e => 
+							<TextField class={style.dateInput} fullwidth={true} outlined type="date" value={this.state.birthday} onInput={e => 
 								this.setState({ birthday : e.target.value })}/>
 							<span class={style.bDayLabel}>Geburtstag</span>
 						</div>
@@ -338,7 +376,10 @@ export default class Profile extends Component {
 							<span class={this.state.fatherFBClass}>{this.state.fatherFB}</span>
 						</div>
 					</div>
-					<Button raised onClick={this.sendData}>Speichern</Button>
+					<div class={style.btnContainer}>
+						<Button raised onClick={this.sendData}>Speichern</Button>
+						<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
+					</div>
 				</div>
 			</div>
 		);

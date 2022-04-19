@@ -24,7 +24,7 @@
 }
 
 .btnContainer {
-	height: 100px;
+	height: fit-content;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
@@ -43,7 +43,19 @@
 }
 
 .input {
+	display: flex;
+	flex-direction: column;
 	margin-bottom: var(--global-line-space);
+}
+
+.feedbackErr {
+	color: var(--global-error-color);
+	font-size: var(--global-feedback-size);
+}
+
+.feedbackSucc {
+	color: var(--global-success-color);
+	font-size: var(--global-feedback-size);
 }
 
 
@@ -51,18 +63,6 @@
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
 
-    .card{
-		position: static;
-        width: 100%;
-        height: 100%;
-		box-shadow: none;
-    }
-
-    
-    .btnContainer {
-		padding-top: 10%;
-      	height: 150px;
-    }
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
