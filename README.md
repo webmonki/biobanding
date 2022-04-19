@@ -18,4 +18,13 @@ npm run build
 npm run serve
 ```
 
+## Create Testdata
+```
+# switch to root
+cd Documents/api_server_flask
+
+# create script
+python test_data/create_test_users.py (API must be running)
+```
+
 For detailed explanation on how things work, checkout the [CLI Readme](https://github.com/developit/preact-cli/blob/master/README.md).
