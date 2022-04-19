@@ -1,0 +1,101 @@
+
+
+.tdIconContainer {
+	width: 120px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.tdIcon {
+	color: var(--mdc-theme-primary);
+}
+
+.tableFixHead, thead, th {
+	position: sticky;
+	top: 0;
+}
+
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th, td {
+	padding: 8px 16px;
+	text-align: center;
+}
+
+td {
+	border-bottom: 1px solid #C7C1C1;
+}
+
+th {
+	border-bottom: 1px solid #C7C1C1;
+}
+
+tr:hover {
+	background-color: #EEEEF1;
+}
+
+.deleteIcon {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.deleteBtn {
+	margin-left: 50px;
+}
+
+.paginationBar {
+	display: flex;
+	width: 100%;
+	justify-content: end;
+}
+
+.btn {
+	color: var(--mdc-theme-primary);
+	width: var(--global-table-page-container-size) !important;
+	height: var(--global-table-page-container-size);
+	border: none;
+	padding: 5px 5px 5px 5px;
+	background: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 100px;
+}
+
+.btnSelected {
+	background-color: #ede1fd;
+	color: var(--mdc-theme-primary);
+	width: var(--global-table-page-container-size) !important;
+	height: var(--global-table-page-container-size);
+	border: none;
+	padding: 5px 5px 5px 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 100px;
+}
+
+.btnSelected:active {
+	background-color: rgba(90, 0, 238, 0.45);
+}
+
+.btn:disabled {
+	color : rgba(0, 0, 0, 0.38);
+}
+
+.btn:hover {
+	background-color: rgba(0, 0, 0, 0.10);
+}
+
+.btn:active {
+	background-color: rgba(0, 0, 0, 0.38);
+}
+
+.pageBtnContainer:hover {
+	background-color: #C7C1C1;
+}

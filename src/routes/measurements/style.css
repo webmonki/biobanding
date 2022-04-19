@@ -1,0 +1,102 @@
+.pageLarge {
+	margin-left: var(--global-navrail-width);
+	height: calc(100% - var(--global-header-height));
+	padding: var(--global-page-margin);
+}
+
+.pageSmall {
+	margin-left: var(--global-navbar-width);
+	height: calc(100% - var(--global-header-height));
+	padding: var(--global-page-margin);
+}
+
+.white {
+	color: white;
+}
+
+.card {
+	overflow-x: auto;
+}
+
+.inputContainer {
+	padding-top: 10px;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.btnContainer {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: var(--global-line-space);
+}
+
+.pageHeader {
+	color: var(--global-header-color);
+	width: 100%;
+	display: inline-block;
+	margin-bottom: var(--global-line-space);
+	font-size: var(--global-header-size);
+	border-bottom: var(--global-header-line-size) solid var(--global-header-line-color);
+}
+
+.subHeader {
+	position: absolute;
+	top: 50px;
+	left : 25px;
+}
+
+.fullWidth{
+	width: 100%;
+}
+
+.dialog {
+	background-color: var(--global-dialog-background);
+	z-index: 7;
+	padding: var(--global-dialog-padding);
+}
+
+.input {
+	width: var(--global-input-width);
+	margin-bottom: var(--global-line-space);
+}
+
+.row {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+}
+
+.deleteIcon {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.deleteBtn {
+	margin-left: 10px;
+}
+
+.footer {
+	padding: 0 24px 0 24px;
+}
+
+.feedbackContainer {
+	width: 100%;
+}
+
+.feedbackErr {
+	color: var(--global-error-color);
+	font-size: var(--global-feedback-size);
+}
+
+.feedbackSucc {
+	color: var(--global-success-color);
+	font-size: var(--global-feedback-size);
+}
+
+.footer {
+	position: relative;
+	top: calc(var(--global-line-space) * -1);
+	padding: 0 24px 0 24px;
+}

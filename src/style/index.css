@@ -1,0 +1,73 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300ita‌​lic,400italic,500,500italic,700,700italic,900italic,900);
+@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
+
+html, body {
+	height: 100%;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	background: #FAFAFA;
+	font-family: 'Helvetica Neue', arial, sans-serif;
+	font-weight: 400;
+	color: #444;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* fallback */
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/materialicons/v29/2fcrYFNaTjcS6g4U3t-Y5UEw0lE80llgEseQY3FEmqw.woff2) format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+#app {
+	height: 100%;
+}
+
+:root {
+	--global-navbar-width: 250px;
+	--global-navrail-width: 72px;
+	--global-header-height: 80px;
+	--global-page-margin: 48px 48px 48px 48px;
+	--global-line-space: 24px;
+	--global-input-width: 49%;
+	--global-profile-line-space: 24px;
+	--global-profile-column-space: 24px;
+	--global-profile-input-width: 200px;
+	--global-topbar-margin: 10px;
+	--global-topbar-btnContainer-width: 250px;
+	--global-dialog-background: none;
+	--global-dialog-padding: 20% 0 50% 0;
+	--global-feedback-size: small;
+	--global-error-color: #B1262D;
+	--global-success-color: #3C9052;
+	--global-header-size: 25px;
+	--global-header-line-size: 1px;
+	--global-header-line-color: rgba(0, 0, 0, 0.6);
+	--global-header-color: black;
+	--global-table-page-container-size: 30px;
+}
+
+
