@@ -109,7 +109,7 @@ class Form extends Component {
 		return (
 				<Card class={style.card}>
 					<div class={style.logoContainer}>
-						<img class={style.logo} src='../../logo/StarsLogoTrans.png' />
+						<img class={style.logo} src='../../assets/StarsLogoTrans.png' />
 					</div>
 					<div class={style.inputContainer}>
 						<div class={style.loginLabel}>Anmeldung</div>
@@ -161,6 +161,7 @@ class Form extends Component {
 							<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
 							<Button class={style.input} raised onClick={this.login} disabled={this.state.btnDisabled}>anmelden</Button>
 							<Link class={style.input} href="/signup" data-native>registrieren</Link>
+							<Link class={style.input} href="/forgot" data-native>Passwort vergessen</Link>
 						</div>
 					</div>
 				</Card>
