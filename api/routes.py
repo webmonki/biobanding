@@ -10,13 +10,14 @@ from json import dumps
 import string
 # from tkinter.tix import Tree
 from flask import request
-from flask_restx import Api, Resource, fields
+from flask_restx import Api, Resource, fields, abort
 
 import jwt
 
 from .models import db, Users, JWTTokenBlocklist, AnthropometricData, AdminConfig, PlayerMaster, PlayerDetail
 from .config import BaseConfig
-from. utils import json_serial
+from .utils import json_serial
+from .email import send_email
 
 rest_api = Api(version="1.0", title="Users API")
 
@@ -39,6 +40,12 @@ user_edit_model = rest_api.model('UserEditModel', {"userID": fields.String(requi
                                                    "username": fields.String(required=True, min_length=2, max_length=32),
                                                    "email": fields.String(required=True, min_length=4, max_length=64)
                                                    })
+user_password_forget_model = rest_api.model('UserPasswordForgetModel', {"email": fields.String(required=True, min_length=4)})
+
+user_password_reset_model = rest_api.model('UserPasswordResetModel', {"token": fields.String(required=True, min_length=1),
+                                                   "password": fields.String(required=True, min_length=2, max_length=16)
+                                                   })
+
 
 config_model = rest_api.model('ConfigModel', {"days_reminder": fields.Integer(min=0, max=120, description='Interval in days in which the players are reminded by mail for a new measurement.')})
 
@@ -217,9 +224,56 @@ class AllUsers(Resource):
         return {"success": True,
                 "users:": userList}, 200
 
+
+@rest_api.expect(user_password_forget_model)
+@rest_api.route('/api/user/forget')
+class ResetPasswort(Resource):
+
+    def put(self):
+
+        req_data = request.get_json()
+
+        _email = req_data.get("email")
+        user = Users.get_by_email(_email)
+
+        if user:
+            send_email(user, 'Passwort zurücksetzen', 'reset_email.html')
+            return {"success": True,
+                    "msg": "Link to reset the password was sent via email to {}.".format(_email)}, 202
+
+        return {"success": False,
+                "msg": "The email address {} does not exist.".format(_email)}, 404
+
+
+@rest_api.expect((user_password_reset_model))
+@rest_api.route('/api/user/reset')
+class ResetVerified(Resource):
+
+    def put(self):
+
+        req_data = request.get_json()
+        _token = req_data.get("token")
+        _password = req_data.get("password")
+
+        user = Users.verify_reset_token(_token)
+        if not user:
+            return {"success": False,
+                    "msg": "No valid token"}, 404
+
+        user.set_password(_password)
+        user.save()
+
+        return {"success": True,
+                "msg": "Password for user {} successfully reset".format(user.username)}, 200
+
+
+        
+
+
+
+
 # @rest_api.expect(login_model)
 @rest_api.route('/api/user/<int:id>')
-
 class EditUser(Resource):
     @token_required
     def put(self, current_user, id):

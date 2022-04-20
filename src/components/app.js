@@ -9,6 +9,8 @@ import Login from '../routes/login';
 import Signup from '../routes/signup';
 import Auth from './state';
 import Users from '../routes/users';
+import Forgot from '../routes/forgot';
+import Reset from '../routes/reset';
 // import Home from 'async!../routes/home';
 // import Profile from 'async!../routes/profile';
 
@@ -21,11 +23,11 @@ export default class App extends Component {
 	handleRoute = async e => {
 		let auth = Auth.getAuth();
 		if (auth === false || auth === undefined) {
-			if (e.url === '/signup'){
-				route('/signup', true);
+			if (e.url === '/measurements' || e.url === '/users' || e.url === 'profile'){
+				this.setState({ currentUrl : '/login' })
 			}
 			else {
-				route('login', true);
+				this.setState({ currentUrl : e.url });
 			}
 		}
 		else {
@@ -44,6 +46,8 @@ export default class App extends Component {
 					<Profile path="/profile/:user" />
 					<Measurements path="/measurements" />
 					<Users path="/users" />
+					<Forgot path="/forgot" />
+					<Reset path="/reset" />
 					<NotFound default />
 				</Router>
 			</div>
