@@ -19,14 +19,16 @@ import TextField from 'preact-material-components/TextField';
 import 'preact-material-components/TextField/style.css';
 import Select from 'preact-material-components/Select';
 import 'preact-material-components/Select/style.css';
-
+import NewMeasurementAdmin from '../dialogs/newMeasurementAdmin';
+import NewMeasurementUser from '../dialogs/newMeasurementUser';
 
 export default class Header extends Component {
 
+	// drawerRef = drawer => (this.drawer = drawer);
+	newMeasurementsDialogRef = dialog => (this.dialog = dialog);
 
 	componentWillMount = () => {
 		this.setState({ userIds : [] });
-		this.setState({ chosenIndex : 0 });
 		this.getDialog();
 	}
 
@@ -85,12 +87,23 @@ export default class Header extends Component {
 		xhttp.send();	
 	}
 
+	getDataFromDialog = (height, sittingHeight, span, weight, chosenIndex) => {
+		this.setState({ height });
+		this.setState({ sittingHeight });
+		this.setState({ span });
+		this.setState({ weight });
+		this.setState({ chosenIndex });
+
+		this.sendMeasurement();
+	}
+
 	sendMeasurement = () => {
 		console.log("SEND")
 
 		let id;
 		Auth.check_admin() ? id = this.state.userIds[this.state.chosenIndex] : id = Auth.getUser().id;
 
+		console.log("ID: ", id)
 		let that = this;
 		let url = Auth.url + '/api/user/' + id + '/anthropometric';
 		let xhttp = new XMLHttpRequest();
@@ -118,13 +131,15 @@ export default class Header extends Component {
 		let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 
 		let data = `{
-			"userID": ${ this.state.userIds[this.state.chosenIndex] },
+			"userID": ${ id },
 			"date_measured": "${ date }",
 			"height": ${ this.state.height },
 			"sitting_height": ${ this.state.sittingHeight },
 			"body_span": ${ this.state.span },
 			"weight": ${ this.state.weight }
 		}`;
+
+		console.log(data)
 
 		xhttp.send(data);
 	}
@@ -133,223 +148,17 @@ export default class Header extends Component {
 		let dialog
 		if (Auth.check_admin()) {
 			dialog = (
-				<Dialog class={style.dialog} ref={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog;}} onAccept={() => {
-					this.sendMeasurement();
-					location.reload();
-				}} onCancel={() => {
-				}}>
-					<Dialog.Header>Neue Messung erstellen</Dialog.Header>
-					<Dialog.Body>
-						<div class={style.inputContainer}>
-							<span class={style.subHeader}>Anthropometrische Daten</span>
-							<Select class={style.selectId} outlined selectedIndex={this.state.chosenIndex} onChange={(e) => {
-								this.setState({ chosenIndex : e.target.selectedIndex });
-							}}>
-								{this.state.userIds.map((id) => <Select.Item>{id}</Select.Item>)}
-							</Select>
-							<div class={style.row}>
-							<div class={style.input}>
-									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe' onKeyUp={e => {
-										let val = e.target.value;
-										this.setState({ height: e.target.val });
-
-										if (val < 0) {
-											this.setState({ heightFBClass : style.feedbackErr });
-											this.setState({ heightFB : 'Mindestens 0'})
-										}
-										if (val > 300) {
-											this.setState({ heightFBClass : style.feedbackErr });
-											this.setState({ heightFB : 'Maximal 300' });
-										}
-										if (val >= 0 && val <= 300) {
-											this.setState({ heightFBClass : style.feedbackSucc });
-											this.setState({ heightFB : 'okay' });
-										}
-										this.getDialog();
-									}}/>
-									<span class={this.state.heightFBClass}>{this.state.heightFB}</span>
-								</div>
-								<div class={style.input}>
-									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe im Sitzen' onKeyUp={e => {
-										let val = e.target.value;
-										this.setState({ sittingHeight : val });
-
-										if (val < 0) {
-											this.setState({ sittingFBClass : style.feedbackErr });
-											this.setState({ sittingFB : 'Mindestens 0'})
-										}
-										if (val > 300) {
-											this.setState({ sittingFBClass : style.feedbackErr });
-											this.setState({ sittingFB : 'Maximal 300'})
-										}
-										if (val >= 0 && val <= 300) {
-											this.setState({ sittingFBClass : style.feedbackSucc });
-											this.setState({ sittingFB : 'okay' });
-										}
-										this.getDialog();
-									}}/>
-									<span class={this.state.sittingFBClass}>{this.state.sittingFB}</span>
-								</div>
-							</div>
-							<div class={style.row}>
-							<div class={style.input}>
-									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Arm Spannweite' onKeyUp={e => {
-											let val = e.target.value;
-											this.setState({ span : val });
-
-											if (val < 0) {
-												this.setState({ spanFBClass : style.feedbackErr });
-												this.setState({ spanFB : 'Mindestens 0'})
-											}
-											if (val > 300) {
-												this.setState({ spanFBClass : style.feedbackErr });
-												this.setState({ spanFB : 'Maximal 300'})
-											}
-											if (val >= 0 && val <= 300) {
-												this.setState({ spanFBClass : style.feedbackSucc });
-												this.setState({ spanFB : 'okay' });
-											}
-											this.getDialog();
-										}}/>
-									<span class={this.state.spanFBClass}>{this.state.spanFB}</span>
-								</div>
-								<div class={style.input}>
-									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Gewicht' onKeyUp={e => {
-										let val = e.target.value
-										this.setState({ weight : val });
-
-										if (val < 0) {
-											this.setState({ weightFBClass : style.feedbackErr });
-											this.setState({ weightFB : 'Mindestens 0'})
-										}
-										if (val > 300) {
-											this.setState({ weightFBClass : style.feedbackErr });
-											this.setState({ weightFB : 'Maximal 300'})
-										}
-										if (val >= 0 && val <= 300) {
-											this.setState({ weightFBClass : style.feedbackSucc });
-											this.setState({ weightFB : 'okay' });
-										}
-										this.getDialog();
-									}}/>
-									<span class={this.state.weightFBClass}>{this.state.weightFB}</span>
-								</div>
-							</div>
-						</div>
-					</Dialog.Body>
-					<Dialog.Footer class={style.footer}>
-						<Dialog.FooterButton cancel={true}>Abbrechen</Dialog.FooterButton>
-						<Dialog.FooterButton style={{color : 'white'}} class="mdc-button mdc-theme--primary-bg" raised accept={true}>Speichern</Dialog.FooterButton>
-					</Dialog.Footer>
-				</Dialog>
+				<NewMeasurementAdmin
+					reference={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog}}
+					userIds={this.state.userIds}
+					sendData={this.getDataFromDialog}/>
 			)
 		}
 		else {
 			dialog = (
-				<Dialog class={style.dialog} ref={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog;}} onAccept={() => {
-					this.sendMeasurement();
-					location.reload();
-				}} onCancel={() => {
-				}}>
-					<Dialog.Header>Neue Messung erstellen</Dialog.Header>
-					<Dialog.Body>
-						<div class={style.inputContainer}>
-							<span class={style.subHeader}>Anthropometrische Daten</span>
-							<div class={style.row}>
-								<div class={style.input}>
-									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe' onKeyUp={e => {
-										let val = e.target.value;
-										this.setState({ height: val });
-
-										if (val < 0) {
-											this.setState({ heightFBClass : style.feedbackErr });
-											this.setState({ heightFB : 'Mindestens 0'})
-										}
-										if (val > 300) {
-											this.setState({ heightFBClass : style.feedbackErr });
-											this.setState({ heightFB : 'Maximal 300' });
-										}
-										if (val >= 0 && val <= 300) {
-											this.setState({ heightFBClass : style.feedbackSucc });
-											this.setState({ heightFB : 'okay' });
-										}
-										this.getDialog();
-									}}/>
-									<span class={this.state.heightFBClass}>{this.state.heightFB}</span>
-								</div>
-								<div class={style.input}>
-									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe im Sitzen' onKeyUp={e => {
-										let val = e.target.value;
-										this.setState({ sittingHeight : val });
-
-										if (val < 0) {
-											this.setState({ sittingFBClass : style.feedbackErr });
-											this.setState({ sittingFB : 'Mindestens 0'})
-										}
-										if (val > 300) {
-											this.setState({ sittingFBClass : style.feedbackErr });
-											this.setState({ sittingFB : 'Maximal 300'})
-										}
-										if (val >= 0 && val <= 300) {
-											this.setState({ sittingFBClass : style.feedbackSucc });
-											this.setState({ sittingFB : 'okay' });
-										}
-										this.getDialog();
-									}}/>
-									<span class={this.state.sittingFBClass}>{this.state.sittingFB}</span>
-								</div>
-							</div>
-							<div class={style.row}>
-								<div class={style.input}>
-									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Arm Spannweite' onKeyUp={e => {
-											let val = e.target.value;
-											this.setState({ span : val });
-
-											if (val < 0) {
-												this.setState({ spanFBClass : style.feedbackErr });
-												this.setState({ spanFB : 'Mindestens 0'})
-											}
-											if (val > 300) {
-												this.setState({ spanFBClass : style.feedbackErr });
-												this.setState({ spanFB : 'Maximal 300'})
-											}
-											if (val >= 0 && val <= 300) {
-												this.setState({ spanFBClass : style.feedbackSucc });
-												this.setState({ spanFB : 'okay' });
-											}
-											this.getDialog();
-										}}/>
-									<span class={this.state.spanFBClass}>{this.state.spanFB}</span>
-								</div>
-								<div class={style.input}>
-									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Gewicht' onKeyUp={e => {
-										let val = e.target.value
-										this.setState({ weight : val });
-
-										if (val < 0) {
-											this.setState({ weightFBClass : style.feedbackErr });
-											this.setState({ weightFB : 'Mindestens 0'})
-										}
-										if (val > 300) {
-											this.setState({ weightFBClass : style.feedbackErr });
-											this.setState({ weightFB : 'Maximal 300'})
-										}
-										if (val >= 0 && val <= 300) {
-											this.setState({ weightFBClass : style.feedbackSucc });
-											this.setState({ weightFB : 'okay' });
-										}
-										this.getDialog();
-									}}/>
-									<span class={this.state.weightFBClass}>{this.state.weightFB}</span>
-								</div>
-							</div>
-						</div>
-					</Dialog.Body>
-					<Dialog.Footer class={style.footer}>
-						<Dialog.FooterButton cancel={true}>Abbrechen</Dialog.FooterButton>
-						<Dialog.FooterButton style={{color : 'white'}} class="mdc-button mdc-theme--primary-bg" raised accept={true}>Speichern</Dialog.FooterButton>
-					</Dialog.Footer>
-				</Dialog>
+				<NewMeasurementUser
+					reference={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog}}
+					sendData={this.getDataFromDialog} />
 			)
 		}
 
@@ -357,7 +166,6 @@ export default class Header extends Component {
 	}
 
 	handleKey = (event) => {
-		console.log("EVENT")
 		if(event.code == 'Enter') {
 			this.sendMeasurement();
 			document.removeEventListener('keyup', this.handleKey)

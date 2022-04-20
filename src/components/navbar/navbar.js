@@ -18,7 +18,6 @@ export default class Navbar extends Component {
 
 	componentWillMount = () => {
 		this.getNavbarContent(this.props);
-
 	}
 	
 	componentDidMount = () => {

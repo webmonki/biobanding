@@ -17,28 +17,21 @@ import List from 'preact-material-components/List';
 import Drawer from 'preact-material-components/Drawer';
 import 'preact-material-components/Drawer/style.css';
 import Table from '../../components/table';
+import NewMeasurementAdmin from '../../components/dialogs/newMeasurementAdmin';
+import NewMeasurementUser from '../../components/dialogs/newMeasurementUser';
 
 export default class Measurements extends Component {
 
 	componentWillMount = () => {
 		this.setState({ pageClass : style.pageSmall });
 
-		let btn = (
-			<Button class={style.deleteBtn} onClick={this.checkDelete}>
-				<List.ItemGraphic class={`${"mdc-theme--primary"} ${style.deleteIcon}`}>delete</List.ItemGraphic>
-			</Button>
-		)
 
 		if (Auth.check_admin()) {
 			this.getOverview();
-			this.setState({ btn : undefined });
 		}
 		else {
 			this.getMeasurements();
-			this.setState({ btn });
 		}
-
-		this.getDialog();
 	}
 
 	componentWillUnmount = () => {
@@ -56,7 +49,7 @@ export default class Measurements extends Component {
 
 		let content = (
 			<div class={style.tableContainer}>
-				<Table editable={editable} data={data} pageSize={11} clickEdit={this.showDialog} idKey='id' />
+				<Table editable={editable} data={data} pageSize={11} clickEdit={this.showDialog} idKey='measureID' />
 			</div>
 		);
 		this.setState({ content });
@@ -139,7 +132,13 @@ export default class Measurements extends Component {
 				that.setState({ responseFBClass : style.feedbackSucc });
 				that.setState({ responseFB : 'Übersicht erfolgreich geladen' });
 				that.setState({ measurements : response['userdetails'] });
-				that.showTable(false);
+				let idList = [];
+				response['userdetails'].forEach(user => {
+					idList.push(user.userID);
+				})
+				that.setState({ userIds : idList });
+				that.showTable(true);
+				that.getDialog();
 			}
 			else {
 				try {
@@ -172,6 +171,7 @@ export default class Measurements extends Component {
 				that.setState({ responseFB : 'Messungen erfolgreich geladen' });
 				that.setState({ measurements : response['measurements:'] });
 				that.showTable(true);
+				that.getDialog();
 			}
 			else {
 				try {
@@ -228,6 +228,53 @@ export default class Measurements extends Component {
 
 	}
 
+	sendMeasurement = () => {
+		console.log("SEND")
+
+		let id;
+		Auth.check_admin() ? id = this.state.userIds[this.state.chosenIndex] : id = Auth.getUser().id;
+
+		console.log("ID: ", id)
+		let that = this;
+		let url = Auth.url + '/api/user/' + id + '/anthropometric';
+		let xhttp = new XMLHttpRequest();
+
+		xhttp.open('POST', url);
+		xhttp.setRequestHeader('Accept', 'application/json');
+		xhttp.setRequestHeader('Content-Type', 'application/json');
+		xhttp.setRequestHeader('authorization', Auth.getUser().token);
+
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				let response = JSON.parse(this.responseText);
+				console.log(response)
+				location.reload();
+
+			}
+			else {
+				let response = JSON.parse(this.responseText);
+				console.log(response)
+			}
+		};
+
+		let today = new Date();
+
+		let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+
+		let data = `{
+			"userID": ${ id },
+			"date_measured": "${ date }",
+			"height": ${ this.state.height },
+			"sitting_height": ${ this.state.sittingHeight },
+			"body_span": ${ this.state.span },
+			"weight": ${ this.state.weight }
+		}`;
+
+		console.log(data)
+
+		xhttp.send(data);
+	}
+
 	checkDelete = () => {
 		let checkboxes = document.getElementsByName('deleteCheck')
 		
@@ -241,6 +288,8 @@ export default class Measurements extends Component {
 	showDialog = (id) => {
 		document.addEventListener('keyup', this.handleKey)
 
+		console.log('ID: ', id)
+
 		this.setState({ editId : id });
 		
 		this.state.measurements.forEach(measurement => {
@@ -252,8 +301,7 @@ export default class Measurements extends Component {
 			}
 		})
 
-		this.getDialog();
-		this.editDialog.MDComponent.show();
+		this.measurementsEditDialog.MDComponent.show();
 	}
 
 	handleKey = (event) => {
@@ -264,116 +312,54 @@ export default class Measurements extends Component {
 		}
 	}
 
+	getDataFromDialogforNew = (height, sittingHeight, span, weight, chosenIndex) => {
+		this.setState({ height });
+		this.setState({ sittingHeight });
+		this.setState({ span });
+		this.setState({ weight });
+		this.setState({ chosenIndex });
+
+		this.sendMeasurement();
+	}
+
+	getDataFromDialogForEdit = (height, sittingHeight, span, weight, chosenIndex) => {
+		this.setState({ height });
+		this.setState({ sittingHeight });
+		this.setState({ span });
+		this.setState({ weight });
+		this.setState({ chosenIndex });
+
+		this.editData();
+	}
+
 	getDialog = () => {
-		let dialog = (
-			<Dialog class={style.dialog} ref={editDialog=>{this.editDialog=editDialog;}} onAccept={() => {
-				this.editData();
-				location.reload();
-			}} onCancel={() => {
-				document.removeEventListener('keyup', this.handleKey)
-			}}>
-				<Dialog.Header>Messung bearbeiten</Dialog.Header>
-				<Dialog.Body>
-					<div class={style.inputContainer}>
-						<span class={style.subHeader}>Anthropometrische Daten</span>
-						<div class={style.row}>
-								<div class={style.input}>
-									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe' value={this.state.height} onKeyUp={e => {
-										let val = e.target.value;
-										this.setState({ height: val });
+		let dialog
 
-										if (val < 0) {
-											this.setState({ heightFBClass : style.feedbackErr });
-											this.setState({ heightFB : 'Mindestens 0'})
-										}
-										if (val > 300) {
-											this.setState({ heightFBClass : style.feedbackErr });
-											this.setState({ heightFB : 'Maximal 300' });
-										}
-										if (val >= 0 && val <= 300) {
-											this.setState({ heightFBClass : style.feedbackSucc });
-											this.setState({ heightFB : 'okay' });
-										}
-										this.getDialog();
-									}}/>
-									<span class={this.state.heightFBClass}>{this.state.heightFB}</span>
-								</div>
-								<div class={style.input}>
-									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe im Sitzen' value={this.state.sittingHeight} onKeyUp={e => {
-										let val = e.target.value;
-										this.setState({ sittingHeight : val });
+		if (Auth.check_admin()) {
+			dialog = (
+				<NewMeasurementAdmin
+					reference={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog}}
+					userIds={this.state.userIds}
+					sendData={this.getDataFromDialogforNew}/>
+			)
+		}
+		else {
+			dialog = (
+				<NewMeasurementUser
+					reference={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog}}
+					sendData={this.getDataFromDialogforNew} />
+			)
+		}
 
-										if (val < 0) {
-											this.setState({ sittingFBClass : style.feedbackErr });
-											this.setState({ sittingFB : 'Mindestens 0'})
-										}
-										if (val > 300) {
-											this.setState({ sittingFBClass : style.feedbackErr });
-											this.setState({ sittingFB : 'Maximal 300'})
-										}
-										if (val >= 0 && val <= 300) {
-											this.setState({ sittingFBClass : style.feedbackSucc });
-											this.setState({ sittingFB : 'okay' });
-										}
-										this.getDialog();
-									}}/>
-									<span class={this.state.sittingFBClass}>{this.state.sittingFB}</span>
-								</div>
-							</div>
-							<div class={style.row}>
-								<div class={style.input}>
-									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Arm Spannweite' value={this.state.span} onKeyUp={e => {
-											let val = e.target.value;
-											this.setState({ span : val });
-
-											if (val < 0) {
-												this.setState({ spanFBClass : style.feedbackErr });
-												this.setState({ spanFB : 'Mindestens 0'})
-											}
-											if (val > 300) {
-												this.setState({ spanFBClass : style.feedbackErr });
-												this.setState({ spanFB : 'Maximal 300'})
-											}
-											if (val >= 0 && val <= 300) {
-												this.setState({ spanFBClass : style.feedbackSucc });
-												this.setState({ spanFB : 'okay' });
-											}
-											this.getDialog();
-										}}/>
-									<span class={this.state.spanFBClass}>{this.state.spanFB}</span>
-								</div>
-								<div class={style.input}>
-									<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Gewicht' value={this.state.weight} onKeyUp={e => {
-										let val = e.target.value
-										this.setState({ weight : val });
-
-										if (val < 0) {
-											this.setState({ weightFBClass : style.feedbackErr });
-											this.setState({ weightFB : 'Mindestens 0'})
-										}
-										if (val > 300) {
-											this.setState({ weightFBClass : style.feedbackErr });
-											this.setState({ weightFB : 'Maximal 300'})
-										}
-										if (val >= 0 && val <= 300) {
-											this.setState({ weightFBClass : style.feedbackSucc });
-											this.setState({ weightFB : 'okay' });
-										}
-										this.getDialog();
-									}}/>
-									<span class={this.state.weightFBClass}>{this.state.weightFB}</span>
-								</div>
-							</div>
-					</div>
-				</Dialog.Body>
-				<Dialog.Footer class={style.footer}>
-					<Dialog.FooterButton cancel={true}>Abbrechen</Dialog.FooterButton>
-					<Dialog.FooterButton style={{color : 'white'}} class="mdc-button mdc-theme--primary-bg" raised accept={true}>Speichern</Dialog.FooterButton>
-				</Dialog.Footer>
-			</Dialog>
+		let editDialog = (
+			<NewMeasurementUser
+			reference={measurementsEditDialog=>{this.measurementsEditDialog=measurementsEditDialog}}
+			sendData={this.getDataFromDialogForEdit} />
 		)
 
+
 		this.setState({ dialog });
+		this.setState({ editDialog });
 	}
 
 	render() {
@@ -382,7 +368,16 @@ export default class Measurements extends Component {
 				<Navbar selectedRoute='/measurements' fitPageSize={this.fitPageSize}/>
 				<span class={style.pageHeader}>Messungen</span>
 				<div class={style.btnContainer}>
-					{this.state.btn}
+					<Button class={style.deleteBtn} onClick={this.checkDelete}>
+						<List.ItemGraphic class={`${"mdc-theme--primary"} ${style.deleteIcon}`}>delete</List.ItemGraphic>
+					</Button>
+					<Button raised class={`${"mdc-button mdc-theme--primary-bg"} ${style.roundBtn}`} onClick={() => {
+						this.newMeasurementsDialog.MDComponent.show();
+						document.addEventListener('keyup', this.handleKey)
+					}}>
+						<i class="material-icons mdc-button__icon mdc-theme-on-primary" aria-hidden="true">add</i>
+						<span class="mdc-button__label mdc-theme-on-primary">erstellen</span>
+					</Button>
 				</div>
 				<Card class={style.card}>
 					{this.state.content}
@@ -391,6 +386,7 @@ export default class Measurements extends Component {
 					<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
 				</div>
 				{this.state.dialog}
+				{this.state.editDialog}
 			</div>
 		);
 	}

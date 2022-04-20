@@ -12,7 +12,7 @@ export default class Table extends Component {
 	componentWillMount = () => {
 		this.setPage(1);
 		this.setState({ backBtnDisabled : true });
-		this.setState({ forwardBtnDisabled : false });
+		this.setState({ forwardBtnDisabled : true });
 	}
 
 	setPage = (page) => {
@@ -105,8 +105,16 @@ export default class Table extends Component {
 		let totalPage = this.getPageCount();
 		let currentPage = this.state.page;
 
-		currentPage == 1 ? this.setState({ backBtnDisabled : true}) : this.setState({ backBtnDisabled : false });
-		currentPage == totalPage ? this.setState({ forwardBtnDisabled : true }) : this.setState({ forwardBtnDisabled : false });
+		if (totalPage == 1) {
+			console.log("ONE")
+			this.setState({ backBtnDisabled : true})
+			this.setState({ forwardBtnDisabled : true })
+		}
+		else {
+			console.log("TWO")
+			currentPage == 1 ? this.setState({ backBtnDisabled : true}) : this.setState({ backBtnDisabled : false });
+			currentPage == totalPage ? this.setState({ forwardBtnDisabled : true }) : this.setState({ forwardBtnDisabled : false });
+		}
 	}
 
 	lowerPage = () => {
