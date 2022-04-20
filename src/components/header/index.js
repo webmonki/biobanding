@@ -24,7 +24,6 @@ import NewMeasurementUser from '../dialogs/newMeasurementUser';
 
 export default class Header extends Component {
 
-	// drawerRef = drawer => (this.drawer = drawer);
 	newMeasurementsDialogRef = dialog => (this.dialog = dialog);
 
 	componentWillMount = () => {
@@ -151,26 +150,24 @@ export default class Header extends Component {
 				<NewMeasurementAdmin
 					reference={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog}}
 					userIds={this.state.userIds}
-					sendData={this.getDataFromDialog}/>
+					sendData={this.getDataFromDialog}
+					header='Messung erstellen'
+					subHeader='Anthropometrische Daten'/>
 			)
 		}
 		else {
 			dialog = (
 				<NewMeasurementUser
 					reference={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog}}
-					sendData={this.getDataFromDialog} />
+					sendData={this.getDataFromDialog}
+					header='Messung erstellen'
+					subHeader='Anthropometrische Daten'/>
 			)
 		}
 
 		this.setState({ dialog });
 	}
 
-	handleKey = (event) => {
-		if(event.code == 'Enter') {
-			this.sendMeasurement();
-			document.removeEventListener('keyup', this.handleKey)
-		}
-	}
 
 	render() {
 		if (Auth.getUser()) {
@@ -184,7 +181,6 @@ export default class Header extends Component {
 						<Button raised class={`${"mdc-button mdc-theme--secondary-bg"} ${style.roundBtn}`} onClick={() => {
 							this.getPlayerDetails();
 							this.newMeasurementsDialog.MDComponent.show();
-							document.addEventListener('keyup', this.handleKey)
 						}}>
 							  <i class="material-icons mdc-button__icon mdc-theme--text-secondary-on-light" aria-hidden="true">add</i>
 							  <span class="mdc-button__label mdc-theme--text-secondary-on-light">Messung</span>

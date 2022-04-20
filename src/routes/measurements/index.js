@@ -5,7 +5,6 @@ import 'preact-material-components/Button/style.css';
 import style from './style';
 import Navbar from '../../components/navbar/navbar';
 import Auth from '../../components/state';
-import createTable from '../../components/table/table';
 import Button from 'preact-material-components/Button';
 import 'preact-material-components/Button/style.css';
 import Dialog from 'preact-material-components/Dialog';
@@ -46,12 +45,22 @@ export default class Measurements extends Component {
 	showTable = (editable) => {
 		
 		let data = this.state.measurements
+		let content;
+		if (Auth.check_admin()) {
+			content = (
+				<div class={style.tableContainer}>
+					<Table editable={editable} data={data} pageSize={11} clickEdit={this.showDialog} idKey='measureID' />
+				</div>
+			);
+		}
+		else {
+			content = (
+				<div class={style.tableContainer}>
+					<Table editable={editable} data={data} pageSize={11} clickEdit={this.showDialog} idKey='id' />
+				</div>
+			);
+		}
 
-		let content = (
-			<div class={style.tableContainer}>
-				<Table editable={editable} data={data} pageSize={11} clickEdit={this.showDialog} idKey='measureID' />
-			</div>
-		);
 		this.setState({ content });
 	};
 
@@ -340,21 +349,27 @@ export default class Measurements extends Component {
 				<NewMeasurementAdmin
 					reference={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog}}
 					userIds={this.state.userIds}
-					sendData={this.getDataFromDialogforNew}/>
+					sendData={this.getDataFromDialogforNew}
+					header='Neue Messung erstellen' 
+					subHeader='Anthropometrische Daten'/>
 			)
 		}
 		else {
 			dialog = (
 				<NewMeasurementUser
 					reference={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog}}
-					sendData={this.getDataFromDialogforNew} />
+					sendData={this.getDataFromDialogforNew}
+					header='Neue Messung erstellen' 
+					subHeader='Anthropometrische Daten'/>
 			)
 		}
 
 		let editDialog = (
 			<NewMeasurementUser
 			reference={measurementsEditDialog=>{this.measurementsEditDialog=measurementsEditDialog}}
-			sendData={this.getDataFromDialogForEdit} />
+			sendData={this.getDataFromDialogForEdit}
+			header='Messung bearbeiten' 
+			subHeader='Anthropometrische Daten'/>
 		)
 
 

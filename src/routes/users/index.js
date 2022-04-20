@@ -5,7 +5,6 @@ import 'preact-material-components/Button/style.css';
 import style from './style';
 import Navbar from '../../components/navbar/navbar';
 import Auth from '../../components/state';
-import createTable from '../../components/table/table';
 import Button from 'preact-material-components/Button';
 import 'preact-material-components/Button/style.css';
 import Dialog from 'preact-material-components/Dialog';
@@ -107,7 +106,6 @@ export default class Users extends Component {
 
 	checkDelete = () => {
 		let checkboxes = document.getElementsByName('deleteCheck')
-
 		
 		checkboxes.forEach(cb => {
 
@@ -255,7 +253,7 @@ export default class Users extends Component {
 					email={this.state.editEmail} />
 				<NewUser
 					reference={newUserDialog=>{this.newUserDialog=newUserDialog;}}
-					sendData={this.getDataFromDialogForEdit} />
+					sendData={this.getDataFromDialogForNew} />
 			</div>
 		)
 
@@ -284,8 +282,6 @@ export default class Users extends Component {
 
 	showTable = (editable) => {
 		
-		let data = this.state.measurements
-
 		let content = (
 			<div class={style.tableContainer}>
 				<Table editable={editable} data={this.state.users} pageSize={11} clickEdit={this.showDialog} idKey='userID'/>

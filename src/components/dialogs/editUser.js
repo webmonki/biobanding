@@ -11,6 +11,13 @@ import 'preact-material-components/TextField/style.css';
 
 export default class EditUser extends Component {
 
+	handleKey = (event) => {
+		if(event.code == 'Enter') {
+			this.props.sendData(this.props.username, this.props.email)
+			document.removeEventListener('keyup', this.handleKey)
+		}
+	}
+
 	render () {
 		return (
 			<Dialog class={style.dialog} ref={this.props.reference} onAccept={() => {
@@ -25,6 +32,7 @@ export default class EditUser extends Component {
 						<div class={style.row}>
 							<div class={style.input}>
 								<TextField outlined label='Benutzername' class={style.fullWidth} value={this.props.username} onKeyUp={e => {
+									document.addEventListener('keyup', this.handleKey)
 									// this.setState({ editUsername : e.target.value })
 									let val = e.target.value
 									this.props.username = val;
@@ -45,6 +53,7 @@ export default class EditUser extends Component {
 							</div>
 							<div class={style.input}>
 								<TextField outlined label='E-Mail' class={style.fullWidth} value={this.props.email} onInput={e =>{
+									document.addEventListener('keyup', this.handleKey)
 									// this.setState({ editEmail : e.target.value });
 									let val = e.target.value
 									this.props.email = val;

@@ -1,0 +1,112 @@
+.pageLarge {
+	margin-left: var(--global-navrail-width);
+	height: calc(100% - var(--global-header-height));
+	padding: var(--global-page-margin);
+	width: calc(100% - var(--global-navrail-width));
+	/* width: 100%; */
+}
+
+.pageSmall {
+	margin-left: var(--global-navbar-width);
+	height: calc(100% - var(--global-header-height));
+	padding: var(--global-page-margin);
+	width: calc(100% - var(--global-navbar-width));
+	/* width: 100%; */
+}
+
+.settingsContainer {
+	width: calc((var(--global-profile-input-width) * 2) + var(--global-profile-column-space));
+}
+
+.headerContainer {
+	display: flex;
+	flex-direction: column;
+}
+
+.pageHeader {
+	color: var(--global-header-color);
+	width: 100%;
+	display: inline-block;
+	margin-bottom: var(--global-line-space);
+	font-size: var(--global-header-size);
+	border-bottom: var(--global-header-line-size) solid var(--global-header-line-color);
+}
+
+.header {
+	font-size: 20px;
+}
+
+.subHeader {
+	font-size: 15px;
+	margin-bottom: var(--global-profile-line-space);
+}
+
+.row {
+	height: fit-content;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: var(--global-profile-line-space);
+}
+
+.radioContainer {
+	height: fit-content;
+	display: flex;
+	justify-content: space-around;
+	width: var(--global-profile-input-width)
+}
+
+.radioBtn {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.fullWidth {
+	width: 100%;
+}
+
+.input {
+	width: var(--global-profile-input-width);
+	margin-bottom: var(--global-profile-line-space);
+}
+
+.dateContainer {
+	width: var(--global-profile-input-width);
+	display: flex;
+	flex-direction: column;
+}
+
+.dateInput {
+	padding-left: 15px;
+}
+
+.feedbackErr {
+	color: var(--global-error-color);
+	font-size: var(--global-feedback-size);
+}
+
+.feedbackSucc {
+	color: var(--global-success-color);
+	font-size: var(--global-feedback-size);
+}
+
+.bDayLabel {
+	padding-left: 5px;
+	padding-right: 5px;
+	width: fit-content;
+	position: relative;
+	top: -64px;
+	left: 10px;
+	font-size: small;
+	background-color: white;
+	color: rgba(0, 0, 0, 0.6);;
+}
+
+.btnContainer {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}

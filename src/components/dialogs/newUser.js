@@ -16,6 +16,13 @@ export default class NewUser extends Component {
 		this.setState({ admin : false });
 	}
 
+	handleKey = (event) => {
+		if(event.code == 'Enter') {
+			this.props.sendData(this.state.username, this.state.email, this.state.password, this.state.admin);
+			document.removeEventListener('keyup', this.handleKey)
+		}
+	}
+
 	render() {
 		return (
 			<Dialog class={style.dialog} ref={this.props.reference} onAccept={() => {
@@ -30,6 +37,7 @@ export default class NewUser extends Component {
 						<div class={style.row}>
 							<div class={style.input}>
 								<TextField outlined label='Benutzername' class={style.fullWidth} value={this.state.username} onKeyUp={e => {
+									document.addEventListener('keyup', this.handleKey)
 									this.setState({ username : e.target.value })
 									let val = e.target.value
 									if (val.length < 1) {
@@ -49,6 +57,7 @@ export default class NewUser extends Component {
 							</div>
 							<div class={style.input}>
 								<TextField outlined label='E-Mail' value={this.state.email} class={style.fullWidth} onInput={e =>{
+									document.addEventListener('keyup', this.handleKey)
 									this.setState({ email : e.target.value });
 									let val = e.target.value
 									if (val.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
@@ -66,6 +75,7 @@ export default class NewUser extends Component {
 						<div class={style.row}>
 							<div class={style.input}>
 								<TextField type='password' outlined label='Passwort' class={style.fullWidth} onKeyUp={e => {
+									document.addEventListener('keyup', this.handleKey)
 									this.setState({ password : e.target.value })
 									let val = e.target.value;
 									if (val.length < 4) {
@@ -93,6 +103,7 @@ export default class NewUser extends Component {
 							</div>
 							<div class={style.input}>
 								<TextField type='password' outlined label='Passwort' class={style.fullWidth} onKeyUp={e => {
+									document.addEventListener('keyup', this.handleKey)
 									this.setState({ password2 : e.target.value })
 									let val = e.target.value;
 									if (val.length < 4) {
@@ -125,6 +136,7 @@ export default class NewUser extends Component {
 						<div class={style.switchContainer}>
 							<label for='adminSwitch'>Admin</label>
 							<Switch id='adminSwitch' onChange={() => {
+								document.addEventListener('keyup', this.handleKey)
 								let checked = document.getElementById('adminSwitch').checked
 								this.setState({ admin : checked})
 							}}/>

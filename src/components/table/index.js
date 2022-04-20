@@ -106,12 +106,10 @@ export default class Table extends Component {
 		let currentPage = this.state.page;
 
 		if (totalPage == 1) {
-			console.log("ONE")
 			this.setState({ backBtnDisabled : true})
 			this.setState({ forwardBtnDisabled : true })
 		}
 		else {
-			console.log("TWO")
 			currentPage == 1 ? this.setState({ backBtnDisabled : true}) : this.setState({ backBtnDisabled : false });
 			currentPage == totalPage ? this.setState({ forwardBtnDisabled : true }) : this.setState({ forwardBtnDisabled : false });
 		}

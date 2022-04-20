@@ -25,7 +25,6 @@ export default class Profile extends Component {
 	}
 
 	handleKey = (event) => {
-		console.log("EVENT")
 		if(event.code == 'Enter') {
 			this.sendData();
 			document.removeEventListener('keyup', this.handleKey)
@@ -157,6 +156,7 @@ export default class Profile extends Component {
 
 
 	sendPlayerDetails = () => {
+		console.log("PLAYERDETAILS")
 		let that = this;
 		let url = Auth.url + '/api/user/' + Auth.getUser().id + '/details';
 		let xhttp = new XMLHttpRequest();
@@ -208,6 +208,8 @@ export default class Profile extends Component {
 			"height_father": ${this.state.fatherHeight},
 			"height_mother": ${this.state.motherHeight}
         }`;
+
+		console.log(data)
 
 		xhttp.send(data);
 		

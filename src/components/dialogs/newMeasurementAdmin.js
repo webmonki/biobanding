@@ -15,6 +15,13 @@ export default class NewMeasurementAdmin extends Component {
 		this.setState({ chosenIndex : 0 });
 	}
 
+	handleKey = (event) => {
+		if(event.code == 'Enter') {
+			this.props.sendData(this.state.height, this.state.sittingHeight, this.state.span, this.state.weight, this.state.chosenIndex)
+			document.removeEventListener('keyup', this.handleKey)
+		}
+	}
+
 
 	render() {
 		return (
@@ -22,10 +29,10 @@ export default class NewMeasurementAdmin extends Component {
 				this.props.sendData(this.state.height, this.state.sittingHeight, this.state.span, this.state.weight, this.state.chosenIndex)
 			}} onCancel={() => {
 			}}>
-				<Dialog.Header>Neue Messung erstellen</Dialog.Header>
+				<Dialog.Header>{this.props.header}</Dialog.Header>
 				<Dialog.Body>
 					<div class={style.inputContainer}>
-						<span class={style.subHeader}>Anthropometrische Daten</span>
+						<span class={style.subHeader}>{this.props.subHeader}</span>
 						<Select class={style.selectId} outlined selectedIndex={this.state.chosenIndex} onChange={(e) => {
 							this.setState({ chosenIndex : e.target.selectedIndex });
 						}}>
@@ -34,6 +41,7 @@ export default class NewMeasurementAdmin extends Component {
 						<div class={style.row}>
 						<div class={style.input}>
 								<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe' onKeyUp={e => {
+									document.addEventListener('keyup', this.handleKey)
 									let val = e.target.value;
 									this.setState({ height: val });
 
@@ -54,6 +62,7 @@ export default class NewMeasurementAdmin extends Component {
 							</div>
 							<div class={style.input}>
 								<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe im Sitzen' onKeyUp={e => {
+									document.addEventListener('keyup', this.handleKey)
 									let val = e.target.value;
 									this.setState({ sittingHeight : val });
 
@@ -76,26 +85,28 @@ export default class NewMeasurementAdmin extends Component {
 						<div class={style.row}>
 						<div class={style.input}>
 								<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Arm Spannweite' onKeyUp={e => {
-										let val = e.target.value;
-										this.setState({ span : val });
+									document.addEventListener('keyup', this.handleKey)
+									let val = e.target.value;
+									this.setState({ span : val });
 
-										if (val < 0) {
-											this.setState({ spanFBClass : style.feedbackErr });
-											this.setState({ spanFB : 'Mindestens 0'})
-										}
-										if (val > 300) {
-											this.setState({ spanFBClass : style.feedbackErr });
-											this.setState({ spanFB : 'Maximal 300'})
-										}
-										if (val >= 0 && val <= 300) {
-											this.setState({ spanFBClass : style.feedbackSucc });
-											this.setState({ spanFB : 'okay' });
-										}
-									}}/>
+									if (val < 0) {
+										this.setState({ spanFBClass : style.feedbackErr });
+										this.setState({ spanFB : 'Mindestens 0'})
+									}
+									if (val > 300) {
+										this.setState({ spanFBClass : style.feedbackErr });
+										this.setState({ spanFB : 'Maximal 300'})
+									}
+									if (val >= 0 && val <= 300) {
+										this.setState({ spanFBClass : style.feedbackSucc });
+										this.setState({ spanFB : 'okay' });
+									}
+								}}/>
 								<span class={this.state.spanFBClass}>{this.state.spanFB}</span>
 							</div>
 							<div class={style.input}>
 								<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Gewicht' onKeyUp={e => {
+									document.addEventListener('keyup', this.handleKey)
 									let val = e.target.value
 									this.setState({ weight : val });
 
