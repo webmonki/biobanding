@@ -11,6 +11,7 @@ import Auth from './state';
 import Users from '../routes/users';
 import Forgot from '../routes/forgot';
 import Reset from '../routes/reset';
+import Settings from '../routes/settings';
 // import Home from 'async!../routes/home';
 // import Profile from 'async!../routes/profile';
 
@@ -19,15 +20,21 @@ export default class App extends Component {
 	 *	@param {Object} event		"change" event from [preact-router](http://git.io/preact-router)
 	 *	@param {string} event.url	The newly routed URL
 	 */
-	// Handle Routing an go to login or sign up if no user is set in Session Storage
+
 	handleRoute = async e => {
 		let auth = Auth.getAuth();
 		if (auth === false || auth === undefined) {
-			if (e.url === '/measurements' || e.url === '/users' || e.url === 'profile'){
-				this.setState({ currentUrl : '/login' })
+			if (e.url === '/signup'){
+				route('/signup', true);
+			}
+			else if (e.url === '/forgot') {
+				route('/forgot', true)
+			}
+			else if (e.url === '/reset') {
+				route('reset', true)
 			}
 			else {
-				this.setState({ currentUrl : e.url });
+				route('login', true);
 			}
 		}
 		else {
@@ -48,6 +55,7 @@ export default class App extends Component {
 					<Users path="/users" />
 					<Forgot path="/forgot" />
 					<Reset path="/reset" />
+					<Settings path="/settings" />
 					<NotFound default />
 				</Router>
 			</div>

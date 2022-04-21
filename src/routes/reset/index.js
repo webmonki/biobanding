@@ -63,7 +63,6 @@ export default class Reset extends Component {
 
 	// Send Request
 	sendNewPassword = () => {
-		console.log("SEND")
 		let that = this;
 		let url = Auth.url + '/api/user/reset';
 		let xhttp = new XMLHttpRequest();
@@ -78,13 +77,11 @@ export default class Reset extends Component {
 			if ([1,2,3,4].includes(this.readyState)) {
 				
 				if (this.status === 200) {
-					console.log("SUCCESS")
 					let response = JSON.parse(this.responseText);
 					console.log(response)
 					route('login', true);
 				}
 				else {
-					console.log("ERROR")
 
 					try {
 						let response = JSON.parse(this.responseText);
@@ -96,9 +93,6 @@ export default class Reset extends Component {
 					catch (err) {}
 
 				}
-			}
-			else {
-				this.setState({ signupResponse: 'Ups, something went wrong' });
 			}
 		};
 
@@ -135,11 +129,11 @@ export default class Reset extends Component {
 									}
 									if (val.length > 3 && val.length < 17) {
 										this.setState({ passwordFBClass : style.feedbackSucc });
-										this.setState({ passwordFB : 'Länge okay'})
+										this.setState({ passwordFB : ''})
 									}
 									if (this.state.password == this.state.password2) {
 										this.setState({ passwordSameFBClass : style.feedbackSucc })
-										this.setState({ passwordSameFB : 'Passwörter stimmen überein'})
+										this.setState({ passwordSameFB : ''})
 									}
 									else {
 										this.setState({ passwordSameFBClass : style.feedbackErr })
@@ -163,11 +157,11 @@ export default class Reset extends Component {
 									}
 									if (val.length > 3 && val.length < 17) {
 										this.setState({ password2FBClass : style.feedbackSucc });
-										this.setState({ password2FB : 'Länge okay'})
+										this.setState({ password2FB : ''})
 									}
 									if (this.state.password == this.state.password2) {
 										this.setState({ passwordSameFBClass : style.feedbackSucc })
-										this.setState({ passwordSameFB : 'Passwörter stimmen überein'})
+										this.setState({ passwordSameFB : ''})
 									}
 									else {
 										this.setState({ passwordSameFBClass : style.feedbackErr })

@@ -12,7 +12,7 @@ export default class Table extends Component {
 	componentWillMount = () => {
 		this.setPage(1);
 		this.setState({ backBtnDisabled : true });
-		this.setState({ forwardBtnDisabled : false });
+		this.setState({ forwardBtnDisabled : true });
 	}
 
 	setPage = (page) => {
@@ -25,7 +25,7 @@ export default class Table extends Component {
 
 	createTableHeader = () => {
 
-		if (this.props.data != undefined) {
+		if (this.props.data != undefined && this.props.data.length != 0) {
 
 			let cols = Object.keys(this.props.data[0]);
 
@@ -51,10 +51,17 @@ export default class Table extends Component {
 
 
 		}
+		else {
+			let tableHeader = (
+				<tr>
+					<th>Keine Messungen vorhanden</th>
+				</tr>
+			)
+			return tableHeader;
+		}
 	}
 
 	createTableBody = (page) => {
-
 		if (this.props.data != undefined) {
 			let indexEnd = page * this.props.pageSize
 			let indexStart = indexEnd - this.props.pageSize
@@ -70,7 +77,7 @@ export default class Table extends Component {
 									<div class={style.tdIconContainer}>
 										<List.ItemGraphic onClick={() => this.props.clickEdit(row[this.props.idKey])} class={style.tdIcon}>edit</List.ItemGraphic>
 										<Formfield>
-											<Checkbox name='deleteCheck' value={row[this.props.idKey]}/>
+											<Checkbox name='deleteCheck' checked={false} value={row[this.props.idKey]}/>
 										</Formfield>
 									</div>
 								</td>
@@ -105,8 +112,14 @@ export default class Table extends Component {
 		let totalPage = this.getPageCount();
 		let currentPage = this.state.page;
 
-		currentPage == 1 ? this.setState({ backBtnDisabled : true}) : this.setState({ backBtnDisabled : false });
-		currentPage == totalPage ? this.setState({ forwardBtnDisabled : true }) : this.setState({ forwardBtnDisabled : false });
+		if (totalPage == 1) {
+			this.setState({ backBtnDisabled : true})
+			this.setState({ forwardBtnDisabled : true })
+		}
+		else {
+			currentPage == 1 ? this.setState({ backBtnDisabled : true}) : this.setState({ backBtnDisabled : false });
+			currentPage == totalPage ? this.setState({ forwardBtnDisabled : true }) : this.setState({ forwardBtnDisabled : false });
+		}
 	}
 
 	lowerPage = () => {
@@ -162,7 +175,7 @@ export default class Table extends Component {
 
 	createTablePagination = () => {
 
-		if (this.props.data != undefined) {
+		if (this.props.data != undefined && this.props.data.length != 0) {
 
 			let pageNumbers = []
 

@@ -91,7 +91,7 @@ export default class Forgot extends Component {
 								let val = e.target.value
 								if (val.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
 									this.setState({ emailFBClass : style.feedbackSucc });
-									this.setState({ emailFB : 'okay'})
+									this.setState({ emailFB : ''})
 								}
 								else {
 									this.setState({ emailFBClass : style.feedbackErr });

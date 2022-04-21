@@ -177,9 +177,11 @@ class AllUserDetails(Resource):
 
             try:
                 anthro_data = AnthropometricData.get_latest_by_user_id(user.id)
+                measureID = anthro_data.id
                 height = anthro_data.height
                 result = anthro_data.result
             except:
+                measureID = "/"
                 height = "/"
                 result = "/"
 
@@ -187,6 +189,7 @@ class AllUserDetails(Resource):
             detailsList.append(
                 {
 				"userID": user.id,
+				"measureID": measureID,
 				"username": user.username,
 				"firstname": first_name,
 				"lastname": last_name,

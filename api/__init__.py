@@ -11,7 +11,6 @@ from flask_mail import Mail
 
 from .routes import rest_api
 from .models import db, AdminConfig, Users
-from .errors import errors
 
 mail = Mail()
 
@@ -20,7 +19,7 @@ mail = Mail(app)
 app.config.from_object('api.config.BaseConfig')
 
 db.init_app(app)
-rest_api.init_app(app, errors=errors)
+rest_api.init_app(app)
 mail.init_app(app)
 CORS(app)
 

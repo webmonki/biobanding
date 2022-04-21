@@ -74,11 +74,9 @@ class Form extends Component {
 					}
 					catch (err) {}
 					// If Request Ok go to Home
-					if (Auth.check_admin()) {
-						route('/measurements', true);
-					} else {
-						route('/measurements', true);
-					}
+					route('/measurements', true);
+					location.reload();
+
 				}
 				else {
 					try {
@@ -120,7 +118,7 @@ class Form extends Component {
 								let val = e.target.value
 								if (val.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
 									this.setState({ emailFBClass : style.feedbackSucc });
-									this.setState({ emailFB : 'okay'})
+									this.setState({ emailFB : ''})
 								}
 								else {
 									this.setState({ emailFBClass : style.feedbackErr });
@@ -144,11 +142,11 @@ class Form extends Component {
 								}
 								if (val.length > 3 && val.length < 17) {
 									this.setState({ passwordFBClass : style.feedbackSucc });
-									this.setState({ passwordFB : 'Länge okay'})
+									this.setState({ passwordFB : ''})
 								}
 								if (this.state.password == this.state.password2) {
 									this.setState({ passwordSameFBClass : style.feedbackSucc })
-									this.setState({ passwordSameFB : 'Passwörter stimmen überein'})
+									this.setState({ passwordSameFB : ''})
 								}
 								else {
 									this.setState({ passwordSameFBClass : style.feedbackErr })

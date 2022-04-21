@@ -18,7 +18,6 @@ export default class Navbar extends Component {
 
 	componentWillMount = () => {
 		this.getNavbarContent(this.props);
-
 	}
 	
 	componentDidMount = () => {
@@ -52,6 +51,7 @@ export default class Navbar extends Component {
 	goToMyProfile = this.linkTo('/profile');
 	goToMeasurements = this.linkTo('/measurements')
 	goToUsers = this.linkTo('/users')
+	goToSettings = this.linkTo('/settings');
 
 	toggleDrawer = () => {
 		if (this.drawer.MDComponent.open == false) {
@@ -88,6 +88,10 @@ export default class Navbar extends Component {
 							<List.ItemGraphic>account_circle</List.ItemGraphic>
 							<span>Profil</span>
 						</Drawer.DrawerItem>
+						<Drawer.DrawerItem selected={props.selectedRoute === '/settings'} onClick={this.goToSettings}>
+							<List.ItemGraphic>build</List.ItemGraphic>
+							<span>Einstellungen</span>
+						</Drawer.DrawerItem>
 					</Drawer.DrawerContent>
 				</Drawer>
 				<Drawer dismissible ref={this.railRef} class={style.navrail}>
@@ -100,6 +104,9 @@ export default class Navbar extends Component {
 						</Drawer.DrawerItem>
 						<Drawer.DrawerItem selected={props.selectedRoute === '/profile'} onClick={this.goToMyProfile}>
 							<List.ItemGraphic>account_circle</List.ItemGraphic>
+						</Drawer.DrawerItem>
+						<Drawer.DrawerItem selected={props.selectedRoute === '/settings'} onClick={this.goToSettings}>
+							<List.ItemGraphic>build</List.ItemGraphic>
 						</Drawer.DrawerItem>
 					</Drawer.DrawerContent>
 				</Drawer>
