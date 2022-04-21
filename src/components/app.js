@@ -24,17 +24,18 @@ export default class App extends Component {
 	handleRoute = async e => {
 		let auth = Auth.getAuth();
 		if (auth === false || auth === undefined) {
+			console.log(e.url)
 			if (e.url === '/signup'){
 				route('/signup', true);
 			}
 			else if (e.url === '/forgot') {
 				route('/forgot', true)
 			}
-			else if (e.url === '/reset') {
-				route('reset', true)
+			else if (e.url.match('/reset')) {
+				route(e.url, true)
 			}
 			else {
-				route('login', true);
+				route('/login', true);
 			}
 		}
 		else {
