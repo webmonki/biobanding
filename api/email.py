@@ -2,7 +2,6 @@ from threading import Thread
 from flask_mail import Message, Mail
 from flask import request, render_template
 from .config import BaseConfig
-from .errors import InternalServerError
 
 
 def send_async_email(app, msg):
@@ -18,7 +17,7 @@ def send_async_email(app, msg):
 def send_email(user, subject, template):
     from api import app
     token = user.get_reset_token()
-    base_url = request.host_url + "reset/"
+    base_url = request.host_url + "reset?token={}".format(token)
     username = user.username
 
 
