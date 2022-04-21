@@ -23,8 +23,6 @@ export default class Reset extends Component {
 
 		let token = urlParams.get('token')
 
-		console.log("TOKEN: ", token)
-
 		this.setState({ token });
 	}
 
@@ -100,6 +98,8 @@ export default class Reset extends Component {
             "token": "${this.state.token}",
             "password": "${this.state.password}"
         }`;
+
+		console.log(data)
 
 		xhttp.send(data);
 

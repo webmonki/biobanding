@@ -68,6 +68,7 @@ html, body {
 	--global-header-line-color: rgba(0, 0, 0, 0.6);
 	--global-header-color: black;
 	--global-table-page-container-size: 30px;
+	--global-login-width: 400px;
 }
 
 
