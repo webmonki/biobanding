@@ -274,11 +274,6 @@ class ResetVerified(Resource):
                 "msg": "Password for user {} successfully reset".format(user.username)}, 200
 
 
-        
-
-
-
-
 # @rest_api.expect(login_model)
 @rest_api.route('/api/user/<int:id>')
 class EditUser(Resource):
@@ -405,9 +400,6 @@ class EditUser(Resource):
             self.update_email(_new_email)
 
         self.save()
-
-
-
 
         token = jwt.encode({'email': _new_email, 'exp': datetime.utcnow() + timedelta(minutes=30)}, BaseConfig.SECRET_KEY)
         self.set_jwt_auth_active(True)

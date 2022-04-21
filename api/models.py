@@ -59,14 +59,14 @@ class Users(db.Model):
         db.session.commit()
 
     def get_reset_token(self, expires=500):
-        return jwt.encode({'reset_password': self.username, 'exp': datetime.utcnow() + timedelta(minutes=5)}, BaseConfig.SECRET_KEY)
+        return jwt.encode({'reset_password': self.username, 'exp': datetime.utcnow() + timedelta(minutes=15)}, BaseConfig.SECRET_KEY)
 
     @staticmethod
     def verify_reset_token(token):
         try:
             username = jwt.decode(token, key=BaseConfig.SECRET_KEY, algorithms=["HS256"])['reset_password']
         except Exception as e:
-            print(e)
+            print('verify_reset_token error: ',e)
             return
         return Users.query.filter_by(username=username).first()
 

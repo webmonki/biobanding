@@ -2,6 +2,7 @@ from threading import Thread
 from flask_mail import Message, Mail
 from flask import request, render_template
 from .config import BaseConfig
+import os
 
 
 def send_async_email(app, msg):
@@ -13,14 +14,11 @@ def send_async_email(app, msg):
             raise "[MAIL SERVER] not working"
 
 
-
 def send_email(user, subject, template):
     from api import app
     token = user.get_reset_token()
-    base_url = request.host_url + "reset?token={}".format(token)
+    url = "{}/reset?token={}".format(os.environ['PREACT_APP_HOST_URI'], token)
     username = user.username
-
-
 
     msg = Message()
     msg.subject = subject
@@ -28,7 +26,7 @@ def send_email(user, subject, template):
     msg.sender = BaseConfig.MAIL_USERNAME
     msg.recipients = [user.email]
     msg.html = render_template(template,
-                                base_url=base_url + token, username=username)
+                                url=url, username=username)
 
     Thread(target=send_async_email, args=(app, msg)).start()
 
