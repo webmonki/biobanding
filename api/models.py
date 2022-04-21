@@ -218,6 +218,34 @@ class AnthropometricData(db.Model):
 class AdminConfig(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     days_reminder = db.Column(db.Integer(), default=90)
+    mail_server = db.Column(db.String(), default='smtp.example.org')
+    mail_port = db.Column(db.Integer(), default=465)
+    mail_use_ssl = db.Column(db.Boolean(), default=True)
+    mail_username = db.Column(db.String(64), default='mustermann')
+    mail_password = db.Column(db.String(64))
+
+    def update_days_reminder(self, days_reminder):
+        self.days_reminder = days_reminder
+
+    def update_mail_server(self, mail_server):
+        self.mail_server = mail_server
+
+    def update_mail_port(self, mail_port):
+        self.mail_port = mail_port
+
+    def update_mail_use_ssl(self, mail_use_ssl):
+        self.mail_use_ssl = mail_use_ssl
+
+    def update_mail_username(self, mail_username):
+        self.mail_username = mail_username
+
+    def update_mail_passwort(self, mail_password):
+        self.mail_password = mail_password
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
 
     @classmethod
     def update_days_reminder (cls, _days_reminder):
@@ -229,5 +257,23 @@ class AdminConfig(db.Model):
     def get_days_reminder(cls):
         config = cls.query.filter_by(id=1).first()
         return config.days_reminder
+
+    @classmethod
+    def get_config(cls):
+        return cls.query.filter_by(id=1).first()
+
+    def toDICT(self):
+
+        cls_dict = {}
+        cls_dict['days_reminder'] = self.days_reminder
+        cls_dict['mail_server'] = self.mail_server
+        cls_dict['mail_port'] = self.mail_port
+        cls_dict['mail_use_ssl'] = self. mail_use_ssl
+        cls_dict['mail_username'] = self.mail_username
+        return cls_dict
+
+
+
+
 
 
