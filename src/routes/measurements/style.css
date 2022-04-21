@@ -14,6 +14,10 @@
 	color: white;
 }
 
+.roundBtn {
+	border-radius: 100px;
+}
+
 .card {
 	overflow-x: auto;
 }

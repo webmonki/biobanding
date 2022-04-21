@@ -25,7 +25,6 @@ export default class Profile extends Component {
 	}
 
 	handleKey = (event) => {
-		console.log("EVENT")
 		if(event.code == 'Enter') {
 			this.sendData();
 			document.removeEventListener('keyup', this.handleKey)
@@ -157,6 +156,7 @@ export default class Profile extends Component {
 
 
 	sendPlayerDetails = () => {
+		console.log("PLAYERDETAILS")
 		let that = this;
 		let url = Auth.url + '/api/user/' + Auth.getUser().id + '/details';
 		let xhttp = new XMLHttpRequest();
@@ -209,6 +209,8 @@ export default class Profile extends Component {
 			"height_mother": ${this.state.motherHeight}
         }`;
 
+		console.log(data)
+
 		xhttp.send(data);
 		
 	}
@@ -254,7 +256,7 @@ export default class Profile extends Component {
 								}
 								if (val.length > 0 && val.length < 33) {
 									this.setState({usernameFBClass : style.feedbackSucc })
-									this.setState({usernameFB : 'okay'})
+									this.setState({usernameFB : ''})
 								}
 							}}/>
 							<span class={this.state.usernameFBClass}>{this.state.usernameFB}</span>
@@ -265,7 +267,7 @@ export default class Profile extends Component {
 								let val = e.target.value
 								if (val.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
 									this.setState({ emailFBClass : style.feedbackSucc });
-									this.setState({ emailFB : 'okay'})
+									this.setState({ emailFB : ''})
 								}
 								else {
 									this.setState({ emailFBClass : style.feedbackErr });
@@ -294,7 +296,7 @@ export default class Profile extends Component {
 								}
 								if (val.length > 1 && val.length < 33) {
 									this.setState({firstnameFBClass : style.feedbackSucc });
-									this.setState({ firstnameFB : 'okay' });
+									this.setState({ firstnameFB : '' });
 								}
 							}}/>
 							<span class={this.state.firstnameFBClass}>{this.state.firstnameFB}</span>
@@ -313,7 +315,7 @@ export default class Profile extends Component {
 								}
 								if (val.length > 3 && val.length < 65) {
 									this.setState({ lastnameFBClass : style.feedbackSucc });
-									this.setState({ lastnameFB : 'okay' });
+									this.setState({ lastnameFB : '' });
 								}
 							}}/>
 							<span class={this.state.lastnameFBClass}>{this.state.lastnameFB}</span>
@@ -351,7 +353,7 @@ export default class Profile extends Component {
 								}
 								if (val >= 0 && val <= 300) {
 									this.setState({ motherFBClass : style.feedbackSucc });
-									this.setState({ motherFB : 'okay' });
+									this.setState({ motherFB : '' });
 								}
 							}}/>
 							<span class={this.state.motherFBClass}>{this.state.motherFB}</span>
@@ -370,7 +372,7 @@ export default class Profile extends Component {
 								}
 								if (val >= 0 && val <= 300) {
 									this.setState({ fatherFBClass : style.feedbackSucc });
-									this.setState({ fatherFB : 'okay' });
+									this.setState({ fatherFB : '' });
 								}
 							}}/>
 							<span class={this.state.fatherFBClass}>{this.state.fatherFB}</span>
