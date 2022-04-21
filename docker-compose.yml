@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.api
-    image: rest-api
+    image: biobanding.azurecr.io/api
     restart: unless-stopped
     container_name: api
     environment:
@@ -15,12 +15,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.client
-    image: rest-client
+    image: biobanding.azurecr.io/client
     restart: unless-stopped
     ports:
       - 80:80
     depends_on:
       - api
     container_name: client
+
+
 
  

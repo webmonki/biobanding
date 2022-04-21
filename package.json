@@ -25,7 +25,9 @@
   "devDependencies": {
     "eslint": "^4.5.0",
     "eslint-config-synacor": "^1.1.0",
-    "preact-cli": "^2.0.0"
+    "preact-cli": "^2.0.0",
+    "preact-cli-plugin-env-vars": "^1.2.1",
+    "react-error-overlay": "6.0.9"
   },
   "dependencies": {
     "@material/theme": "^13.0.0",
@@ -35,6 +37,7 @@
     "preact-compat": "^3.17.0",
     "preact-material-components": "^1.4.3",
     "preact-render-to-string": "^4.1.0",
-    "preact-router": "^2.5.5"
+    "preact-router": "^2.5.5",
+    "process": "^0.11.10"
   }
 }
