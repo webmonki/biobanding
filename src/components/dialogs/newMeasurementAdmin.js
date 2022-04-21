@@ -55,7 +55,7 @@ export default class NewMeasurementAdmin extends Component {
 									}
 									if (val >= 0 && val <= 300) {
 										this.setState({ heightFBClass : style.feedbackSucc });
-										this.setState({ heightFB : 'okay' });
+										this.setState({ heightFB : '' });
 									}
 								}}/>
 								<span class={this.state.heightFBClass}>{this.state.heightFB}</span>
@@ -76,7 +76,7 @@ export default class NewMeasurementAdmin extends Component {
 									}
 									if (val >= 0 && val <= 300) {
 										this.setState({ sittingFBClass : style.feedbackSucc });
-										this.setState({ sittingFB : 'okay' });
+										this.setState({ sittingFB : '' });
 									}
 								}}/>
 								<span class={this.state.sittingFBClass}>{this.state.sittingFB}</span>
@@ -99,7 +99,7 @@ export default class NewMeasurementAdmin extends Component {
 									}
 									if (val >= 0 && val <= 300) {
 										this.setState({ spanFBClass : style.feedbackSucc });
-										this.setState({ spanFB : 'okay' });
+										this.setState({ spanFB : '' });
 									}
 								}}/>
 								<span class={this.state.spanFBClass}>{this.state.spanFB}</span>
@@ -120,7 +120,7 @@ export default class NewMeasurementAdmin extends Component {
 									}
 									if (val >= 0 && val <= 300) {
 										this.setState({ weightFBClass : style.feedbackSucc });
-										this.setState({ weightFB : 'okay' });
+										this.setState({ weightFB : '' });
 									}
 								}}/>
 								<span class={this.state.weightFBClass}>{this.state.weightFB}</span>

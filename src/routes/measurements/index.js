@@ -24,7 +24,10 @@ export default class Measurements extends Component {
 	componentWillMount = () => {
 		this.setState({ pageClass : style.pageSmall });
 
+		this.loadData();
+	}
 
+	loadData = () => {
 		if (Auth.check_admin()) {
 			this.getOverview();
 		}
@@ -74,26 +77,6 @@ export default class Measurements extends Component {
 		xhttp.setRequestHeader('Content-Type', 'application/json');
 		xhttp.setRequestHeader('authorization', Auth.getUser().token);
 
-
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				let response = JSON.parse(this.responseText);
-				that.setState({ responseFBClass : style.feedbackSucc });
-				that.setState({ responseFB : 'Messung erfolgreich geändert' });
-				location.reload();
-			}
-			else {
-				try {
-					let response = JSON.parse(this.responseText);
-					if (response.msg == 'Token is invalid') {
-						Auth.logout();
-						location.reload();
-					}
-				}
-				catch (err) {}
-			}
-		};
-
 		let today = new Date();
 
 		let month = '';
@@ -113,6 +96,29 @@ export default class Measurements extends Component {
 		}
 
 		let date = today.getFullYear() + '-' + month + '-' + day;
+
+
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				let response = JSON.parse(this.responseText);
+				that.setState({ responseFBClass : style.feedbackSucc });
+				that.setState({ responseFB : 'Messung erfolgreich geändert' });
+				that.loadData();
+				that.measurementsEditDialog.MDComponent.close();
+				that.showTable(true)
+
+			}
+			else {
+				try {
+					let response = JSON.parse(this.responseText);
+					if (response.msg == 'Token is invalid') {
+						Auth.logout();
+						location.reload();
+					}
+				}
+				catch (err) {}
+			}
+		};
 
 		let data = `{
 			"date_measured": "${ date }",
@@ -212,13 +218,7 @@ export default class Measurements extends Component {
 				that.setState({ responseFBClass : style.feedbackSucc });
 				that.setState({ responseFB : 'Messung erfolgreich gelöscht' });
 				
-				let newMeasureList = []
-				that.state.measurements.forEach(measure => {
-					if (measure.id != id) {
-						newMeasureList.push(measure)
-					}
-				})
-				that.setState({ measurements : newMeasureList });
+				that.loadData();
 				that.showTable(true);
 			}
 			else {
@@ -238,12 +238,10 @@ export default class Measurements extends Component {
 	}
 
 	sendMeasurement = () => {
-		console.log("SEND")
 
 		let id;
 		Auth.check_admin() ? id = this.state.userIds[this.state.chosenIndex] : id = Auth.getUser().id;
 
-		console.log("ID: ", id)
 		let that = this;
 		let url = Auth.url + '/api/user/' + id + '/anthropometric';
 		let xhttp = new XMLHttpRequest();
@@ -256,13 +254,11 @@ export default class Measurements extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
-				console.log(response)
-				location.reload();
-
+				that.loadData();
+				that.newMeasurementsDialog.MDComponent.close();
 			}
 			else {
 				let response = JSON.parse(this.responseText);
-				console.log(response)
 			}
 		};
 
@@ -278,8 +274,6 @@ export default class Measurements extends Component {
 			"body_span": ${ this.state.span },
 			"weight": ${ this.state.weight }
 		}`;
-
-		console.log(data)
 
 		xhttp.send(data);
 	}
@@ -297,8 +291,6 @@ export default class Measurements extends Component {
 	showDialog = (id) => {
 		document.addEventListener('keyup', this.handleKey)
 
-		console.log('ID: ', id)
-
 		this.setState({ editId : id });
 		
 		this.state.measurements.forEach(measurement => {
@@ -311,14 +303,6 @@ export default class Measurements extends Component {
 		})
 
 		this.measurementsEditDialog.MDComponent.show();
-	}
-
-	handleKey = (event) => {
-		console.log("EVENT")
-		if(event.code == 'Enter') {
-			this.editData();
-			document.removeEventListener('keyup', this.handleKey)
-		}
 	}
 
 	getDataFromDialogforNew = (height, sittingHeight, span, weight, chosenIndex) => {
@@ -388,7 +372,6 @@ export default class Measurements extends Component {
 					</Button>
 					<Button raised class={`${"mdc-button mdc-theme--primary-bg"} ${style.roundBtn}`} onClick={() => {
 						this.newMeasurementsDialog.MDComponent.show();
-						document.addEventListener('keyup', this.handleKey)
 					}}>
 						<i class="material-icons mdc-button__icon mdc-theme-on-primary" aria-hidden="true">add</i>
 						<span class="mdc-button__label mdc-theme-on-primary">erstellen</span>

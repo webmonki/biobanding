@@ -81,13 +81,7 @@ export default class Users extends Component {
 			if (this.readyState == 4 && this.status == 200) {
 				that.setState({ responseFBClass : style.feedbackSucc });
 				that.setState({ responseFB : 'Benutzer erflogreich gelöscht' });
-				let newUserList = []
-				that.state.users.forEach(user => {
-					if (user.userID != id) {
-						newUserList.push(user)
-					}
-				})
-				that.setState({ users : newUserList });
+				that.getData();
 			}
 			else {
 				try {
@@ -177,8 +171,6 @@ export default class Users extends Component {
 			}
 		};
 
-		console.log(this.editUsername)
-
 		let data = `{
 			"username": "${ this.state.editUsername }",
 			"email": "${ this.state.editEmail }"
@@ -188,7 +180,7 @@ export default class Users extends Component {
 		xhttp.send(data);
 	}
 
-	sendData = () => {		
+	sendData = () => {
 		let that = this;
 		let url = Auth.url + '/api/users/register';
 		let xhttp = new XMLHttpRequest();
@@ -201,8 +193,8 @@ export default class Users extends Component {
 			if (this.readyState == 4 && this.status == 200) {
 				that.setState({ responseFBClass : style.feedbackSucc });
 				that.setState({ responseFB : 'Benutzer erfolgreich angelegt' });
-
-				location.reload();
+				that.getData();
+				that.newUserDialog.MDComponent.close();
 			}
 			else {
 				try {
@@ -263,21 +255,6 @@ export default class Users extends Component {
 
 	showNewUserDialog = () => {
 		this.newUserDialog.MDComponent.show();
-		document.addEventListener('keyup', this.handleKey)
-	}
-
-	handleKey = (event) => {
-		if(event.code == 'Enter') {
-			this.sendData();
-			document.removeEventListener('keyup', this.handleKey)
-		}
-	}
-
-	handleKeyEdit = (event) => {
-		if(event.code == 'Enter') {
-			this.editData();
-			document.removeEventListener('keyup', this.handleKey)
-		}
 	}
 
 	showTable = (editable) => {

@@ -54,7 +54,6 @@ export default class Table extends Component {
 	}
 
 	createTableBody = (page) => {
-
 		if (this.props.data != undefined) {
 			let indexEnd = page * this.props.pageSize
 			let indexStart = indexEnd - this.props.pageSize
@@ -70,7 +69,7 @@ export default class Table extends Component {
 									<div class={style.tdIconContainer}>
 										<List.ItemGraphic onClick={() => this.props.clickEdit(row[this.props.idKey])} class={style.tdIcon}>edit</List.ItemGraphic>
 										<Formfield>
-											<Checkbox name='deleteCheck' value={row[this.props.idKey]}/>
+											<Checkbox name='deleteCheck' checked={false} value={row[this.props.idKey]}/>
 										</Formfield>
 									</div>
 								</td>

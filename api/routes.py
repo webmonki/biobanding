@@ -181,6 +181,7 @@ class AllUserDetails(Resource):
                 height = anthro_data.height
                 result = anthro_data.result
             except:
+                measureID = "/"
                 height = "/"
                 result = "/"
 

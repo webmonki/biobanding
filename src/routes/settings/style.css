@@ -21,6 +21,7 @@
 .headerContainer {
 	display: flex;
 	flex-direction: column;
+	margin-bottom: var(--global-profile-line-space);
 }
 
 .pageHeader {
@@ -38,7 +39,6 @@
 
 .subHeader {
 	font-size: 15px;
-	margin-bottom: var(--global-profile-line-space);
 }
 
 .row {
@@ -69,6 +69,9 @@
 
 .input {
 	width: var(--global-profile-input-width);
+}
+
+.mrgnBttm {
 	margin-bottom: var(--global-profile-line-space);
 }
 
@@ -92,15 +95,14 @@
 	font-size: var(--global-feedback-size);
 }
 
-.bDayLabel {
+.label {
 	padding-left: 5px;
 	padding-right: 5px;
 	width: fit-content;
 	position: relative;
-	top: -64px;
-	left: 10px;
-	font-size: small;
-	background-color: white;
+	/* top: -30px;
+	left: 15px; */
+	font-size: 15px;
 	color: rgba(0, 0, 0, 0.6);;
 }
 
@@ -108,5 +110,17 @@
 	width: 100%;
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
+}
+
+.center {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.checkContainer {
+	display: flex;
+	flex-direction: row;
 	align-items: center;
 }

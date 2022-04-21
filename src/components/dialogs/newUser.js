@@ -50,7 +50,7 @@ export default class NewUser extends Component {
 									}
 									if (val.length > 0 && val.length < 33) {
 										this.setState({usernameFBClass : style.feedbackSucc })
-										this.setState({usernameFB : 'okay'})
+										this.setState({usernameFB : ''})
 									}
 								}}/>
 								<span class={this.state.usernameFBClass}>{this.state.usernameFB}</span>
@@ -62,7 +62,7 @@ export default class NewUser extends Component {
 									let val = e.target.value
 									if (val.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
 										this.setState({ emailFBClass : style.feedbackSucc });
-										this.setState({ emailFB : 'okay'})
+										this.setState({ emailFB : ''})
 									}
 									else {
 										this.setState({ emailFBClass : style.feedbackErr });
@@ -88,11 +88,11 @@ export default class NewUser extends Component {
 									}
 									if (val.length > 3 && val.length < 17) {
 										this.setState({ passwordFBClass : style.feedbackSucc });
-										this.setState({ passwordFB : 'Länge okay'})
+										this.setState({ passwordFB : ''})
 									}
 									if (this.state.password == this.state.password2) {
 										this.setState({ passwordSameFBClass : style.feedbackSucc })
-										this.setState({ passwordSameFB : 'Passwörter stimmen überein'})
+										this.setState({ passwordSameFB : ''})
 									}
 									else {
 										this.setState({ passwordSameFBClass : style.feedbackErr })
@@ -116,11 +116,11 @@ export default class NewUser extends Component {
 									}
 									if (val.length > 3 && val.length < 17) {
 										this.setState({ password2FBClass : style.feedbackSucc });
-										this.setState({ password2FB : 'Länge okay'})
+										this.setState({ password2FB : ''})
 									}
 									if (this.state.password == this.state.password2) {
 										this.setState({ passwordSameFBClass : style.feedbackSucc })
-										this.setState({ passwordSameFB : 'Passwörter stimmen überein'})
+										this.setState({ passwordSameFB : ''})
 									}
 									else {
 										this.setState({ passwordSameFBClass : style.feedbackErr })

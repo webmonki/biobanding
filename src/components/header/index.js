@@ -24,11 +24,8 @@ import NewMeasurementUser from '../dialogs/newMeasurementUser';
 
 export default class Header extends Component {
 
-	newMeasurementsDialogRef = dialog => (this.dialog = dialog);
-
 	componentWillMount = () => {
 		this.setState({ userIds : [] });
-		this.getDialog();
 	}
 
 	componentWillUnmount = () => {
@@ -69,6 +66,7 @@ export default class Header extends Component {
 		xhttp.setRequestHeader('Accept', 'application/json');
 		xhttp.setRequestHeader('authorization',  Auth.getUser().token);
 
+
 		xhttp.onreadystatechange = function() {
 
 			if (this.readyState == 4 && this.status == 200) {
@@ -78,9 +76,8 @@ export default class Header extends Component {
 				response['userdetails'].forEach(user => {
 					idList.push(user.userID);
 				})
-
-				that.setState({ userIds : idList });	
-				that.getDialog();
+				that.setState({ userIds : idList });
+				that.getDialog(idList)
 			}
 		}
 		xhttp.send();	
@@ -97,12 +94,10 @@ export default class Header extends Component {
 	}
 
 	sendMeasurement = () => {
-		console.log("SEND")
 
 		let id;
 		Auth.check_admin() ? id = this.state.userIds[this.state.chosenIndex] : id = Auth.getUser().id;
 
-		console.log("ID: ", id)
 		let that = this;
 		let url = Auth.url + '/api/user/' + id + '/anthropometric';
 		let xhttp = new XMLHttpRequest();
@@ -115,13 +110,11 @@ export default class Header extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
-				console.log(response)
 				location.reload();
 
 			}
 			else {
 				let response = JSON.parse(this.responseText);
-				console.log(response)
 			}
 		};
 
@@ -139,17 +132,16 @@ export default class Header extends Component {
 		}`;
 
 		console.log(data)
-
 		xhttp.send(data);
 	}
 
-	getDialog = () => {
+	getDialog = (idList=[]) => {
 		let dialog
 		if (Auth.check_admin()) {
 			dialog = (
 				<NewMeasurementAdmin
 					reference={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog}}
-					userIds={this.state.userIds}
+					userIds={idList}
 					sendData={this.getDataFromDialog}
 					header='Messung erstellen'
 					subHeader='Anthropometrische Daten'/>
@@ -169,8 +161,13 @@ export default class Header extends Component {
 	}
 
 
+
+
 	render() {
 		if (Auth.getUser()) {
+			if (this.state.dialog == undefined) {
+				this.getPlayerDetails();
+			}
 			return (
 				<div class={`${"mdc-theme--primary-bg"} ${style.topAppBar}`}>
 					<span class={`${style.appTitle} ${style.white}`}>Astrostars biobanding</span>
@@ -179,7 +176,6 @@ export default class Header extends Component {
 							<span class={style.white}>Abmelden</span>
 						</Button>
 						<Button raised class={`${"mdc-button mdc-theme--secondary-bg"} ${style.roundBtn}`} onClick={() => {
-							this.getPlayerDetails();
 							this.newMeasurementsDialog.MDComponent.show();
 						}}>
 							  <i class="material-icons mdc-button__icon mdc-theme--text-secondary-on-light" aria-hidden="true">add</i>

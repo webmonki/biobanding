@@ -23,7 +23,6 @@ export default class EditUser extends Component {
 			<Dialog class={style.dialog} ref={this.props.reference} onAccept={() => {
 				this.props.sendData(this.props.username, this.props.email)
 			}} onCancel={() => {
-				document.removeEventListener('keyup', this.handleKey)
 			}}>
 				<Dialog.Header>Benutzer bearbeiten</Dialog.Header>
 				<Dialog.Body>
@@ -46,21 +45,20 @@ export default class EditUser extends Component {
 									}
 									if (val.length > 0 && val.length < 33) {
 										this.setState({ usernameFBClass : style.feedbackSucc })
-										this.setState({ usernameFB : 'okay' })
+										this.setState({ usernameFB : '' })
 									}
 								}}/>
 								<span class={this.state.usernameFBClass}>{this.state.usernameFB}</span>
 							</div>
 							<div class={style.input}>
 								<TextField outlined label='E-Mail' class={style.fullWidth} value={this.props.email} onInput={e =>{
-									document.addEventListener('keyup', this.handleKey)
 									// this.setState({ editEmail : e.target.value });
 									let val = e.target.value
 									this.props.email = val;
 
 									if (val.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
 										this.setState({ emailFBClass : style.feedbackSucc });
-										this.setState({ emailFB : 'okay'})
+										this.setState({ emailFB : ''})
 									}
 									else {
 										this.setState({ emailFBClass : style.feedbackErr });

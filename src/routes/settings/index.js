@@ -10,6 +10,10 @@ import Radio from 'preact-material-components/Radio';
 import Auth from '../../components/state'
 import 'preact-material-components/List/style.css';
 import 'preact-material-components/Radio/style.css';
+import Checkbox from 'preact-material-components/Checkbox';
+import Formfield from 'preact-material-components/FormField';
+import 'preact-material-components/Checkbox/style.css';
+
 
 export default class Settings extends Component {
 
@@ -129,6 +133,16 @@ export default class Settings extends Component {
 
 	}
 
+	setServer = () =>  {
+		this.checkServer();
+	}
+
+	checkServer = () => {
+		let checkbox = document.getElementsByName('serverCheck')
+		
+		this.setState({ serverChecked : checkbox.checked})
+	}
+
 
 	render() {
 		return (
@@ -137,19 +151,64 @@ export default class Settings extends Component {
 				<span class={style.pageHeader}>Einstellungen</span>
 				<div class={style.settingsContainer}>
 					<div class={style.headerContainer}>
-						<span class={style.header}>Erinnerungs-E-Mail</span>
-						<span class={style.subHeader}>Angeben in wievielen Tagen die Erinnerungs-E-Mail gesendet werden soll</span>
+						<span class={style.header}>Erinnerungsintervall</span>
+						<span class={style.subHeader}>Intervall innerhalb dessen die Spieler per E-Mail an eine neue Messung erinnert werden</span>
 					</div>
-					<div class={style.input}>
-						<TextField outlined label='Erinnerung in Tagen' value={this.state.reminder} onInput={e => {
-							this.setState({ reminder : e.target.value })
-						}}/>
-						<span class={this.state.usernameFBClass}>{this.state.usernameFB}</span>
+					<div class={style.row}>
+						<div class={style.input}>
+							<TextField outlined label='Erinnerung in Tagen' value={this.state.reminder} onInput={e => {
+								this.setState({ reminder : e.target.value })
+							}}/>
+							<span class={this.state.usernameFBClass}>{this.state.usernameFB}</span>
+						</div>
 					</div>
 					<div class={style.btnContainer}>
-						<Button raised onClick={this.setConfiguration}>Speichern</Button>
+						<Button class={style.mrgnBttm} raised onClick={this.setConfiguration}>Speichern</Button>
 					</div>
 					<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
+				</div>
+				<div class={style.settingsContainer}>
+					<div class={style.headerContainer}>
+						<span class={style.header}>E-Mail-Server</span>
+						<span class={style.subHeader}>Es ist wichtig diesen Server zu konfigurieren, dass E-Mail versandt werden können, z.B. für den Passwort-Reset und Benachrichtigungen</span>
+					</div>
+					<div class={style.row}>
+						<div class={style.input}>
+							<TextField outlined label='E-Mail-Server' value={this.state.server} onInput={e => {
+								this.setState({ server : e.target.value})
+							}}/>
+							<span class={this.state.serverFBClass}>{this.state.serverFB}</span>
+						</div>
+						<div class={style.input}>
+							<TextField outlined label='Port' value={this.state.port} onInput={e => {
+								this.setState({ port : e.target.value });
+							}}/>
+							<span class={this.state.portFBClass}>{this.state.portFB}</span>
+						</div>
+					</div>
+					<div class={style.row}>
+						<div class={style.input}>
+							<TextField outlined label='Benutzername' value={this.state.username} onInput={e => {
+								this.setState({ username : e.target.value });
+							}} />
+						</div>
+						<div class={style.input}>
+							<TextField outlined label='Passwort' type='password' value={this.state.password} onInput={e => {
+								this.setState({ password : e.target.value });
+							}} />
+						</div>
+					</div>
+					<div class={style.row}>
+						<div class={style.checkContainer}>
+							<span class={style.label}>SSL Verschlüsselung</span>
+							<Formfield>
+								<Checkbox name='serverCheck' checked={true}/>
+							</Formfield>
+						</div>
+					</div>
+					<div class={style.btnContainer}>
+							<Button class={style.mrgnBttm} raised onClick={this.setServer}>Speichern</Button>
+					</div>
 				</div>
 			</div>
 		);
