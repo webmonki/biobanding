@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 """
-Copyright (c) 2019 - present AppSeed.us
+Copyright (c) 2022 - VP-Systeme GmbH, Lyrenstr. 13, 44866 Bochum
 """
 
 from dataclasses import field
@@ -47,7 +47,13 @@ user_password_reset_model = rest_api.model('UserPasswordResetModel', {"token": f
                                                    })
 
 
-config_model = rest_api.model('ConfigModel', {"days_reminder": fields.Integer(min=0, max=120, description='Interval in days in which the players are reminded by mail for a new measurement.')})
+config_model = rest_api.model('ConfigModel', {"days_reminder": fields.Integer(min=0, max=120, description='Interval in days in which the players are reminded by mail for a new measurement.'),
+                                              "mail_server": fields.String(),
+                                              "mail_port": fields.Integer(min=0 , max=65000),
+                                              "mail_use_ssl": fields.Boolean(),
+                                              "mail_username": fields.String(),
+                                              "mail_password": fields.String()
+                                              })
 
 player_model = rest_api.model('PlayerModel', {"userID": fields.Integer(required=True, min=0),
                                                    "first_name": fields.String(required=True, min_length=2, max_length=32),
@@ -438,33 +444,52 @@ class EditConfiguration(Resource):
 
     @rest_api.expect(config_model)
     @token_required
-    def put(self, current_user):
+    def put(self):
         """Updates the admin configuration"""
 
         req_data = request.get_json()
         _days_reminder = req_data.get("days_reminder")
+        _mail_server = req_data.get("mail_server")
+        _mail_port = req_data.get("mail_port")
+        _mail_use_ssl = req_data.get("mail_use_ssl")
+        _mail_username = req_data.get("mail_username")
+        _mail_password = req_data.get("mail_password")
+
         try:
-            AdminConfig.update_days_reminder(_days_reminder)
+            config = AdminConfig.get_config()
+            if _days_reminder:
+                config.update_days_reminder(_days_reminder)
+            if _mail_server:
+                config.update_mail_server(_mail_server)
+            if _mail_port:
+                config.update_mail_port(_mail_port)
+            if _mail_use_ssl:
+                config.update_mail_use_ssl(_mail_use_ssl)
+            if _mail_username:
+                config.update_mail_username(_mail_username)
+            if _mail_password:
+                config.update_mail_passwort(_mail_password)
+            config.save()
         except Exception:
             return {"success": False,
-                    "msg": "Configuration could not be loaded"}, 500
+                    "msg": "Configuration could not be loaded"}, 400
 
         return {"success": True,
                 "msg": "The config was successfully updated"}, 200
 
     @token_required
-    def get(self, current_user):
+    def get(self):
         """Return the admin configuration"""
 
         try:
-            config = AdminConfig.get_days_reminder()
+            config = AdminConfig.get_config()
         except:
             return {"success": False,
                     "msg": "There is no configuration."}, 500
 
 
         return {"success": True,
-                "days_reminder": config}, 200
+                "config": config.toDICT()}, 200
 
 
 @rest_api.route('/api/user/<int:userID>/details')
