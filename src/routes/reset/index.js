@@ -11,11 +11,21 @@ import { Link } from 'preact-router/match';
 import TextField from 'preact-material-components/TextField';
 import 'preact-material-components/TextField/style.css';
 
-class Form extends Component {
 
+export default class Reset extends Component {
 
 	componentWillMount = () => {
 		this.setState({ btnDisabled: true });
+		
+		let queryString = window.location.search;
+
+		let urlParams = new URLSearchParams(queryString);
+
+		let token = urlParams.get('token')
+
+		console.log("TOKEN: ", token)
+
+		this.setState({ token });
 	}
 
 	componentDidMount = () => {
@@ -37,15 +47,11 @@ class Form extends Component {
 
 	// Check Inputs and Enable Button
 	handleChange = () => {
-		this.setState({ username: document.getElementById('usernameInput').value });
 		this.setState({ password: document.getElementById('passwordInput').value });
-		this.setState({ email: document.getElementById('emailInput').value });
 		this.setState({ password2: document.getElementById('password2Input').value });
 
 
-		if (this.state.email.match(
-			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-		) && this.state.username.length > 2 && this.state.username.length < 33 && this.state.password.length > 3 && this.state.password.length < 17 &&
+		if (this.state.password.length > 3 && this.state.password.length < 17 &&
 		this.state.password === this.state.password2) {
 			this.setState({ btnDisabled: false });
 		}
@@ -56,12 +62,13 @@ class Form extends Component {
 
 
 	// Send Request
-	signup = () => {
+	sendNewPassword = () => {
+		console.log("SEND")
 		let that = this;
-		let url = Auth.url + '/api/users/register';
+		let url = Auth.url + '/api/user/reset';
 		let xhttp = new XMLHttpRequest();
 
-		xhttp.open('POST', url);
+		xhttp.open('PUT', url);
 		xhttp.setRequestHeader('Accept', 'application/json');
 		xhttp.setRequestHeader('Content-Type', 'application/json');
 
@@ -71,16 +78,18 @@ class Form extends Component {
 			if ([1,2,3,4].includes(this.readyState)) {
 				
 				if (this.status === 200) {
-					// If Request is Ok go to Login
-					route('/login', true);
+					console.log("SUCCESS")
+					let response = JSON.parse(this.responseText);
+					console.log(response)
+					route('login', true);
 				}
 				else {
+					console.log("ERROR")
+
 					try {
 						let response = JSON.parse(this.responseText);
-						if (response.msg == 'Token is invalid') {
-							Auth.logout();
-							location.reload();
-						}
+						console.log(response)
+
 						that.setState({ responseFBClass : style.feedbackErr });
 						that.setState({ responseFB : response.msg });
 					}
@@ -94,10 +103,8 @@ class Form extends Component {
 		};
 
 		let data =  `{
-            "username": "${this.state.username}",
-            "email": "${this.state.email}",
-            "password": "${this.state.password}",
-			"is_admin": ${false}
+            "token": "${this.state.token}",
+            "password": "${this.state.password}"
         }`;
 
 		xhttp.send(data);
@@ -112,43 +119,7 @@ class Form extends Component {
 						<img class={style.logo} src='../../assets/StarsLogoTrans.png' />
 					</div>
 					<div class={style.inputContainer}>
-						<div class={style.loginLabel}>Registrierung</div>
-						<div class={style.input}>
-								<TextField id='usernameInput' outlined label='Benutzername' value={this.state.editUsername} onKeyUp={e => {
-									this.handleChange();
-									this.setState({ editUsername : e.target.value })
-									let val = e.target.value
-									if (val.length < 1) {
-										this.setState({usernameFBClass : style.feedbackErr})
-										this.setState({ usernameFB : 'Mindestens 1 Zeichen'})
-									}
-									if (val.length > 32) {
-										this.setState({usernameFBClass : style.feedbackErr })
-										this.setState({ usernameFB : 'Maximal 32 Zeichen'})
-									}
-									if (val.length > 0 && val.length < 33) {
-										this.setState({usernameFBClass : style.feedbackSucc })
-										this.setState({usernameFB : 'okay'})
-									}
-								}}/>
-								<span class={this.state.usernameFBClass}>{this.state.usernameFB}</span>
-							</div>
-							<div class={style.input}>
-								<TextField id='emailInput' outlined label='E-Mail' value={this.state.email} onInput={e =>{
-									this.handleChange();
-									this.setState({ email : e.target.value });
-									let val = e.target.value
-									if (val.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
-										this.setState({ emailFBClass : style.feedbackSucc });
-										this.setState({ emailFB : 'okay'})
-									}
-									else {
-										this.setState({ emailFBClass : style.feedbackErr });
-										this.setState({ emailFB : 'keine E-Mail'})
-									}
-								}}/>
-								<span class={this.state.emailFBClass}>{this.state.emailFB}</span>
-							</div>
+						<div class={style.loginLabel}>Neues Passwort</div>
 							<div class={style.input}>
 								<TextField id='passwordInput' type='password' outlined label='Passwort' onKeyUp={e => {
 									this.handleChange();
@@ -210,20 +181,11 @@ class Form extends Component {
 							</div>
 							<div class={style.btnContainer}>
 								<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
-								<Button class={style.input} raised onClick={this.signup} disabled={this.state.btnDisabled}>registrieren</Button>
+								<Button class={style.input} raised onClick={this.sendNewPassword} disabled={this.state.btnDisabled}>senden</Button>
 								<Link class={style.input} href="/login" data-native>anmelden</Link>
 							</div>
 						</div>
 					</Card>
 			);
 		}
-
-	}
-
-export default class Signup extends Component {
-	render() {
-		return (
-			<Form />
-		);
-	}
 }
