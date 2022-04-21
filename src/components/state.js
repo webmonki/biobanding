@@ -1,8 +1,9 @@
 import { route } from "preact-router";
 
+
 export default class Auth {
 	// URL of API
-    static url = 'http://127.0.0.1:5000'
+    static url = process.env.PREACT_APP_HOST_URI
 
 
 	// Save User Data in Session Storage
