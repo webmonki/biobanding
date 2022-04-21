@@ -25,7 +25,7 @@ export default class Table extends Component {
 
 	createTableHeader = () => {
 
-		if (this.props.data != undefined) {
+		if (this.props.data != undefined && this.props.data.length != 0) {
 
 			let cols = Object.keys(this.props.data[0]);
 
@@ -50,6 +50,14 @@ export default class Table extends Component {
 			}
 
 
+		}
+		else {
+			let tableHeader = (
+				<tr>
+					<th>Keine Messungen vorhanden</th>
+				</tr>
+			)
+			return tableHeader;
 		}
 	}
 
@@ -167,7 +175,7 @@ export default class Table extends Component {
 
 	createTablePagination = () => {
 
-		if (this.props.data != undefined) {
+		if (this.props.data != undefined && this.props.data.length != 0) {
 
 			let pageNumbers = []
 
