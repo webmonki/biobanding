@@ -327,10 +327,15 @@ class Register(Resource):
         _password = req_data.get("password")
         _is_admin = req_data.get("is_admin")
 
-        user_exists = Users.get_by_email(_email)
+        email_exists = Users.get_by_email(_email)
+        if email_exists:
+            return {"success": False,
+                    "msg": "Email {} already taken".format(_email)}, 400
+
+        user_exists = Users.get_by_username(_username)
         if user_exists:
             return {"success": False,
-                    "msg": "Email already taken"}, 400
+                    "msg": "Username {} already taken".format(_username)}, 400
 
         new_user = Users(username=_username, email=_email)
 
