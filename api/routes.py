@@ -3,7 +3,6 @@
 Copyright (c) 2022 - VP-Systeme GmbH, Lyrenstr. 13, 44866 Bochum
 """
 
-from dataclasses import field
 from datetime import datetime, timezone, timedelta
 from functools import wraps
 from json import dumps
@@ -16,6 +15,7 @@ from .models import db, Users, JWTTokenBlocklist, AnthropometricData, AdminConfi
 from .config import BaseConfig
 from .utils import json_serial, emailIsValid
 from .email import send_email
+
 
 rest_api = Api(version="1.0", title="Users API")
 
@@ -445,7 +445,7 @@ class EditConfiguration(Resource):
     @rest_api.expect(config_model)
     def post(self):
         """Updates the admin configuration"""
-
+        from api import app
         req_data = request.get_json()
         _days_reminder = req_data.get("days_reminder")
         _mail_server = req_data.get("mail_server")
@@ -460,14 +460,19 @@ class EditConfiguration(Resource):
                 config.update_days_reminder(_days_reminder)
             if _mail_server:
                 config.update_mail_server(_mail_server)
+                app.config['MAIL_SERVER'] = _mail_server
             if _mail_port:
                 config.update_mail_port(_mail_port)
+                app.config['MAIL_PORT'] = _mail_port
             if _mail_use_ssl is not None:
                 config.update_mail_use_ssl(_mail_use_ssl)
+                app.config['MAIL_USE_SSL'] = _mail_use_ssl
             if _mail_username:
                 config.update_mail_username(_mail_username)
+                app.config['MAIL_USERNAME'] = _mail_username
             if _mail_password:
-                config.update_mail_passwort(_mail_password)
+                app.config['MAIL_PASSWORD'] = _mail_password
+                #config.update_mail_passwort(_mail_password)
             config.save()
         except Exception:
             return {"success": False,
