@@ -39,7 +39,6 @@ export default class Profile extends Component {
 	}
 
 	sendNewLogin = () => {
-		console.log("NEW LOGIN")
 		let that = this;
 		let url = Auth.url + '/api/users/edit';
 		let xhttp = new XMLHttpRequest();
@@ -87,7 +86,6 @@ export default class Profile extends Component {
 	sendData = () => {
 
 		if (this.state.username != Auth.getUser().name || this.state.email != Auth.getUser().email) {
-			console.log("NEW")
 			this.sendNewLogin();
 		}
 
@@ -155,7 +153,6 @@ export default class Profile extends Component {
 
 
 	sendPlayerDetails = () => {
-		console.log("PLAYERDETAILS")
 		let that = this;
 		let url = Auth.url + '/api/user/' + Auth.getUser().id + '/details';
 		let xhttp = new XMLHttpRequest();
@@ -207,9 +204,6 @@ export default class Profile extends Component {
 			"height_father": ${this.state.fatherHeight},
 			"height_mother": ${this.state.motherHeight}
         }`;
-
-		console.log(data)
-
 		xhttp.send(data);
 		
 	}

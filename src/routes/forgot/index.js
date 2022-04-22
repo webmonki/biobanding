@@ -65,7 +65,6 @@ export default class Forgot extends Component {
 				if (this.status === 200) {
 					try {
 						let response = JSON.parse(this.responseText);
-						console.log(response)
 					}
 					catch (err) {}
 				}
@@ -76,7 +75,6 @@ export default class Forgot extends Component {
 							Auth.logout();
 							location.reload();
 						}
-						console.log(response)
 						that.setState({ responseFBClass : style.feedbackSucc });
 						that.setState({ responseFB : response.msg });
 					}

@@ -66,11 +66,8 @@ export default class Settings extends Component {
 						that.setState({ mailUsername : response.config.mail_username })
 						that.setState({ responseFB: 'Konfigurationen erfolgreich geladen' })
 						that.setState({ responseFBClass: style.feedbackSucc });
-
-						console.log("GET: ", that.state.ssl)
 					}
 					catch (err) {}
-;
 				}
 				else {
 					try {
@@ -107,10 +104,7 @@ export default class Settings extends Component {
 				if (this.status === 200) {
 					try {
 						let response = JSON.parse(this.responseText);
-						console.log(response)
 						that.setState({ responseFB: response.msg });
-						console.log("SET: ", that.state.ssl)
-
 					}
 					catch (err) {}
 
@@ -119,7 +113,6 @@ export default class Settings extends Component {
 				else {
 					try {
 						let response = JSON.parse(this.responseText);
-						console.log(response)
 						that.setState({ responseFB: response.msg });
 					}
 					catch (err) {}
@@ -137,7 +130,6 @@ export default class Settings extends Component {
 			"mail_password": "${this.state.password}"
         }`;
 
-		console.log(data)
 		xhttp.send(data);
 
 	}

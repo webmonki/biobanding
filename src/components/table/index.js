@@ -19,12 +19,11 @@ export default class Table extends Component {
 
 		if (this.state.page != page) {
 			this.setState({ page });
-			this.disableButtons();
 		}
 	}
 
 	createTableHeader = () => {
-
+		console.log("CREATE HEADER")
 		if (this.props.data != undefined && this.props.data.length != 0) {
 
 			let cols = Object.keys(this.props.data[0]);
@@ -62,6 +61,7 @@ export default class Table extends Component {
 	}
 
 	createTableBody = (page) => {
+		console.log("CREATE Body")
 		if (this.props.data != undefined) {
 			let indexEnd = page * this.props.pageSize
 			let indexStart = indexEnd - this.props.pageSize
@@ -109,14 +109,19 @@ export default class Table extends Component {
 	}
 
 	disableButtons = () => {
+		console.log("DISABLE")
 		let totalPage = this.getPageCount();
 		let currentPage = this.state.page;
+		console.log("TOTAL PAGE: ", totalPage)
+		console.log("CURRENT PAGE: ", currentPage)
+
 
 		if (totalPage == 1) {
 			this.setState({ backBtnDisabled : true})
 			this.setState({ forwardBtnDisabled : true })
 		}
 		else {
+			console.log("X")
 			currentPage == 1 ? this.setState({ backBtnDisabled : true}) : this.setState({ backBtnDisabled : false });
 			currentPage == totalPage ? this.setState({ forwardBtnDisabled : true }) : this.setState({ forwardBtnDisabled : false });
 		}
@@ -160,6 +165,7 @@ export default class Table extends Component {
 	}
 
 	createBtn = (pageNumber) => {
+		console.log("CREATE BTN")
 		if (pageNumber == this.state.page) {
 
 			return (				
@@ -174,6 +180,9 @@ export default class Table extends Component {
 	}
 
 	createTablePagination = () => {
+		console.log("CREATE PAGINATION")
+		console.log("BACK: ", this.state.backBtnDisabled)
+		console.log("FORWARD: ", this.state.forwardBtnDisabled)
 
 		if (this.props.data != undefined && this.props.data.length != 0) {
 
@@ -202,11 +211,10 @@ export default class Table extends Component {
 
 			return pagination;
 		}
-
-
 	}
 	
 	render() {
+		console.log("RENDER")
 		return (
 			<div>
 				<table>
