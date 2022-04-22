@@ -137,9 +137,8 @@ class Form extends Component {
 							</div>
 						</div>					
 						<div class={style.btnContainer}>
-							<Button raised onClick={this.login} disabled={this.state.btnDisabled}>anmelden</Button>
-							<div class={style.spaceBetween} />
 							<Button class={style.secondaryBtn} onClick={() => {route('/signup', true)}}>Registrieren</Button>
+							<Button raised onClick={this.login} disabled={this.state.btnDisabled}>anmelden</Button>
 						</div>
 					</div>
 				</Card>

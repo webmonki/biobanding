@@ -29,10 +29,6 @@
 	margin-bottom: var(--global-line-space);
 }
 
-.spaceBetween {
-	width: var(--global-space-between);
-}
-
 .linkContainer {
 	display: flex;
 	justify-content: space-between;
