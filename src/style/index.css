@@ -70,6 +70,8 @@ html, body {
 	--global-header-color: black;
 	--global-table-page-container-size: 30px;
 	--global-login-width: 480px;
+	--global-btn-justification: flex-end;
+	--global-space-between: 10px;
 }
 
 

@@ -18,9 +18,7 @@ class Form extends Component {
 	}
 
 	componentDidMount = () => {
-		this.handleChange();
 		document.addEventListener('keyup', this.handleKey)
-
 	}
 
 	componentWillUnmount = () => {
@@ -133,13 +131,15 @@ class Form extends Component {
 								let val = e.target.value;
 								this.setState({ password : val })
 							}}/>
-							<span class={this.state.passwordFBClass}>{this.state.passwordFB}</span>	
+							<div class={style.linkContainer}>
+								<Link class={style.link} href="/forgot" data-native>Passwort vergessen?</Link>
+								<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
+							</div>
 						</div>					
 						<div class={style.btnContainer}>
-							<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
-							<Button class={style.input} raised onClick={this.login} disabled={this.state.btnDisabled}>anmelden</Button>
-							<Link class={style.input} href="/signup" data-native>registrieren</Link>
-							<Link class={style.input} href="/forgot" data-native>Passwort vergessen</Link>
+							<Button raised onClick={this.login} disabled={this.state.btnDisabled}>anmelden</Button>
+							<div class={style.spaceBetween} />
+							<Button class={style.secondaryBtn} onClick={() => {route('/signup', true)}}>Registrieren</Button>
 						</div>
 					</div>
 				</Card>

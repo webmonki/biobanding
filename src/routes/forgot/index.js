@@ -17,6 +17,22 @@ export default class Forgot extends Component {
 		this.setState({ btnDisabled : true });
 	}
 
+	componentDidMount = () => {
+		document.addEventListener('keyup', this.handleKey)
+	}
+
+	componentWillUnmount = () => {
+		document.removeEventListener('keyup', this.handleKey)
+	}
+
+
+	handleKey = (event) => {
+		if(this.state.btnDisabled == false && event.code == 'Enter') {
+			this.sendEmail();
+			document.removeEventListener('keyup', this.handleKey)
+		}
+	}
+
 
 	// Check Input and Enable Button
 	handleChange = () => {
@@ -100,11 +116,11 @@ export default class Forgot extends Component {
 							}}/>				
 							<span class={this.state.emailFBClass}>{this.state.emailFB}</span>
 						</div>
-						
+						<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
 						<div class={style.btnContainer}>
-							<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
 							<Button class={style.input} raised onClick={this.sendEmail} disabled={this.state.btnDisabled}>senden</Button>
-							<Link class={style.input} href="/login" data-native>login</Link>
+							<div class={style.spaceBetween} />
+							<Button class={style.secondaryBtn} onClick={() => {route('/login', true)}}>Anmelden</Button>
 						</div>
 					</div>
 				</Card>

@@ -24,11 +24,19 @@
 }
 
 .btnContainer {
-	height: fit-content;
 	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-	align-items: center;
+	justify-content: var(--global-btn-justification);
+	margin-bottom: var(--global-line-space);
+}
+
+.spaceBetween {
+	width: var(--global-space-between);
+}
+
+.linkContainer {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: var(--global-line-space);
 }
 
 .logoContainer {
@@ -56,6 +64,16 @@
 .feedbackSucc {
 	color: var(--global-success-color);
 	font-size: var(--global-feedback-size);
+}
+
+.link {
+	text-decoration: none;
+	color: var(--mdc-theme-primary)
+}
+
+.secondaryBtn {
+	background-color: white !important;
+	color: var(--mdc-theme-primary) !important;
 }
 
 

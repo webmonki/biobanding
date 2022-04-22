@@ -24,11 +24,12 @@
 }
 
 .btnContainer {
-	height: fit-content;
 	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-	align-items: center;
+	justify-content: var(--global-btn-justification);
+}
+
+.spaceBetween {
+	width: var(--global-space-between);
 }
 
 .logoContainer {
@@ -57,6 +58,12 @@
 	color: var(--global-success-color);
 	font-size: var(--global-feedback-size);
 }
+
+.secondaryBtn {
+	background-color: white !important;
+	color: var(--mdc-theme-primary) !important;
+}
+
 
 
 

@@ -37,7 +37,7 @@ export default class Reset extends Component {
 
 	handleKey = (event) => {
 		if(this.state.btnDisabled == false && event.code == 'Enter') {
-			this.signup();
+			this.sendNewPassword();
 			document.removeEventListener('keyup', this.handleKey)
 		}
 	}
@@ -173,10 +173,11 @@ export default class Reset extends Component {
 							<div class={style.pwVal}>
 								<span class={this.state.passwordSameFBClass}>{this.state.passwordSameFB}</span>
 							</div>
+							<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
 							<div class={style.btnContainer}>
-								<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
 								<Button class={style.input} raised onClick={this.sendNewPassword} disabled={this.state.btnDisabled}>senden</Button>
-								<Link class={style.input} href="/login" data-native>anmelden</Link>
+								<div class={style.spaceBetween} />
+								<Button class={style.secondaryBtn} onClick={() => {route('/login', true)}}>Anmelden</Button>
 							</div>
 						</div>
 					</Card>
