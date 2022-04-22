@@ -275,6 +275,7 @@ class ResetVerified(Resource):
 # @rest_api.expect(login_model)
 @rest_api.route('/api/user/<int:id>')
 class EditUser(Resource):
+
     @token_required
     def put(self, current_user, id):
 
@@ -442,8 +443,7 @@ class EditConfiguration(Resource):
     """
 
     @rest_api.expect(config_model)
-    @token_required
-    def put(self):
+    def post(self):
         """Updates the admin configuration"""
 
         req_data = request.get_json()
@@ -462,7 +462,7 @@ class EditConfiguration(Resource):
                 config.update_mail_server(_mail_server)
             if _mail_port:
                 config.update_mail_port(_mail_port)
-            if _mail_use_ssl:
+            if _mail_use_ssl is not None:
                 config.update_mail_use_ssl(_mail_use_ssl)
             if _mail_username:
                 config.update_mail_username(_mail_username)
