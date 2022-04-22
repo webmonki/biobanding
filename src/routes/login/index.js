@@ -43,7 +43,7 @@ class Form extends Component {
 
 		if (this.state.email.match(
 			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-		) && this.state.password.length > 3 && this.state.password.length < 17){
+		)){
 			this.setState({ btnDisabled: false });
 		}
 		else {
@@ -128,30 +128,10 @@ class Form extends Component {
 							<span class={this.state.emailFBClass}>{this.state.emailFB}</span>
 						</div>
 						<div class={style.input}>
-							<TextField id='passwordInput' type='password' outlined label='Passwort' onKeyUp={e => {
+							<TextField id='passwordInput' type='password' outlined label='Passwort' value={this.state.password} onKeyUp={e => {
 								this.handleChange();
-								this.setState({ password : e.target.value })
 								let val = e.target.value;
-								if (val.length < 4) {
-									this.setState({ passwordFBClass : style.feedbackErr });
-									this.setState({ passwordFB : 'Mindetsens 4 Zeichen'})
-								}
-								if (val.length > 16) {
-									this.setState({ passwordFBClass : style.feedbackErr });
-									this.setState({ passwordFB : 'Maximal 16 Zeichen'})
-								}
-								if (val.length > 3 && val.length < 17) {
-									this.setState({ passwordFBClass : style.feedbackSucc });
-									this.setState({ passwordFB : ''})
-								}
-								if (this.state.password == this.state.password2) {
-									this.setState({ passwordSameFBClass : style.feedbackSucc })
-									this.setState({ passwordSameFB : ''})
-								}
-								else {
-									this.setState({ passwordSameFBClass : style.feedbackErr })
-									this.setState({ passwordSameFB : 'Passwörter stimmen nicht überein'})
-								}
+								this.setState({ password : val })
 							}}/>
 							<span class={this.state.passwordFBClass}>{this.state.passwordFB}</span>	
 						</div>					

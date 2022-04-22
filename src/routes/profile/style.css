@@ -81,6 +81,11 @@
 	padding-left: 15px;
 }
 
+.dateInput:focus {
+	border-color: var(--mdc-theme-primary) !important;
+	padding-left: 100px;
+}
+
 .feedbackErr {
 	color: var(--global-error-color);
 	font-size: var(--global-feedback-size);
@@ -92,15 +97,30 @@
 }
 
 .bDayLabel {
-	padding-left: 5px;
-	padding-right: 5px;
-	width: fit-content;
+	background-color: white;
+	/* padding-left: 10px; */
+	width: 75px;
 	position: relative;
 	top: -64px;
 	left: 10px;
 	font-size: small;
-	background-color: white;
 	color: rgba(0, 0, 0, 0.6);;
+	display: flex;
+	justify-content: center;
+}
+
+.bDayLabelFocused {
+	background-color: white;
+	/* padding-left: 10px; */
+	width: 75px;
+	position: relative;
+	top: -64px;
+	left: 10px;
+	font-size: small;
+	color: rgba(0, 0, 0, 0.6);;
+	display: flex;
+	justify-content: center;
+	color: var(--mdc-theme-primary);
 }
 
 .btnContainer {

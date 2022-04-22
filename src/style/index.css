@@ -49,7 +49,7 @@ html, body {
 :root {
 	--global-navbar-width: 250px;
 	--global-navrail-width: 58px;
-	--global-header-height: 80px;
+	--global-header-height: 65px;
 	--global-page-margin: 48px 48px 48px 48px;
 	--global-line-space: 24px;
 	--global-input-width: 390px;
@@ -68,7 +68,7 @@ html, body {
 	--global-header-line-color: rgba(0, 0, 0, 0.6);
 	--global-header-color: black;
 	--global-table-page-container-size: 30px;
-	--global-login-width: 400px;
+	--global-login-width: 480px;
 }
 
 

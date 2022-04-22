@@ -115,7 +115,7 @@ export default class Reset extends Component {
 					<div class={style.inputContainer}>
 						<div class={style.loginLabel}>Neues Passwort</div>
 							<div class={style.input}>
-								<TextField id='passwordInput' type='password' outlined label='Passwort' onKeyUp={e => {
+								<TextField id='passwordInput' type='password' outlined label='Passwort' value={this.state.password} onKeyUp={e => {
 									this.handleChange();
 									this.setState({ password : e.target.value })
 									let val = e.target.value;
@@ -143,7 +143,7 @@ export default class Reset extends Component {
 								<span class={this.state.passwordFBClass}>{this.state.passwordFB}</span>
 							</div>
 							<div class={style.input}>
-								<TextField id='password2Input' type='password' outlined label='Passwort wiederholen' onKeyUp={e => {
+								<TextField id='password2Input' type='password' outlined label='Passwort wiederholen' value={this.state.password2} onKeyUp={e => {
 									this.handleChange();
 									this.setState({ password2 : e.target.value })
 									let val = e.target.value;

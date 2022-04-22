@@ -74,7 +74,7 @@ export default class NewUser extends Component {
 						</div>
 						<div class={style.row}>
 							<div class={style.input}>
-								<TextField type='password' outlined label='Passwort' class={style.fullWidth} onKeyUp={e => {
+								<TextField type='password' outlined label='Passwort' class={style.fullWidth} value={this.state.password} onKeyUp={e => {
 									document.addEventListener('keyup', this.handleKey)
 									this.setState({ password : e.target.value })
 									let val = e.target.value;
@@ -102,7 +102,7 @@ export default class NewUser extends Component {
 								<span class={this.state.passwordFBClass}>{this.state.passwordFB}</span>
 							</div>
 							<div class={style.input}>
-								<TextField type='password' outlined label='Passwort' class={style.fullWidth} onKeyUp={e => {
+								<TextField type='password' outlined label='Passwort' class={style.fullWidth} value={this.state.password2} onKeyUp={e => {
 									document.addEventListener('keyup', this.handleKey)
 									this.setState({ password2 : e.target.value })
 									let val = e.target.value;

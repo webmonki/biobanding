@@ -16,7 +16,6 @@ export default class Profile extends Component {
 		this.setState({ pageClass : style.pageSmall });
 		this.setState({ username : Auth.getUser().name });
 		this.setState({ email : Auth.getUser().email });
-
 		this.getDetails();
 	}
 
@@ -323,7 +322,7 @@ export default class Profile extends Component {
 					</div>
 					<div class={style.row}>
 						<div class={style.dateContainer}>
-							<TextField class={style.dateInput} fullwidth={true} outlined type="date" value={this.state.birthday} onInput={e => 
+							<TextField class={style.dateInput} outlined type="date" value={this.state.birthday} onInput={e => 
 								this.setState({ birthday : e.target.value })}/>
 							<span class={style.bDayLabel}>Geburtstag</span>
 						</div>

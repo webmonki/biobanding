@@ -59,25 +59,28 @@ export default class Settings extends Component {
 				if (this.status === 200) {
 					try {
 						let response = JSON.parse(this.responseText);
-						that.setState({ reminder: response.days_reminder });
-						that.setState({ feedback: response.msg })
+						that.setState({ reminder : response.config.days_reminder })
+						that.setState({ mailService : response.config.mail_server })
+						that.setState({ mailPort : response.config.mail_port })
+						that.setState({ ssl : response.config.mail_use_ssl })
+						that.setState({ mailUsername : response.config.mail_username })
+						that.setState({ responseFB: 'Konfigurationen erfolgreich geladen' })
+						that.setState({ responseFBClass: style.feedbackSucc });
+
+						console.log("GET: ", that.state.ssl)
 					}
 					catch (err) {}
 ;
-					that.setState({ feedbackStyle: style.feedbackSucc });
 				}
 				else {
 					try {
 						let response = JSON.parse(this.responseText);
-						that.setState({ feedback: response.msg });
+						that.setState({ responseFB: response.msg });
 					}
 					catch (err) {}
 
-					that.setState({ feedbackStyle: style.feedbackErr });
+					that.setState({ responseFBClass: style.feedbackErr });
 				}
-			}
-			else {
-				this.setState({ feedback: 'Ups, something went wrong' });
 			}
 		};
 
@@ -104,7 +107,10 @@ export default class Settings extends Component {
 				if (this.status === 200) {
 					try {
 						let response = JSON.parse(this.responseText);
+						console.log(response)
 						that.setState({ responseFB: response.msg });
+						console.log("SET: ", that.state.ssl)
+
 					}
 					catch (err) {}
 
@@ -113,6 +119,7 @@ export default class Settings extends Component {
 				else {
 					try {
 						let response = JSON.parse(this.responseText);
+						console.log(response)
 						that.setState({ responseFB: response.msg });
 					}
 					catch (err) {}
@@ -120,15 +127,17 @@ export default class Settings extends Component {
 					that.setState({ responseFBClass: style.feedbackErr });
 				}
 			}
-			else {
-				this.setState({ feedback: 'Ups, something went wrong' });
-			}
 		};
 
 		let data = `{
-            "days_reminder": ${that.state.reminder}
+            "days_reminder": ${this.state.reminder},
+			"mail_server": "${this.state.mailService}",
+			"mail_port": ${this.state.mailPort},
+			"mail_user_ssl" : ${this.state.ssl},
+			"mail_password": "${this.state.password}"
         }`;
 
+		console.log(data)
 		xhttp.send(data);
 
 	}
@@ -139,8 +148,7 @@ export default class Settings extends Component {
 
 	checkServer = () => {
 		let checkbox = document.getElementsByName('serverCheck')
-		
-		this.setState({ serverChecked : checkbox.checked})
+		this.setState({ ssl: checkbox[0].checked })
 	}
 
 
@@ -162,10 +170,6 @@ export default class Settings extends Component {
 							<span class={this.state.usernameFBClass}>{this.state.usernameFB}</span>
 						</div>
 					</div>
-					<div class={style.btnContainer}>
-						<Button class={style.mrgnBttm} raised onClick={this.setConfiguration}>Speichern</Button>
-					</div>
-					<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
 				</div>
 				<div class={style.settingsContainer}>
 					<div class={style.headerContainer}>
@@ -174,22 +178,22 @@ export default class Settings extends Component {
 					</div>
 					<div class={style.row}>
 						<div class={style.input}>
-							<TextField outlined label='E-Mail-Server' value={this.state.server} onInput={e => {
-								this.setState({ server : e.target.value})
+							<TextField outlined label='E-Mail-Server' value={this.state.mailService} onInput={e => {
+								this.setState({ mailService : e.target.value})
 							}}/>
 							<span class={this.state.serverFBClass}>{this.state.serverFB}</span>
 						</div>
 						<div class={style.input}>
-							<TextField outlined label='Port' value={this.state.port} onInput={e => {
-								this.setState({ port : e.target.value });
+							<TextField outlined label='Port' value={this.state.mailPort} onInput={e => {
+								this.setState({ mailPort : e.target.value });
 							}}/>
 							<span class={this.state.portFBClass}>{this.state.portFB}</span>
 						</div>
 					</div>
 					<div class={style.row}>
 						<div class={style.input}>
-							<TextField outlined label='Benutzername' value={this.state.username} onInput={e => {
-								this.setState({ username : e.target.value });
+							<TextField outlined label='Benutzername' value={this.state.mailUsername} onInput={e => {
+								this.setState({ mailUsername : e.target.value });
 							}} />
 						</div>
 						<div class={style.input}>
@@ -202,13 +206,16 @@ export default class Settings extends Component {
 						<div class={style.checkContainer}>
 							<span class={style.label}>SSL Verschlüsselung</span>
 							<Formfield>
-								<Checkbox name='serverCheck' checked={true}/>
+								<Checkbox name='serverCheck' checked={this.state.ssl} onChange={() => {
+									this.checkServer();
+								}}/>
 							</Formfield>
 						</div>
 					</div>
 					<div class={style.btnContainer}>
-							<Button class={style.mrgnBttm} raised onClick={this.setServer}>Speichern</Button>
+						<Button class={style.mrgnBttm} raised onClick={this.setConfiguration}>Speichern</Button>
 					</div>
+					<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
 				</div>
 			</div>
 		);
