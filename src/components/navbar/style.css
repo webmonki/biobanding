@@ -1,24 +1,32 @@
 .menuIcon {
-	color: white;
+	color: var(--mdc-theme-primary);
 	font-family: 'Material Icons';
     font-style: normal;
     font-size: 40px;
 	position: absolute;
 	top: calc((var(--global-header-height) / 2) - 18px);
-	left: var(--global-topbar-margin);
+	left: var(--global-topbar-margin-left);
 }
 
 .navbar {
-	box-shadow: 5px -1px 5px gray;
 	position: absolute;
+	/* top: calc(var(--global-header-height) - var(--global-border-width) - 1px); */
 	top: var(--global-header-height);
 	left: 0;
 	height: calc(100% - var(--global-header-height));
 }
 
+aside {
+	/* border-top: 10px solid white !important; */
+	border-right: var(--global-border-width) solid var(--global-shadow-color) !important;
+
+	/* box-shadow: 15px 0px 15px -15px var(--global-shadow-color); */
+	/* border-right: none !important; */
+}
+
 .navrail {
-	box-shadow: 5px -1px 5px gray;
 	position: absolute;
+	/* top: calc(var(--global-header-height) - var(--global-border-width) - 1px); */
 	top: var(--global-header-height);
 	left: 0;
 	height: calc(100% - var(--global-header-height));

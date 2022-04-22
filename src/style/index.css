@@ -57,7 +57,8 @@ html, body {
 	--global-profile-line-space: 24px;
 	--global-profile-column-space: 24px;
 	--global-profile-input-width: 200px;
-	--global-topbar-margin: 10px;
+	--global-topbar-margin-left: 10px;
+	--global-topbar-margin-right: 48px;
 	--global-topbar-btnContainer-width: 250px;
 	--global-dialog-background: none;
 	--global-dialog-padding: 20% 0 50% 0;
@@ -70,8 +71,9 @@ html, body {
 	--global-header-color: black;
 	--global-table-page-container-size: 30px;
 	--global-login-width: 480px;
-	--global-btn-justification: flex-end;
-	--global-space-between: 10px;
+	--global-btn-justification: space-between;
+	--global-shadow-color: var(--mdc-theme-primary);
+	--global-border-width: 1px;
 }
 
 

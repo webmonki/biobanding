@@ -28,10 +28,6 @@
 	justify-content: var(--global-btn-justification);
 }
 
-.spaceBetween {
-	width: var(--global-space-between);
-}
-
 .logoContainer {
 	width: 100%;
 	display: flex;

@@ -6,16 +6,13 @@
 	color: white !important;
 }
 
-.appTitle {
-	position: absolute;
-	left: calc(var(--global-topbar-margin) + 90px);
-	font-size: 20px;
-}
-
 .topAppBar{
+	background-color: white !important;
 	height: var(--global-header-height);
 	display: flex;
 	align-items: center;
+	/* box-shadow: 20px 15px 10px -15px var(--global-shadow-color);  */
+	border-bottom: var(--global-border-width) solid var(--global-shadow-color);
 }
 
 .btnContainer {
@@ -23,7 +20,7 @@
 	display: flex;
 	justify-content: space-between;
 	position: absolute;
-	right: var(--global-topbar-margin);
+	right: var(--global-topbar-margin-right);
 }
 
 .inputContainer {
@@ -88,4 +85,9 @@
 .feedbackSucc {
 	color: var(--global-success-color);
 	font-size: var(--global-feedback-size);
+}
+
+.secondaryBtn {
+	background-color: white !important;
+	color: var(--mdc-theme-primary) !important;
 }

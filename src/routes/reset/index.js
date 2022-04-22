@@ -175,9 +175,8 @@ export default class Reset extends Component {
 							</div>
 							<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
 							<div class={style.btnContainer}>
-								<Button class={style.input} raised onClick={this.sendNewPassword} disabled={this.state.btnDisabled}>senden</Button>
-								<div class={style.spaceBetween} />
 								<Button class={style.secondaryBtn} onClick={() => {route('/login', true)}}>Anmelden</Button>
+								<Button class={style.input} raised onClick={this.sendNewPassword} disabled={this.state.btnDisabled}>senden</Button>
 							</div>
 						</div>
 					</Card>

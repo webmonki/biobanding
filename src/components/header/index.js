@@ -170,11 +170,8 @@ export default class Header extends Component {
 			}
 			return (
 				<div class={`${"mdc-theme--primary-bg"} ${style.topAppBar}`}>
-					<span class={`${style.appTitle} ${style.white}`}>Astrostars biobanding</span>
 					<div class={style.btnContainer}>
-						<Button class={`${"mdc-button mdc-theme--primary-bg"} ${style.white}`} onClick={this.logOut}>
-							<span class={style.white}>Abmelden</span>
-						</Button>
+						<Button class={style.secondaryBtn} onClick={this.logOut}>Abmelden</Button>
 						<Button raised class={`${"mdc-button mdc-theme--secondary-bg"} ${style.roundBtn}`} onClick={() => {
 							this.newMeasurementsDialog.MDComponent.show();
 						}}>
