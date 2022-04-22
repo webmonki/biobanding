@@ -7,8 +7,6 @@ from dataclasses import field
 from datetime import datetime, timezone, timedelta
 from functools import wraps
 from json import dumps
-import string
-# from tkinter.tix import Tree
 from flask import request
 from flask_restx import Api, Resource, fields, abort
 
@@ -16,7 +14,7 @@ import jwt
 
 from .models import db, Users, JWTTokenBlocklist, AnthropometricData, AdminConfig, PlayerMaster, PlayerDetail
 from .config import BaseConfig
-from .utils import json_serial
+from .utils import json_serial, emailIsValid
 from .email import send_email
 
 rest_api = Api(version="1.0", title="Users API")
@@ -326,6 +324,10 @@ class Register(Resource):
         _email = req_data.get("email")
         _password = req_data.get("password")
         _is_admin = req_data.get("is_admin")
+
+        if not emailIsValid(_email):
+            return {"success": False,
+                    "msg": "Email {} is not valid".format(_email)}, 400
 
         email_exists = Users.get_by_email(_email)
         if email_exists:
