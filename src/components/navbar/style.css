@@ -10,18 +10,23 @@
 
 .navbar {
 	position: absolute;
-	top: calc(var(--global-header-height));
+	/* top: calc(var(--global-header-height) - var(--global-border-width) - 1px); */
+	top: var(--global-header-height);
 	left: 0;
 	height: calc(100% - var(--global-header-height));
 }
+
 aside {
-	box-shadow: 15px 0px 15px -15px var(--global-shadow-color);
-	/* border-right: 1px solid var(--mdc-theme-primary) !important; */
+	/* border-top: 10px solid white !important; */
+	border-right: var(--global-border-width) solid var(--global-shadow-color) !important;
+
+	/* box-shadow: 15px 0px 15px -15px var(--global-shadow-color); */
 	/* border-right: none !important; */
 }
 
 .navrail {
 	position: absolute;
+	/* top: calc(var(--global-header-height) - var(--global-border-width) - 1px); */
 	top: var(--global-header-height);
 	left: 0;
 	height: calc(100% - var(--global-header-height));

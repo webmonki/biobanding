@@ -73,6 +73,7 @@ html, body {
 	--global-login-width: 480px;
 	--global-btn-justification: space-between;
 	--global-shadow-color: var(--mdc-theme-primary);
+	--global-border-width: 1px;
 }
 
 

@@ -39,7 +39,17 @@ export default class App extends Component {
 			}
 		}
 		else {
-			this.setState({ currentUrl : e.url })
+			if (Auth.check_admin()) {
+				this.setState({ currentUrl : e.url });
+			}
+			else {
+				if (e.url === '/users' || e.url === '/settings') {
+					route('/measurements')
+				}
+				else {
+					this.setState({ currentUrl : e.url });
+				}
+			}
 		}
 	}
 

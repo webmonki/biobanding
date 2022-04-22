@@ -11,8 +11,8 @@
 	height: var(--global-header-height);
 	display: flex;
 	align-items: center;
-	box-shadow: 20px 15px 10px -15px var(--global-shadow-color); 
-	/* border-bottom: 1px solid var(--mdc-theme-primary); */
+	/* box-shadow: 20px 15px 10px -15px var(--global-shadow-color);  */
+	border-bottom: var(--global-border-width) solid var(--global-shadow-color);
 }
 
 .btnContainer {
