@@ -76,14 +76,12 @@ export default class Reset extends Component {
 				
 				if (this.status === 200) {
 					let response = JSON.parse(this.responseText);
-					console.log(response)
 					route('login', true);
 				}
 				else {
 
 					try {
 						let response = JSON.parse(this.responseText);
-						console.log(response)
 
 						that.setState({ responseFBClass : style.feedbackErr });
 						that.setState({ responseFB : response.msg });
@@ -99,7 +97,6 @@ export default class Reset extends Component {
             "password": "${this.state.password}"
         }`;
 
-		console.log(data)
 
 		xhttp.send(data);
 

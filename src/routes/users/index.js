@@ -176,7 +176,6 @@ export default class Users extends Component {
 			"email": "${ this.state.editEmail }"
 		}`;
 
-		console.log(data)
 		xhttp.send(data);
 	}
 
@@ -215,7 +214,6 @@ export default class Users extends Component {
 			"is_admin": ${this.state.admin}
         }`;
 
-		console.log(data)
 		xhttp.send(data);
 	}
 

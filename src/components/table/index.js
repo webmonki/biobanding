@@ -11,20 +11,17 @@ export default class Table extends Component {
 
 	componentWillMount = () => {
 		this.setPage(1);
-		this.setState({ backBtnDisabled : true });
-		this.setState({ forwardBtnDisabled : true });
 	}
+
 
 	setPage = (page) => {
 
 		if (this.state.page != page) {
 			this.setState({ page });
-			this.disableButtons();
 		}
 	}
 
 	createTableHeader = () => {
-
 		if (this.props.data != undefined && this.props.data.length != 0) {
 
 			let cols = Object.keys(this.props.data[0]);
@@ -124,12 +121,10 @@ export default class Table extends Component {
 
 	lowerPage = () => {
 		this.setState({ page : this.state.page - 1})
-		this.disableButtons();
 	}
 
 	increasePage = () => {
 		this.setState({ page : this.state.page + 1})
-		this.disableButtons();
 	}
 
 	createPageCounter = () =>  {
@@ -173,6 +168,30 @@ export default class Table extends Component {
 		}
 	}
 
+	disableBackBtn = () => {
+		let currentPage = this.state.page;
+
+		if (currentPage == 1) {
+			return true
+		}
+		else {
+			return false
+		}
+	}
+
+	disableForwardBtn = () => {
+		let totalPage = this.getPageCount();
+		let currentPage = this.state.page;
+
+		if (currentPage == totalPage) {
+			return true
+		}
+		else {
+			return false;
+		}
+
+	}
+
 	createTablePagination = () => {
 
 		if (this.props.data != undefined && this.props.data.length != 0) {
@@ -188,13 +207,13 @@ export default class Table extends Component {
 					<div class={style.btn} disabled={true}>
 						{this.createPageCounter()}
 					</div>
-					<button class={style.btn} onClick={this.lowerPage} disabled={this.state.backBtnDisabled}>
+					<button class={style.btn} onClick={this.lowerPage} disabled={this.disableBackBtn()}>
 						<i class={`${"material-icons"} ${style.btnIcon}`} aria-hidden="true">chevron_left</i>
 					</button>
 					{pageNumbers.map((pageNumber) => 
 						this.createBtn(pageNumber)
 					)}
-					<button class={style.btn} onClick={this.increasePage} disabled={this.state.forwardBtnDisabled}>
+					<button class={style.btn} onClick={this.increasePage} disabled={this.disableForwardBtn()}>
 						<i class={`${"material-icons"} ${style.btnIcon}`} aria-hidden="true">chevron_right</i>
 					</button>
 				</div>
@@ -202,8 +221,6 @@ export default class Table extends Component {
 
 			return pagination;
 		}
-
-
 	}
 	
 	render() {

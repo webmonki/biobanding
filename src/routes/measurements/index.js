@@ -331,9 +331,7 @@ export default class Measurements extends Component {
 	getDialog = () => {
 		let dialog
 
-		console.log("GET DIALOG")
 		if (Auth.check_admin()) {
-			console.log("ADMIN")
 			dialog = (
 				<NewMeasurementAdmin
 					reference={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog}}
@@ -344,7 +342,6 @@ export default class Measurements extends Component {
 			)
 		}
 		else {
-			console.log("NO ADMIN")
 			dialog = (
 				<NewMeasurementUser
 					reference={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog}}
@@ -368,7 +365,6 @@ export default class Measurements extends Component {
 	}
 
 	render() {
-		console.log(this.state.dialog)
 		return (
 			<div class={this.state.pageClass}>
 				<Navbar selectedRoute='/measurements' fitPageSize={this.fitPageSize}/>

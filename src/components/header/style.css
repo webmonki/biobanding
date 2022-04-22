@@ -7,12 +7,13 @@
 }
 
 .topAppBar{
+	position: relative;
 	background-color: white !important;
 	height: var(--global-header-height);
 	display: flex;
 	align-items: center;
-	/* box-shadow: 20px 15px 10px -15px var(--global-shadow-color);  */
-	border-bottom: var(--global-border-width) solid var(--global-shadow-color);
+	box-shadow: var(--global-shadow);
+	z-index: 7;
 }
 
 .btnContainer {

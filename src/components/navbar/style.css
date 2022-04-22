@@ -6,27 +6,24 @@
 	position: absolute;
 	top: calc((var(--global-header-height) / 2) - 18px);
 	left: var(--global-topbar-margin-left);
+	z-index: 8;
 }
 
 .navbar {
 	position: absolute;
-	/* top: calc(var(--global-header-height) - var(--global-border-width) - 1px); */
 	top: var(--global-header-height);
 	left: 0;
 	height: calc(100% - var(--global-header-height));
 }
 
 aside {
-	/* border-top: 10px solid white !important; */
-	border-right: var(--global-border-width) solid var(--global-shadow-color) !important;
-
-	/* box-shadow: 15px 0px 15px -15px var(--global-shadow-color); */
-	/* border-right: none !important; */
+	position: absolute;
+	z-index: 1;
+	box-shadow: var(--global-shadow);
 }
 
 .navrail {
 	position: absolute;
-	/* top: calc(var(--global-header-height) - var(--global-border-width) - 1px); */
 	top: var(--global-header-height);
 	left: 0;
 	height: calc(100% - var(--global-header-height));
