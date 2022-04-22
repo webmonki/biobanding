@@ -1,6 +1,6 @@
 .inputContainer {
 	padding-top: var(--global-line-space);
-	width: 100%;
+	width: var(--global-dialog-width);
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;

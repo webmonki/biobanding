@@ -53,6 +53,7 @@ html, body {
 	--global-page-margin: 48px 48px 48px 48px;
 	--global-line-space: 24px;
 	--global-input-width: 390px;
+	--global-dialog-width: 800px;
 	--global-profile-line-space: 24px;
 	--global-profile-column-space: 24px;
 	--global-profile-input-width: 200px;
