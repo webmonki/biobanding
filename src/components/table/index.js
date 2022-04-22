@@ -11,9 +11,8 @@ export default class Table extends Component {
 
 	componentWillMount = () => {
 		this.setPage(1);
-		this.setState({ backBtnDisabled : true });
-		this.setState({ forwardBtnDisabled : true });
 	}
+
 
 	setPage = (page) => {
 
@@ -23,7 +22,6 @@ export default class Table extends Component {
 	}
 
 	createTableHeader = () => {
-		console.log("CREATE HEADER")
 		if (this.props.data != undefined && this.props.data.length != 0) {
 
 			let cols = Object.keys(this.props.data[0]);
@@ -61,7 +59,6 @@ export default class Table extends Component {
 	}
 
 	createTableBody = (page) => {
-		console.log("CREATE Body")
 		if (this.props.data != undefined) {
 			let indexEnd = page * this.props.pageSize
 			let indexStart = indexEnd - this.props.pageSize
@@ -109,19 +106,14 @@ export default class Table extends Component {
 	}
 
 	disableButtons = () => {
-		console.log("DISABLE")
 		let totalPage = this.getPageCount();
 		let currentPage = this.state.page;
-		console.log("TOTAL PAGE: ", totalPage)
-		console.log("CURRENT PAGE: ", currentPage)
-
 
 		if (totalPage == 1) {
 			this.setState({ backBtnDisabled : true})
 			this.setState({ forwardBtnDisabled : true })
 		}
 		else {
-			console.log("X")
 			currentPage == 1 ? this.setState({ backBtnDisabled : true}) : this.setState({ backBtnDisabled : false });
 			currentPage == totalPage ? this.setState({ forwardBtnDisabled : true }) : this.setState({ forwardBtnDisabled : false });
 		}
@@ -129,12 +121,10 @@ export default class Table extends Component {
 
 	lowerPage = () => {
 		this.setState({ page : this.state.page - 1})
-		this.disableButtons();
 	}
 
 	increasePage = () => {
 		this.setState({ page : this.state.page + 1})
-		this.disableButtons();
 	}
 
 	createPageCounter = () =>  {
@@ -165,7 +155,6 @@ export default class Table extends Component {
 	}
 
 	createBtn = (pageNumber) => {
-		console.log("CREATE BTN")
 		if (pageNumber == this.state.page) {
 
 			return (				
@@ -179,10 +168,31 @@ export default class Table extends Component {
 		}
 	}
 
+	disableBackBtn = () => {
+		let currentPage = this.state.page;
+
+		if (currentPage == 1) {
+			return true
+		}
+		else {
+			return false
+		}
+	}
+
+	disableForwardBtn = () => {
+		let totalPage = this.getPageCount();
+		let currentPage = this.state.page;
+
+		if (currentPage == totalPage) {
+			return true
+		}
+		else {
+			return false;
+		}
+
+	}
+
 	createTablePagination = () => {
-		console.log("CREATE PAGINATION")
-		console.log("BACK: ", this.state.backBtnDisabled)
-		console.log("FORWARD: ", this.state.forwardBtnDisabled)
 
 		if (this.props.data != undefined && this.props.data.length != 0) {
 
@@ -197,13 +207,13 @@ export default class Table extends Component {
 					<div class={style.btn} disabled={true}>
 						{this.createPageCounter()}
 					</div>
-					<button class={style.btn} onClick={this.lowerPage} disabled={this.state.backBtnDisabled}>
+					<button class={style.btn} onClick={this.lowerPage} disabled={this.disableBackBtn()}>
 						<i class={`${"material-icons"} ${style.btnIcon}`} aria-hidden="true">chevron_left</i>
 					</button>
 					{pageNumbers.map((pageNumber) => 
 						this.createBtn(pageNumber)
 					)}
-					<button class={style.btn} onClick={this.increasePage} disabled={this.state.forwardBtnDisabled}>
+					<button class={style.btn} onClick={this.increasePage} disabled={this.disableForwardBtn()}>
 						<i class={`${"material-icons"} ${style.btnIcon}`} aria-hidden="true">chevron_right</i>
 					</button>
 				</div>
@@ -214,7 +224,6 @@ export default class Table extends Component {
 	}
 	
 	render() {
-		console.log("RENDER")
 		return (
 			<div>
 				<table>
