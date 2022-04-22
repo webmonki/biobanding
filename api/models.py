@@ -3,14 +3,12 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-from datetime import datetime, timezone, timedelta
-from xmlrpc.client import DateTime
-
+from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from api.formulas import mirwald
 from .config import BaseConfig
-import os, jwt
+import jwt
 
 db = SQLAlchemy()
 
@@ -224,7 +222,7 @@ class AdminConfig(db.Model):
     days_reminder = db.Column(db.Integer(), default=90)
     mail_server = db.Column(db.String(), default='smtp.example.org')
     mail_port = db.Column(db.Integer(), default=465)
-    mail_use_ssl = db.Column(db.Boolean(), default=True)
+    mail_use_ssl = db.Column(db.Boolean(), default=False)
     mail_username = db.Column(db.String(64), default='mustermann')
     mail_password = db.Column(db.String(64))
 
@@ -238,6 +236,7 @@ class AdminConfig(db.Model):
         self.mail_port = mail_port
 
     def update_mail_use_ssl(self, mail_use_ssl):
+        print('SSL: ', mail_use_ssl)
         self.mail_use_ssl = mail_use_ssl
 
     def update_mail_username(self, mail_username):
