@@ -24,6 +24,7 @@ export default class NewMeasurementAdmin extends Component {
 
 
 	render() {
+
 		return (
 			<Dialog class={style.dialog} ref={this.props.reference} onAccept={() => {
 				this.props.sendData(this.state.height, this.state.sittingHeight, this.state.span, this.state.weight, this.state.chosenIndex)
@@ -36,7 +37,7 @@ export default class NewMeasurementAdmin extends Component {
 						<Select class={style.selectId} outlined selectedIndex={this.state.chosenIndex} onChange={(e) => {
 							this.setState({ chosenIndex : e.target.selectedIndex });
 						}}>
-							{this.props.userIds.map((id) => <Select.Item>{id}</Select.Item>)}
+							{this.props.usernames.map((id) => <Select.Item>{id}</Select.Item>)}
 						</Select>
 						<div class={style.row}>
 						<div class={style.input}>
