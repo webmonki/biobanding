@@ -24,7 +24,6 @@ export default class App extends Component {
 	handleRoute = async e => {
 		let auth = Auth.getAuth();
 		if (auth === false || auth === undefined) {
-			console.log(e.url)
 			if (e.url === '/signup'){
 				route('/signup', true);
 			}
