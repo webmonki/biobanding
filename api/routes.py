@@ -14,7 +14,7 @@ import jwt
 from .models import db, Users, JWTTokenBlocklist, AnthropometricData, AdminConfig, PlayerMaster, PlayerDetail
 from .config import BaseConfig
 from .utils import json_serial, emailIsValid
-from .email import send_email_password_reset
+from .email import send_email_password_reset, send_email
 
 
 rest_api = Api(version="1.0", title="Users API")
@@ -52,6 +52,8 @@ config_model = rest_api.model('ConfigModel', {"days_reminder": fields.Integer(mi
                                               "mail_username": fields.String(),
                                               "mail_password": fields.String()
                                               })
+test_mail_config_model = rest_api.model('TestMailConfigModel', {"test_email_address": fields.String(required=True, min_length=5,max_length=64)})
+
 
 player_model = rest_api.model('PlayerModel', {"userID": fields.Integer(required=True, min=0),
                                                    "first_name": fields.String(required=True, min_length=2, max_length=32),
@@ -255,7 +257,7 @@ class ResetPasswort(Resource):
 class ResetVerified(Resource):
 
     def put(self):
-        
+
         req_data = request.get_json()
         _token = req_data.get("token")
         _password = req_data.get("password")
@@ -445,7 +447,7 @@ class EditConfiguration(Resource):
 
     @rest_api.expect(config_model)
     @token_required
-    def post(self):
+    def post(self, current_user):
         """Updates the admin configuration"""
         from api import app
         req_data = request.get_json()
@@ -479,7 +481,7 @@ class EditConfiguration(Resource):
                 "msg": "The config was successfully updated"}, 200
 
     @token_required
-    def get(self):
+    def get(self, current_user):
         """Return the admin configuration"""
 
         try:
@@ -491,6 +493,36 @@ class EditConfiguration(Resource):
 
         return {"success": True,
                 "config": config.toDICT()}, 200
+
+@rest_api.route('/api/configurations/testmail')
+class EditConfiguration(Resource):
+
+    @rest_api.expect(test_mail_config_model)
+    @token_required
+    def post(self, current_user):
+        """Send test mail to given e-mail address"""
+
+        req_data = request.get_json()
+
+        _test_email_address = req_data.get("test_email_address")
+
+        if current_user.is_admin:
+            try:
+                if _test_email_address:
+                    send_email(_test_email_address, 'Testmail: Mail-Server ist korrekt konfiguriert.', 'Testmail')
+
+            except Exception:
+                return {"success": False,
+                        "msg": "Test email could not be sent"}, 400
+
+            return {"success": True,
+                    "msg": "Test email has been sent"}, 200
+        else:
+            return {"success": False,
+                    "msg": "Authenticated, but no permissions"}, 403
+
+
+
 
 
 @rest_api.route('/api/user/<int:userID>/details')
