@@ -189,7 +189,9 @@ export default class Header extends Component {
 							  <span class="mdc-button__label mdc-theme--text-secondary-on-light">Messung</span>
 						</Button>
 					</div>
-					<Snackbar ref={sbar => {this.sbar=sbar}} />
+					<div class={style.mySnackbar}>
+						<Snackbar ref={sbar => {this.sbar=sbar}} />
+					</div>
 					{this.state.dialog}
 				</div>
 			);

@@ -271,6 +271,9 @@ export default class Measurements extends Component {
 				let response = JSON.parse(this.responseText);
 				that.loadData();
 				that.newMeasurementsDialog.MDComponent.close();
+				that.bar.MDComponent.show({
+					message: `Messung erfolgreich angelegt`
+				})
 			}
 			else {
 				let response = JSON.parse(this.responseText);
@@ -399,7 +402,9 @@ export default class Measurements extends Component {
 				{/* <div class={style.feedbackContainer}>
 					<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
 				</div> */}
-				<Snackbar ref={bar => {this.bar=bar}} />
+				<div class={style.mySnackbar}>
+					<Snackbar ref={bar => {this.bar=bar}} />
+				</div>
 				{this.state.dialog}
 				{this.state.editDialog}
 			</div>

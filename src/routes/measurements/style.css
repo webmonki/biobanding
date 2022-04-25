@@ -104,3 +104,10 @@
 	top: calc(var(--global-line-space) * -1);
 	padding: 0 24px 0 24px;
 }
+
+.mySnackbar :global(.mdc-snackbar) {
+	width: var(--global-snackbar-width);
+	margin: var(--global-snackbar-margin);
+	background-color: var(--global-snackbar-color);
+	box-shadow: var(--global-shadow);
+}

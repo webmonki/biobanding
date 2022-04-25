@@ -131,8 +131,15 @@ export default class Users extends Component {
 		this.editUserDialog.MDComponent.show();
 	}
 
+	showSnackbar = (text) => {
+		this.bar.MDComponent.show({
+			message: text
+		})
+	}
+
 	editData = () => {
 		let that = this;
+
 		let url = Auth.url + '/api/user/' + this.state.editId;
 		let xhttp = new XMLHttpRequest();
 
@@ -147,9 +154,7 @@ export default class Users extends Component {
 				// that.setState({ responseFBClass : style.feedbackSucc });
 				// that.setState({ responseFB : 'Benutzer erfolgreich geändert' });
 
-				that.bar.MDComponent.show({
-					message: `Benutzer erfolgreich geändert`
-				})
+
 
 				let newUserList = []
 				let editId = that.state.editId
@@ -165,6 +170,11 @@ export default class Users extends Component {
 				})
 				that.setState({ users : newUserList });
 				that.editUserDialog.MDComponent.close()
+				that.bar.MDComponent.show({
+					message: 'Benutzer erfolgreich geändert'
+				})
+
+
 
 
 			}
@@ -297,7 +307,10 @@ export default class Users extends Component {
 				<div class={style.feedbackContainer}>
 					<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
 				</div>
-				<Snackbar ref={bar => {this.bar=bar}} />
+				<div class={style.mySnackbar}>
+					<Snackbar ref={bar => {this.bar=bar}} />
+				</div>
+				<Snackbar ref={sbar => {this.sbar=sbar}} />
 				{this.state.dialog}
 			</div>
 		);

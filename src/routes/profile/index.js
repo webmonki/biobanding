@@ -385,7 +385,9 @@ export default class Profile extends Component {
 						<Button raised onClick={this.sendData}>Speichern</Button>
 						{/* <span class={this.state.responseFBClass}>{this.state.responseFB}</span> */}
 					</div>
-					<Snackbar ref={bar => {this.bar=bar}} />
+					<div class={style.mySnackbar}>
+						<Snackbar ref={bar => {this.bar=bar}} />
+					</div>
 				</div>
 			</div>
 		);

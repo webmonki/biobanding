@@ -213,7 +213,9 @@ export default class Settings extends Component {
 						<Button class={style.mrgnBttm} raised onClick={this.setConfiguration}>Speichern</Button>
 					</div>
 					{/* <span class={this.state.responseFBClass}>{this.state.responseFB}</span> */}
-					<Snackbar ref={bar => {this.bar=bar}} />
+					<div class={style.mySnackbar}>
+						<Snackbar ref={bar => {this.bar=bar}} />
+					</div>
 				</div>
 			</div>
 		);
