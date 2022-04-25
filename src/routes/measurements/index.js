@@ -152,9 +152,12 @@ export default class Measurements extends Component {
 				that.setState({ responseFB : 'Übersicht erfolgreich geladen' });
 				that.setState({ measurements : response['userdetails'] });
 				let idList = [];
+				let usernameList = [];
 				response['userdetails'].forEach(user => {
+					usernameList.push(user.username)
 					idList.push(user.userID);
 				})
+				that.setState({ usernames : usernameList })
 				that.setState({ userIds : idList });
 				that.showTable(true);
 				that.getDialog();
@@ -336,6 +339,7 @@ export default class Measurements extends Component {
 				<NewMeasurementAdmin
 					reference={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog}}
 					userIds={this.state.userIds}
+					usernames={this.state.usernames}
 					sendData={this.getDataFromDialogforNew}
 					header='Neue Messung erstellen' 
 					subHeader='Anthropometrische Daten'/>

@@ -61,7 +61,7 @@ html, body {
 	--global-topbar-margin-right: 48px;
 	--global-topbar-btnContainer-width: 250px;
 	--global-dialog-background: none;
-	--global-dialog-padding: 20% 0 50% 0;
+	--global-dialog-padding: 350px 0 650px 0;
 	--global-feedback-size: small;
 	--global-error-color: #B1262D;
 	--global-success-color: #3C9052;

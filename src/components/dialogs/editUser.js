@@ -30,9 +30,8 @@ export default class EditUser extends Component {
 						<span class={style.subHeader}>Benutzer Daten</span>
 						<div class={style.row}>
 							<div class={style.input}>
-								<TextField outlined label='Benutzername' class={style.fullWidth} value={this.props.username} onKeyUp={e => {
+								<TextField autocomplete='off' outlined label='Benutzername' class={style.fullWidth} value={this.props.username} onKeyUp={e => {
 									document.addEventListener('keyup', this.handleKey)
-									// this.setState({ editUsername : e.target.value })
 									let val = e.target.value
 									this.props.username = val;
 									if (val.length < 1) {
@@ -51,8 +50,7 @@ export default class EditUser extends Component {
 								<span class={this.state.usernameFBClass}>{this.state.usernameFB}</span>
 							</div>
 							<div class={style.input}>
-								<TextField outlined label='E-Mail' class={style.fullWidth} value={this.props.email} onInput={e =>{
-									// this.setState({ editEmail : e.target.value });
+								<TextField autocomplete='off' outlined label='E-Mail' class={style.fullWidth} value={this.props.email} onInput={e =>{
 									let val = e.target.value
 									this.props.email = val;
 

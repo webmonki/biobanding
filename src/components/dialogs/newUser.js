@@ -36,7 +36,7 @@ export default class NewUser extends Component {
 						<span class={style.subHeader}>Login Daten</span>
 						<div class={style.row}>
 							<div class={style.input}>
-								<TextField outlined label='Benutzername' class={style.fullWidth} value={this.state.username} onKeyUp={e => {
+								<TextField autocomplete='off' outlined label='Benutzername' class={style.fullWidth} value={this.state.username} onKeyUp={e => {
 									document.addEventListener('keyup', this.handleKey)
 									this.setState({ username : e.target.value })
 									let val = e.target.value
@@ -56,7 +56,7 @@ export default class NewUser extends Component {
 								<span class={this.state.usernameFBClass}>{this.state.usernameFB}</span>
 							</div>
 							<div class={style.input}>
-								<TextField outlined label='E-Mail' value={this.state.email} class={style.fullWidth} onInput={e =>{
+								<TextField autocomplete='off' outlined label='E-Mail' value={this.state.email} class={style.fullWidth} onInput={e =>{
 									document.addEventListener('keyup', this.handleKey)
 									this.setState({ email : e.target.value });
 									let val = e.target.value
@@ -74,7 +74,7 @@ export default class NewUser extends Component {
 						</div>
 						<div class={style.row}>
 							<div class={style.input}>
-								<TextField type='password' outlined label='Passwort' class={style.fullWidth} value={this.state.password} onKeyUp={e => {
+								<TextField autocomplete='off' type='password' outlined label='Passwort' class={style.fullWidth} value={this.state.password} onKeyUp={e => {
 									document.addEventListener('keyup', this.handleKey)
 									this.setState({ password : e.target.value })
 									let val = e.target.value;
@@ -102,7 +102,7 @@ export default class NewUser extends Component {
 								<span class={this.state.passwordFBClass}>{this.state.passwordFB}</span>
 							</div>
 							<div class={style.input}>
-								<TextField type='password' outlined label='Passwort' class={style.fullWidth} value={this.state.password2} onKeyUp={e => {
+								<TextField autocomplete='off' type='password' outlined label='Passwort' class={style.fullWidth} value={this.state.password2} onKeyUp={e => {
 									document.addEventListener('keyup', this.handleKey)
 									this.setState({ password2 : e.target.value })
 									let val = e.target.value;

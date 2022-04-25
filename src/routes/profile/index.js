@@ -236,7 +236,7 @@ export default class Profile extends Component {
 					</div>
 					<div class={style.row}>
 						<div class={style.input}>
-							<TextField outlined label='Benutzername' value={this.state.username} onInput={e => {
+							<TextField autocomplete='off' outlined label='Benutzername' value={this.state.username} onInput={e => {
 								this.setState({ username : e.target.value })
 								let val = e.target.value
 								if (val.length < 1) {
@@ -255,7 +255,7 @@ export default class Profile extends Component {
 							<span class={this.state.usernameFBClass}>{this.state.usernameFB}</span>
 						</div>
 						<div class={style.input}>
-							<TextField outlined label='E-Mail' value={this.state.email} onInput={e =>{
+							<TextField autocomplete='off' outlined label='E-Mail' value={this.state.email} onInput={e =>{
 								this.setState({ email : e.target.value });
 								let val = e.target.value
 								if (val.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
@@ -276,7 +276,7 @@ export default class Profile extends Component {
 					</div>
 					<div class={style.row}>
 						<div class={style.input}>
-							<TextField outlined label='Vorname' value={this.state.firstname} onInput={e => {
+							<TextField autocomplete='off' outlined label='Vorname' value={this.state.firstname} onInput={e => {
 								this.setState({ firstname : e.target.value });
 								let val = e.target.value;
 								if (val.length < 2) {
@@ -295,7 +295,7 @@ export default class Profile extends Component {
 							<span class={this.state.firstnameFBClass}>{this.state.firstnameFB}</span>
 						</div>
 						<div class={style.input}>
-							<TextField outlined label='Nachname' value={this.state.lastname} onInput={e => {
+							<TextField autocomplete='off' outlined label='Nachname' value={this.state.lastname} onInput={e => {
 								this.setState({ lastname : e.target.value })
 								let val = e.target.value
 								if (val.length < 4) {
@@ -333,7 +333,7 @@ export default class Profile extends Component {
 					</div>
 					<div class={style.row}>
 						<div class={style.input}>
-							<TextField class={style.fullWidth} type='number' min={0} max={300} outlined label='Größe der Mutter' value={this.state.motherHeight} onInput={e => {
+							<TextField autocomplete='off' class={style.fullWidth} type='number' min={0} max={300} outlined label='Größe der Mutter' value={this.state.motherHeight} onInput={e => {
 								this.setState({ motherHeight : e.target.value})
 								let val = e.target.value;
 								if (val < 0) {
@@ -352,7 +352,7 @@ export default class Profile extends Component {
 							<span class={this.state.motherFBClass}>{this.state.motherFB}</span>
 						</div>
 						<div class={style.input}>
-							<TextField class={style.fullWidth} type='number' min={0} max={300} outlined label='Größe des Vaters' value={this.state.fatherHeight} onInput={e => {
+							<TextField autocomplete='off' class={style.fullWidth} type='number' min={0} max={300} outlined label='Größe des Vaters' value={this.state.fatherHeight} onInput={e => {
 								this.setState({ fatherHeight : e.target.value });
 								let val = e.target.value;
 								if (val < 0) {

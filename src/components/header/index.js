@@ -73,9 +73,13 @@ export default class Header extends Component {
 				let response = JSON.parse(this.responseText);
 
 				let idList = [];
+				let usernameList = [];
+
 				response['userdetails'].forEach(user => {
+					usernameList.push(user.username)
 					idList.push(user.userID);
 				})
+				that.setState({ usernames : usernameList })
 				that.setState({ userIds : idList });
 				that.getDialog(idList)
 			}
@@ -131,7 +135,6 @@ export default class Header extends Component {
 			"weight": ${ this.state.weight }
 		}`;
 
-		console.log(data)
 		xhttp.send(data);
 	}
 
@@ -142,6 +145,7 @@ export default class Header extends Component {
 				<NewMeasurementAdmin
 					reference={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog}}
 					userIds={idList}
+					usernames={this.state.usernames}
 					sendData={this.getDataFromDialog}
 					header='Messung erstellen'
 					subHeader='Anthropometrische Daten'/>
