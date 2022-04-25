@@ -50,3 +50,15 @@ aside {
 	right: 70px;
 	border-radius: 50px;
 }
+
+.versionContainer {
+	/* height: 100px;
+	width: 100px; */
+	background-color: white;
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	box-shadow: var(--global-shadow);
+	color: rgba(0, 0, 0, 0.4);
+	z-index: 7;
+}

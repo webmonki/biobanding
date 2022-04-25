@@ -18,6 +18,7 @@ export default class Navbar extends Component {
 
 	componentWillMount = () => {
 		this.getNavbarContent(this.props);
+
 	}
 	
 	componentDidMount = () => {
@@ -73,6 +74,10 @@ export default class Navbar extends Component {
 			content = (
 				<div id='navbar'>
 				<i class={style.menuIcon} aria-hidden="true" onClick={this.toggleDrawer}>menu</i>
+
+				<div class={style.versionContainer}>
+						<span>{Auth.version}</span>
+				</div>
 
 				<Drawer dismissible ref={this.drawerRef} class={style.navbar}>
 					<Drawer.DrawerContent class={style.navbarContent}>
