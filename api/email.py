@@ -19,7 +19,8 @@ def send_async_email(to_email, config, msg):
     else:
         server = smtplib.SMTP(config.mail_server, serverport)
     try:
-        server.set_debuglevel(True)
+        # Enable for SMTP Debugging
+        # server.set_debuglevel(True)
 
         # identify ourselves, prompting server for supported features
         server.ehlo()
@@ -40,6 +41,7 @@ def send_async_email(to_email, config, msg):
 
 # [BEGIN send_email_password_reset]
 def send_email_password_reset(user, subject, template):
+    ""
     token = user.get_reset_token()
     url = "{}/reset?token={}".format(os.environ['PREACT_APP_HOST_URI'], token)
     username = user.username
