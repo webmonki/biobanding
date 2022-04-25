@@ -18,6 +18,8 @@ import 'preact-material-components/Drawer/style.css';
 import Table from '../../components/table';
 import EditUser from '../../components/dialogs/editUser';
 import NewUser from '../../components/dialogs/newUser';
+import Snackbar from 'preact-material-components/Snackbar';
+import 'preact-material-components/Snackbar/style.css';
 
 export default class Users extends Component {
 
@@ -48,8 +50,8 @@ export default class Users extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
-				that.setState({ responseFBClass : style.feedbackSucc });
-				that.setState({ responseFB : 'Benutzer erfolgreich geladen' });
+				// that.setState({ responseFBClass : style.feedbackSucc });
+				// that.setState({ responseFB : 'Benutzer erfolgreich geladen' });
 				that.setState({ users : response['users:'] });
 				that.showTable(true)
 			}
@@ -79,8 +81,11 @@ export default class Users extends Component {
 
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				that.setState({ responseFBClass : style.feedbackSucc });
-				that.setState({ responseFB : 'Benutzer erflogreich gelöscht' });
+				// that.setState({ responseFBClass : style.feedbackSucc });
+				// that.setState({ responseFB : 'Benutzer erflogreich gelöscht' });
+				that.bar.MDComponent.show({
+					message: `Benutzer erfolgreich gelöscht`
+				})
 				that.getData();
 			}
 			else {
@@ -126,8 +131,15 @@ export default class Users extends Component {
 		this.editUserDialog.MDComponent.show();
 	}
 
+	showSnackbar = (text) => {
+		this.bar.MDComponent.show({
+			message: text
+		})
+	}
+
 	editData = () => {
 		let that = this;
+
 		let url = Auth.url + '/api/user/' + this.state.editId;
 		let xhttp = new XMLHttpRequest();
 
@@ -139,8 +151,10 @@ export default class Users extends Component {
 
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				that.setState({ responseFBClass : style.feedbackSucc });
-				that.setState({ responseFB : 'Benutzer erfolgreich geändert' });
+				// that.setState({ responseFBClass : style.feedbackSucc });
+				// that.setState({ responseFB : 'Benutzer erfolgreich geändert' });
+
+
 
 				let newUserList = []
 				let editId = that.state.editId
@@ -156,6 +170,11 @@ export default class Users extends Component {
 				})
 				that.setState({ users : newUserList });
 				that.editUserDialog.MDComponent.close()
+				that.bar.MDComponent.show({
+					message: 'Benutzer erfolgreich geändert'
+				})
+
+
 
 
 			}
@@ -190,8 +209,11 @@ export default class Users extends Component {
 
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				that.setState({ responseFBClass : style.feedbackSucc });
-				that.setState({ responseFB : 'Benutzer erfolgreich angelegt' });
+				// that.setState({ responseFBClass : style.feedbackSucc });
+				// that.setState({ responseFB : 'Benutzer erfolgreich angelegt' });
+				that.bar.MDComponent.show({
+					message: 'Benutzer erfolgreich angelegt'
+				})
 				that.getData();
 				that.newUserDialog.MDComponent.close();
 			}
@@ -285,6 +307,10 @@ export default class Users extends Component {
 				<div class={style.feedbackContainer}>
 					<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
 				</div>
+				<div class={style.mySnackbar}>
+					<Snackbar ref={bar => {this.bar=bar}} />
+				</div>
+				<Snackbar ref={sbar => {this.sbar=sbar}} />
 				{this.state.dialog}
 			</div>
 		);

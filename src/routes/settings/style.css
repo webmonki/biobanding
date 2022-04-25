@@ -123,3 +123,10 @@
 	flex-direction: row;
 	align-items: center;
 }
+
+.mySnackbar :global(.mdc-snackbar) {
+	width: var(--global-snackbar-width);
+	margin: var(--global-snackbar-margin);
+	background-color: var(--global-snackbar-color);
+	box-shadow: var(--global-shadow);
+}
