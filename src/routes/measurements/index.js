@@ -18,6 +18,9 @@ import 'preact-material-components/Drawer/style.css';
 import Table from '../../components/table';
 import NewMeasurementAdmin from '../../components/dialogs/newMeasurementAdmin';
 import NewMeasurementUser from '../../components/dialogs/newMeasurementUser';
+import Snackbar from 'preact-material-components/Snackbar';
+import 'preact-material-components/Snackbar/style.css';
+
 
 export default class Measurements extends Component {
 
@@ -105,8 +108,11 @@ export default class Measurements extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
-				that.setState({ responseFBClass : style.feedbackSucc });
-				that.setState({ responseFB : 'Messung erfolgreich geändert' });
+				// that.setState({ responseFBClass : style.feedbackSucc });
+				// that.setState({ responseFB : 'Messung erfolgreich geändert' });
+				that.bar.MDComponent.show({
+					message: `Messung ${that.state.editId} erfolgreich geändert`
+				})
 				that.loadData();
 				that.measurementsEditDialog.MDComponent.close();
 				that.showTable(true)
@@ -148,8 +154,8 @@ export default class Measurements extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
-				that.setState({ responseFBClass : style.feedbackSucc });
-				that.setState({ responseFB : 'Übersicht erfolgreich geladen' });
+				// that.setState({ responseFBClass : style.feedbackSucc });
+				// that.setState({ responseFB : 'Übersicht erfolgreich geladen' });
 				that.setState({ measurements : response['userdetails'] });
 				let idList = [];
 				let usernameList = [];
@@ -189,8 +195,8 @@ export default class Measurements extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
-				that.setState({ responseFBClass : style.feedbackSucc });
-				that.setState({ responseFB : 'Messungen erfolgreich geladen' });
+				// that.setState({ responseFBClass : style.feedbackSucc });
+				// that.setState({ responseFB : 'Messungen erfolgreich geladen' });
 				that.setState({ measurements : response['measurements:'] });
 				that.showTable(true);
 			}
@@ -221,8 +227,11 @@ export default class Measurements extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
-				that.setState({ responseFBClass : style.feedbackSucc });
-				that.setState({ responseFB : 'Messung erfolgreich gelöscht' });
+				// that.setState({ responseFBClass : style.feedbackSucc });
+				// that.setState({ responseFB : 'Messung erfolgreich gelöscht' });
+				that.bar.MDComponent.show({
+					message: `Messung ${id} erfolgreich gelöscht`
+				})
 				
 				that.loadData();
 				that.showTable(true);
@@ -387,9 +396,10 @@ export default class Measurements extends Component {
 				<Card class={style.card}>
 					{this.state.content}
 				</Card>
-				<div class={style.feedbackContainer}>
+				{/* <div class={style.feedbackContainer}>
 					<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
-				</div>
+				</div> */}
+				<Snackbar ref={bar => {this.bar=bar}} />
 				{this.state.dialog}
 				{this.state.editDialog}
 			</div>

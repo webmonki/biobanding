@@ -13,7 +13,8 @@ import 'preact-material-components/Radio/style.css';
 import Checkbox from 'preact-material-components/Checkbox';
 import Formfield from 'preact-material-components/FormField';
 import 'preact-material-components/Checkbox/style.css';
-
+import Snackbar from 'preact-material-components/Snackbar';
+import 'preact-material-components/Snackbar/style.css';
 
 export default class Settings extends Component {
 
@@ -104,11 +105,15 @@ export default class Settings extends Component {
 				if (this.status === 200) {
 					try {
 						let response = JSON.parse(this.responseText);
-						that.setState({ responseFB: response.msg });
+						// that.setState({ responseFB: response.msg });
 					}
 					catch (err) {}
 
-					that.setState({ responseFBClass: style.feedbackSucc });
+					that.bar.MDComponent.show({
+						message: `Einstellungen erfolgreich geändert`
+					})
+
+					// that.setState({ responseFBClass: style.feedbackSucc });
 				}
 				else {
 					try {
@@ -207,7 +212,8 @@ export default class Settings extends Component {
 					<div class={style.btnContainer}>
 						<Button class={style.mrgnBttm} raised onClick={this.setConfiguration}>Speichern</Button>
 					</div>
-					<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
+					{/* <span class={this.state.responseFBClass}>{this.state.responseFB}</span> */}
+					<Snackbar ref={bar => {this.bar=bar}} />
 				</div>
 			</div>
 		);

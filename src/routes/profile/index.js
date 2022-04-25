@@ -9,6 +9,9 @@ import Radio from 'preact-material-components/Radio';
 import Auth from '../../components/state'
 import 'preact-material-components/List/style.css';
 import 'preact-material-components/Radio/style.css';
+import Snackbar from 'preact-material-components/Snackbar';
+import 'preact-material-components/Snackbar/style.css';
+
 
 export default class Profile extends Component {
 
@@ -52,8 +55,12 @@ export default class Profile extends Component {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
 
-				that.setState({ responseFBClass : style.feedbackSucc });
-				that.setState({ responseFB : 'Login erfolgreich geändert' });
+				// that.setState({ responseFBClass : style.feedbackSucc });
+				// that.setState({ responseFB : 'Login erfolgreich geändert' });
+
+				that.bar.MDComponent.show({
+					message: `Login-Daten erfolgreich geändert`
+				})
 
 				Auth.setEmail(that.state.email);
 				Auth.setUsername(that.state.username);
@@ -106,8 +113,8 @@ export default class Profile extends Component {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
 
-				that.setState({ responseFBClass : style.feedbackSucc });
-				that.setState({ responseFB : 'Spieler Details erfolgreich geladen' });
+				// that.setState({ responseFBClass : style.feedbackSucc });
+				// that.setState({ responseFB : 'Spieler Details erfolgreich geladen' });
 				
 				that.setState({ firstname : response['player_details:'].first_name });
 				that.setState({ lastname : response['player_details:'].last_name });
@@ -166,8 +173,11 @@ export default class Profile extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
-				that.setState({ responseFBClass : style.feedbackSucc });
-				that.setState({ responseFB : 'Spieler Details erfolgreich angelegt'});
+				// that.setState({ responseFBClass : style.feedbackSucc });
+				// that.setState({ responseFB : 'Spieler Details erfolgreich angelegt'});
+				that.bar.MDComponent.show({
+					message: `Spielerdetails erfolgreich angelegt`
+				})
 			}
 			else {
 				try {
@@ -373,8 +383,9 @@ export default class Profile extends Component {
 					</div>
 					<div class={style.btnContainer}>
 						<Button raised onClick={this.sendData}>Speichern</Button>
-						<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
+						{/* <span class={this.state.responseFBClass}>{this.state.responseFB}</span> */}
 					</div>
+					<Snackbar ref={bar => {this.bar=bar}} />
 				</div>
 			</div>
 		);

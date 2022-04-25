@@ -21,6 +21,9 @@ import Select from 'preact-material-components/Select';
 import 'preact-material-components/Select/style.css';
 import NewMeasurementAdmin from '../dialogs/newMeasurementAdmin';
 import NewMeasurementUser from '../dialogs/newMeasurementUser';
+import Snackbar from 'preact-material-components/Snackbar';
+import 'preact-material-components/Snackbar/style.css';
+
 
 export default class Header extends Component {
 
@@ -114,6 +117,9 @@ export default class Header extends Component {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				let response = JSON.parse(this.responseText);
+				that.sbar.MDComponent.show({
+					message: 'Messung erfolgreich gesendet'
+				})
 				location.reload();
 
 			}
@@ -183,6 +189,7 @@ export default class Header extends Component {
 							  <span class="mdc-button__label mdc-theme--text-secondary-on-light">Messung</span>
 						</Button>
 					</div>
+					<Snackbar ref={sbar => {this.sbar=sbar}} />
 					{this.state.dialog}
 				</div>
 			);
