@@ -1,34 +1,92 @@
 from threading import Thread
-from flask_mail import Message, Mail
+from email.mime.text import MIMEText
 from flask import request, render_template
-from .config import BaseConfig
+from .models import AdminConfig
+
 import os
+import smtplib
+import email.utils
 
+def send_async_email(to_email, config, msg):
 
-def send_async_email(app, msg):
-    from api import mail
-    with app.app_context():
-        try:
-            mail.send(msg)
-        except ConnectionRefusedError:
-            raise "[MAIL SERVER] not working"
+    if config.mail_port:
+        serverport = int(config.mail_port)
+    else:
+        serverport = 25
 
+    if config.mail_use_ssl:
+        server = smtplib.SMTP_SSL(config.mail_server, serverport)
+    else:
+        server = smtplib.SMTP(config.mail_server, serverport)
+    try:
+        server.set_debuglevel(True)
 
-def send_email(user, subject, template):
-    from api import app
+        # identify ourselves, prompting server for supported features
+        server.ehlo()
+
+        # If we can encrypt this session, do it
+        if server.has_extn('STARTTLS'):
+            server.starttls()
+            server.ehlo()  # reidentify ourselves over TLS connection
+
+        if server.has_extn('AUTH'):
+            server.login(config.mail_username, config.mail_password)
+
+        server.sendmail(config.mail_server,
+                        [to_email],
+                        msg.as_string())
+    finally:
+        server.quit()
+
+# [BEGIN send_email_password_reset]
+def send_email_password_reset(user, subject, template):
     token = user.get_reset_token()
     url = "{}/reset?token={}".format(os.environ['PREACT_APP_HOST_URI'], token)
     username = user.username
+    content = render_template(template, url=url, username=username)
 
-    msg = Message()
-    msg.subject = subject
-    #msg.sender = os.getenv('MAIL_USERNAME')
-    msg.sender = BaseConfig.MAIL_USERNAME
-    msg.recipients = [user.email]
-    msg.html = render_template(template,
-                                url=url, username=username)
+    try:
+        config = AdminConfig.get_config()
+    except ConnectionRefusedError:
+        raise 'Could not read server config from database'
 
-    Thread(target=send_async_email, args=(app, msg)).start()
+    # Prompt the user for connection info
+    to_email = user.email
+    sender_mail = config.mail_username
+
+    # Create the message
+    msg = MIMEText(content, 'html')
+    msg.set_unixfrom('author')
+    msg['To'] = email.utils.formataddr(('Recipient', to_email))
+    msg['From'] = email.utils.formataddr(('BioBanding', sender_mail))
+    msg['Subject'] = subject
+
+    Thread(target=send_async_email, args=(to_email, config, msg)).start()
+# [END send_email_password_reset]
+
+# [BEGIN send_email]
+def send_email(to_mail, content, subject):
+
+    try:
+        config = AdminConfig.get_config()
+    except ConnectionRefusedError:
+        raise 'Could not read server config from database'
+
+    # Prompt the user for connection info
+    to_email = to_mail
+    sender_mail = config.mail_username
+
+    # Create the message
+    msg = MIMEText(content, 'plain')
+    msg.set_unixfrom('author')
+    msg['To'] = email.utils.formataddr(('Recipient', to_email))
+    msg['From'] = email.utils.formataddr(('BioBanding', sender_mail))
+    msg['Subject'] = subject
+
+    Thread(target=send_async_email, args=(to_email, config, msg)).start()
+# [END send_email]
+
+
 
 
 

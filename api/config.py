@@ -24,6 +24,3 @@ class BaseConfig():
     MAIL_USERNAME = "test@vp-services.de"
     MAIL_PASSWORD = "!Sklarja_93"
 
-    # Frontend routes for unique links creation
-    FRONTEND_URI = "localhost:8080"
-

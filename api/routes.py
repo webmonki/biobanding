@@ -14,7 +14,7 @@ import jwt
 from .models import db, Users, JWTTokenBlocklist, AnthropometricData, AdminConfig, PlayerMaster, PlayerDetail
 from .config import BaseConfig
 from .utils import json_serial, emailIsValid
-from .email import send_email
+from .email import send_email_password_reset
 
 
 rest_api = Api(version="1.0", title="Users API")
@@ -242,7 +242,7 @@ class ResetPasswort(Resource):
         user = Users.get_by_email(_email)
 
         if user:
-            send_email(user, 'Passwort zurücksetzen', 'reset_email.html')
+            send_email_password_reset(user, 'Passwort vergessen', 'reset_email.html')
             return {"success": True,
                     "msg": "Link to reset the password was sent via email to {}.".format(_email)}, 202
 
@@ -255,12 +255,13 @@ class ResetPasswort(Resource):
 class ResetVerified(Resource):
 
     def put(self):
-
+        
         req_data = request.get_json()
         _token = req_data.get("token")
         _password = req_data.get("password")
 
         user = Users.verify_reset_token(_token)
+
         if not user:
             return {"success": False,
                     "msg": "No valid token"}, 404
@@ -443,6 +444,7 @@ class EditConfiguration(Resource):
     """
 
     @rest_api.expect(config_model)
+    @token_required
     def post(self):
         """Updates the admin configuration"""
         from api import app
@@ -460,19 +462,14 @@ class EditConfiguration(Resource):
                 config.update_days_reminder(_days_reminder)
             if _mail_server:
                 config.update_mail_server(_mail_server)
-                app.config['MAIL_SERVER'] = _mail_server
             if _mail_port:
                 config.update_mail_port(_mail_port)
-                app.config['MAIL_PORT'] = _mail_port
             if _mail_use_ssl is not None:
                 config.update_mail_use_ssl(_mail_use_ssl)
-                app.config['MAIL_USE_SSL'] = _mail_use_ssl
             if _mail_username:
                 config.update_mail_username(_mail_username)
-                app.config['MAIL_USERNAME'] = _mail_username
             if _mail_password:
-                app.config['MAIL_PASSWORD'] = _mail_password
-                #config.update_mail_passwort(_mail_password)
+                config.update_mail_passwort(_mail_password)
             config.save()
         except Exception:
             return {"success": False,
