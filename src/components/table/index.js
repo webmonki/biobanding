@@ -72,7 +72,9 @@ export default class Table extends Component {
 							<tr>
 								<td>
 									<div class={style.tdIconContainer}>
-										<List.ItemGraphic onClick={() => this.props.clickEdit(row[this.props.idKey])} class={style.tdIcon}>edit</List.ItemGraphic>
+										<Button onClick={() => this.props.clickEdit(row[this.props.idKey])}>
+											<List.ItemGraphic class={`${"mdc-theme--primary"} ${style.tdIcon}`}>edit</List.ItemGraphic>
+										</Button>
 										<Formfield>
 											<Checkbox name='deleteCheck' checked={false} value={row[this.props.idKey]}/>
 										</Formfield>
