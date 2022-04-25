@@ -41,7 +41,7 @@ export default class NewMeasurementAdmin extends Component {
 						</Select>
 						<div class={style.row}>
 						<div class={style.input}>
-								<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe' value={this.state.height} onKeyUp={e => {
+								<TextField autocomplete='off' type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe' value={this.state.height} onKeyUp={e => {
 									document.addEventListener('keyup', this.handleKey)
 									let val = e.target.value;
 									this.setState({ height: val });
@@ -62,7 +62,7 @@ export default class NewMeasurementAdmin extends Component {
 								<span class={this.state.heightFBClass}>{this.state.heightFB}</span>
 							</div>
 							<div class={style.input}>
-								<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe im Sitzen' value={this.state.sittingHeight} onKeyUp={e => {
+								<TextField autocomplete='off' type='number' class={style.fullWidth} min={0} max={300} outlined label='Größe im Sitzen' value={this.state.sittingHeight} onKeyUp={e => {
 									document.addEventListener('keyup', this.handleKey)
 									let val = e.target.value;
 									this.setState({ sittingHeight : val });
@@ -85,7 +85,7 @@ export default class NewMeasurementAdmin extends Component {
 						</div>
 						<div class={style.row}>
 						<div class={style.input}>
-								<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Arm Spannweite' value={this.state.span} onKeyUp={e => {
+								<TextField autocomplete='off' type='number' class={style.fullWidth} min={0} max={300} outlined label='Arm Spannweite' value={this.state.span} onKeyUp={e => {
 									document.addEventListener('keyup', this.handleKey)
 									let val = e.target.value;
 									this.setState({ span : val });
@@ -106,7 +106,7 @@ export default class NewMeasurementAdmin extends Component {
 								<span class={this.state.spanFBClass}>{this.state.spanFB}</span>
 							</div>
 							<div class={style.input}>
-								<TextField type='number' class={style.fullWidth} min={0} max={300} outlined label='Gewicht' value={this.state.weight} onKeyUp={e => {
+								<TextField autocomplete='off' type='number' class={style.fullWidth} min={0} max={300} outlined label='Gewicht' value={this.state.weight} onKeyUp={e => {
 									document.addEventListener('keyup', this.handleKey)
 									let val = e.target.value
 									this.setState({ weight : val });

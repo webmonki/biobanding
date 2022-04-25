@@ -156,7 +156,7 @@ export default class Settings extends Component {
 					</div>
 					<div class={style.row}>
 						<div class={style.input}>
-							<TextField outlined label='Erinnerung in Tagen' value={this.state.reminder} onInput={e => {
+							<TextField autocomplete='off' outlined label='Erinnerung in Tagen' value={this.state.reminder} onInput={e => {
 								this.setState({ reminder : e.target.value })
 							}}/>
 							<span class={this.state.usernameFBClass}>{this.state.usernameFB}</span>
@@ -170,13 +170,13 @@ export default class Settings extends Component {
 					</div>
 					<div class={style.row}>
 						<div class={style.input}>
-							<TextField outlined label='E-Mail-Server' value={this.state.mailService} onInput={e => {
+							<TextField autocomplete='off' outlined label='E-Mail-Server' value={this.state.mailService} onInput={e => {
 								this.setState({ mailService : e.target.value})
 							}}/>
 							<span class={this.state.serverFBClass}>{this.state.serverFB}</span>
 						</div>
 						<div class={style.input}>
-							<TextField outlined label='Port' value={this.state.mailPort} onInput={e => {
+							<TextField autocomplete='off' outlined label='Port' value={this.state.mailPort} onInput={e => {
 								this.setState({ mailPort : e.target.value });
 							}}/>
 							<span class={this.state.portFBClass}>{this.state.portFB}</span>
@@ -184,12 +184,12 @@ export default class Settings extends Component {
 					</div>
 					<div class={style.row}>
 						<div class={style.input}>
-							<TextField outlined label='Benutzername' value={this.state.mailUsername} onInput={e => {
+							<TextField autocomplete='off' outlined label='Benutzername' value={this.state.mailUsername} onInput={e => {
 								this.setState({ mailUsername : e.target.value });
 							}} />
 						</div>
 						<div class={style.input}>
-							<TextField outlined label='Passwort' type='password' value={this.state.password} onInput={e => {
+							<TextField autocomplete='off' outlined label='Passwort' type='password' value={this.state.password} onInput={e => {
 								this.setState({ password : e.target.value });
 							}} />
 						</div>

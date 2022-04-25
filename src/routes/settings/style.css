@@ -3,7 +3,6 @@
 	height: calc(100% - var(--global-header-height));
 	padding: var(--global-page-margin);
 	width: calc(100% - var(--global-navrail-width));
-	/* width: 100%; */
 }
 
 .pageSmall {
@@ -11,7 +10,6 @@
 	height: calc(100% - var(--global-header-height));
 	padding: var(--global-page-margin);
 	width: calc(100% - var(--global-navbar-width));
-	/* width: 100%; */
 }
 
 .settingsContainer {
@@ -22,6 +20,7 @@
 	display: flex;
 	flex-direction: column;
 	margin-bottom: var(--global-profile-line-space);
+	width: 800px;
 }
 
 .pageHeader {
