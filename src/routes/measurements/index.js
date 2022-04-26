@@ -76,7 +76,6 @@ export default class Measurements extends Component {
 	};
 
 	getUsers = () => {
-		console.log("GET")
 		let that = this;
 		let url = Auth.url + '/api/users';
 		let xhttp = new XMLHttpRequest();
@@ -90,7 +89,6 @@ export default class Measurements extends Component {
 				let response = JSON.parse(this.responseText);
 				// that.setState({ responseFBClass : style.feedbackSucc });
 				// that.setState({ responseFB : 'Benutzer erfolgreich geladen' });
-				console.log(response)
 				let idList = [];
 				let usernameList = [];
 				response['users:'].forEach(user => {
@@ -197,7 +195,6 @@ export default class Measurements extends Component {
 				let response = JSON.parse(this.responseText);
 				// that.setState({ responseFBClass : style.feedbackSucc });
 				// that.setState({ responseFB : 'Übersicht erfolgreich geladen' });
-				console.log(response)
 				that.setState({ measurements : response.measurements });
 				that.showTable(true);
 			}
