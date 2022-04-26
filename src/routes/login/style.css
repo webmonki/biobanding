@@ -69,6 +69,13 @@
 	color: var(--mdc-theme-primary) !important;
 }
 
+.mySnackbar :global(.mdc-snackbar) {
+	width: var(--global-snackbar-width);
+	margin: var(--global-snackbar-margin);
+	background-color: var(--global-snackbar-color);
+	box-shadow: var(--global-shadow);
+}
+
 
 
 /* Extra small devices (phones, 600px and down) */
