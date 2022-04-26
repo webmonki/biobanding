@@ -17,6 +17,8 @@ export default class Navbar extends Component {
 	railRef = rail => (this.rail = rail)
 
 	componentWillMount = () => {
+		this.setState({ versionClass : style.versionContainer })
+
 		this.getNavbarContent(this.props);
 	}
 	
@@ -58,13 +60,18 @@ export default class Navbar extends Component {
 			this.drawer.MDComponent.open = true;
 			this.rail.MDComponent.open = false;
 			this.props.fitPageSize(false);
+			this.setState({ versionClass : style.versionContainer });
+
 
 		}
 		else {
 			this.props.fitPageSize(true);
 			this.drawer.MDComponent.open = false;
 			this.rail.MDComponent.open = true;
+			this.setState({ versionClass : style.versionContainerRail });
+
 		}
+		this.getNavbarContent(this.props);
 	}
 
 	getNavbarContent = (props) => {
@@ -73,6 +80,10 @@ export default class Navbar extends Component {
 			content = (
 				<div id='navbar'>
 				<i class={style.menuIcon} aria-hidden="true" onClick={this.toggleDrawer}>menu</i>
+
+				<div class={this.state.versionClass}>
+					<span>{Auth.version}</span>
+				</div>
 
 				<Drawer dismissible ref={this.drawerRef} class={style.navbar}>
 					<Drawer.DrawerContent class={style.navbarContent}>

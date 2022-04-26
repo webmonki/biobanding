@@ -77,7 +77,8 @@ html, body {
 	/*SNACKBAR*/
 	--global-snackbar-width: 100%;
 	--global-snackbar-margin: 0 0 0 50%;
-	--global-snackbar-color: var(--mdc-theme-primary);
+	--global-snackbar-color: white;
+	--global-snackbar-font-color: var(--mdc-theme-primary);
 }
 
 
