@@ -6,7 +6,7 @@ Copyright (c) 2022 - VP-Systeme GmbH, Lyrenstr. 13, 44866 Bochum
 from datetime import datetime, timezone, timedelta
 from functools import wraps
 from json import dumps
-from flask import request
+from flask import request, jsonify
 from flask_restx import Api, Resource, fields, abort
 
 import jwt
@@ -156,11 +156,12 @@ class AllUserDetails(Resource):
 
     @token_required
     def get(self, current_user):
+        "Get "
         try:
             users = Users.get_all_users()
         except:
             return {"success": False,
-                "msg": "Could not read users"}, 500
+                "msg": "Could not read users"}, 400
 
         detailsList = []
 
@@ -312,7 +313,6 @@ class EditUser(Resource):
         return {"success": True}, 200
 
 
-
 @rest_api.route('/api/users/register')
 class Register(Resource):
     """
@@ -439,6 +439,7 @@ class LogoutUser(Resource):
 
         return {"success": True}, 200
 
+
 @rest_api.route('/api/configurations')
 class EditConfiguration(Resource):
     """
@@ -494,6 +495,7 @@ class EditConfiguration(Resource):
         return {"success": True,
                 "config": config.toDICT()}, 200
 
+
 @rest_api.route('/api/configurations/testmail')
 class EditConfiguration(Resource):
 
@@ -502,15 +504,9 @@ class EditConfiguration(Resource):
     def post(self, current_user):
         """Send test mail to given e-mail address"""
 
-        req_data = request.get_json()
-
-        _test_email_address = req_data.get("test_email_address")
-
         if current_user.is_admin:
             try:
-                if _test_email_address:
-                    send_email(_test_email_address, 'Testmail: Mail-Server ist korrekt konfiguriert.', 'Testmail')
-
+                send_email(current_user.email, 'Testmail: Mail-Server ist korrekt konfiguriert.', 'Testmail')
             except Exception:
                 return {"success": False,
                         "msg": "Test email could not be sent"}, 400
@@ -520,9 +516,6 @@ class EditConfiguration(Resource):
         else:
             return {"success": False,
                     "msg": "Authenticated, but no permissions"}, 403
-
-
-
 
 
 @rest_api.route('/api/user/<int:userID>/details')
@@ -650,6 +643,7 @@ class Anthropometric(Resource):
         return {"success": True,
                 "measurements:": measurements}, 200
 
+
 @rest_api.route('/api/measurement/<int:id>')
 class Measurement(Resource):
     @token_required
@@ -721,5 +715,36 @@ class Measurement(Resource):
 
         measurement_data.save()
 
-        return {"success": True}, 200
+        return {"success": True,
+                'msg': 'Successfully created new measurement.'}, 200
+
+
+@rest_api.route('/api/measurements')
+class Measurements(Resource):
+
+    @token_required
+    def get(self, current_user):
+        """Return all anthropometric measurements"""
+
+        try:
+            query = db.session.query(AnthropometricData, Users.username).join(Users).all()
+            result = []
+
+            for a, u in query:
+
+                result_dict = {'id': a.id, 'username': u, 'date_measured': dumps(a.date_measured, default=json_serial),
+                               'height': a.height, 'sitting_height': a.sitting_height,
+                               'body_span': a.body_span, 'weight': a.weight, 'pvh': a.result}
+
+                result.append(result_dict)
+
+            return {"success": True,
+                    'measurements': result}, 200
+        except Exception:
+            return {"success": False,
+                    'msg': 'Could not read measurements.'}, 400
+
+
+
+
 

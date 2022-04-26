@@ -7,6 +7,7 @@ import os
 import smtplib
 import email.utils
 
+
 def send_async_email(to_email, config, msg):
 
     if config.mail_port:
@@ -39,9 +40,9 @@ def send_async_email(to_email, config, msg):
     finally:
         server.quit()
 
+
 # [BEGIN send_email_password_reset]
 def send_email_password_reset(user, subject, template):
-    ""
     token = user.get_reset_token()
     url = "{}/reset?token={}".format(os.environ['PREACT_APP_HOST_URI'], token)
     username = user.username
@@ -65,6 +66,7 @@ def send_email_password_reset(user, subject, template):
 
     Thread(target=send_async_email, args=(to_email, config, msg)).start()
 # [END send_email_password_reset]
+
 
 # [BEGIN send_email]
 def send_email(to_mail, content, subject):

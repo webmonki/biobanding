@@ -6,12 +6,14 @@ Copyright (c) 2019 - present AppSeed.us
 from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
+from dataclasses import dataclass
 from api.formulas import mirwald
 from .config import BaseConfig
 import jwt
 
 db = SQLAlchemy()
 
+@dataclass
 class Users(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(32), nullable=False)
@@ -112,7 +114,7 @@ class JWTTokenBlocklist(db.Model):
         db.session.add(self)
         db.session.commit()
 
-
+@dataclass
 class PlayerMaster(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), primary_key=True)
     first_name = db.Column(db.String(), nullable=False)
@@ -126,7 +128,7 @@ class PlayerMaster(db.Model):
         db.session.add(self)
         db.session.commit()
 
-
+@dataclass
 class PlayerDetail(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), primary_key=True)
     birthday = db.Column(db.DateTime(), nullable=False)
@@ -143,7 +145,7 @@ class PlayerDetail(db.Model):
         db.session.add(self)
         db.session.commit()
 
-
+@dataclass
 class AnthropometricData(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), nullable=False)
@@ -217,6 +219,12 @@ class AnthropometricData(db.Model):
         user_data = cls.query.filter_by(user_id=_id).all()
         return user_data[len(user_data) - 1]
 
+    @classmethod
+    def get_all(cls):
+        user_data = cls.query.all()
+        return user_data
+
+@dataclass
 class AdminConfig(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     days_reminder = db.Column(db.Integer(), default=90)
