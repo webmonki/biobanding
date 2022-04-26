@@ -30,7 +30,15 @@ export default class Table extends Component {
 				let tableHeader = (
 					<tr>
 						<th></th>
-						{cols.map((name) => <th>{name}</th>)}
+						{cols.map((name) => {
+							if (name === 'id' || name === 'userID') {
+								return undefined;
+							}
+							else {
+								return (<th>{name}</th>)
+							}
+						} 
+						)}
 					</tr>
 				)
 		
@@ -39,7 +47,15 @@ export default class Table extends Component {
 			else {
 				let tableHeader = (
 					<tr>
-						{cols.map((name) => <th>{name}</th>)}
+						{cols.map((name) => {
+							if (name === 'id' || name === 'userID') {
+								return undefined;
+							}
+							else {
+								return (<th>{name}</th>)
+							}
+						} 
+						)}
 					</tr>
 				)
 		
@@ -80,8 +96,14 @@ export default class Table extends Component {
 										</Formfield>
 									</div>
 								</td>
-								{Object.keys(row).map((key) =>
-									<td>{row[key]}</td>
+								{Object.keys(row).map((key) => {
+									if (key === 'id' || key === 'userID') {
+										return undefined
+									}
+									else {
+										return (<td>{row[key]}</td>)
+									}
+								}
 								)}
 							</tr>
 						)}
