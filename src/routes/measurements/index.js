@@ -37,6 +37,7 @@ export default class Measurements extends Component {
 	loadData = () => {
 		if (Auth.check_admin()) {
 			this.getOverview();
+			this.getUsers();
 		}
 		else {
 			this.getMeasurements();
@@ -59,7 +60,7 @@ export default class Measurements extends Component {
 		if (Auth.check_admin()) {
 			content = (
 				<div class={style.tableContainer}>
-					<Table editable={editable} data={data} pageSize={11} clickEdit={this.showDialog} idKey='measureID' />
+					<Table editable={editable} data={data} pageSize={11} clickEdit={this.showDialog} idKey='id' />
 				</div>
 			);
 		}
@@ -73,6 +74,46 @@ export default class Measurements extends Component {
 
 		this.setState({ content });
 	};
+
+	getUsers = () => {
+		console.log("GET")
+		let that = this;
+		let url = Auth.url + '/api/users';
+		let xhttp = new XMLHttpRequest();
+	
+		xhttp.open('GET', url);
+		xhttp.setRequestHeader('Accept', 'application/json');
+		xhttp.setRequestHeader('authorization',  Auth.getUser().token);
+
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				let response = JSON.parse(this.responseText);
+				// that.setState({ responseFBClass : style.feedbackSucc });
+				// that.setState({ responseFB : 'Benutzer erfolgreich geladen' });
+				console.log(response)
+				let idList = [];
+				let usernameList = [];
+				response['users:'].forEach(user => {
+					usernameList.push(user.username)
+					idList.push(user.userID);
+				})
+				that.setState({ usernames : usernameList })
+				that.setState({ userIds : idList });
+				that.getDialog();
+			}
+			else {
+				try {
+					let response = JSON.parse(this.responseText);
+					if (response.msg == 'Token is invalid') {
+						Auth.logout();
+						location.reload();
+					}
+				}
+				catch (err) {}
+			}
+		};
+		xhttp.send();
+	}
 
 	editData = () => {
 		let that = this;
@@ -143,7 +184,7 @@ export default class Measurements extends Component {
 
 	getOverview = () => {
 		let that = this;
-		let url = Auth.url + '/api/users/details';
+		let url = Auth.url + '/api/measurements';
 		let xhttp = new XMLHttpRequest();
 
 		xhttp.open('GET', url);
@@ -156,17 +197,9 @@ export default class Measurements extends Component {
 				let response = JSON.parse(this.responseText);
 				// that.setState({ responseFBClass : style.feedbackSucc });
 				// that.setState({ responseFB : 'Übersicht erfolgreich geladen' });
-				that.setState({ measurements : response['userdetails'] });
-				let idList = [];
-				let usernameList = [];
-				response['userdetails'].forEach(user => {
-					usernameList.push(user.username)
-					idList.push(user.userID);
-				})
-				that.setState({ usernames : usernameList })
-				that.setState({ userIds : idList });
+				console.log(response)
+				that.setState({ measurements : response.measurements });
 				that.showTable(true);
-				that.getDialog();
 			}
 			else {
 				try {
