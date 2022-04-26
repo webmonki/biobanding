@@ -53,6 +53,9 @@ export default class Header extends Component {
 				if (this.status === 200) {
 					Auth.logout();
 				}
+				else {
+					Auth.logout();
+				}
 			}
 
 		};
