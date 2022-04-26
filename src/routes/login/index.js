@@ -9,12 +9,48 @@ import Auth from '../../components/state.js';
 import { Link } from 'preact-router/match';
 import TextField from 'preact-material-components/TextField';
 import 'preact-material-components/TextField/style.css';
-
+import Snackbar from 'preact-material-components/Snackbar';
+import 'preact-material-components/Snackbar/style.css';
 
 class Form extends Component {
 
 	componentWillMount = () => {
 		this.setState({ btnDisabled: true });
+
+		this.checkApi();
+
+	}
+
+	checkApi = () => {
+		let that = this;
+		let url_count = Auth.url + '/api/usercount';
+		let xhttp = new XMLHttpRequest();
+
+
+	
+		xhttp.open('GET', url_count);
+		xhttp.setRequestHeader('Accept', 'application/json');
+	
+		xhttp.onreadystatechange = function() {
+	
+	
+			if([0,1,2,3,4].includes(this.readyState)) {
+	
+				if (this.status === 200) {
+					try {
+						let response = JSON.parse(this.responseText);
+					}
+					catch(err) {}
+				}
+				else {
+					that.bar.MDComponent.show({
+						message: `Keine Verbindung zur API`
+					})
+				}
+			}
+		}
+	
+		xhttp.send();
 	}
 
 	componentDidMount = () => {
@@ -140,6 +176,9 @@ class Form extends Component {
 							<Button class={style.secondaryBtn} onClick={() => {route('/signup', true)}}>Registrieren</Button>
 							<Button raised onClick={this.login} disabled={this.state.btnDisabled}>anmelden</Button>
 						</div>
+					</div>
+					<div class={style.mySnackbar}>
+						<Snackbar dismissesOnAction={false} class={'mdc-snackbar__dismiss'} ref={bar => {this.bar=bar}} />
 					</div>
 				</Card>
 		);

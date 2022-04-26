@@ -27,9 +27,9 @@ table {
 }
 
 th, td {
-	max-height: 20px;
+	height: 60px;
 	padding: 8px 16px;
-	text-align: center;
+	text-align: left;
 	border-bottom: 1px solid #C7C1C1;
 
 }
@@ -48,9 +48,11 @@ tr:hover {
 }
 
 .paginationBar {
+	height: 60px;
 	display: flex;
 	width: 100%;
 	justify-content: end;
+	align-items: center;
 }
 
 .btn {
