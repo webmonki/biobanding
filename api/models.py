@@ -228,11 +228,11 @@ class AnthropometricData(db.Model):
 @dataclass
 class AdminConfig(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    days_reminder = db.Column(db.Integer(), default=90)
+    days_reminder = db.Column(db.Integer(),default=90)
     mail_server = db.Column(db.String(), default='smtp.example.org')
     mail_port = db.Column(db.Integer(), default=465)
     mail_use_ssl = db.Column(db.Boolean(), default=True)
-    mail_username = db.Column(db.String(64), default='mustermann')
+    mail_username = db.Column(db.String(64), default='doe')
     mail_password = db.Column(db.String(64))
 
     def update_days_reminder(self, days_reminder):

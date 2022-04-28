@@ -3,8 +3,7 @@ import { route } from "preact-router";
 export default class Auth {
 	// URL of API
     static url = process.env.PREACT_APP_HOST_URI
-	// static version = process.env.PREACT_VERSION
-	static version = "1.1.1.3.12213.34523456q34"
+	static version = process.env.PREACT_APP_VERSION
 
 	// Save User Data in Session Storage
 	static createUser = (response) => {

@@ -5,7 +5,8 @@
 FROM node:16-alpine as build-step
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
-ENV PREACT_APP_HOST_URI http://localhost
+ENV PREACT_APP_HOST_URI http://0.0.0.0
+ENV PREACT_APP_VERSION 1.0
 COPY package.json yarn.lock ./
 COPY preact.config.js preact.config.js
 COPY ./src ./src
