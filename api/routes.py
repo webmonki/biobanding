@@ -45,7 +45,8 @@ user_password_reset_model = rest_api.model('UserPasswordResetModel', {"token": f
                                                    })
 
 
-config_model = rest_api.model('ConfigModel', {"days_reminder": fields.Integer(min=0, max=120, description='Interval in days in which the players are reminded by mail for a new measurement.'),
+config_model = rest_api.model('ConfigModel', {"days_reminder": fields.Integer(min=0, max=120,
+                                                                              description='Interval in days in which the players are reminded by mail for a new measurement.'),
                                               "mail_server": fields.String(),
                                               "mail_port": fields.Integer(min=0 , max=65000),
                                               "mail_use_ssl": fields.Boolean(),
@@ -159,7 +160,6 @@ class AllUserDetails(Resource):
 
     @token_required
     def get(self, current_user):
-        "Get "
         try:
             users = Users.get_all_users()
         except:
@@ -216,9 +216,13 @@ class AllUserDetails(Resource):
 @rest_api.route('/api/users')
 class AllUsers(Resource):
 
+
     @token_required
+    @rest_api.response(200, 'Success')
+    @rest_api.response(500, 'Could not read players anthropometric data')
     def get(self, current_user):
-        """Return players anthropometric data"""
+        """Return all users"""
+
         try:
             users = Users.get_all_users()
         except:
@@ -240,7 +244,10 @@ class AllUsers(Resource):
 @rest_api.route('/api/user/forget')
 class ResetPasswort(Resource):
 
+    @rest_api.response(200, 'Success')
+    @rest_api.response(404, 'The email address does not exist')
     def put(self):
+        """Send email to given address with option to reset the password."""
 
         req_data = request.get_json()
 
@@ -253,7 +260,7 @@ class ResetPasswort(Resource):
         if user:
             send_email_with_token(user, 'Passwort vergessen', 'reset_email.html', url)
             return {"success": True,
-                    "msg": "Link to reset the password was sent via email to {}.".format(_email)}, 202
+                    "msg": "Link to reset the password was sent via email to {}.".format(_email)}, 200
 
         return {"success": False,
                 "msg": "The email address {} does not exist.".format(_email)}, 404
@@ -263,7 +270,10 @@ class ResetPasswort(Resource):
 @rest_api.route('/api/user/reset')
 class ResetVerified(Resource):
 
+    @rest_api.response(202, 'Accepted')
+    @rest_api.response(401, 'No valid token')
     def put(self):
+        """Update user password if token is valid."""
 
         req_data = request.get_json()
         _token = req_data.get("token")
@@ -273,13 +283,13 @@ class ResetVerified(Resource):
 
         if not user:
             return {"success": False,
-                    "msg": "No valid token"}, 404
+                    "msg": "No valid token"}, 401
 
         user.set_password(_password)
         user.save()
 
         return {"success": True,
-                "msg": "Password for user {} successfully reset".format(user.username)}, 200
+                "msg": "Password for user {} successfully reset".format(user.username)}, 202
 
 
 # @rest_api.expect(login_model)
@@ -287,26 +297,36 @@ class ResetVerified(Resource):
 class EditUser(Resource):
 
     @token_required
+    @rest_api.response(200, 'Success')
+    @rest_api.response(400, 'No user found with given id')
     def put(self, current_user, id):
+        """Update user from given id."""
 
         req_data = request.get_json()
         
         _new_username = req_data.get("username")
         _new_email = req_data.get("email")
-        user = Users.get_by_id(id)
+        try:
+            user = Users.get_by_id(id)
 
-        if _new_username:
-            user.update_username(_new_username)
+            if _new_username:
+                user.update_username(_new_username)
 
-        if _new_email:
-            user.update_email(_new_email)
+            if _new_email:
+                user.update_email(_new_email)
+        except:
+            return {"success": False,
+                    "msg": "No user found with given id"}, 400
 
         user.save()
 
         return {"success": True}, 200
 
     @token_required
+    @rest_api.response(200, 'Success')
+    @rest_api.response(400, 'Could not delete User')
     def delete(self, current_user, id):
+        """Delete user with given id"""
         
         try:
             user = Users.get_by_id(id)
@@ -314,7 +334,7 @@ class EditUser(Resource):
         except:
             return {
                 "success": False,
-                "msg": "Could not delete User"}, 500
+                "msg": "Could not delete User"}, 400
 
         return {"success": True}, 200
 
@@ -325,9 +345,11 @@ class Register(Resource):
        Creates a new user by taking 'signup_model' input
     """
 
+    @rest_api.response(200, 'Success')
+    @rest_api.response(400, 'Invalid credentials')
     @rest_api.expect(signup_model, validate=True)
     def post(self):
-
+        """Register a new user"""
         req_data = request.get_json()
 
         _username = req_data.get("username")
@@ -367,6 +389,8 @@ class Login(Resource):
     """
 
     @rest_api.expect(login_model, validate=True)
+    @rest_api.response(200, 'Success')
+    @rest_api.response(400, 'Wrong credentials')
     def post(self):
 
         req_data = request.get_json()
