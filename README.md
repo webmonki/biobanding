@@ -1,25 +1,14 @@
-## [Flask API Server](https://appseed.us/boilerplate-code/flask-api-boilerplate)
+## How-to
+The application consists a REST-API (Flask) and a Preact-Client. 
+Both can be started locally for development or initialized directly via Docker-Compose.
 
-Simple [Flask API Boilerplate](https://appseed.us/boilerplate-code/flask-api-boilerplate) enhanced with JWT authentication, SqlAlchemy, **SQLite** persistence and deployment scripts via Docker - Provided by **AppSeed**. It has all the ready-to-use bare minimum essentials.
-
-<br />
-
-> Features:
-
-- `Up-to-date dependencies` 
-- [API Definition](https://docs.appseed.us/boilerplate-code/api-unified-definition) - the unified API structure implemented by this server
-- Simple, intuitive codebase - can be extended with ease. 
-- `Flask-restX`, `Flask-jwt_extended`
-- **Docker**, `Unitary tests`
-
-<br />
 
 ## ✨ Quick Start in `Docker`
 
 > Get the code
 
 ```bash
-$ git clone https://github.com/app-generator/api-server-flask.git
+$ git git clone git@bitbucket.org:vpsysteme/api-server-flask.git
 $ cd api-server-flask
 ```
 
@@ -29,25 +18,9 @@ $ cd api-server-flask
 $ docker-compose up --build  
 ```
 
-The API server will start using the PORT `5000`.
+The Client server will start using the PORT `8080`.
 
-<br />
 
-> **[PRO Version](https://github.com/app-generator/api-server-flask-pro)** available: MongoDB persistance, Docker, Unitary Tests, 24/7 LIVE Support via [Discord](https://discord.gg/fZC6hup)
-
-<br />
-
-> Can be used with other [React Starters](https://appseed.us/apps/react) for a complete **Full-Stack** experience:
-
-| [React Node JS Berry](https://appseed.us/product/react-node-js-berry-dashboard) | [React Node Soft Dashboard](https://appseed.us/product/node-js-react-soft-dashboard) | [React Purity Dashboard](https://github.com/app-generator/react-purity-dashboard) |
-| --- | --- | --- |
-| [![React Node JS Berry](https://user-images.githubusercontent.com/51070104/124934742-aa392300-e00d-11eb-83bf-28d8b8704ec8.png)](https://appseed.us/product/react-node-js-berry-dashboard) | [![React Node Soft Dashboard](https://user-images.githubusercontent.com/51070104/137918158-54b20cce-1ac8-4279-ab89-aac0353ff7d3.png)](https://appseed.us/product/node-js-react-soft-dashboard) | [![React Purity Dashboard](https://user-images.githubusercontent.com/51070104/141952254-be2308c1-f304-42b3-bfeb-dd082ab9a86e.jpg)](https://github.com/app-generator/react-purity-dashboard)
-
-<br />
-
-![Flask API Server - Open-source Flask Starter provided by AppSeed.](https://user-images.githubusercontent.com/51070104/126349643-264d4cf4-6d0b-4c24-8185-adf69409fa4e.png)
-
-<br />
 
 ## ✨ Table of Contents
 
@@ -63,7 +36,7 @@ The API server will start using the PORT `5000`.
 > **Step #1** - Clone the project
 
 ```bash
-$ git clone https://github.com/app-generator/api-server-flask.git
+$ git git clone git@bitbucket.org:vpsysteme/api-server-flask.git
 $ cd api-server-flask
 ```
 
@@ -122,27 +95,50 @@ Use the API via `POSTMAN` or Swagger Dashboard.
 
 <br />
 
+> **Step #6** - start test client `localhost:8080`
+```bash
+$ yarn install
+$ yarn dev
+```
+
+## ✨ Azure Deployment
+> **Step #1** - Clone the project
+
+
+
+
+
 ## ✨ Project Structure
 
 ```bash
 api-server-flask/
 ├── api
-│   ├── config.py
-│   ├── __init__.py
-│   ├── models.py
-│   └── routes.py
-├── Dockerfile
+│   ├── config.py
+│   ├── __init__.py
+│   ├── models.py
+│   └── routes.py
+│   ├── config.py
+├── nginx
+│   ├── config.py
+├── src
+│   ├── assets
+│   ├── components
+│   ├── logo
+│   ├── routes
+│   ├── style
 ├── README.md
 ├── requirements.txt
 ├── run.py
 └── tests.py
+├── Dockerfile.api
+├── Dockerfile.client
+├── docker-compose-yml
+└── package.json
 ```
 
 <br />
 
 ## ✨ API
-
-For a fast set up, use this `POSTMAN` file: [api_sample](https://github.com/app-generator/api-unified-definition/blob/main/api.postman_collection.json)
 
 > **Register** - `api/users/register` (**POST** request)
 
@@ -153,7 +149,7 @@ Content-Type: application/json
 {
     "username":"test",
     "password":"pass", 
-    "email":"test@appseed.us"
+    "email":"test@example.org"
 }
 ```
 
@@ -167,7 +163,7 @@ Content-Type: application/json
 
 {
     "password":"pass", 
-    "email":"test@appseed.us"
+    "email":"test@example.org"
 }
 ```
 
@@ -187,15 +183,6 @@ authorization: JWT_TOKEN (returned by Login request)
 
 <br />
 
-### Create Testdata
-```
-# switch to root
-cd Documents/api_server_flask
-
-# create script
-python test_data/create_test_users.py (API must be running)
-```
-
 ## ✨ Testing
 
 Run tests using `pytest tests.py`
@@ -203,27 +190,4 @@ Run tests using `pytest tests.py`
 <br />
 
 ---
-**[Flask API Boilerplate](https://appseed.us/boilerplate-code/flask-api-boilerplate)** - provided by AppSeed [App Generator](https://appseed.us)
-
-
-## preact material app
-
-Super performant `Material` app for preact world using [preact-material-components](https://github.com/prateekbh/preact-material-components)
-
-### CLI Commands
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# test the production build locally
-npm run serve
-```
-
-For detailed explanation on how things work, checkout the [CLI Readme](https://github.com/developit/preact-cli/blob/master/README.md).
+VP-Systeme GmbH | Lyrenstr 13 | 44866 Bochum
