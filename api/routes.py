@@ -138,8 +138,10 @@ def token_required(f):
     Flask-Restx routes
 """
 
-@rest_api.route('/api/usercount')
+
+@rest_api.route('/api/usercount', doc={"deprecated": True})
 class UserCount(Resource):
+
 
     def get(self):
         try:
@@ -151,7 +153,8 @@ class UserCount(Resource):
         return {"success": True,
                 "length": len(users)}, 200
 
-@rest_api.route('/api/users/details')
+
+@rest_api.route('/api/users/details', doc={"deprecated": True})
 class AllUserDetails(Resource):
 
     @token_required
