@@ -28,11 +28,15 @@ CORS(app)
 def initialize_database():
     db.create_all()
 
-    # Set default config
-    if not db.session.query(AdminConfig).first():
-        config = AdminConfig(days_reminder=90)
-        db.session.add(config)
-        db.session.commit()
+    # Create initial admin user
+    admin = Users(username='admin', email='admin@example.org', is_admin=True)
+    admin.set_password('admin')
+    db.session.add(admin)
+    # Create default config
+    config = AdminConfig(days_reminder=90)
+    db.session.add(config)
+    # Commit data to db
+    db.session.commit()
 
 """
    Custom responses
