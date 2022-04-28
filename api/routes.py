@@ -9,12 +9,12 @@ from json import dumps
 from flask import request, jsonify
 from flask_restx import Api, Resource, fields, abort
 
-import jwt
+import jwt, os
 
 from .models import db, Users, JWTTokenBlocklist, AnthropometricData, AdminConfig, PlayerMaster, PlayerDetail
 from .config import BaseConfig
 from .utils import json_serial, emailIsValid
-from .email import send_email_password_reset, send_email
+from .email import send_email_with_token, send_email
 
 
 rest_api = Api(version="1.0", title="Users API")
@@ -244,8 +244,11 @@ class ResetPasswort(Resource):
         _email = req_data.get("email")
         user = Users.get_by_email(_email)
 
+        token = user.get_jwt_token()
+        url = "{}/reset?token={}".format(os.environ['PREACT_APP_HOST_URI'], token)
+
         if user:
-            send_email_password_reset(user, 'Passwort vergessen', 'reset_email.html')
+            send_email_with_token(user, 'Passwort vergessen', 'reset_email.html', url)
             return {"success": True,
                     "msg": "Link to reset the password was sent via email to {}.".format(_email)}, 202
 
@@ -732,9 +735,9 @@ class Measurements(Resource):
 
             for a, u in query:
 
-                result_dict = {'id': a.id, 'username': u, 'date_measured': dumps(a.date_measured, default=json_serial),
-                               'height': a.height, 'sitting_height': a.sitting_height,
-                               'body_span': a.body_span, 'weight': a.weight, 'pvh': a.result}
+                result_dict = {'Id': a.id, 'Benutzername': u, 'Datum': dumps(a.date_measured, default=json_serial),
+                               'Größe': a.height, 'Sitzgröße': a.sitting_height,
+                               'Körperspanne': a.body_span, 'Gewicht': a.weight, 'YAPHV': a.result}
 
                 result.append(result_dict)
 

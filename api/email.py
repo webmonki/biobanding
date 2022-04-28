@@ -1,9 +1,9 @@
+import time
 from threading import Thread
 from email.mime.text import MIMEText
 from flask import request, render_template
 from .models import AdminConfig
 
-import os
 import smtplib
 import email.utils
 
@@ -19,6 +19,7 @@ def send_async_email(to_email, config, msg):
         server = smtplib.SMTP_SSL(config.mail_server, serverport)
     else:
         server = smtplib.SMTP(config.mail_server, serverport)
+
     try:
         # Enable for SMTP Debugging
         # server.set_debuglevel(True)
@@ -42,9 +43,7 @@ def send_async_email(to_email, config, msg):
 
 
 # [BEGIN send_email_password_reset]
-def send_email_password_reset(user, subject, template):
-    token = user.get_reset_token()
-    url = "{}/reset?token={}".format(os.environ['PREACT_APP_HOST_URI'], token)
+def send_email_with_token(user, subject, template, url):
     username = user.username
     content = render_template(template, url=url, username=username)
 
@@ -67,7 +66,6 @@ def send_email_password_reset(user, subject, template):
     Thread(target=send_async_email, args=(to_email, config, msg)).start()
 # [END send_email_password_reset]
 
-
 # [BEGIN send_email]
 def send_email(to_mail, content, subject):
 
@@ -89,6 +87,8 @@ def send_email(to_mail, content, subject):
 
     Thread(target=send_async_email, args=(to_email, config, msg)).start()
 # [END send_email]
+
+
 
 
 

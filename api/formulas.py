@@ -43,6 +43,6 @@ def mirwald(sitting_height:float,
         raise ValueError("gender must be 0 (female) or 1 (male).")
         
     # Calculate maturity offset according to the Mirwald method
-    phv = round(-9.236 + (ratio * leg_length * sitting_height) + (-0.001663 * chronological_age * leg_length) + (0.007216 * chronological_age * sitting_height ) + (0.02292 * (weight / standing_height) * 100), 2)
+    phv = round(-9.236 + (ratio * leg_length * sitting_height) + (-0.001663 * chronological_age * leg_length) + (0.007216 * chronological_age * sitting_height) + (0.02292 * (weight / standing_height) * 100), 2)
     
     return phv

@@ -3,7 +3,7 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from dataclasses import dataclass
@@ -22,6 +22,7 @@ class Users(db.Model):
     date_joined = db.Column(db.DateTime(), default=datetime.utcnow)
     jwt_auth_active = db.Column(db.Boolean())
     is_admin = db.Column(db.Boolean())
+    date_last_measurement_reminder = db.Column(db.Date)
 
     def __repr__(self):
         return f"User {self.username}"
@@ -58,7 +59,7 @@ class Users(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    def get_reset_token(self, expires=500):
+    def get_jwt_token(self, expires=500):
         return jwt.encode({'reset_password': self.username, 'exp': datetime.utcnow() + timedelta(minutes=15)}, BaseConfig.SECRET_KEY)
 
     @staticmethod
@@ -149,7 +150,7 @@ class PlayerDetail(db.Model):
 class AnthropometricData(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), nullable=False)
-    date_measured = db.Column(db.DateTime(), default=datetime.utcnow)
+    date_measured = db.Column(db.Date, default=date.today())
     height = db.Column(db.Integer(), nullable=False)
     sitting_height = db.Column(db.Integer(), nullable=False)
     body_span = db.Column(db.Integer(), nullable=False)
@@ -230,7 +231,7 @@ class AdminConfig(db.Model):
     days_reminder = db.Column(db.Integer(), default=90)
     mail_server = db.Column(db.String(), default='smtp.example.org')
     mail_port = db.Column(db.Integer(), default=465)
-    mail_use_ssl = db.Column(db.Boolean(), default=False)
+    mail_use_ssl = db.Column(db.Boolean(), default=True)
     mail_username = db.Column(db.String(64), default='mustermann')
     mail_password = db.Column(db.String(64))
 

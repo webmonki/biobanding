@@ -1,0 +1,8 @@
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+0 7 * * * cd /app ; flask reminder >>/var/log/cron.log 2>&1
+
+
+
+
+
+

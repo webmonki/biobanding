@@ -1,0 +1,2 @@
+FLASK_APP=run.py
+PREACT_APP_HOST_URI=http://0.0.0.0:5000

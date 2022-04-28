@@ -2,12 +2,33 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
+RUN apt-get update && apt-get -y install cron && apt install nano
+
 COPY ./api ./api
 COPY requirements.txt ./
 COPY run.py ./
+COPY .flaskenv ./
+COPY crontest.py ./
+
+# Define etrypoint for crontab
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+
+# Copy my-cron file to the my-cron.d directory
+COPY my-cron /etc/cron.d/my-cron
+
+# Give execution rights on the my-cron job
+RUN chmod 0644 /etc/cron.d/my-cron
+
+# Apply my-cron job
+RUN crontab /etc/cron.d/my-cron
+
+# Create the log file to be able to run tail
+RUN touch /var/log/cron.log
 
 ENV PREACT_APP_HOST_URI http://0.0.0.0
 
 RUN pip install -r requirements.txt
 
-CMD gunicorn -b 0.0.0.0:5000 run:app
+ENTRYPOINT ["/entrypoint.sh"]
