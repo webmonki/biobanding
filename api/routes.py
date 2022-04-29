@@ -6,9 +6,8 @@ Copyright (c) 2022 - VP-Systeme GmbH, Lyrenstr. 13, 44866 Bochum
 from datetime import datetime, timezone, timedelta
 from functools import wraps
 from json import dumps
-from flask import request, jsonify
-from flask_restx import Api, Resource, fields, abort
-from sqlalchemy.orm.exc import ConcurrentModificationError
+from flask import request
+from flask_restx import Api, Resource, fields
 
 import jwt, os
 
@@ -17,9 +16,10 @@ from .config import BaseConfig
 from .utils import json_serial, emailIsValid
 from .email import send_email_with_token, send_email
 
+# Define authorization method for SWAGGER UI
+authorizations = {"jwt": {"type": "apiKey", "in": "header", "name": "authorization"}}
 
-rest_api = Api(version="1.0", title="Users API")
-
+rest_api = Api(version="1.0", title="Users API", authorizations=authorizations)
 
 """
     Flask-Restx models for api request and response data
@@ -45,9 +45,13 @@ user_password_reset_model = rest_api.model('UserPasswordResetModel', {"token": f
                                                    "password": fields.String(required=True, min_length=2, max_length=16)
                                                    })
 
+user_confirm_model = rest_api.model('UserConformModel', {"token": fields.String(required=True, min_length=1)})
+
 
 config_model = rest_api.model('ConfigModel', {"days_reminder": fields.Integer(min=0, max=120,
-                                                                              description='Interval in days in which the players are reminded by mail for a new measurement.'),
+                                                                              description='Interval in days in which '
+                                                                                          'the players are reminded by '
+                                                                                          'mail for a new measurement.'),
                                               "mail_server": fields.String(),
                                               "mail_port": fields.Integer(min=0 , max=65000),
                                               "mail_use_ssl": fields.Boolean(),
@@ -55,6 +59,7 @@ config_model = rest_api.model('ConfigModel', {"days_reminder": fields.Integer(mi
                                               "mail_password": fields.String()
                                               })
 test_mail_config_model = rest_api.model('TestMailConfigModel', {"test_email_address": fields.String(required=True, min_length=5,max_length=64)})
+
 
 
 player_model = rest_api.model('PlayerModel', {"userID": fields.Integer(required=True, min=0),
@@ -99,9 +104,11 @@ anthropometric_data_edit_model = rest_api.model('AnthropometricDataEditModel', {
    Helper function for JWT token required
 """
 
+
 def token_required(f):
 
     @wraps(f)
+    @rest_api.doc(security='jwt')
     def decorator(*args, **kwargs):
 
         token = None
@@ -139,8 +146,6 @@ def token_required(f):
 """
     Flask-Restx routes
 """
-
-
 @rest_api.route('/api/usercount', doc={"deprecated": True})
 class UserCount(Resource):
 
@@ -298,6 +303,7 @@ class ResetVerified(Resource):
 class EditUser(Resource):
 
     @token_required
+    @rest_api.doc(security='apikey')
     @rest_api.response(200, 'Success')
     @rest_api.response(400, 'No user found with given id')
     def put(self, current_user, id):
@@ -350,7 +356,8 @@ class Register(Resource):
     @rest_api.response(400, 'Invalid credentials')
     @rest_api.expect(signup_model, validate=True)
     def post(self):
-        """Register a new user"""
+        """Register a new user and send an email with a confirmation link (example.org/confirm?token=example-token)"""
+
         req_data = request.get_json()
 
         _username = req_data.get("username")
@@ -372,15 +379,20 @@ class Register(Resource):
             return {"success": False,
                     "msg": "Username {} already taken".format(_username)}, 400
 
-        new_user = Users(username=_username, email=_email)
+        new_user = Users(username=_username, email=_email, confirmed=False)
 
         new_user.set_password(_password)
         new_user.set_is_admin(_is_admin)
         new_user.save()
 
+        token = new_user.get_jwt_token()
+        url = "{}/confirm?token={}".format(os.environ['PREACT_APP_HOST_URI'], token)
+
+        send_email_with_token(new_user, 'Bitte bestätige deine E-Mail-Adresse', 'confirm_email_address.html', url)
+
         return {"success": True,
                 "userID": new_user.id,
-                "msg": "The user was successfully registered"}, 200
+                "msg": "The user was successfully registered and a confirmation link was send"}, 200
 
 
 @rest_api.route('/api/users/login')
@@ -469,6 +481,38 @@ class LogoutUser(Resource):
         self.save()
 
         return {"success": True}, 200
+
+
+@rest_api.route('/api/users/confirm')
+@rest_api.expect(user_confirm_model)
+class Confirm(Resource):
+    """
+      Confirm users email address
+    """
+
+    @rest_api.response(200, 'Success')
+    @rest_api.response(401, 'No valid token')
+    def post(self):
+        req_data = request.get_json()
+
+        _token = req_data.get("token")
+
+        user = Users.verify_reset_token(_token)
+
+        if not user:
+            return {"success": False,
+                    "msg": "No valid token"}, 401
+
+        if user.confirmed:
+            return {"success": True,
+                    "msg": "Email address already confirmed. Please login."}, 200
+
+        user.confirmed = True
+        user.confirmed_on = datetime.utcnow()
+        user.save()
+
+        return {"success": True,
+                "msg": "You have confirmed your account. Thanks!"}, 200
 
 
 @rest_api.route('/api/configurations')

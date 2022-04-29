@@ -8,7 +8,6 @@ COPY ./api ./api
 COPY requirements.txt ./
 COPY run.py ./
 COPY .flaskenv ./
-COPY crontest.py ./
 
 # Define etrypoint for crontab
 COPY entrypoint.sh /entrypoint.sh
@@ -27,7 +26,7 @@ RUN crontab /etc/cron.d/my-cron
 # Create the log file to be able to run tail
 RUN touch /var/log/cron.log
 
-ENV PREACT_APP_HOST_URI http://0.0.0.0
+ENV PREACT_APP_HOST_URI https://biobanding.azurewebsites.net
 
 RUN pip install -r requirements.txt
 

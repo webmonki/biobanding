@@ -8,7 +8,7 @@ import os
 from flask import Flask
 from flask_cors import CORS
 from sqlalchemy import func, and_
-from datetime import date
+from datetime import date, datetime
 
 from .routes import rest_api
 from .models import db, AdminConfig, Users, AnthropometricData
@@ -28,15 +28,22 @@ CORS(app)
 def initialize_database():
     db.create_all()
 
-    # Create initial admin user
-    admin = Users(username='admin', email='admin@example.org', is_admin=True)
-    admin.set_password('admin')
-    db.session.add(admin)
-    # Create default config
-    config = AdminConfig(days_reminder=90)
-    db.session.add(config)
-    # Commit data to db
-    db.session.commit()
+    # Create initial admin user and setting if not exists
+    print(db.session.query(Users).first())
+    if db.session.query(Users).first() is None:
+        admin = Users(username='admin',
+                      email='admin@example.org',
+                      is_admin=True,
+                      confirmed=True,
+                      confirmed_on=datetime.now())
+        admin.set_password('admin')
+        db.session.add(admin)
+        db.session.commit()
+
+    if db.session.query(AdminConfig).first() is None:
+        config = AdminConfig(days_reminder=90)
+        db.session.add(config)
+        db.session.commit()
 
 """
    Custom responses
