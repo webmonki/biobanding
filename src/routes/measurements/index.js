@@ -1,443 +1,481 @@
-import { h, Component } from 'preact';
-import Card from 'preact-material-components/Card';
-import 'preact-material-components/Card/style.css';
-import 'preact-material-components/Button/style.css';
-import style from './style';
-import Navbar from '../../components/navbar/navbar';
-import Auth from '../../components/state';
-import Button from 'preact-material-components/Button';
-import 'preact-material-components/Button/style.css';
-import Dialog from 'preact-material-components/Dialog';
-import 'preact-material-components/Dialog/style.css';
-import TextField from 'preact-material-components/TextField';
-import 'preact-material-components/TextField/style.css';
-import 'preact-material-components/List/style.css';
-import List from 'preact-material-components/List';
-import Drawer from 'preact-material-components/Drawer';
-import 'preact-material-components/Drawer/style.css';
-import Table from '../../components/table';
-import NewMeasurementAdmin from '../../components/dialogs/newMeasurementAdmin';
-import NewMeasurementUser from '../../components/dialogs/newMeasurementUser';
-import Snackbar from 'preact-material-components/Snackbar';
-import 'preact-material-components/Snackbar/style.css';
-
+import { h, Component } from "preact";
+import Card from "preact-material-components/Card";
+import "preact-material-components/Card/style.css";
+import "preact-material-components/Button/style.css";
+import style from "./style";
+import Navbar from "../../components/navbar/navbar";
+import Auth from "../../components/state";
+import Button from "preact-material-components/Button";
+import "preact-material-components/Button/style.css";
+import Dialog from "preact-material-components/Dialog";
+import "preact-material-components/Dialog/style.css";
+import TextField from "preact-material-components/TextField";
+import "preact-material-components/TextField/style.css";
+import "preact-material-components/List/style.css";
+import List from "preact-material-components/List";
+import Drawer from "preact-material-components/Drawer";
+import "preact-material-components/Drawer/style.css";
+import Table from "../../components/table";
+import NewMeasurementAdmin from "../../components/dialogs/newMeasurementAdmin";
+import NewMeasurementUser from "../../components/dialogs/newMeasurementUser";
+import Snackbar from "preact-material-components/Snackbar";
+import "preact-material-components/Snackbar/style.css";
 
 export default class Measurements extends Component {
+  componentWillMount = () => {
+    this.setState({ pageClass: style.pageSmall });
 
-	componentWillMount = () => {
-		this.setState({ pageClass : style.pageSmall });
+    this.loadData();
 
-		this.loadData();
+    if (Auth.check_admin() == false) {
+      this.getDialog();
+    }
+  };
 
-		if (Auth.check_admin() == false) {
-			this.getDialog();
-		}
-	}
+  loadData = () => {
+    if (Auth.check_admin()) {
+      this.getOverview();
+      this.getUsers();
+    } else {
+      this.getMeasurements();
+    }
+  };
 
-	loadData = () => {
-		if (Auth.check_admin()) {
-			this.getOverview();
-			this.getUsers();
-		}
-		else {
-			this.getMeasurements();
-		}
-	}
+  componentWillUnmount = () => {
+    document.removeEventListener("keyup", this.handleKey);
+  };
 
-	componentWillUnmount = () => {
-		document.removeEventListener('keyup', this.handleKey)
-	}
+  fitPageSize = (large) => {
+    large
+      ? this.setState({ pageClass: style.pageLarge })
+      : this.setState({ pageClass: style.pageSmall });
+  };
 
+  showTable = (editable) => {
+    let data = this.state.measurements;
+    let content;
+    if (Auth.check_admin()) {
+      content = (
+        <div class={style.tableContainer}>
+          <Table
+            editable={editable}
+            data={data}
+            pageSize={11}
+            clickEdit={this.showDialog}
+            idKey="Id"
+          />
+        </div>
+      );
+    } else {
+      content = (
+        <div class={style.tableContainer}>
+          <Table
+            editable={editable}
+            data={data}
+            pageSize={11}
+            clickEdit={this.showDialog}
+            idKey="Id"
+          />
+        </div>
+      );
+    }
 
-	fitPageSize = (large) => {
-		large ? this.setState({pageClass : style.pageLarge }) : this.setState({pageClass : style.pageSmall})
-	}
+    this.setState({ content });
+  };
 
-	showTable = (editable) => {
-		
-		let data = this.state.measurements
-		let content;
-		if (Auth.check_admin()) {
-			content = (
-				<div class={style.tableContainer}>
-					<Table editable={editable} data={data} pageSize={11} clickEdit={this.showDialog} idKey='id' />
-				</div>
-			);
-		}
-		else {
-			content = (
-				<div class={style.tableContainer}>
-					<Table editable={editable} data={data} pageSize={11} clickEdit={this.showDialog} idKey='id' />
-				</div>
-			);
-		}
+  getUsers = () => {
+    let that = this;
+    let url = Auth.url + "/api/users";
+    let xhttp = new XMLHttpRequest();
 
-		this.setState({ content });
-	};
+    xhttp.open("GET", url);
+    xhttp.setRequestHeader("Accept", "application/json");
+    xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
-	getUsers = () => {
-		let that = this;
-		let url = Auth.url + '/api/users';
-		let xhttp = new XMLHttpRequest();
-	
-		xhttp.open('GET', url);
-		xhttp.setRequestHeader('Accept', 'application/json');
-		xhttp.setRequestHeader('authorization',  Auth.getUser().token);
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        let response = JSON.parse(this.responseText);
+        // that.setState({ responseFBClass : style.feedbackSucc });
+        // that.setState({ responseFB : 'Benutzer erfolgreich geladen' });
+        let idList = [];
+        let usernameList = [];
+        response["users:"].forEach((user) => {
+          usernameList.push(user.username);
+          idList.push(user.userID);
+        });
+        that.setState({ usernames: usernameList });
+        that.setState({ userIds: idList });
+        that.getDialog();
+      } else {
+        try {
+          let response = JSON.parse(this.responseText);
+          if (response.msg == "Token is invalid") {
+            Auth.logout();
+            location.reload();
+          }
+        } catch (err) {}
+      }
+    };
+    xhttp.send();
+  };
 
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				let response = JSON.parse(this.responseText);
-				// that.setState({ responseFBClass : style.feedbackSucc });
-				// that.setState({ responseFB : 'Benutzer erfolgreich geladen' });
-				let idList = [];
-				let usernameList = [];
-				response['users:'].forEach(user => {
-					usernameList.push(user.username)
-					idList.push(user.userID);
-				})
-				that.setState({ usernames : usernameList })
-				that.setState({ userIds : idList });
-				that.getDialog();
-			}
-			else {
-				try {
-					let response = JSON.parse(this.responseText);
-					if (response.msg == 'Token is invalid') {
-						Auth.logout();
-						location.reload();
-					}
-				}
-				catch (err) {}
-			}
-		};
-		xhttp.send();
-	}
+  editData = () => {
+    let that = this;
+    let url = Auth.url + "/api/measurement/" + this.state.editId;
+    let xhttp = new XMLHttpRequest();
 
-	editData = () => {
-		let that = this;
-		let url = Auth.url + '/api/measurement/' + this.state.editId;
-		let xhttp = new XMLHttpRequest();
+    xhttp.open("PUT", url);
+    xhttp.setRequestHeader("Accept", "application/json");
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
-		xhttp.open('PUT', url);
-		xhttp.setRequestHeader('Accept', 'application/json');
-		xhttp.setRequestHeader('Content-Type', 'application/json');
-		xhttp.setRequestHeader('authorization', Auth.getUser().token);
+    let today = new Date();
 
-		let today = new Date();
+    let month = "";
 
-		let month = '';
+    if (today.getMonth() + 1 < 10) {
+      month = "0" + (today.getMonth() + 1);
+    } else {
+      month = today.getMonth() + 1;
+    }
 
-		if ((today.getMonth() + 1) < 10) {
-			month = '0' + (today.getMonth() + 1)
-		}
-		else {
-			month = today.getMonth() + 1
-		}
+    let day = "";
+    if (today.getDate() < 10) {
+      day = "0" + today.getDate();
+    } else {
+      day = today.getDate();
+    }
 
-		let day = '';
-		if(today.getDate() < 10) {
-			day = '0' + (today.getDate());
-		} else {
-			day = today.getDate();
-		}
+    let date = today.getFullYear() + "-" + month + "-" + day;
 
-		let date = today.getFullYear() + '-' + month + '-' + day;
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        let response = JSON.parse(this.responseText);
+        // that.setState({ responseFBClass : style.feedbackSucc });
+        // that.setState({ responseFB : 'Messung erfolgreich geändert' });
+        that.bar.MDComponent.show({
+          message: `Messung ${that.state.editId} erfolgreich geändert`,
+        });
+        that.loadData();
+        that.measurementsEditDialog.MDComponent.close();
+        that.showTable(true);
+      } else {
+        try {
+          let response = JSON.parse(this.responseText);
+          if (response.msg == "Token is invalid") {
+            Auth.logout();
+            location.reload();
+          }
+        } catch (err) {}
+      }
+    };
 
-
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				let response = JSON.parse(this.responseText);
-				// that.setState({ responseFBClass : style.feedbackSucc });
-				// that.setState({ responseFB : 'Messung erfolgreich geändert' });
-				that.bar.MDComponent.show({
-					message: `Messung ${that.state.editId} erfolgreich geändert`
-				})
-				that.loadData();
-				that.measurementsEditDialog.MDComponent.close();
-				that.showTable(true)
-
-			}
-			else {
-				try {
-					let response = JSON.parse(this.responseText);
-					if (response.msg == 'Token is invalid') {
-						Auth.logout();
-						location.reload();
-					}
-				}
-				catch (err) {}
-			}
-		};
-
-		let data = `{
-			"date_measured": "${ date }",
-			"height": ${ this.state.height },
-			"sitting_height": ${ this.state.sittingHeight },
-			"body_span": ${ this.state.span },
-			"weight": ${ this.state.weight }
+    let data = `{
+			"date_measured": "${date}",
+			"height": ${this.state.height},
+			"sitting_height": ${this.state.sittingHeight},
+			"body_span": ${this.state.span},
+			"weight": ${this.state.weight}
 		}`;
 
-		xhttp.send(data);
-	}
+    xhttp.send(data);
+  };
 
-	getOverview = () => {
-		let that = this;
-		let url = Auth.url + '/api/measurements';
-		let xhttp = new XMLHttpRequest();
+  getOverview = () => {
+    let that = this;
+    let url = Auth.url + "/api/measurements";
+    let xhttp = new XMLHttpRequest();
 
-		xhttp.open('GET', url);
-		xhttp.setRequestHeader('Accept', 'application/json');
-		xhttp.setRequestHeader('authorization',  Auth.getUser().token);
+    xhttp.open("GET", url);
+    xhttp.setRequestHeader("Accept", "application/json");
+    xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        let response = JSON.parse(this.responseText);
+        // that.setState({ responseFBClass : style.feedbackSucc });
+        // that.setState({ responseFB : 'Übersicht erfolgreich geladen' });
+        that.setState({ measurements: response.measurements });
+        that.showTable(true);
+      } else {
+        try {
+          let response = JSON.parse(this.responseText);
+          if (response.msg == "Token is invalid") {
+            Auth.logout();
+            location.reload();
+          }
+        } catch (err) {}
+      }
+    };
+    xhttp.send();
+  };
 
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				let response = JSON.parse(this.responseText);
-				// that.setState({ responseFBClass : style.feedbackSucc });
-				// that.setState({ responseFB : 'Übersicht erfolgreich geladen' });
-				that.setState({ measurements : response.measurements });
-				that.showTable(true);
-			}
-			else {
-				try {
-					let response = JSON.parse(this.responseText);
-					if (response.msg == 'Token is invalid') {
-						Auth.logout();
-						location.reload();
-					}
-				}
-				catch (err) {}
-			}
-		};
-		xhttp.send();
-	}
+  getMeasurements = () => {
+    let that = this;
+    let url = Auth.url + "/api/user/" + Auth.getUser().id + "/anthropometric";
+    let xhttp = new XMLHttpRequest();
 
-	getMeasurements = () => {
-		let that = this;
-		let url = Auth.url + '/api/user/' + Auth.getUser().id + '/anthropometric';
-		let xhttp = new XMLHttpRequest();
+    xhttp.open("GET", url);
+    xhttp.setRequestHeader("Accept", "application/json");
+    xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
-		xhttp.open('GET', url);
-		xhttp.setRequestHeader('Accept', 'application/json');
-		xhttp.setRequestHeader('authorization',  Auth.getUser().token);
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        let response = JSON.parse(this.responseText);
+        // that.setState({ responseFBClass : style.feedbackSucc });
+        // that.setState({ responseFB : 'Messungen erfolgreich geladen' });
+        that.setState({ measurements: response["measurements:"] });
+        that.showTable(true);
+      } else {
+        try {
+          let response = JSON.parse(this.responseText);
+          if (response.msg == "Token is invalid") {
+            Auth.logout();
+            location.reload();
+          }
+        } catch (err) {}
+      }
+    };
+    xhttp.send();
+  };
 
+  delete = (id) => {
+    let that = this;
+    let url = Auth.url + "/api/measurement/" + id;
+    let xhttp = new XMLHttpRequest();
 
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				let response = JSON.parse(this.responseText);
-				// that.setState({ responseFBClass : style.feedbackSucc });
-				// that.setState({ responseFB : 'Messungen erfolgreich geladen' });
-				that.setState({ measurements : response['measurements:'] });
-				that.showTable(true);
-			}
-			else {
-				try {
-					let response = JSON.parse(this.responseText);
-					if (response.msg == 'Token is invalid') {
-						Auth.logout();
-						location.reload();
-					}
-				}
-				catch (err) {}
-			}
-		};
-		xhttp.send();
-	}
+    xhttp.open("DELETE", url);
+    xhttp.setRequestHeader("Accept", "application/json");
+    xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
-	delete = (id) => {
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        let response = JSON.parse(this.responseText);
+        // that.setState({ responseFBClass : style.feedbackSucc });
+        // that.setState({ responseFB : 'Messung erfolgreich gelöscht' });
+        that.bar.MDComponent.show({
+          message: `Messung ${id} erfolgreich gelöscht`,
+        });
 
-		let that = this;
-		let url = Auth.url + '/api/measurement/' + id;
-		let xhttp = new XMLHttpRequest();
+        that.loadData();
+        that.showTable(true);
+      } else {
+        try {
+          let response = JSON.parse(this.responseText);
+          if (response.msg == "Token is invalid") {
+            Auth.logout();
+            location.reload();
+          }
+        } catch (err) {}
+      }
+    };
 
-		xhttp.open('DELETE', url);
-		xhttp.setRequestHeader('Accept', 'application/json');
-		xhttp.setRequestHeader('authorization', Auth.getUser().token);
+    xhttp.send();
+  };
 
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				let response = JSON.parse(this.responseText);
-				// that.setState({ responseFBClass : style.feedbackSucc });
-				// that.setState({ responseFB : 'Messung erfolgreich gelöscht' });
-				that.bar.MDComponent.show({
-					message: `Messung ${id} erfolgreich gelöscht`
-				})
-				
-				that.loadData();
-				that.showTable(true);
-			}
-			else {
-				try {
-					let response = JSON.parse(this.responseText);
-					if (response.msg == 'Token is invalid') {
-						Auth.logout();
-						location.reload();
-					}
-				}
-				catch (err) {}
-			}
-		};
+  sendMeasurement = () => {
+    let id;
+    Auth.check_admin()
+      ? (id = this.state.userIds[this.state.chosenIndex])
+      : (id = Auth.getUser().id);
 
-		xhttp.send();
+    let that = this;
+    let url = Auth.url + "/api/user/" + id + "/anthropometric";
+    let xhttp = new XMLHttpRequest();
 
-	}
+    xhttp.open("POST", url);
+    xhttp.setRequestHeader("Accept", "application/json");
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
-	sendMeasurement = () => {
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        let response = JSON.parse(this.responseText);
+        that.loadData();
+        that.newMeasurementsDialog.MDComponent.close();
+        that.bar.MDComponent.show({
+          message: `Messung erfolgreich angelegt`,
+        });
+      } else {
+        let response = JSON.parse(this.responseText);
+      }
+    };
 
-		let id;
-		Auth.check_admin() ? id = this.state.userIds[this.state.chosenIndex] : id = Auth.getUser().id;
+    let today = new Date();
 
-		let that = this;
-		let url = Auth.url + '/api/user/' + id + '/anthropometric';
-		let xhttp = new XMLHttpRequest();
+    let date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
 
-		xhttp.open('POST', url);
-		xhttp.setRequestHeader('Accept', 'application/json');
-		xhttp.setRequestHeader('Content-Type', 'application/json');
-		xhttp.setRequestHeader('authorization', Auth.getUser().token);
-
-		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				let response = JSON.parse(this.responseText);
-				that.loadData();
-				that.newMeasurementsDialog.MDComponent.close();
-				that.bar.MDComponent.show({
-					message: `Messung erfolgreich angelegt`
-				})
-			}
-			else {
-				let response = JSON.parse(this.responseText);
-			}
-		};
-
-		let today = new Date();
-
-		let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-
-		let data = `{
-			"userID": ${ id },
-			"date_measured": "${ date }",
-			"height": ${ this.state.height },
-			"sitting_height": ${ this.state.sittingHeight },
-			"body_span": ${ this.state.span },
-			"weight": ${ this.state.weight }
+    let data = `{
+			"userID": ${id},
+			"date_measured": "${date}",
+			"height": ${this.state.height},
+			"sitting_height": ${this.state.sittingHeight},
+			"body_span": ${this.state.span},
+			"weight": ${this.state.weight}
 		}`;
 
-		xhttp.send(data);
-	}
+    xhttp.send(data);
+  };
 
-	checkDelete = () => {
-		let checkboxes = document.getElementsByName('deleteCheck')
-		
-		checkboxes.forEach(cb => {
-			if (cb.checked) {
-				this.delete(cb.value)
-			}
-		})
-	}
+  checkDelete = () => {
+    let checkboxes = document.getElementsByName("deleteCheck");
 
-	showDialog = (id) => {
-		document.addEventListener('keyup', this.handleKey)
+    checkboxes.forEach((cb) => {
+      if (cb.checked) {
+        this.delete(cb.value);
+      }
+    });
+  };
 
-		this.setState({ editId : id });
-		
-		this.state.measurements.forEach(measurement => {
-			if (measurement.id == id) {
-				this.setState({ height : measurement.height })
-				this.setState({ sittingHeight : measurement.sitting_height })
-				this.setState({ span : measurement.body_span })
-				this.setState({ weight : measurement.weight })
-			}
-		})
+  showDialog = (id) => {
+    document.addEventListener("keyup", this.handleKey);
 
-		this.measurementsEditDialog.MDComponent.show();
-	}
+    this.setState({ editId: id });
 
-	getDataFromDialogforNew = (height, sittingHeight, span, weight, chosenIndex) => {
-		this.setState({ height });
-		this.setState({ sittingHeight });
-		this.setState({ span });
-		this.setState({ weight });
-		this.setState({ chosenIndex });
+    this.state.measurements.forEach((measurement) => {
+      if (measurement.Id == id) {
+        this.setState({ height: measurement.Größe });
+        this.setState({ sittingHeight: measurement.Sitzgröße });
+        this.setState({ span: measurement.Körperspanne });
+        this.setState({ weight: measurement.Gewicht });
+      }
+    });
 
-		this.sendMeasurement();
-	}
+    this.getDialog();
 
-	getDataFromDialogForEdit = (height, sittingHeight, span, weight, chosenIndex) => {
-		this.setState({ height });
-		this.setState({ sittingHeight });
-		this.setState({ span });
-		this.setState({ weight });
-		this.setState({ chosenIndex });
+    this.measurementsEditDialog.MDComponent.show();
+  };
 
-		this.editData();
-	}
+  getDataFromDialogforNew = (
+    height,
+    sittingHeight,
+    span,
+    weight,
+    chosenIndex
+  ) => {
+    this.setState({ height });
+    this.setState({ sittingHeight });
+    this.setState({ span });
+    this.setState({ weight });
+    this.setState({ chosenIndex });
 
-	getDialog = () => {
-		let dialog
+    this.sendMeasurement();
+  };
 
-		if (Auth.check_admin()) {
-			dialog = (
-				<NewMeasurementAdmin
-					reference={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog}}
-					userIds={this.state.userIds}
-					usernames={this.state.usernames}
-					sendData={this.getDataFromDialogforNew}
-					header='Neue Messung erstellen' 
-					subHeader='Anthropometrische Daten'/>
-			)
-		}
-		else {
-			dialog = (
-				<NewMeasurementUser
-					reference={newMeasurementsDialog=>{this.newMeasurementsDialog=newMeasurementsDialog}}
-					sendData={this.getDataFromDialogforNew}
-					header='Neue Messung erstellen' 
-					subHeader='Anthropometrische Daten'/>
-			)
-		}
+  getDataFromDialogForEdit = (
+    height,
+    sittingHeight,
+    span,
+    weight,
+    chosenIndex
+  ) => {
+    this.setState({ height });
+    this.setState({ sittingHeight });
+    this.setState({ span });
+    this.setState({ weight });
+    this.setState({ chosenIndex });
 
-		let editDialog = (
-			<NewMeasurementUser
-			reference={measurementsEditDialog=>{this.measurementsEditDialog=measurementsEditDialog}}
-			sendData={this.getDataFromDialogForEdit}
-			header='Messung bearbeiten' 
-			subHeader='Anthropometrische Daten'/>
-		)
+    this.editData();
+  };
 
+  getDialog = () => {
+    let dialog;
 
-		this.setState({ dialog });
-		this.setState({ editDialog });
-	}
+    if (Auth.check_admin()) {
+      dialog = (
+        <NewMeasurementAdmin
+          reference={(newMeasurementsDialog) => {
+            this.newMeasurementsDialog = newMeasurementsDialog;
+          }}
+          userIds={this.state.userIds}
+          usernames={this.state.usernames}
+          sendData={this.getDataFromDialogforNew}
+          header="Neue Messung erstellen"
+          subHeader="Anthropometrische Daten"
+        />
+      );
+    } else {
+      dialog = (
+        <NewMeasurementUser
+          reference={(newMeasurementsDialog) => {
+            this.newMeasurementsDialog = newMeasurementsDialog;
+          }}
+          sendData={this.getDataFromDialogforNew}
+          header="Neue Messung erstellen"
+          subHeader="Anthropometrische Daten"
+        />
+      );
+    }
 
-	render() {
-		return (
-			<div class={this.state.pageClass}>
-				<Navbar selectedRoute='/measurements' fitPageSize={this.fitPageSize}/>
-				<span class={style.pageHeader}>Messungen</span>
-				<div class={style.btnContainer}>
-					<Button class={style.deleteBtn} onClick={this.checkDelete}>
-						<List.ItemGraphic class={`${"mdc-theme--primary"} ${style.deleteIcon}`}>delete</List.ItemGraphic>
-					</Button>
-					<Button raised class={`${"mdc-button mdc-theme--primary-bg"} ${style.roundBtn}`} onClick={() => {
-						this.newMeasurementsDialog.MDComponent.show();
-					}}>
-						<i class="material-icons mdc-button__icon mdc-theme-on-primary" aria-hidden="true">add</i>
-						<span class="mdc-button__label mdc-theme-on-primary">erstellen</span>
-					</Button>
-				</div>
-				<Card class={style.card}>
-					{this.state.content}
-				</Card>
-				{/* <div class={style.feedbackContainer}>
+    let editDialog = (
+      <NewMeasurementUser
+        reference={(measurementsEditDialog) => {
+          this.measurementsEditDialog = measurementsEditDialog;
+        }}
+        sendData={this.getDataFromDialogForEdit}
+        header="Messung bearbeiten"
+        subHeader="Anthropometrische Daten"
+        height={this.state.height}
+        sittingHeight={this.state.sittingHeight}
+        span={this.state.span}
+        weight={this.state.weight}
+      />
+    );
+
+    this.setState({ dialog });
+    this.setState({ editDialog });
+  };
+
+  render() {
+    return (
+      <div class={this.state.pageClass}>
+        <Navbar selectedRoute="/measurements" fitPageSize={this.fitPageSize} />
+        <span class={style.pageHeader}>Messungen</span>
+        <div class={style.btnContainer}>
+          <Button class={style.deleteBtn} onClick={this.checkDelete}>
+            <List.ItemGraphic
+              class={`${"mdc-theme--primary"} ${style.deleteIcon}`}
+            >
+              delete
+            </List.ItemGraphic>
+          </Button>
+          <Button
+            raised
+            class={`${"mdc-button mdc-theme--primary-bg"} ${style.roundBtn}`}
+            onClick={() => {
+              this.newMeasurementsDialog.MDComponent.show();
+            }}
+          >
+            <i
+              class="material-icons mdc-button__icon mdc-theme-on-primary"
+              aria-hidden="true"
+            >
+              add
+            </i>
+            <span class="mdc-button__label mdc-theme-on-primary">
+              erstellen
+            </span>
+          </Button>
+        </div>
+        <Card class={style.card}>{this.state.content}</Card>
+        {/* <div class={style.feedbackContainer}>
 					<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
 				</div> */}
-				<div class={style.mySnackbar}>
-					<Snackbar ref={bar => {this.bar=bar}} />
-				</div>
-				{this.state.dialog}
-				{this.state.editDialog}
-			</div>
-		);
-	}
+        <div class={style.mySnackbar}>
+          <Snackbar
+            ref={(bar) => {
+              this.bar = bar;
+            }}
+          />
+        </div>
+        {this.state.dialog}
+        {this.state.editDialog}
+      </div>
+    );
+  }
 }
