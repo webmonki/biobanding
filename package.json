@@ -11,7 +11,7 @@
     "postinstall": "echo 'ALERT! This package has been deprecated. Please use default/typescript/netlify/simple.'"
   },
   "eslintConfig": {
-    "extends": "eslint-config-synacor",
+    "extends": ["eslint-config-synacor", "prettier"],
     "rules": {
       "no-unused-vars": "warn",
       "react/sort-comp": "off",
@@ -24,6 +24,7 @@
   ],
   "devDependencies": {
     "eslint": "^4.5.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-config-synacor": "^1.1.0",
     "preact-cli": "^2.0.0",
     "preact-cli-plugin-env-vars": "^1.2.1",
