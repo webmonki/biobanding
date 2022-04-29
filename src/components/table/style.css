@@ -15,10 +15,31 @@
 	margin-right: auto;
 }
 
+.thIcon {
+	color: var(--mdc-theme-primary);
+	cursor: pointer;
+	margin-left: 5px;
+}
+
+.thIconBtn {
+	color: rgba(0, 0, 0, 0.38);
+	width: var(--global-table-page-container-size) !important;
+	height: var(--global-table-page-container-size);
+	border: none;
+	background: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 100px;
+	cursor: pointer;
+	margin-left: 15px;
+}
+
 .tableFixHead, thead, th {
 	position: sticky;
 	top: 0;
 }
+
 
 
 table {
@@ -27,6 +48,8 @@ table {
 }
 
 th, td {
+	min-width: 200px;
+	max-width: 200px;
 	height: 60px;
 	padding: 8px 16px;
 	text-align: left;
@@ -36,6 +59,12 @@ th, td {
 
 tr:hover {
 	background-color: #EEEEF1;
+}
+
+.headerCell {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
 }
 
 .deleteIcon {
@@ -100,4 +129,78 @@ tr:hover {
 
 .pageBtnContainer:hover {
 	background-color: #C7C1C1;
+}
+
+.menuIcon {
+	color: var(--mdc-theme-primary);
+	font-family: 'Material Icons';
+    font-style: normal;
+    font-size: 40px;
+}
+
+.menuBtn {
+	width: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+
+.menuBtn:hover {
+ background-color: #EEEEF1;
+}
+
+.menu {
+	position: absolute;
+	top: 220px;
+	background-color: white;
+	width: fit-content;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	box-shadow: var(--global-shadow);
+	z-index: 8;
+}
+
+.dontDisplay {
+	display: none;
+}
+
+.menuContainer {
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	padding-right: 50px;
+
+}
+
+.menuItem {
+	color: var(--mdc-theme-primary);
+	background-color: white !important;
+	width: 200px;
+	display: flex;
+	justify-content: flex-start;
+	margin-bottom: 5px;
+}
+
+.menuItem:hover {
+	background-color: #EEEEF1 !important;
+}
+
+.searchContainer {
+	display: flex;
+	justify-content: space-between;
+	padding: 10px 30px 0px 30px
+}
+
+.deleteContainer {
+	display: flex;
+	justify-content: flex-end;
+	padding: 10px 30px 0px 30px
+}
+
+.checkAll {
+	width: fit-content;
+	margin-left: 65px;
 }

@@ -268,6 +268,8 @@ export default class Users extends Component {
           data={this.state.users}
           pageSize={11}
           clickEdit={this.showDialog}
+          delete={this.delete}
+          showDialog={this.showNewUserDialog}
           idKey="userID"
         />
       </div>
@@ -280,28 +282,6 @@ export default class Users extends Component {
       <div class={this.state.pageClass}>
         <Navbar selectedRoute="/users" fitPageSize={this.fitPageSize} />
         <span class={style.pageHeader}>Benutzer</span>
-        <div class={style.btnContainer}>
-          <Button class={style.deleteBtn} onClick={this.checkDelete}>
-            <List.ItemGraphic class={`${"mdc-theme--primary"} ${style.icon}`}>
-              delete
-            </List.ItemGraphic>
-          </Button>
-          <Button
-            raised
-            class={`${"mdc-button mdc-theme--primary-bg"} ${style.roundBtn}`}
-            onClick={this.showNewUserDialog}
-          >
-            <i
-              class="material-icons mdc-button__icon mdc-theme-on-primary"
-              aria-hidden="true"
-            >
-              add
-            </i>
-            <span class="mdc-button__label mdc-theme-on-primary">
-              erstellen
-            </span>
-          </Button>
-        </div>
         <Card class={style.card}>{this.state.content}</Card>
         <div class={style.feedbackContainer}>
           <span class={this.state.responseFBClass}>

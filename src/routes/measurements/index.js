@@ -62,6 +62,8 @@ export default class Measurements extends Component {
             data={data}
             pageSize={11}
             clickEdit={this.showDialog}
+            delete={this.delete}
+            showDialog={this.openDialog}
             idKey="Id"
           />
         </div>
@@ -74,6 +76,8 @@ export default class Measurements extends Component {
             data={data}
             pageSize={11}
             clickEdit={this.showDialog}
+            delete={this.delete}
+            showDialog={this.openDialog}
             idKey="Id"
           />
         </div>
@@ -438,32 +442,17 @@ export default class Measurements extends Component {
       <div class={this.state.pageClass}>
         <Navbar selectedRoute="/measurements" fitPageSize={this.fitPageSize} />
         <span class={style.pageHeader}>Messungen</span>
-        <div class={style.btnContainer}>
-          <Button class={style.deleteBtn} onClick={this.checkDelete}>
-            <List.ItemGraphic
-              class={`${"mdc-theme--primary"} ${style.deleteIcon}`}
-            >
-              delete
-            </List.ItemGraphic>
-          </Button>
-          <Button
-            raised
-            class={`${"mdc-button mdc-theme--primary-bg"} ${style.roundBtn}`}
-            onClick={() => {
-              this.newMeasurementsDialog.MDComponent.show();
-            }}
-          >
-            <i
-              class="material-icons mdc-button__icon mdc-theme-on-primary"
-              aria-hidden="true"
-            >
-              add
-            </i>
-            <span class="mdc-button__label mdc-theme-on-primary">
-              erstellen
-            </span>
-          </Button>
-        </div>
+        {/* <div class={style.btnContainer}>
+					<Button class={style.deleteBtn} onClick={this.checkDelete}>
+						<List.ItemGraphic class={`${"mdc-theme--primary"} ${style.deleteIcon}`}>delete</List.ItemGraphic>
+					</Button>
+					<Button raised class={`${"mdc-button mdc-theme--primary-bg"} ${style.roundBtn}`} onClick={() => {
+						this.newMeasurementsDialog.MDComponent.show();
+					}}>
+						<i class="material-icons mdc-button__icon mdc-theme-on-primary" aria-hidden="true">add</i>
+						<span class="mdc-button__label mdc-theme-on-primary">erstellen</span>
+					</Button>
+				</div> */}
         <Card class={style.card}>{this.state.content}</Card>
         {/* <div class={style.feedbackContainer}>
 					<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
