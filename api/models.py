@@ -23,6 +23,9 @@ class Users(db.Model):
     jwt_auth_active = db.Column(db.Boolean())
     is_admin = db.Column(db.Boolean())
     date_last_measurement_reminder = db.Column(db.Date)
+    confirmed = db.Column(db.Boolean, nullable=False, default=False)
+    confirmed_on = db.Column(db.DateTime, nullable=True)
+
 
     def __repr__(self):
         return f"User {self.username}"
@@ -60,16 +63,16 @@ class Users(db.Model):
         db.session.commit()
 
     def get_jwt_token(self, expires=500):
-        return jwt.encode({'reset_password': self.username, 'exp': datetime.utcnow() + timedelta(minutes=15)}, BaseConfig.SECRET_KEY)
+        return jwt.encode({'email': self.email, 'exp': datetime.utcnow() + timedelta(hours=4)}, BaseConfig.SECRET_KEY)
 
     @staticmethod
     def verify_reset_token(token):
         try:
-            username = jwt.decode(token, key=BaseConfig.SECRET_KEY, algorithms=["HS256"])['reset_password']
+            email = jwt.decode(token, key=BaseConfig.SECRET_KEY, algorithms=["HS256"])['email']
         except Exception as e:
-            print('verify_reset_token error: ',e)
+            print('verify_reset_token error: ', e)
             return
-        return Users.query.filter_by(username=username).first()
+        return Users.get_by_email(email)
 
     @classmethod
     def get_all_users(cls):
