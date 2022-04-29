@@ -9,11 +9,10 @@ import TextField from "preact-material-components/TextField";
 import "preact-material-components/TextField/style.css";
 
 export default class NewMeasurementUser extends Component {
+  state = { formValues: {} };
   componentWillMount = () => {
     this.setState({ header: this.props.header });
   };
-
-  componentDidUpdate = () => {};
 
   handleKey = (event) => {
     if (event.code === "Enter") {
@@ -24,10 +23,10 @@ export default class NewMeasurementUser extends Component {
 
   onAccept = () => {
     this.props.sendData(
-      this.state.height,
-      this.state.sittingHeight,
-      this.state.span,
-      this.state.weight
+      this.state.formValues.height,
+      this.state.formValues.sittingHeight,
+      this.state.formValues.span,
+      this.state.formValues.weight
     );
 
     this.resetFormValues();
@@ -35,10 +34,7 @@ export default class NewMeasurementUser extends Component {
 
   resetFormValues = () => {
     this.setState({
-      height: undefined,
-      span: undefined,
-      sittingHeight: undefined,
-      weight: undefined,
+      formValues: {},
     });
   };
 
@@ -74,6 +70,20 @@ export default class NewMeasurementUser extends Component {
     return this.props.weight;
   };
 
+  getFormValue = (name) => {
+    if (this.state.formValues[name] !== undefined) {
+      return this.state.formValues[name];
+    }
+
+    return this.props.formValues[name];
+  };
+
+  setFormValue = (name, value) => {
+    this.setState({
+      formValues: { ...this.state.formValues, [name]: value },
+    });
+  };
+
   render() {
     return (
       <Dialog
@@ -96,12 +106,12 @@ export default class NewMeasurementUser extends Component {
                   max={300}
                   outlined
                   label="Größe"
-                  value={this.getHeight()}
+                  value={this.getFormValue("height")}
                   onKeyUp={(e) => {
                     document.addEventListener("keyup", this.handleKey);
 
                     let val = e.target.value;
-                    this.setState({ height: val });
+                    this.setFormValue("height", val);
 
                     if (val < 0) {
                       this.setState({ heightFBClass: style.feedbackErr });
@@ -130,12 +140,11 @@ export default class NewMeasurementUser extends Component {
                   max={300}
                   outlined
                   label="Größe im Sitzen"
-                  value={this.getSittingHeight()}
+                  value={this.getFormValue("sittingHeight")}
                   onKeyUp={(e) => {
                     document.addEventListener("keyup", this.handleKey);
                     let val = e.target.value;
-                    this.setState({ sittingHeight: val });
-
+                    this.setFormValue("sittingHeight", val);
                     if (val < 0) {
                       this.setState({ sittingFBClass: style.feedbackErr });
                       this.setState({ sittingFB: "Mindestens 0" });
@@ -165,12 +174,11 @@ export default class NewMeasurementUser extends Component {
                   max={300}
                   outlined
                   label="Arm Spannweite"
-                  value={this.getSpan()}
+                  value={this.getFormValue("span")}
                   onKeyUp={(e) => {
                     document.addEventListener("keyup", this.handleKey);
                     let val = e.target.value;
-                    this.setState({ span: val });
-
+                    this.setFormValue("span", val);
                     if (val < 0) {
                       this.setState({ spanFBClass: style.feedbackErr });
                       this.setState({ spanFB: "Mindestens 0" });
@@ -196,12 +204,11 @@ export default class NewMeasurementUser extends Component {
                   max={300}
                   outlined
                   label="Gewicht"
-                  value={this.getWeight()}
+                  value={this.getFormValue("weight")}
                   onKeyUp={(e) => {
                     document.addEventListener("keyup", this.handleKey);
                     let val = e.target.value;
-                    this.setState({ weight: val });
-
+                    this.setFormValue("weight", val);
                     if (val < 0) {
                       this.setState({ weightFBClass: style.feedbackErr });
                       this.setState({ weightFB: "Mindestens 0" });

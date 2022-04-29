@@ -420,10 +420,12 @@ export default class Measurements extends Component {
         sendData={this.getDataFromDialogForEdit}
         header="Messung bearbeiten"
         subHeader="Anthropometrische Daten"
-        height={this.state.height}
-        sittingHeight={this.state.sittingHeight}
-        span={this.state.span}
-        weight={this.state.weight}
+        formValues={{
+          height: this.state.height,
+          sittingHeight: this.state.sittingHeight,
+          span: this.state.span,
+          weight: this.state.weight,
+        }}
       />
     );
 
