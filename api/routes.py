@@ -8,6 +8,7 @@ from functools import wraps
 from json import dumps
 from flask import request, jsonify
 from flask_restx import Api, Resource, fields, abort
+from sqlalchemy.orm.exc import ConcurrentModificationError
 
 import jwt, os
 
@@ -556,6 +557,8 @@ class PlayerDetails(Resource):
 
     @rest_api.expect(player_model)
     @token_required
+    @rest_api.response(200, "Success")
+    @rest_api.response(400, "Player details could not be created")
     def post(self, current_user, userID):
         """create player details"""
 
@@ -575,21 +578,19 @@ class PlayerDetails(Resource):
             _new_player_detail.save()
         except:
             return {"success": False,
-                    "msg": "Player details could not be created"}, 500
+                    "msg": "Player details could not be created"}, 400
 
         return {"success": True,
                 "msg": "Player details were successfully created"}, 200
 
     @token_required
+    @rest_api.response(200, "Success", player_model)
+    @rest_api.response(404, "404 Not Found: The requested URL was not found on the server.")
     def get(self, current_user, userID):
         """Return player details"""
 
-        try:
-            player_detail = PlayerDetail.get_by_id(userID)
-            player_master = PlayerMaster.get_by_id(userID)
-        except:
-            return {"success": False,
-                    "msg": "Could not read player details"}, 500
+        player_detail = PlayerDetail.get_by_id(userID)
+        player_master = PlayerMaster.get_by_id(userID)
 
         return {"success": True,
                 "player_details:": {
