@@ -38,44 +38,12 @@ export default class NewMeasurementUser extends Component {
     });
   };
 
-  getHeight = () => {
-    if (this.state.height !== undefined) {
-      return this.state.height;
-    }
-
-    return this.props.height;
-  };
-
-  getSittingHeight = () => {
-    if (this.state.sittingHeight !== undefined) {
-      return this.state.sittingHeight;
-    }
-
-    return this.props.sittingHeight;
-  };
-
-  getSpan = () => {
-    if (this.state.span !== undefined) {
-      return this.state.span;
-    }
-
-    return this.props.span;
-  };
-
-  getWeight = () => {
-    if (this.state.weight !== undefined) {
-      return this.state.weight;
-    }
-
-    return this.props.weight;
-  };
-
   getFormValue = (name) => {
     if (this.state.formValues[name] !== undefined) {
       return this.state.formValues[name];
     }
 
-    return this.props.formValues[name];
+    return this.props.formValues && this.props.formValues[name];
   };
 
   setFormValue = (name, value) => {
