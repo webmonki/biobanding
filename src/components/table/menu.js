@@ -12,11 +12,27 @@ export default class Menu extends Component {
     this.setState({ containerAddSearch: style.searchContainer });
   };
 
+  getSelectedCountMsg = () => {
+    let msg = this.props.count.toString();
+    if (this.props.count === 1) {
+      if (this.props.title === "Messungen") {
+        msg = msg + " Messung ausgewählt";
+
+        return msg;
+      }
+    }
+
+    msg = msg + " " + this.props.title + " ausgewählt";
+
+    return msg;
+  };
+
   render() {
     let content;
     if (this.props.showDelete) {
       content = (
         <div class={style.deleteContainer} onClick={this.props.checkDelete}>
+          <span class={style.selectedCount}>{this.getSelectedCountMsg()}</span>
           <i class={style.deleteIcon} aria-hidden="true">
             delete
           </i>

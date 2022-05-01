@@ -195,9 +195,10 @@ tr:hover {
 .deleteContainer {
 	height: var(--global-table-menu-height);
 	background-color: rgba(1, 135, 134, 0.45);
-	padding: 10px 30px 10px 30px;
+	padding: 10px 30px 10px 45px;
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 	box-shadow: var(--global-shadow);
 	cursor: pointer;
 }
@@ -247,4 +248,8 @@ tr:hover {
 
 .rowSelected:hover {
 	background-color: rgba(1, 135, 134, 0.8);
+}
+
+.selectedCount {
+	font-size: 18px;
 }

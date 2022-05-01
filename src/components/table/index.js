@@ -480,6 +480,8 @@ export default class Table extends Component {
     link.click(); // This will download the data file named "my_data.csv".
   };
 
+  getSelectedCount = () => this.state.checkList.length;
+
   render() {
     return (
       <div>
@@ -489,6 +491,8 @@ export default class Table extends Component {
             showDialog={this.props.showDialog}
             showDelete={this.state.showDelete}
             checkDelete={this.checkDelete}
+            count={this.getSelectedCount()}
+            title={this.props.title}
           />
         </div>
 
