@@ -16,12 +16,10 @@ export default class Menu extends Component {
     let content;
     if (this.props.showDelete) {
       content = (
-        <div class={style.deleteContainer}>
-          <Button class={style.menuItem} onClick={this.props.checkDelete}>
-            <List.ItemGraphic class={`${"mdc-theme--primary"}`}>
-              delete
-            </List.ItemGraphic>
-          </Button>
+        <div class={style.deleteContainer} onClick={this.props.checkDelete}>
+          <i class={style.deleteIcon} aria-hidden="true">
+            delete
+          </i>
         </div>
       );
     } else {
@@ -35,10 +33,10 @@ export default class Menu extends Component {
             onKeyUp={(e) => {
               let val = e.target.value;
               this.setState({ search: val });
-              this.props.search(val);
+              this.props.setSearchVal(val);
             }}
           />
-          <Button raised onClick={this.props.showDialog}>
+          <Button class={style.roundBtn} raised onClick={this.props.showDialog}>
             <i
               class="material-icons mdc-button__icon mdc-theme-on-primary"
               aria-hidden="true"

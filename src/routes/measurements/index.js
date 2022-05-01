@@ -51,34 +51,40 @@ export default class Measurements extends Component {
       : this.setState({ pageClass: style.pageSmall });
   };
 
+  openDialog = () => {
+    this.newMeasurementsDialog.MDComponent.show();
+  };
+
   showTable = (editable) => {
     let data = this.state.measurements;
     let content;
     if (Auth.check_admin()) {
       content = (
-        <div class={style.tableContainer}>
+        <div>
           <Table
             editable={editable}
             data={data}
-            pageSize={11}
+            pageSize={10}
             clickEdit={this.showDialog}
             delete={this.delete}
             showDialog={this.openDialog}
             idKey="Id"
+            title="Messungen"
           />
         </div>
       );
     } else {
       content = (
-        <div class={style.tableContainer}>
+        <div>
           <Table
             editable={editable}
             data={data}
-            pageSize={11}
+            pageSize={10}
             clickEdit={this.showDialog}
             delete={this.delete}
             showDialog={this.openDialog}
             idKey="Id"
+            title="Messungen"
           />
         </div>
       );

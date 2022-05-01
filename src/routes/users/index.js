@@ -53,7 +53,6 @@ export default class Users extends Component {
         // that.setState({ responseFBClass : style.feedbackSucc });
         // that.setState({ responseFB : 'Benutzer erfolgreich geladen' });
         that.setState({ users: response["users:"] });
-        that.showTable(true);
       } else {
         try {
           let response = JSON.parse(this.responseText);
@@ -189,7 +188,7 @@ export default class Users extends Component {
     xhttp.setRequestHeader("Content-Type", "application/json");
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
+      if (this.readyState === 4 && this.status === 200) {
         // that.setState({ responseFBClass : style.feedbackSucc });
         // that.setState({ responseFB : 'Benutzer erfolgreich angelegt' });
         that.bar.MDComponent.show({
@@ -200,7 +199,7 @@ export default class Users extends Component {
       } else {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg == "Token is invalid") {
+          if (response.msg === "Token is invalid") {
             Auth.logout();
             location.reload();
           }
@@ -262,19 +261,20 @@ export default class Users extends Component {
 
   showTable = (editable) => {
     let content = (
-      <div class={style.tableContainer}>
+      <div>
         <Table
           editable={editable}
           data={this.state.users}
-          pageSize={11}
+          pageSize={10}
           clickEdit={this.showDialog}
           delete={this.delete}
           showDialog={this.showNewUserDialog}
           idKey="userID"
+          title="Benutzer"
         />
       </div>
     );
-    this.setState({ content });
+    return content;
   };
 
   render() {
@@ -282,7 +282,7 @@ export default class Users extends Component {
       <div class={this.state.pageClass}>
         <Navbar selectedRoute="/users" fitPageSize={this.fitPageSize} />
         <span class={style.pageHeader}>Benutzer</span>
-        <Card class={style.card}>{this.state.content}</Card>
+        <Card class={style.card}>{this.showTable(true)}</Card>
         <div class={style.feedbackContainer}>
           <span class={this.state.responseFBClass}>
             {this.state.responseFB}

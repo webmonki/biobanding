@@ -13,10 +13,10 @@ export default class SortIcon extends Component {
   handleIconClick = () => {
     if (this.state.arrow === "arrow_downward") {
       this.setState({ arrow: "arrow_upward" });
-      this.props.desc(this.props.colname);
+      this.props.onClickSort(true, this.props.colname);
     } else if (this.state.arrow === "arrow_upward") {
       this.setState({ arrow: "arrow_downward" });
-      this.props.asc(this.props.colname);
+      this.props.onClickSort(false, this.props.colname);
     }
   };
 
