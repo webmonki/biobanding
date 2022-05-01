@@ -1,11 +1,60 @@
 
 
+.brighter {
+	color: rgba(0, 0, 0, 0.5) !important;
+
+
+}
+
 .tdIconContainer {
-	width: 120px;
+	width: 90px;
 	display: flex;
 	justify-content: flex-start;
-	/* justify-content: center; */
-	/* align-items: center; */
+	justify-content: space-between;
+	align-items: center;
+	margin-left: 15px;
+}
+
+.editBtn {
+	width: 40px;
+	height: 40px;
+	border: none;
+	padding: 5px 5px 5px 5px;
+	background: none;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	border-radius: 100px;
+	cursor: pointer;
+}
+
+.editBtnSelected {
+	width: 40px;
+	height: 40px;
+	border: none;
+	padding: 5px 5px 5px 5px;
+	background: none;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	border-radius: 100px;
+	cursor: pointer;
+}
+
+.editBtnSelected:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.editBtnSelected:active {
+	background-color: rgba(1, 135, 134, 1);
+}
+
+.editBtn:hover {
+	background-color: rgba(0, 0, 0, 0.10);
+}
+
+.editBtn:active {
+	background-color: rgba(0, 0, 0, 0.3);
 }
 
 .tdIcon {
@@ -15,10 +64,36 @@
 	margin-right: auto;
 }
 
+.editIcon {
+	color: var(--mdc-theme-primary) !important;
+	cursor: pointer;
+	margin-left: 5px;
+}
+
+.editIconSelected {
+	color: rgba(0, 0, 0, 0.5);
+	margin-left: 5px;
+}
+
+.thIconBtn {
+	color: rgba(0, 0, 0, 0.38);
+	width: var(--global-table-page-container-size) !important;
+	height: var(--global-table-page-container-size);
+	border: none;
+	background: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 100px;
+	cursor: pointer;
+	margin-left: 15px;
+}
+
 .tableFixHead, thead, th {
 	position: sticky;
 	top: 0;
 }
+
 
 
 table {
@@ -27,6 +102,8 @@ table {
 }
 
 th, td {
+	min-width: 200px;
+	max-width: 200px;
 	height: 60px;
 	padding: 8px 16px;
 	text-align: left;
@@ -38,22 +115,17 @@ tr:hover {
 	background-color: #EEEEF1;
 }
 
-.deleteIcon {
-	margin-left: auto;
-	margin-right: auto;
+.headerCell {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
 }
 
 .deleteBtn {
 	margin-left: 50px;
 }
 
-.paginationBar {
-	height: 60px;
-	display: flex;
-	width: 100%;
-	justify-content: end;
-	align-items: center;
-}
+
 
 .btn {
 	color: var(--mdc-theme-primary);
@@ -95,9 +167,84 @@ tr:hover {
 }
 
 .btn:active {
-	background-color: rgba(0, 0, 0, 0.38);
+	background-color: rgba(0, 0, 0, 0.3);
 }
 
 .pageBtnContainer:hover {
 	background-color: #C7C1C1;
+}
+
+
+.dontDisplay {
+	display: none;
+}
+
+
+.tableContainer {
+	overflow-x: auto;
+}
+
+.searchContainer {
+	height: var(--global-table-menu-height);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 30px 0px 30px;
+}
+
+.deleteContainer {
+	height: var(--global-table-menu-height);
+	background-color: rgba(1, 135, 134, 0.45);
+	padding: 10px 30px 10px 30px;
+	display: flex;
+	align-items: center;
+	box-shadow: var(--global-shadow);
+	cursor: pointer;
+}
+
+.deleteContainer:hover {
+	background-color: rgba(1, 135, 134, 0.8);
+}
+
+.deleteContainer:active {
+	background-color: rgba(1, 135, 134, 0.4);
+}
+
+.checkAll {
+	width: fit-content;
+	margin-left: 65px;
+}
+
+.roundBtn {
+	border-radius: 100px;
+}
+
+.deleteIcon {
+	color: rgba(0, 0, 0, 0.5);
+	/* background-color: rgba(90, 0, 238, 0.45); */
+	font-family: 'Material Icons';
+    font-style: normal;
+    font-size: 40px;
+}
+
+.footerBar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0px 30px 0px 30px;
+	height: 55px;
+}
+
+.paginationBar {
+	display: flex;
+	justify-content: end;
+	align-items: center;
+}
+
+.rowSelected {
+	background-color: rgba(1, 135, 134, 0.45);
+}
+
+.rowSelected:hover {
+	background-color: rgba(1, 135, 134, 0.8);
 }
