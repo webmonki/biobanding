@@ -12,10 +12,11 @@ import Users from "../routes/users";
 import Forgot from "../routes/forgot";
 import Reset from "../routes/reset";
 import Settings from "../routes/settings";
+import Confirm from "../routes/confirm";
 // import Home from 'async!../routes/home';
 // import Profile from 'async!../routes/profile';
 
-const publicRoutes = ["/signup", "/forgot", "/reset", "/login"];
+const publicRoutes = ["/signup", "/forgot", "/reset", "/login", "/confirm"];
 const adminOnlyRoutes = ["/settings", "/users"];
 
 export default class App extends Component {
@@ -54,6 +55,7 @@ export default class App extends Component {
           <Forgot path="/forgot" />
           <Reset path="/reset" />
           <Settings path="/settings" />
+          <Confirm path="/confirm" />
           <NotFound default />
         </Router>
       </div>
