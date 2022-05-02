@@ -52,9 +52,7 @@ export default class Confirm extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         let response = JSON.parse(this.responseText);
-        // that.setState({ responseFBClass : style.feedbackSucc });
-        // that.setState({ responseFB : 'Spieler Details erfolgreich angelegt'});
-        console.log("RES: ", this.response);
+        Auth.createUser(response);
         that.bar.MDComponent.show({
           message: `Benutzer bestätigt`,
         });
