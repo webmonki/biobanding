@@ -50,6 +50,7 @@ html, body {
 	--global-navbar-width: 250px;
 	--global-navrail-width: 58px;
 	--global-header-height: 65px;
+	--global-page-mrgn: 48px;
 	--global-page-margin: 48px 48px 48px 48px;
 	--global-line-space: 24px;
 	--global-input-width: 390px;
@@ -79,6 +80,8 @@ html, body {
 	--global-snackbar-margin: 0 0 0 50%;
 	--global-snackbar-color: white;
 	--global-snackbar-font-color: var(--mdc-theme-primary);
+	/*Table*/
+	--global-table-menu-height: 50px;
 }
 
 

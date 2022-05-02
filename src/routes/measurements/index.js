@@ -41,14 +41,14 @@ export default class Measurements extends Component {
     }
   };
 
-  componentWillUnmount = () => {
-    document.removeEventListener("keyup", this.handleKey);
-  };
-
   fitPageSize = (large) => {
     large
       ? this.setState({ pageClass: style.pageLarge })
       : this.setState({ pageClass: style.pageSmall });
+  };
+
+  openDialog = () => {
+    this.newMeasurementsDialog.MDComponent.show();
   };
 
   showTable = (editable) => {
@@ -56,25 +56,31 @@ export default class Measurements extends Component {
     let content;
     if (Auth.check_admin()) {
       content = (
-        <div class={style.tableContainer}>
+        <div>
           <Table
             editable={editable}
             data={data}
-            pageSize={11}
+            pageSize={10}
             clickEdit={this.showDialog}
+            delete={this.delete}
+            showDialog={this.openDialog}
             idKey="Id"
+            title="Messungen"
           />
         </div>
       );
     } else {
       content = (
-        <div class={style.tableContainer}>
+        <div>
           <Table
             editable={editable}
             data={data}
-            pageSize={11}
+            pageSize={10}
             clickEdit={this.showDialog}
+            delete={this.delete}
+            showDialog={this.openDialog}
             idKey="Id"
+            title="Messungen"
           />
         </div>
       );
@@ -333,12 +339,10 @@ export default class Measurements extends Component {
   };
 
   showDialog = (id) => {
-    document.addEventListener("keyup", this.handleKey);
-
     this.setState({ editId: id });
 
     this.state.measurements.forEach((measurement) => {
-      if (measurement.Id == id) {
+      if (measurement.Id === id) {
         this.setState({ height: measurement.Größe });
         this.setState({ sittingHeight: measurement.Sitzgröße });
         this.setState({ span: measurement.Körperspanne });
@@ -438,32 +442,17 @@ export default class Measurements extends Component {
       <div class={this.state.pageClass}>
         <Navbar selectedRoute="/measurements" fitPageSize={this.fitPageSize} />
         <span class={style.pageHeader}>Messungen</span>
-        <div class={style.btnContainer}>
-          <Button class={style.deleteBtn} onClick={this.checkDelete}>
-            <List.ItemGraphic
-              class={`${"mdc-theme--primary"} ${style.deleteIcon}`}
-            >
-              delete
-            </List.ItemGraphic>
-          </Button>
-          <Button
-            raised
-            class={`${"mdc-button mdc-theme--primary-bg"} ${style.roundBtn}`}
-            onClick={() => {
-              this.newMeasurementsDialog.MDComponent.show();
-            }}
-          >
-            <i
-              class="material-icons mdc-button__icon mdc-theme-on-primary"
-              aria-hidden="true"
-            >
-              add
-            </i>
-            <span class="mdc-button__label mdc-theme-on-primary">
-              erstellen
-            </span>
-          </Button>
-        </div>
+        {/* <div class={style.btnContainer}>
+					<Button class={style.deleteBtn} onClick={this.checkDelete}>
+						<List.ItemGraphic class={`${"mdc-theme--primary"} ${style.deleteIcon}`}>delete</List.ItemGraphic>
+					</Button>
+					<Button raised class={`${"mdc-button mdc-theme--primary-bg"} ${style.roundBtn}`} onClick={() => {
+						this.newMeasurementsDialog.MDComponent.show();
+					}}>
+						<i class="material-icons mdc-button__icon mdc-theme-on-primary" aria-hidden="true">add</i>
+						<span class="mdc-button__label mdc-theme-on-primary">erstellen</span>
+					</Button>
+				</div> */}
         <Card class={style.card}>{this.state.content}</Card>
         {/* <div class={style.feedbackContainer}>
 					<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
