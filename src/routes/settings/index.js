@@ -120,6 +120,7 @@ export default class Settings extends Component {
 			"mail_server": "${this.state.mailService}",
 			"mail_port": ${this.state.mailPort},
 			"mail_user_ssl" : ${this.state.ssl},
+			"mail_username": "${this.state.mailUsername}",
 			"mail_password": "${this.state.password}"
         }`;
 
