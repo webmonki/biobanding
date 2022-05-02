@@ -8,8 +8,8 @@ Both can be started locally for development or initialized directly via Docker-C
 > Get the code
 
 ```bash
-$ git git clone git@bitbucket.org:vpsysteme/api-server-flask.git
-$ cd api-server-flask
+$ git clone git@bitbucket.org:vpsysteme/webapp.git
+$ cd webapp
 ```
 
 > Start the app in Docker
@@ -36,8 +36,8 @@ The Client server will start using the PORT `8080`.
 > **Step #1** - Clone the project
 
 ```bash
-$ git git clone git@bitbucket.org:vpsysteme/api-server-flask.git
-$ cd api-server-flask
+$ git clone git@bitbucket.org:vpsysteme/webapp.git
+$ cd webapp
 ```
 
 <br />
@@ -69,6 +69,7 @@ $ pip install -r requirements.txt
 ```bash
 $ export FLASK_APP=run.py
 $ export FLASK_ENV=development
+$ export PREACT_APP_HOST_URI=http://127.0.0.1:5000
 ```
 
  For **Windows-based** systems
@@ -99,6 +100,11 @@ Use the API via `POSTMAN` or Swagger Dashboard.
 ```bash
 $ yarn install
 $ yarn dev
+```
+If above commands return `ERROR: [Errno 2] No such file or directory: 'install'` or `ERROR: [Errno 2] No such file or directory: 'dev'` try:
+```bash
+$ npm install
+$ npm run dev
 ```
 
 ## ✨ Azure Deployment
