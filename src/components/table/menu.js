@@ -41,28 +41,38 @@ export default class Menu extends Component {
     } else {
       content = (
         <div class={style.searchContainer}>
-          <TextField
-            autocomplete="off"
-            outlined
-            label="Suche"
-            value={this.state.search}
-            onKeyUp={(e) => {
-              let val = e.target.value;
-              this.setState({ search: val });
-              this.props.setSearchVal(val);
-            }}
-          />
-          <Button class={style.roundBtn} raised onClick={this.props.showDialog}>
-            <i
-              class="material-icons mdc-button__icon mdc-theme-on-primary"
-              aria-hidden="true"
-            >
-              add
-            </i>
-            <span class="mdc-button__label mdc-theme-on-primary">
-              erstellen
-            </span>
-          </Button>
+          <div class={style.menuHeight}>
+            <TextField
+              autocomplete="off"
+              label="Suche"
+              outlined
+              value={this.state.search}
+              onKeyUp={(e) => {
+                let val = e.target.value;
+                this.setState({ search: val });
+                this.props.setSearchVal(val);
+              }}
+            />
+          </div>
+
+          <div class={style.menuBtnContainer}>
+            <button class={style.menuBtn} onClick={this.props.exportFile}>
+              <i
+                class={`${"material-icons"} ${style.menuBtnIcon}`}
+                aria-hidden="true"
+              >
+                file_download
+              </i>
+            </button>
+            <button class={style.menuBtn} onClick={this.props.showDialog}>
+              <i
+                class={`${"material-icons"} ${style.menuBtnIcon}`}
+                aria-hidden="true"
+              >
+                add
+              </i>
+            </button>
+          </div>
         </div>
       );
     }

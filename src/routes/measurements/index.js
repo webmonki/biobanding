@@ -41,10 +41,6 @@ export default class Measurements extends Component {
     }
   };
 
-  componentWillUnmount = () => {
-    document.removeEventListener("keyup", this.handleKey);
-  };
-
   fitPageSize = (large) => {
     large
       ? this.setState({ pageClass: style.pageLarge })
@@ -343,12 +339,10 @@ export default class Measurements extends Component {
   };
 
   showDialog = (id) => {
-    document.addEventListener("keyup", this.handleKey);
-
     this.setState({ editId: id });
 
     this.state.measurements.forEach((measurement) => {
-      if (measurement.Id == id) {
+      if (measurement.Id === id) {
         this.setState({ height: measurement.Größe });
         this.setState({ sittingHeight: measurement.Sitzgröße });
         this.setState({ span: measurement.Körperspanne });

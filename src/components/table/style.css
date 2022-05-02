@@ -1,9 +1,40 @@
 
 
-.brighter {
-	color: rgba(0, 0, 0, 0.5) !important;
+.menuBtnIcon {
+	color: rgba(0, 0, 0, 0.5);
+	font-size: 30px;
+}
 
+.menuBtn {
+	border: none;
+	padding: 5px 5px 5px 5px;
+	background: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 100px;
+	cursor: pointer;
+}
 
+button {
+	border: none;
+	outline: none;
+
+}
+
+.menuBtn:hover {
+	background-color: rgba(0, 0, 0, 0.10);
+}
+
+.menuBtn:active {
+	background-color: rgba(0, 0, 0, 0.3);
+}
+
+.menuBtnContainer {
+	width: 90px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .tdIconContainer {
@@ -189,13 +220,13 @@ tr:hover {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 10px 30px 0px 30px;
+	padding: 15px 30px 15px 0px;
 }
 
 .deleteContainer {
 	height: var(--global-table-menu-height);
-	background-color: rgba(1, 135, 134, 0.45);
-	padding: 10px 30px 10px 45px;
+	background-color: #EEEEF1;
+	padding: 0px 30px 0px 45px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -204,11 +235,11 @@ tr:hover {
 }
 
 .deleteContainer:hover {
-	background-color: rgba(1, 135, 134, 0.8);
+	background-color: rgba(0, 0, 0, 0.3);
 }
 
 .deleteContainer:active {
-	background-color: rgba(1, 135, 134, 0.4);
+	background-color: #EEEEF1;
 }
 
 .checkAll {
@@ -225,12 +256,12 @@ tr:hover {
 	/* background-color: rgba(90, 0, 238, 0.45); */
 	font-family: 'Material Icons';
     font-style: normal;
-    font-size: 40px;
+    font-size: 30px;
 }
 
 .footerBar {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-end;
 	align-items: center;
 	padding: 0px 30px 0px 30px;
 	height: 55px;
@@ -251,5 +282,9 @@ tr:hover {
 }
 
 .selectedCount {
-	font-size: 18px;
+	font-size: 15px;
+}
+
+.menuHeight {
+	transform: scale( 0.7 );
 }

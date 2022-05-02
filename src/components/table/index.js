@@ -287,17 +287,15 @@ export default class Table extends Component {
             {pageData.map((row) => {
               let key = row[this.props.idKey];
               return (
-                <tr class={this.getTableRowStyle(key)}>
+                <tr>
                   <td>
                     <div class={style.tdIconContainer}>
                       <button
                         onClick={() => this.props.clickEdit(key)}
-                        class={this.getEditBtnStyle(key)}
+                        class={style.editBtn}
                       >
                         <i
-                          class={`${"material-icons"} ${this.getEditIconStyle(
-                            key
-                          )}`}
+                          class={`${"material-icons"} ${style.editIcon}`}
                           aria-hidden="true"
                         >
                           edit
@@ -492,6 +490,7 @@ export default class Table extends Component {
             showDelete={this.state.showDelete}
             checkDelete={this.checkDelete}
             count={this.getSelectedCount()}
+            exportFile={this.exportFile}
             title={this.props.title}
           />
         </div>
@@ -502,32 +501,7 @@ export default class Table extends Component {
             {this.createTableBody()}
           </table>
         </div>
-        <div class={style.footerBar}>
-          <Button
-            raised
-            class={`${"mdc-button mdc-theme--secondary-bg"} ${style.roundBtn}`}
-            onClick={() => {
-              this.exportFile();
-            }}
-          >
-            <i
-              class={`${"material-icons mdc-button__icon mdc-theme--text-secondary-on-light"} ${
-                style.brighter
-              }`}
-              aria-hidden="true"
-            >
-              file_download
-            </i>
-            <span
-              class={`${"mdc-button__label mdc-theme--text-secondary-on-light"} ${
-                style.brighter
-              }`}
-            >
-              exportieren
-            </span>
-          </Button>
-          {this.createTablePagination()}
-        </div>
+        <div class={style.footerBar}>{this.createTablePagination()}</div>
       </div>
     );
   }

@@ -81,7 +81,7 @@ html, body {
 	--global-snackbar-color: white;
 	--global-snackbar-font-color: var(--mdc-theme-primary);
 	/*Table*/
-	--global-table-menu-height: 70px;
+	--global-table-menu-height: 50px;
 }
 
 
