@@ -15,7 +15,7 @@ import "preact-material-components/Snackbar/style.css";
 class Form extends Component {
   componentWillMount = () => {
     this.setState({ btnDisabled: true });
-    this.setState({ loginStatus: true });
+    this.setState({ loginStatus: false });
   };
 
   componentDidMount = () => {
@@ -175,7 +175,7 @@ class Form extends Component {
     return (
       <div class={style.inputContainer}>
         <div class={style.loginLabel}>Registrierung abschließen</div>
-        <span>
+        <span class={style.msg}>
           Deine E-Mail Adresse wurde noch nicht bestätigt. Bitte überprüfe deine
           Mails und folge den Anweisungen. Falls keine E-Mail vorhanden ist
           klicke auf "erneut senden".
@@ -184,7 +184,7 @@ class Form extends Component {
           <Button
             class={style.secondaryBtn}
             onClick={() => {
-              route("/login", true);
+              this.setState({ loginStatus: true });
             }}
           >
             Anmelden

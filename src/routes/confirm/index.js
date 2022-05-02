@@ -113,7 +113,7 @@ export default class Confirm extends Component {
           <span class={style.header}>Persönliche Daten</span>
           <span class={style.subHeader}>
             Um deine Registrierung abzuschließen, gib jetzt deine persönlichen
-            Daten ein. Diese werden für die Berechnung benötigt
+            Daten ein. Diese werden für die Berechnung benötigt.
           </span>
         </div>
         <div class={style.inputContainer}>
