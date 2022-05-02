@@ -1,197 +1,225 @@
-import { h, Component } from 'preact';
-import Card from 'preact-material-components/Card';
-import 'preact-material-components/Card/style.css';
-import Button from 'preact-material-components/Button';
-import 'preact-material-components/Button/style.css';
-import style from './style';
-import { route } from 'preact-router';
-import Auth from '../../components/state.js';
-import { Link } from 'preact-router/match';
-import TextField from 'preact-material-components/TextField';
-import 'preact-material-components/TextField/style.css';
-import Snackbar from 'preact-material-components/Snackbar';
-import 'preact-material-components/Snackbar/style.css';
+import { h, Component } from "preact";
+import Card from "preact-material-components/Card";
+import "preact-material-components/Card/style.css";
+import Button from "preact-material-components/Button";
+import "preact-material-components/Button/style.css";
+import style from "./style";
+import { route } from "preact-router";
+import Auth from "../../components/state.js";
+import { Link } from "preact-router/match";
+import TextField from "preact-material-components/TextField";
+import "preact-material-components/TextField/style.css";
+import Snackbar from "preact-material-components/Snackbar";
+import "preact-material-components/Snackbar/style.css";
 
 class Form extends Component {
+  componentWillMount = () => {
+    this.setState({ btnDisabled: true });
+    this.setState({ loginStatus: true });
+  };
 
-	componentWillMount = () => {
-		this.setState({ btnDisabled: true });
+  componentDidMount = () => {
+    document.addEventListener("keyup", this.handleKey);
+  };
 
-		this.checkApi();
+  componentWillUnmount = () => {
+    document.removeEventListener("keyup", this.handleKey);
+  };
 
-	}
+  handleKey = (event) => {
+    if (this.state.btnDisabled == false && event.code == "Enter") {
+      this.login();
+      document.removeEventListener("keyup", this.handleKey);
+    }
+  };
 
-	checkApi = () => {
-		let that = this;
-		let url_count = Auth.url + '/api/usercount';
-		let xhttp = new XMLHttpRequest();
+  // Check Input and Enable Button
+  handleChange = () => {
+    this.setState({ email: document.getElementById("emailInput").value });
+    this.setState({ password: document.getElementById("passwordInput").value });
+    this.setState({ loginResponse: "" });
 
+    if (
+      this.state.email.match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      )
+    ) {
+      this.setState({ btnDisabled: false });
+    } else {
+      this.setState({ btnDisabled: true });
+    }
+  };
 
-	
-		xhttp.open('GET', url_count);
-		xhttp.setRequestHeader('Accept', 'application/json');
-	
-		xhttp.onreadystatechange = function() {
-	
-	
-			if([0,1,2,3,4].includes(this.readyState)) {
-	
-				if (this.status === 200) {
-					try {
-						let response = JSON.parse(this.responseText);
-					}
-					catch(err) {}
-				}
-				else {
-					that.bar.MDComponent.show({
-						message: `Keine Verbindung zur API`
-					})
-				}
-			}
-		}
-	
-		xhttp.send();
-	}
+  // Request to Post Login Data
+  login = () => {
+    let that = this;
+    let url = Auth.url + "/api/users/login";
+    let xhttp = new XMLHttpRequest();
 
-	componentDidMount = () => {
-		document.addEventListener('keyup', this.handleKey)
-	}
+    xhttp.open("POST", url);
+    xhttp.setRequestHeader("Accept", "application/json");
+    xhttp.setRequestHeader("Content-Type", "application/json");
 
-	componentWillUnmount = () => {
-		document.removeEventListener('keyup', this.handleKey)
-	}
+    xhttp.onreadystatechange = function () {
+      if ([1, 2, 3, 4].includes(this.readyState)) {
+        if (this.status === 200) {
+          try {
+            let response = JSON.parse(this.responseText);
+            Auth.createUser(response);
+          } catch (err) {}
+          // If Request Ok go to Home
+          route("/measurements", true);
+          location.reload();
+        } else if (this.status === 403) {
+          that.setState({ loginStatus: false });
+        } else {
+          try {
+            let response = JSON.parse(this.responseText);
+            if (response.msg == "Token is invalid") {
+              Auth.logout();
+              location.reload();
+            }
+            that.setState({ responseFBClass: style.feedbackErr });
+            that.setState({ responseFB: response.msg });
+          } catch (err) {}
+        }
+      }
+    };
 
-	handleKey = (event) => {
-		if(this.state.btnDisabled == false && event.code == 'Enter') {
-			this.login();
-			document.removeEventListener('keyup', this.handleKey)
-		}
-	}
-
-
-	// Check Input and Enable Button
-	handleChange = () => {
-		this.setState({ email: document.getElementById('emailInput').value });
-		this.setState({ password: document.getElementById('passwordInput').value });
-		this.setState({ loginResponse: '' });
-
-		if (this.state.email.match(
-			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-		)){
-			this.setState({ btnDisabled: false });
-		}
-		else {
-			this.setState({ btnDisabled: true });
-		}
-
-	}
-
-
-	// Request to Post Login Data
-	login = () => {
-		let that = this;
-		let url = Auth.url + '/api/users/login';
-		let xhttp = new XMLHttpRequest();
-
-		xhttp.open('POST', url);
-		xhttp.setRequestHeader('Accept', 'application/json');
-		xhttp.setRequestHeader('Content-Type', 'application/json');
-
-		xhttp.onreadystatechange = function() {
-
-			if ([1,2,3,4].includes(this.readyState)) {
-				
-				if (this.status === 200) {
-					try {
-						let response = JSON.parse(this.responseText);
-						Auth.createUser(response);
-					}
-					catch (err) {}
-					// If Request Ok go to Home
-					route('/measurements', true);
-					location.reload();
-
-				}
-				else {
-					try {
-						let response = JSON.parse(this.responseText);
-						if (response.msg == 'Token is invalid') {
-							Auth.logout();
-							location.reload();
-						}
-						that.setState({ responseFBClass : style.feedbackErr });
-						that.setState({ responseFB : response.msg });
-					}
-					catch (err) {}
-				}
-			}
-		};
-
-		let data =  `{
+    let data = `{
             "email": "${this.state.email}",
             "password": "${this.state.password}"
         }`;
 
-		xhttp.send(data);
+    xhttp.send(data);
+  };
 
-	}
+  sendMail = () => {
+    console.log("SEND MAIL");
+  };
 
+  renderContent = () => {
+    let status = this.state.loginStatus;
 
-	render() {
-		return (
-				<Card class={style.card}>
-					<div class={style.logoContainer}>
-						<img class={style.logo} src='../../assets/StarsLogoTrans.png' />
-					</div>
-					<div class={style.inputContainer}>
-						<div class={style.loginLabel}>Anmeldung</div>
-						<div class={style.input}>
-							<TextField id='emailInput' outlined label='E-Mail' value={this.state.email} onKeyUp={e =>{
-								this.handleChange();
-								this.setState({ email : e.target.value });
-								let val = e.target.value
-								if (val.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
-									this.setState({ emailFBClass : style.feedbackSucc });
-									this.setState({ emailFB : ''})
-								}
-								else {
-									this.setState({ emailFBClass : style.feedbackErr });
-									this.setState({ emailFB : 'keine E-Mail'})
-								}
-							}}/>				
-							<span class={this.state.emailFBClass}>{this.state.emailFB}</span>
-						</div>
-						<div class={style.input}>
-							<TextField id='passwordInput' type='password' outlined label='Passwort' value={this.state.password} onKeyUp={e => {
-								this.handleChange();
-								let val = e.target.value;
-								this.setState({ password : val })
-							}}/>
-							<div class={style.linkContainer}>
-								<Link class={style.link} href="/forgot" data-native>Passwort vergessen?</Link>
-								<span class={this.state.responseFBClass}>{this.state.responseFB}</span>
-							</div>
-						</div>					
-						<div class={style.btnContainer}>
-							<Button class={style.secondaryBtn} onClick={() => {route('/signup', true)}}>Registrieren</Button>
-							<Button raised onClick={this.login} disabled={this.state.btnDisabled}>anmelden</Button>
-						</div>
-					</div>
-					<div class={style.mySnackbar}>
-						<Snackbar dismissesOnAction={false} class={'mdc-snackbar__dismiss'} ref={bar => {this.bar=bar}} />
-					</div>
-				</Card>
-		);
-	}
+    if (status) {
+      return (
+        <div class={style.inputContainer}>
+          <div class={style.loginLabel}>Anmeldung</div>
+          <div class={style.input}>
+            <TextField
+              id="emailInput"
+              outlined
+              label="E-Mail"
+              value={this.state.email}
+              onKeyUp={(e) => {
+                this.handleChange();
+                this.setState({ email: e.target.value });
+                let val = e.target.value;
+                if (
+                  val.match(
+                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                  )
+                ) {
+                  this.setState({ emailFBClass: style.feedbackSucc });
+                  this.setState({ emailFB: "" });
+                } else {
+                  this.setState({ emailFBClass: style.feedbackErr });
+                  this.setState({ emailFB: "keine E-Mail" });
+                }
+              }}
+            />
+            <span class={this.state.emailFBClass}>{this.state.emailFB}</span>
+          </div>
+          <div class={style.input}>
+            <TextField
+              id="passwordInput"
+              type="password"
+              outlined
+              label="Passwort"
+              value={this.state.password}
+              onKeyUp={(e) => {
+                this.handleChange();
+                let val = e.target.value;
+                this.setState({ password: val });
+              }}
+            />
+            <div class={style.linkContainer}>
+              <Link class={style.link} href="/forgot" data-native>
+                Passwort vergessen?
+              </Link>
+              <span class={this.state.responseFBClass}>
+                {this.state.responseFB}
+              </span>
+            </div>
+          </div>
+          <div class={style.btnContainer}>
+            <Button
+              class={style.secondaryBtn}
+              onClick={() => {
+                route("/signup", true);
+              }}
+            >
+              Registrieren
+            </Button>
+            <Button
+              raised
+              onClick={this.login}
+              disabled={this.state.btnDisabled}
+            >
+              anmelden
+            </Button>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div class={style.inputContainer}>
+        <div class={style.loginLabel}>Registrierung abschließen</div>
+        <span>
+          Deine E-Mail Adresse wurde noch nicht bestätigt. Bitte überprüfe deine
+          Mails und folge den Anweisungen. Falls keine E-Mail vorhanden ist
+          klicke auf "erneut senden".
+        </span>
+        <div class={style.btnContainer}>
+          <Button
+            class={style.secondaryBtn}
+            onClick={() => {
+              route("/login", true);
+            }}
+          >
+            Anmelden
+          </Button>
+          <Button raised onClick={this.sendMail}>
+            erneut senden
+          </Button>
+        </div>
+      </div>
+    );
+  };
 
+  render() {
+    return (
+      <Card class={style.card}>
+        <div class={style.logoContainer}>
+          <img class={style.logo} src="../../assets/StarsLogoTrans.png" />
+        </div>
+        {this.renderContent()}
+        <div class={style.mySnackbar}>
+          <Snackbar
+            dismissesOnAction={false}
+            class={"mdc-snackbar__dismiss"}
+            ref={(bar) => {
+              this.bar = bar;
+            }}
+          />
+        </div>
+      </Card>
+    );
+  }
 }
-
 
 export default class Login extends Component {
-	render() {
-		return (
-			<Form />
-		);
-	}
+  render() {
+    return <Form />;
+  }
 }
-

@@ -12,6 +12,7 @@ import "preact-material-components/Radio/style.css";
 import Snackbar from "preact-material-components/Snackbar";
 import "preact-material-components/Snackbar/style.css";
 import Card from "preact-material-components/Card";
+import { route } from "preact-router";
 
 export default class Confirm extends Component {
   componentWillMount = () => {
@@ -30,7 +31,7 @@ export default class Confirm extends Component {
 
   handleKey = (event) => {
     if (event.code == "Enter") {
-      this.sendData();
+      this.sendConfirm();
       document.removeEventListener("keyup", this.handleKey);
     }
   };
@@ -50,11 +51,14 @@ export default class Confirm extends Component {
     xhttp.setRequestHeader("authorization", this.state.token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
+      if (this.readyState == 4 && this.status == 201) {
         let response = JSON.parse(this.responseText);
+
         Auth.createUser(response);
+        route("/measurements", true);
+      } else if (this.readyState === 4 && this.status === 200) {
         that.bar.MDComponent.show({
-          message: `Benutzer bestätigt`,
+          message: `Email Adresse ist bereits bestätigt`,
         });
       } else {
         try {
@@ -106,7 +110,11 @@ export default class Confirm extends Component {
     return (
       <Card class={style.card}>
         <div class={style.headerContainer}>
-          <span class={style.header}>Benutzer bestätigen</span>
+          <span class={style.header}>Persönliche Daten</span>
+          <span class={style.subHeader}>
+            Um deine Registrierung abzuschließen, gib jetzt deine persönlichen
+            Daten ein. Diese werden für die Berechnung benötigt
+          </span>
         </div>
         <div class={style.inputContainer}>
           <div class={style.input}>
@@ -159,34 +167,37 @@ export default class Confirm extends Component {
               }}
             />
           </div>
-          <div class={style.dateContainer}>
-            <TextField
-              class={style.dateInput}
-              outlined
-              type="date"
-              value={this.state.birthday}
-              onInput={(e) => this.setState({ birthday: e.target.value })}
-            />
-            <span class={style.bDayLabel}>Geburtstag</span>
-          </div>
-          <div class={style.radioContainer}>
-            <div class={style.radioBtn}>
-              <label for="radioMale">männlich</label>
-              <Radio
-                id="radioMale"
-                name="genderOptions"
-                onChange={this.handleRadioChange}
+          <div class={style.row}>
+            <div class={style.dateContainer}>
+              <TextField
+                class={style.dateInput}
+                outlined
+                type="date"
+                value={this.state.birthday}
+                onInput={(e) => this.setState({ birthday: e.target.value })}
               />
+              <span class={style.bDayLabel}>Geburtstag</span>
             </div>
-            <div class={style.radioBtn}>
-              <label for="radioFemale">weiblich</label>
-              <Radio
-                id="radioFemale"
-                name="genderOptions"
-                onChange={this.handleRadioChange}
-              />
+            <div class={style.radioContainer}>
+              <div class={style.radioBtn}>
+                <label for="radioMale">männlich</label>
+                <Radio
+                  id="radioMale"
+                  name="genderOptions"
+                  onChange={this.handleRadioChange}
+                />
+              </div>
+              <div class={style.radioBtn}>
+                <label for="radioFemale">weiblich</label>
+                <Radio
+                  id="radioFemale"
+                  name="genderOptions"
+                  onChange={this.handleRadioChange}
+                />
+              </div>
             </div>
           </div>
+
           <div class={style.input}>
             <TextField
               autocomplete="off"
@@ -196,6 +207,8 @@ export default class Confirm extends Component {
               max={300}
               outlined
               label="Größe der Mutter"
+              helperText="optional"
+              helperTextPersistent
               value={this.state.motherHeight}
               onInput={(e) => {
                 this.setState({ motherHeight: e.target.value });
@@ -224,6 +237,8 @@ export default class Confirm extends Component {
               max={300}
               outlined
               label="Größe des Vaters"
+              helperText="optional"
+              helperTextPersistent
               value={this.state.fatherHeight}
               onInput={(e) => {
                 this.setState({ fatherHeight: e.target.value });
@@ -244,8 +259,8 @@ export default class Confirm extends Component {
             />
           </div>
           <div class={style.btnContainer}>
-            <Button raised onClick={this.sendData}>
-              Speichern
+            <Button raised onClick={this.sendConfirm}>
+              Registrierung abschließen
             </Button>
           </div>
           <div class={style.mySnackbar}>
