@@ -45,7 +45,14 @@ user_password_reset_model = rest_api.model('UserPasswordResetModel', {"token": f
                                                    "password": fields.String(required=True, min_length=2, max_length=16)
                                                    })
 
-user_confirm_model = rest_api.model('UserConformModel', {"token": fields.String(required=True, min_length=1)})
+user_confirm_model = rest_api.model('UserConformModel', {"first_name": fields.String(required=True, min_length=2,max_length=32),
+                                                         "last_name": fields.String(required=True, min_length=4,
+                                                                                    max_length=64),
+                                                         "birthday": fields.Date(required=True),
+                                                         "sex_m_0_f_1": fields.Integer(required=True, min=0, max=1),
+                                                         "height_father": fields.Float(required=False, min=0, max=300),
+                                                         "height_mother": fields.Float(required=False, min=0, max=300)
+                                                         })
 
 
 config_model = rest_api.model('ConfigModel', {"days_reminder": fields.Integer(min=0, max=120,
@@ -403,7 +410,8 @@ class Login(Resource):
 
     @rest_api.expect(login_model, validate=True)
     @rest_api.response(200, 'Success')
-    @rest_api.response(400, 'Wrong credentials')
+    @rest_api.response(401, 'Wrong credentials')
+    @rest_api.response(403, 'Email address is not confirmed')
     def post(self):
 
         req_data = request.get_json()
@@ -415,11 +423,16 @@ class Login(Resource):
 
         if not user_exists:
             return {"success": False,
-                    "msg": "This email does not exist."}, 400
+                    "msg": "This email does not exist."}, 401
 
         if not user_exists.check_password(_password):
             return {"success": False,
-                    "msg": "Wrong credentials."}, 400
+                    "msg": "Wrong credentials."}, 401
+
+        if not user_exists.confirmed:
+            return {"success": False,
+                    "msg": "Email address is not confirmed"}, 403
+
 
         # create access token uwing JWT
         token = jwt.encode({'email': _email, 'exp': datetime.utcnow() + timedelta(minutes=30)}, BaseConfig.SECRET_KEY)
@@ -490,29 +503,77 @@ class Confirm(Resource):
       Confirm users email address
     """
 
-    @rest_api.response(200, 'Success')
+    @rest_api.response(200, 'Email address already confirmed')
+    @rest_api.response(201, 'Account Confirmed and created player details')
     @rest_api.response(401, 'No valid token')
+    @rest_api.doc(security='jwt')
     def post(self):
         req_data = request.get_json()
 
-        _token = req_data.get("token")
+        _last_name = req_data.get("last_name")
+        _first_name = req_data.get("first_name")
+        _birthday = datetime.strptime(req_data.get("birthday"), '%Y-%m-%d')
+        _sex_m_0_f_1 = req_data.get("sex_m_0_f_1")
+        _height_father = req_data.get("height_father")
+        _height_mother = req_data.get("height_mother")
 
-        user = Users.verify_reset_token(_token)
+        token = None
 
-        if not user:
-            return {"success": False,
-                    "msg": "No valid token"}, 401
+        # Check if token is valid
+        if "authorization" in request.headers:
+            token = request.headers["authorization"]
 
+        if not token:
+            return {"success": False, "msg": "Valid JWT token is missing"}, 400
+
+        try:
+            user = Users.verify_reset_token(token)
+
+            if not user:
+                return {"success": False,
+                        "msg": "Sorry. Wrong auth token. This user does not exist."}, 400
+
+            token_expired = db.session.query(JWTTokenBlocklist.id).filter_by(jwt_token=token).scalar()
+
+            if token_expired is not None:
+                return {"success": False, "msg": "Token revoked."}, 400
+
+        except:
+            return {"success": False, "msg": "Token is invalid"}, 400
+
+        # Check if user is alread confirmed
         if user.confirmed:
             return {"success": True,
                     "msg": "Email address already confirmed. Please login."}, 200
 
+
+        # Save PlayerDetails to DB
+        playerdetails = PlayerDetail(user_id=user.id, birthday=_birthday, sex_m_0_f_1=_sex_m_0_f_1)
+
+        if _height_father:
+            playerdetails.height_father = _height_father
+        if _height_mother:
+            playerdetails.height_mother = _height_mother
+
+        playerdetails.save()
+
+        # Save last- and firstname to PlayerMaster table
+        playermaster = PlayerMaster(user_id=user.id, last_name=_last_name, first_name=_first_name)
+        playermaster.save()
+
+        # Set user confirmed to true
         user.confirmed = True
         user.confirmed_on = datetime.utcnow()
+        # Set user session
+        user.set_jwt_auth_active(True)
+        # Save confirmed user
         user.save()
 
         return {"success": True,
-                "msg": "You have confirmed your account. Thanks!"}, 200
+                "token": token,
+                "user": user.toJSON(),
+                "msg": "Successful confirmed account. User is Logged in"}, 201
+
 
 
 @rest_api.route('/api/configurations')

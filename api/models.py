@@ -63,7 +63,7 @@ class Users(db.Model):
         db.session.commit()
 
     def get_jwt_token(self, expires=500):
-        return jwt.encode({'email': self.email, 'exp': datetime.utcnow() + timedelta(hours=4)}, BaseConfig.SECRET_KEY)
+        return jwt.encode({'email': self.email, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
 
     @staticmethod
     def verify_reset_token(token):
@@ -137,8 +137,8 @@ class PlayerDetail(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), primary_key=True)
     birthday = db.Column(db.DateTime(), nullable=False)
     sex_m_0_f_1 = db.Column(db.Integer(), nullable=False)
-    height_father = db.Column(db.Integer(), nullable=False)
-    height_mother = db.Column(db.Integer(), nullable=False)
+    height_father = db.Column(db.Integer())
+    height_mother = db.Column(db.Integer())
 
     @classmethod
     def get_by_id(cls, id):
