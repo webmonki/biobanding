@@ -41,18 +41,25 @@ export default class Menu extends Component {
     } else {
       content = (
         <div class={style.searchContainer}>
-          <div class={style.menuHeight}>
-            <TextField
-              autocomplete="off"
-              label="Suche"
-              outlined
-              value={this.state.search}
-              onKeyUp={(e) => {
-                let val = e.target.value;
-                this.setState({ search: val });
-                this.props.setSearchVal(val);
-              }}
-            />
+          <div class={style.search}>
+            <i
+              class={`${"material-icons"} ${style.searchIcon}`}
+              aria-hidden="true"
+            >
+              search
+            </i>
+            <div class={`${style.menuHeight} ${style.searchInput}`}>
+              <TextField
+                autocomplete="off"
+                value={this.state.search}
+                outlined
+                onKeyUp={(e) => {
+                  let val = e.target.value;
+                  this.setState({ search: val });
+                  this.props.setSearchVal(val);
+                }}
+              />
+            </div>
           </div>
 
           <div class={style.menuBtnContainer}>
@@ -69,7 +76,7 @@ export default class Menu extends Component {
                 class={`${"material-icons"} ${style.menuBtnIcon}`}
                 aria-hidden="true"
               >
-                add
+                add_circle_outline
               </i>
             </button>
           </div>

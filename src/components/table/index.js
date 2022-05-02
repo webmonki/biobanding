@@ -9,6 +9,11 @@ import "preact-material-components/Checkbox/style.css";
 import SortIcon from "./sortIcon";
 import Menu from "./menu";
 
+const testTable = [
+  { ergebnis: 1.9, result: 4.5, solution: 2.2 },
+  { ergebnis: 2.6, result: 5.4, solution: 1.1 },
+];
+
 export default class Table extends Component {
   componentWillMount = () => {
     this.setPage(1);
@@ -272,6 +277,68 @@ export default class Table extends Component {
     return style.editBtn;
   };
 
+  renderSubTable = () => {
+    return (
+      <tr>
+        <table class={style.subTable}>
+          <tr>
+            <th>Result</th>
+            <th>Ergebnis</th>
+            <th>Solution</th>
+          </tr>
+          <tr>
+            <td>1.1</td>
+            <td>2.2</td>
+            <td>3.3</td>
+          </tr>
+          <tr>
+            <td>2.5</td>
+            <td>3.3</td>
+            <td>5</td>
+          </tr>
+        </table>
+      </tr>
+    );
+  };
+
+  renderTableContent = (key, row) => {
+    return (
+      <tr>
+        <td>
+          <div class={style.tdIconContainer}>
+            <button
+              onClick={() => this.props.clickEdit(key)}
+              class={style.editBtn}
+            >
+              <i
+                class={`${"material-icons"} ${style.editIcon}`}
+                aria-hidden="true"
+              >
+                edit
+              </i>
+            </button>
+            <Formfield>
+              <Checkbox
+                name="deleteCheck"
+                value={key}
+                checked={this.getCheckState(key)}
+                onChange={(e) => {
+                  this.addToCheckList(key);
+                }}
+              />
+            </Formfield>
+          </div>
+        </td>
+        {Object.keys(row).map((key) => {
+          if (key === "Id" || key === "userID") {
+            return undefined;
+          }
+          return <td>{row[key]}</td>;
+        })}
+      </tr>
+    );
+  };
+
   createTableBody = () => {
     let page = this.state.page;
     let data = this.getData();
@@ -286,41 +353,7 @@ export default class Table extends Component {
           <tbody>
             {pageData.map((row) => {
               let key = row[this.props.idKey];
-              return (
-                <tr>
-                  <td>
-                    <div class={style.tdIconContainer}>
-                      <button
-                        onClick={() => this.props.clickEdit(key)}
-                        class={style.editBtn}
-                      >
-                        <i
-                          class={`${"material-icons"} ${style.editIcon}`}
-                          aria-hidden="true"
-                        >
-                          edit
-                        </i>
-                      </button>
-                      <Formfield>
-                        <Checkbox
-                          name="deleteCheck"
-                          value={key}
-                          checked={this.getCheckState(key)}
-                          onChange={(e) => {
-                            this.addToCheckList(key);
-                          }}
-                        />
-                      </Formfield>
-                    </div>
-                  </td>
-                  {Object.keys(row).map((key) => {
-                    if (key === "Id" || key === "userID") {
-                      return undefined;
-                    }
-                    return <td>{row[key]}</td>;
-                  })}
-                </tr>
-              );
+              return this.renderTableContent(key, row);
             })}
           </tbody>
         );

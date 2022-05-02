@@ -221,6 +221,7 @@ tr:hover {
 	justify-content: space-between;
 	align-items: center;
 	padding: 15px 30px 15px 0px;
+
 }
 
 .deleteContainer {
@@ -230,7 +231,6 @@ tr:hover {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	box-shadow: var(--global-shadow);
 	cursor: pointer;
 }
 
@@ -287,4 +287,32 @@ tr:hover {
 
 .menuHeight {
 	transform: scale( 0.7 );
+}
+
+.subTable {
+	background-color: red;
+	position: absolute;
+
+}
+
+.content {
+	background-color: aqua;
+}
+
+.search {
+	display: flex;
+	align-items: center;
+	padding-left: 30px;
+}
+
+.searchInput {
+	position: relative;
+	right: 5px;
+}
+
+.searchIcon {
+	color: rgba(0, 0, 0, 0.5);
+	font-size: 30px;
+	position: relative;
+	left: 10px;
 }
