@@ -199,7 +199,6 @@ export default class Measurements extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         let response = JSON.parse(this.responseText);
-        console.log(response);
         // that.setState({ responseFBClass : style.feedbackSucc });
         // that.setState({ responseFB : 'Übersicht erfolgreich geladen' });
         that.setState({ measurements: response.measurements });

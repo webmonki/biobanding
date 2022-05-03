@@ -138,7 +138,7 @@ export default class Table extends Component {
               </Formfield>
             </th>
             {cols.map((name) => {
-              if (name === "Id" || name === "userID") {
+              if (name === "Id" || name === "userID" || name === "collapse") {
                 return undefined;
               }
 
@@ -156,7 +156,7 @@ export default class Table extends Component {
       let tableHeader = (
         <tr>
           {cols.map((name) => {
-            if (name === "Id" || name === "userID") {
+            if (name === "Id" || name === "userID" || name === "collapse") {
               return undefined;
             }
             return <th>{name}</th>;
@@ -274,40 +274,37 @@ export default class Table extends Component {
     return style.editBtn;
   };
 
-  renderSubTable = (id) => {
+  renderSubTable = (id, row) => {
     let cols = Object.keys(this.props.data[0]);
 
-    return (
-      <tr class={style.subTableRow} id={"subTableRow"}>
-        <td colSpan={cols.length} class={style.subTableData}>
-          <div class={style.subTableContainer} id={id}>
-            <table class={style.subTable}>
-              <caption>Unter Tabelle</caption>
-              <tr>
-                <th>Result</th>
-                <th>Ergebnis</th>
-                <th>Solution</th>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>5</td>
-                <td>6</td>
-              </tr>
-              <tr>
-                <td>7</td>
-                <td>8</td>
-                <td>9</td>
-              </tr>
-            </table>
-          </div>
-        </td>
-      </tr>
-    );
+    let data = row.collapse;
+
+    if (data !== undefined) {
+      let tableHeaders = Object.keys(data);
+
+      return (
+        <tr class={style.subTableRow} id={"subTableRow"}>
+          <td colSpan={cols.length} class={style.subTableData}>
+            <div class={style.subTableContainer} id={id}>
+              <table class={style.subTable}>
+                <tr>
+                  {tableHeaders.map((header) => (
+                    <th>{header}</th>
+                  ))}
+                </tr>
+                <tr>
+                  {tableHeaders.map((key) => (
+                    <td>{data[key]}</td>
+                  ))}
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      );
+    }
+
+    return undefined;
   };
 
   collapse = (id) => {
@@ -322,6 +319,24 @@ export default class Table extends Component {
       collIcon.innerHTML = "arrow_drop_up";
     }
     this.getPageSize();
+  };
+
+  getCollapseBtn = (key, row) => {
+    if (row.collapse !== undefined) {
+      return (
+        <button onCLick={() => this.collapse(key)} class={style.menuBtn}>
+          <i
+            class={`${"material-icons"} ${style.menuBtnIcon}`}
+            aria-hidden="true"
+            id={key + "icon"}
+          >
+            arrow_drop_down
+          </i>
+        </button>
+      );
+    }
+
+    return undefined;
   };
 
   renderTableContent = (key, row) => {
@@ -347,19 +362,11 @@ export default class Table extends Component {
                 }}
               />
             </Formfield>
-            <button onCLick={() => this.collapse(key)} class={style.menuBtn}>
-              <i
-                class={`${"material-icons"} ${style.menuBtnIcon}`}
-                aria-hidden="true"
-                id={key + "icon"}
-              >
-                arrow_drop_down
-              </i>
-            </button>
+            {this.getCollapseBtn(key, row)}
           </div>
         </td>
         {Object.keys(row).map((key) => {
-          if (key === "Id" || key === "userID") {
+          if (key === "Id" || key === "userID" || key === "collapse") {
             return undefined;
           }
           return <td>{row[key]}</td>;
@@ -383,7 +390,7 @@ export default class Table extends Component {
           return (
             <tbody>
               {this.renderTableContent(key, row)}
-              {this.renderSubTable(key)}
+              {this.renderSubTable(key, row)}
             </tbody>
           );
         });
