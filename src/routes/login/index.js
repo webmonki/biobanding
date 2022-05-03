@@ -102,8 +102,6 @@ export default class Login extends Component {
     let status = this.state.loginStatus;
     let showInstruction = this.props.showInstruction;
 
-    console.log("SHOW: ", showInstruction);
-
     if (showInstruction) {
       return (
         <div class={style.inputContainer}>

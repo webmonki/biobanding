@@ -26,7 +26,6 @@ export default class App extends Component {
    */
 
   componentWillMount = () => {
-    console.log("MOUNT");
     this.setState({ showInstruction: false });
   };
 
@@ -51,7 +50,6 @@ export default class App extends Component {
   };
 
   render() {
-    console.log("SHOW INST: ", this.state.showInstruction);
     return (
       <div id="app">
         <Header />
