@@ -890,10 +890,17 @@ class Measurements(Resource):
 
             for a, u in query:
 
-                result_dict = {'Id': a.id, 'Benutzername': u, 'Datum': dumps(a.date_measured, default=json_serial),
-                               'Größe': a.height, 'Sitzgröße': a.sitting_height,
-                               'Körperspanne': a.body_span, 'Gewicht': a.weight, 'YAPHV': a.result}
-
+                result_dict = {'Id': a.id,
+                               'Benutzername': u,
+                               'Datum': dumps(a.date_measured, default=json_serial),
+                               'Größe': a.height,
+                               'Sitzgröße': a.sitting_height,
+                               'Körperspanne': a.body_span,
+                               'Gewicht': a.weight,
+                                'collapse': {'YAPHV': a.result,
+                                             'PHV': 'TBD',
+                                             'BMI': 'TBD',
+                                             'AK_BIO': 'TBD'}}
                 result.append(result_dict)
 
             return {"success": True,
