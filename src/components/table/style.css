@@ -291,8 +291,10 @@ tr:hover {
 
 .subTable {
 	background-color: red;
-	position: absolute;
+}
 
+.subTableRow {
+	height: 10px;
 }
 
 .content {

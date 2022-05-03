@@ -279,7 +279,7 @@ export default class Table extends Component {
 
   renderSubTable = () => {
     return (
-      <tr>
+      <tr class={style.subTableRow}>
         <table class={style.subTable}>
           <tr>
             <th>Result</th>
@@ -349,14 +349,15 @@ export default class Table extends Component {
       let pageData = data.slice(indexStart, indexEnd);
 
       if (this.props.editable) {
-        let tableBody = (
-          <tbody>
-            {pageData.map((row) => {
-              let key = row[this.props.idKey];
-              return this.renderTableContent(key, row);
-            })}
-          </tbody>
-        );
+        let tableBody = pageData.map((row) => {
+          let key = row[this.props.idKey];
+          return (
+            <tbody>
+              {this.renderTableContent(key, row)}
+              {this.renderSubTable()}
+            </tbody>
+          );
+        });
         return tableBody;
       }
       let tableBody = (
