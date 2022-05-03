@@ -15,7 +15,7 @@ import "preact-material-components/Snackbar/style.css";
 class Form extends Component {
   componentWillMount = () => {
     this.setState({ btnDisabled: true });
-    this.setState({ loginStatus: false });
+    this.setState({ loginStatus: true });
   };
 
   componentDidMount = () => {
