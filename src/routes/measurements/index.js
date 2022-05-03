@@ -106,7 +106,7 @@ export default class Measurements extends Component {
         let idList = [];
         let usernameList = [];
         response["users:"].forEach((user) => {
-          usernameList.push(user.username);
+          usernameList.push(user.Benutzername);
           idList.push(user.userID);
         });
         that.setState({ usernames: usernameList });
@@ -199,6 +199,7 @@ export default class Measurements extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         let response = JSON.parse(this.responseText);
+        console.log(response);
         // that.setState({ responseFBClass : style.feedbackSucc });
         // that.setState({ responseFB : 'Übersicht erfolgreich geladen' });
         that.setState({ measurements: response.measurements });
