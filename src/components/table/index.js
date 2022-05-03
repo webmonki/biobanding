@@ -9,11 +9,6 @@ import "preact-material-components/Checkbox/style.css";
 import SortIcon from "./sortIcon";
 import Menu from "./menu";
 
-const testTable = [
-  { ergebnis: 1.9, result: 4.5, solution: 2.2 },
-  { ergebnis: 2.6, result: 5.4, solution: 1.1 },
-];
-
 export default class Table extends Component {
   componentWillMount = () => {
     this.setPage(1);
@@ -25,6 +20,8 @@ export default class Table extends Component {
     this.setState({ checkList: [] });
 
     this.setState({ newData: this.props.data });
+
+    this.getPageSize();
   };
 
   componentDidMount = () => {
@@ -281,7 +278,7 @@ export default class Table extends Component {
     let cols = Object.keys(this.props.data[0]);
 
     return (
-      <tr class={style.subTableRow}>
+      <tr class={style.subTableRow} id={"subTableRow"}>
         <td colSpan={cols.length} class={style.subTableData}>
           <div class={style.subTableContainer} id={id}>
             <table class={style.subTable}>
@@ -324,58 +321,63 @@ export default class Table extends Component {
       coll.style.maxHeight = coll.scrollHeight + "px";
       collIcon.innerHTML = "arrow_drop_up";
     }
+    this.getPageSize();
   };
 
   renderTableContent = (key, row) => {
-    return (
-      <tr>
-        <td>
-          <div class={style.tdIconContainer}>
-            <button onClick={() => this.props.clickEdit} class={style.editBtn}>
-              <i
-                class={`${"material-icons"} ${style.editIcon}`}
-                aria-hidden="true"
+    if (this.props.title === "measurements")
+      return (
+        <tr>
+          <td id={"tableData"}>
+            <div class={style.tdIconContainer}>
+              <button
+                onClick={() => this.props.clickEdit}
+                class={style.editBtn}
               >
-                edit
-              </i>
-            </button>
-            <Formfield>
-              <Checkbox
-                name="deleteCheck"
-                value={key}
-                checked={this.getCheckState(key)}
-                onChange={(e) => {
-                  this.addToCheckList(key);
-                }}
-              />
-            </Formfield>
-            <button onCLick={() => this.collapse(key)} class={style.menuBtn}>
-              <i
-                class={`${"material-icons"} ${style.menuBtnIcon}`}
-                aria-hidden="true"
-                id={key + "icon"}
-              >
-                arrow_drop_down
-              </i>
-            </button>
-          </div>
-        </td>
-        {Object.keys(row).map((key) => {
-          if (key === "Id" || key === "userID") {
-            return undefined;
-          }
-          return <td>{row[key]}</td>;
-        })}
-      </tr>
-    );
+                <i
+                  class={`${"material-icons"} ${style.editIcon}`}
+                  aria-hidden="true"
+                >
+                  edit
+                </i>
+              </button>
+              <Formfield>
+                <Checkbox
+                  name="deleteCheck"
+                  value={key}
+                  checked={this.getCheckState(key)}
+                  onChange={(e) => {
+                    this.addToCheckList(key);
+                  }}
+                />
+              </Formfield>
+              <button onCLick={() => this.collapse(key)} class={style.menuBtn}>
+                <i
+                  class={`${"material-icons"} ${style.menuBtnIcon}`}
+                  aria-hidden="true"
+                  id={key + "icon"}
+                >
+                  arrow_drop_down
+                </i>
+              </button>
+            </div>
+          </td>
+          {Object.keys(row).map((key) => {
+            if (key === "Id" || key === "userID") {
+              return undefined;
+            }
+            return <td>{row[key]}</td>;
+          })}
+        </tr>
+      );
   };
 
   createTableBody = () => {
     let page = this.state.page;
     let data = this.getData();
     if (data !== undefined) {
-      let indexEnd = page * this.props.pageSize;
-      let indexStart = indexEnd - this.props.pageSize;
+      let indexEnd = page * this.state.pageSize;
+      let indexStart = indexEnd - this.state.pageSize;
 
       let pageData = data.slice(indexStart, indexEnd);
 
@@ -422,17 +424,30 @@ export default class Table extends Component {
     }
   };
 
+  getPageSize = () => {
+    let maxHeight = window.innerHeight;
+    let tableData = document.getElementById("tableData");
+    let subTable = document.getElementById("subTableRow");
+
+    if (tableData !== null) {
+      let dataHeight = tableData.offsetHeight;
+      let subTableHeight = subTable.offsetHeight;
+    }
+
+    this.setState({ pageSize: this.props.pageSize });
+  };
+
   getPageCount = () => {
     if (this.state.data !== undefined) {
       let pageCount;
-      if (this.state.data.length === this.props.pageSize) {
+      if (this.state.data.length === this.state.pageSize) {
         pageCount = 1;
       }
-      if (this.state.data.length < this.props.pageSize) {
+      if (this.state.data.length < this.state.pageSize) {
         pageCount = 1;
       }
-      if (this.state.data.length > this.props.pageSize) {
-        pageCount = (this.props.data.length / this.props.pageSize + 1)
+      if (this.state.data.length > this.state.pageSize) {
+        pageCount = (this.props.data.length / this.state.pageSize + 1)
           .toString()
           .split(".")[0];
 
