@@ -246,8 +246,9 @@ class AllUsers(Resource):
             userList.append(
                 {
                 "userID": row.id,
-                "username": row.username,
-                "email": row.email}
+                "Benutzername": row.username,
+                "E-Mail": row.email
+                }
             )
         return {"success": True,
                 "users:": userList}, 200
@@ -786,12 +787,16 @@ class Anthropometric(Resource):
             measurements.append(
                 {"id": row.id,
                 "userID": row.user_id,
-                "date_measured": dumps(row.date_measured, default=json_serial),
-                "height": row.height,
-                "sitting_height": row.sitting_height,
-                "body_span": row.body_span,
-                "weight": row.weight,
-                "result": row.result}
+                "Datum": dumps(row.date_measured, default=json_serial),
+                "Größe": row.height,
+                "Sitzgröße": row.sitting_height,
+                "Körperspanne": row.body_span,
+                "Gewicht": row.weight,
+                "collapse": {"YAPHV": row.result,
+                             "PHV": 'TBD',
+                             "BMI": 'TBD',
+                             "AK_BIO": 'TBD'}
+                 }
             )
         return {"success": True,
                 "measurements:": measurements}, 200
