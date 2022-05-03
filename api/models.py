@@ -13,8 +13,10 @@ import jwt
 
 db = SQLAlchemy()
 
-@dataclass
+
 class Users(db.Model):
+    __tablename__ = 'users'
+
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(32), nullable=False)
     email = db.Column(db.String(64), nullable=False)
@@ -25,6 +27,9 @@ class Users(db.Model):
     date_last_measurement_reminder = db.Column(db.Date)
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
     confirmed_on = db.Column(db.DateTime, nullable=True)
+    is_activ = db.Column(db.Boolean(), nullable=False, default=True)
+
+    playermaster = db.relationship("PlayerMaster", back_populates="users", uselist=False)
 
 
     def __repr__(self):
@@ -59,7 +64,17 @@ class Users(db.Model):
         self.is_admin = set_status
 
     def delete(self):
-        db.session.delete(self)
+        # Anonymize PlayerMaster
+        self.playermaster.first_name = "DELETED"
+        self.playermaster.last_name = "DELETED"
+        self.email = "DELETED"
+        self.username = "DELETED"
+        self.is_activ = False
+        self.save()
+
+        # Anonymize user data
+
+
         db.session.commit()
 
     def get_jwt_token(self, expires=500):
@@ -76,7 +91,7 @@ class Users(db.Model):
 
     @classmethod
     def get_all_users(cls):
-        users = cls.query.all()
+        users = cls.query.filter_by(is_activ=True).all()
         return users
 
     @classmethod
@@ -118,11 +133,15 @@ class JWTTokenBlocklist(db.Model):
         db.session.add(self)
         db.session.commit()
 
-@dataclass
+
 class PlayerMaster(db.Model):
+    __tablename__ = 'playermaster'
+
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), primary_key=True)
     first_name = db.Column(db.String(), nullable=False)
     last_name = db.Column(db.String(), nullable=False)
+
+    users = db.relationship("Users", back_populates="playermaster")
 
     @classmethod
     def get_by_id(cls, id):

@@ -345,10 +345,11 @@ class EditUser(Resource):
         try:
             user = Users.get_by_id(id)
             user.delete()
-        except:
+        except Exception as e:
+            print(e)
             return {
                 "success": False,
-                "msg": "Could not delete User"}, 400
+                "msg": "Could not delete User {}".format(e)}, 400
 
         return {"success": True}, 200
 
@@ -586,7 +587,7 @@ class EditConfiguration(Resource):
     @token_required
     def post(self, current_user):
         """Updates the admin configuration"""
-        from api import app
+
         req_data = request.get_json()
         _days_reminder = req_data.get("days_reminder")
         _mail_server = req_data.get("mail_server")
