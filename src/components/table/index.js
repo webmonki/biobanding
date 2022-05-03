@@ -277,28 +277,53 @@ export default class Table extends Component {
     return style.editBtn;
   };
 
-  renderSubTable = () => {
+  renderSubTable = (id) => {
+    let cols = Object.keys(this.props.data[0]);
+
     return (
       <tr class={style.subTableRow}>
-        <table class={style.subTable}>
-          <tr>
-            <th>Result</th>
-            <th>Ergebnis</th>
-            <th>Solution</th>
-          </tr>
-          <tr>
-            <td>1.1</td>
-            <td>2.2</td>
-            <td>3.3</td>
-          </tr>
-          <tr>
-            <td>2.5</td>
-            <td>3.3</td>
-            <td>5</td>
-          </tr>
-        </table>
+        <td colSpan={cols.length} class={style.subTableData}>
+          <div class={style.subTableContainer} id={id}>
+            <table class={style.subTable}>
+              <caption>Unter Tabelle</caption>
+              <tr>
+                <th>Result</th>
+                <th>Ergebnis</th>
+                <th>Solution</th>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+              </tr>
+            </table>
+          </div>
+        </td>
       </tr>
     );
+  };
+
+  collapse = (id) => {
+    let coll = document.getElementById(id);
+    let collIcon = document.getElementById(id + "icon");
+
+    if (coll.style.maxHeight) {
+      coll.style.maxHeight = null;
+      collIcon.innerHTML = "arrow_drop_down";
+    } else {
+      coll.style.maxHeight = coll.scrollHeight + "px";
+      collIcon.innerHTML = "arrow_drop_up";
+    }
   };
 
   renderTableContent = (key, row) => {
@@ -306,10 +331,7 @@ export default class Table extends Component {
       <tr>
         <td>
           <div class={style.tdIconContainer}>
-            <button
-              onClick={() => this.props.clickEdit(key)}
-              class={style.editBtn}
-            >
+            <button onClick={() => this.props.clickEdit} class={style.editBtn}>
               <i
                 class={`${"material-icons"} ${style.editIcon}`}
                 aria-hidden="true"
@@ -327,6 +349,15 @@ export default class Table extends Component {
                 }}
               />
             </Formfield>
+            <button onCLick={() => this.collapse(key)} class={style.editBtn}>
+              <i
+                class={`${"material-icons"} ${style.editIcon}`}
+                aria-hidden="true"
+                id={key + "icon"}
+              >
+                arrow_drop_down
+              </i>
+            </button>
           </div>
         </td>
         {Object.keys(row).map((key) => {
@@ -354,7 +385,7 @@ export default class Table extends Component {
           return (
             <tbody>
               {this.renderTableContent(key, row)}
-              {this.renderSubTable()}
+              {this.renderSubTable(key)}
             </tbody>
           );
         });
