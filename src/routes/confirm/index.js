@@ -82,7 +82,13 @@ export default class Confirm extends Component {
         break;
     }
 
-    let data = `{
+    let data;
+
+    if (
+      this.state.motherHeight !== undefined &&
+      this.state.fatherHeight !== undefined
+    ) {
+      data = `{
             "first_name": "${this.state.firstname}",
 			"last_name": "${this.state.lastname}",
 			"birthday": "${this.state.birthday}",
@@ -90,6 +96,36 @@ export default class Confirm extends Component {
 			"height_father": ${this.state.fatherHeight},
 			"height_mother": ${this.state.motherHeight}
         }`;
+    } else if (
+      this.state.motherHeight !== undefined &&
+      this.state.fatherHeight === undefined
+    ) {
+      data = `{
+            "first_name": "${this.state.firstname}",
+			"last_name": "${this.state.lastname}",
+			"birthday": "${this.state.birthday}",
+			"sex_m_0_f_1" : ${this.sex},
+			"height_mother": ${this.state.motherHeight}
+        }`;
+    } else if (
+      this.state.motherHeight === undefined &&
+      this.state.fatherHeight !== undefined
+    ) {
+      data = `{
+            "first_name": "${this.state.firstname}",
+			"last_name": "${this.state.lastname}",
+			"birthday": "${this.state.birthday}",
+			"sex_m_0_f_1" : ${this.sex},
+			"height_father": ${this.state.fatherHeight}        
+		}`;
+    } else {
+      data = `{
+            "first_name": "${this.state.firstname}",
+			"last_name": "${this.state.lastname}",
+			"birthday": "${this.state.birthday}",
+			"sex_m_0_f_1" : ${this.sex}
+        }`;
+    }
     xhttp.send(data);
   };
 

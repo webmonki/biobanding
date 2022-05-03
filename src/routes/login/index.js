@@ -12,7 +12,7 @@ import "preact-material-components/TextField/style.css";
 import Snackbar from "preact-material-components/Snackbar";
 import "preact-material-components/Snackbar/style.css";
 
-class Form extends Component {
+export default class Login extends Component {
   componentWillMount = () => {
     this.setState({ btnDisabled: true });
     this.setState({ loginStatus: true });
@@ -100,6 +100,30 @@ class Form extends Component {
 
   renderContent = () => {
     let status = this.state.loginStatus;
+    let showInstruction = this.props.showInstruction;
+
+    if (showInstruction) {
+      return (
+        <div class={style.inputContainer}>
+          <div class={style.loginLabel}>Registrierung abschließen</div>
+          <span class={style.msg}>
+            Um die Registrierung abzuschließen, folgen Sie bitte den Anweisungen
+            in der Bestätigungsmail.
+          </span>
+          <div class={style.btnContainer}>
+            <Button
+              class={style.secondaryBtn}
+              onClick={() => {
+                this.setState({ loginStatus: true });
+                this.props.setInstructions(false);
+              }}
+            >
+              Anmelden
+            </Button>
+          </div>
+        </div>
+      );
+    }
 
     if (status) {
       return (
@@ -215,11 +239,5 @@ class Form extends Component {
         </div>
       </Card>
     );
-  }
-}
-
-export default class Login extends Component {
-  render() {
-    return <Form />;
   }
 }

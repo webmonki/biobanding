@@ -25,6 +25,10 @@ export default class App extends Component {
    *	@param {string} event.url	The newly routed URL
    */
 
+  componentWillMount = () => {
+    this.setState({ showInstruction: false });
+  };
+
   handleRoute = async (e) => {
     let auth = Auth.getAuth();
     const isPublicRoute = publicRoutes.some((route) => e.url.match(route));
@@ -41,13 +45,21 @@ export default class App extends Component {
     this.setState({ currentUrl: e.url });
   };
 
+  setInstructions = (val) => {
+    this.setState({ showInstruction: val });
+  };
+
   render() {
     return (
       <div id="app">
         <Header />
         <Router onChange={this.handleRoute}>
-          <Login path="/login" />
-          <Signup path="/signup" />
+          <Login
+            path="/login"
+            showInstruction={this.state.showInstruction}
+            setInstructions={this.setInstructions}
+          />
+          <Signup path="/signup" setInstructions={this.setInstructions} />
           <Profile path="/profile/" user="me" />
           <Profile path="/profile/:user" />
           <Measurements path="/measurements" />
