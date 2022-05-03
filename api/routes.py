@@ -258,6 +258,7 @@ class AllUsers(Resource):
 class ResetPasswort(Resource):
 
     @rest_api.response(200, 'Success')
+    @rest_api.response(403, 'Only one password reset email can be sent per minute')
     @rest_api.response(404, 'The email address does not exist')
     def put(self):
         """Send email to given address with option to reset the password."""
@@ -271,12 +272,27 @@ class ResetPasswort(Resource):
         url = "{}/reset?token={}".format(os.environ['PREACT_APP_HOST_URI'], token)
 
         if user:
-            send_email_with_token(user, 'Passwort vergessen', 'reset_email.html', url)
-            return {"success": True,
-                    "msg": "Link to reset the password was sent via email to {}.".format(_email)}, 200
+            block_reset = True
+            # Check id user has already requested a password reset
+            if user.date_last_password_reset is not None:
+                # Get seconds since last reset
+                delta = (datetime.utcnow() - user.date_last_password_reset).total_seconds() / 60
+                # Check if the last mail was sent more than one minute ago
+                if delta <= 1:
+                    block_reset = True
+            if not block_reset:
+                user.date_last_password_reset = datetime.utcnow()
+                user.save()
+                send_email_with_token(user, 'Passwort vergessen', 'reset_email.html', url)
 
-        return {"success": False,
-                "msg": "The email address {} does not exist.".format(_email)}, 404
+                return {"success": True,
+                        "msg": "Link to reset the password was sent via email to {}.".format(_email)}, 200
+            else:
+                return {"success": False,
+                        "msg": "Only one password reset email can be sent per minute."}, 403
+        else:
+            return {"success": False,
+                    "msg": "The email address {} does not exist.".format(_email)}, 404
 
 
 @rest_api.expect((user_password_reset_model))

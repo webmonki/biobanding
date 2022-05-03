@@ -94,7 +94,7 @@ def reminder():
             # Check if user is activ
             if user.is_active:
                 # Check if the user has already received a reminder email
-                if user.date_last_measurement_reminder is not None :
+                if user.date_last_measurement_reminder is not None:
                     delta2 = (date.today() - user.date_last_measurement_reminder).days
                     if delta2 >= 7:
                         # Set date of reminder in user table
