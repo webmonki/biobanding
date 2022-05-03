@@ -325,51 +325,47 @@ export default class Table extends Component {
   };
 
   renderTableContent = (key, row) => {
-    if (this.props.title === "measurements")
-      return (
-        <tr>
-          <td id={"tableData"}>
-            <div class={style.tdIconContainer}>
-              <button
-                onClick={() => this.props.clickEdit}
-                class={style.editBtn}
+    return (
+      <tr>
+        <td id={"tableData"}>
+          <div class={style.tdIconContainer}>
+            <button onClick={() => this.props.clickEdit} class={style.editBtn}>
+              <i
+                class={`${"material-icons"} ${style.editIcon}`}
+                aria-hidden="true"
               >
-                <i
-                  class={`${"material-icons"} ${style.editIcon}`}
-                  aria-hidden="true"
-                >
-                  edit
-                </i>
-              </button>
-              <Formfield>
-                <Checkbox
-                  name="deleteCheck"
-                  value={key}
-                  checked={this.getCheckState(key)}
-                  onChange={(e) => {
-                    this.addToCheckList(key);
-                  }}
-                />
-              </Formfield>
-              <button onCLick={() => this.collapse(key)} class={style.menuBtn}>
-                <i
-                  class={`${"material-icons"} ${style.menuBtnIcon}`}
-                  aria-hidden="true"
-                  id={key + "icon"}
-                >
-                  arrow_drop_down
-                </i>
-              </button>
-            </div>
-          </td>
-          {Object.keys(row).map((key) => {
-            if (key === "Id" || key === "userID") {
-              return undefined;
-            }
-            return <td>{row[key]}</td>;
-          })}
-        </tr>
-      );
+                edit
+              </i>
+            </button>
+            <Formfield>
+              <Checkbox
+                name="deleteCheck"
+                value={key}
+                checked={this.getCheckState(key)}
+                onChange={(e) => {
+                  this.addToCheckList(key);
+                }}
+              />
+            </Formfield>
+            <button onCLick={() => this.collapse(key)} class={style.menuBtn}>
+              <i
+                class={`${"material-icons"} ${style.menuBtnIcon}`}
+                aria-hidden="true"
+                id={key + "icon"}
+              >
+                arrow_drop_down
+              </i>
+            </button>
+          </div>
+        </td>
+        {Object.keys(row).map((key) => {
+          if (key === "Id" || key === "userID") {
+            return undefined;
+          }
+          return <td>{row[key]}</td>;
+        })}
+      </tr>
+    );
   };
 
   createTableBody = () => {
