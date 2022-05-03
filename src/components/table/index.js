@@ -349,9 +349,9 @@ export default class Table extends Component {
                 }}
               />
             </Formfield>
-            <button onCLick={() => this.collapse(key)} class={style.editBtn}>
+            <button onCLick={() => this.collapse(key)} class={style.menuBtn}>
               <i
-                class={`${"material-icons"} ${style.editIcon}`}
+                class={`${"material-icons"} ${style.menuBtnIcon}`}
                 aria-hidden="true"
                 id={key + "icon"}
               >
