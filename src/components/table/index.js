@@ -91,7 +91,7 @@ export default class Table extends Component {
     data.forEach((obj) => {
       let match = false;
       cols.forEach((col) => {
-        if (col !== "id" && col !== "userID") {
+        if (col !== "id" && col !== "userID" && col !== "Id") {
           if (typeof obj[col] === "number") {
             if (obj[col].toString().match(val)) {
               match = true;
@@ -138,7 +138,12 @@ export default class Table extends Component {
               </Formfield>
             </th>
             {cols.map((name) => {
-              if (name === "Id" || name === "userID" || name === "collapse") {
+              if (
+                name === "Id" ||
+                name === "userID" ||
+                name === "collapse" ||
+                name === "id"
+              ) {
                 return undefined;
               }
 
@@ -156,7 +161,12 @@ export default class Table extends Component {
       let tableHeader = (
         <tr>
           {cols.map((name) => {
-            if (name === "Id" || name === "userID" || name === "collapse") {
+            if (
+              name === "Id" ||
+              name === "userID" ||
+              name === "collapse" ||
+              name === "id"
+            ) {
               return undefined;
             }
             return <th>{name}</th>;
@@ -344,7 +354,12 @@ export default class Table extends Component {
       <tr>
         <td id={"tableData"}>
           <div class={style.tdIconContainer}>
-            <button onClick={() => this.props.clickEdit} class={style.editBtn}>
+            <button
+              onClick={() => {
+                this.props.clickEdit(key);
+              }}
+              class={style.editBtn}
+            >
               <i
                 class={`${"material-icons"} ${style.editIcon}`}
                 aria-hidden="true"
@@ -366,7 +381,12 @@ export default class Table extends Component {
           </div>
         </td>
         {Object.keys(row).map((key) => {
-          if (key === "Id" || key === "userID" || key === "collapse") {
+          if (
+            key === "Id" ||
+            key === "userID" ||
+            key === "collapse" ||
+            key === "id"
+          ) {
             return undefined;
           }
           return <td>{row[key]}</td>;

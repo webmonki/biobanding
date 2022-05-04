@@ -32,6 +32,15 @@ export default class Measurements extends Component {
     }
   };
 
+  componentDidUpdate = () => {
+    console.log("UPDATE: ", this.props.reload);
+    if (this.props.reload) {
+      console.log("LOAD");
+      this.loadData();
+      this.props.unsetReload();
+    }
+  };
+
   loadData = () => {
     if (Auth.check_admin()) {
       this.getOverview();
@@ -79,7 +88,7 @@ export default class Measurements extends Component {
             clickEdit={this.showDialog}
             delete={this.delete}
             showDialog={this.openDialog}
-            idKey="Id"
+            idKey="id"
             title="Messungen"
           />
         </div>
@@ -339,6 +348,7 @@ export default class Measurements extends Component {
   };
 
   showDialog = (id) => {
+    console.log("EDIT: ", id);
     this.setState({ editId: id });
 
     this.state.measurements.forEach((measurement) => {
