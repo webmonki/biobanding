@@ -10,6 +10,8 @@ export default class SortIcon extends Component {
   };
 
   handleIconClick = () => {
+    console.log("CLICKID: ", this.props.id);
+
     if (this.state.arrow === "arrow_downward") {
       this.setState({ arrow: "arrow_upward" });
       this.props.onClickSort(true, this.props.colname);
@@ -23,7 +25,9 @@ export default class SortIcon extends Component {
   };
 
   handleOutsideClick = (event) => {
-    if (document.getElementById(this.props.colname).contains(event.target)) {
+    console.log("ID: ", this.props.id);
+
+    if (document.getElementById(this.props.id).contains(event.target)) {
       // DO NOTHING
     } else {
       window.removeEventListener("click", this.handleOutsideClick);
@@ -31,31 +35,47 @@ export default class SortIcon extends Component {
     }
   };
 
-  getIcon = () => {
-    if (this.state.arrow !== "") {
+  getHeaderContent = () => {
+    if (this.props.alignment === style.alignLeft) {
       return (
-        <i class={"material-icons"} aria-hidden="true">
-          {this.state.arrow}
-        </i>
+        <div
+          id={this.props.id}
+          class={`${this.props.alignment} ${style.headerCell}`}
+          onCLick={() => {
+            window.addEventListener("click", this.handleOutsideClick);
+            this.handleIconClick();
+          }}
+        >
+          <span>{this.props.colname}</span>
+
+          <i class={"material-icons"} aria-hidden="true">
+            {this.state.arrow}
+          </i>
+        </div>
       );
     }
-    return <div class={style.placeholder} />;
+
+    if (this.props.alignment === style.alignRight) {
+      return (
+        <div
+          id={this.props.id}
+          class={`${this.props.alignment} ${style.headerCell}`}
+          onCLick={() => {
+            window.addEventListener("click", this.handleOutsideClick);
+            this.handleIconClick();
+          }}
+        >
+          <i class={"material-icons"} aria-hidden="true">
+            {this.state.arrow}
+          </i>
+          <span>{this.props.colname}</span>
+        </div>
+      );
+    }
   };
 
   render() {
-    return (
-      <div
-        id={this.props.colname}
-        class={`${this.props.alignment} ${style.headerCell}`}
-        onCLick={() => {
-          window.addEventListener("click", this.handleOutsideClick);
-          this.handleIconClick();
-        }}
-      >
-        <span>{this.props.colname}</span>
-
-        {this.getIcon()}
-      </div>
-    );
+    console.log("RENDERID: ", this.props.id);
+    return this.getHeaderContent();
   }
 }

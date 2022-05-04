@@ -127,7 +127,7 @@ export default class Table extends Component {
     }
   };
 
-  createSubTableHeader = () => {
+  createSubTableHeader = (id) => {
     let cols = this.getRangeList(this.state.subTableIndex, this.getColCount());
 
     let tableHeader = (
@@ -143,6 +143,7 @@ export default class Table extends Component {
                 colname={name}
                 onClickSort={this.setSortParams}
                 alignment={this.getTableHeadStyle(name)}
+                id={id + name}
               />
             </th>
           );
@@ -183,6 +184,7 @@ export default class Table extends Component {
                     colname={name}
                     onClickSort={this.setSortParams}
                     alignment={this.getTableHeadStyle(name)}
+                    id={name}
                   />
                 </th>
               );
@@ -353,7 +355,7 @@ export default class Table extends Component {
               </span>
             </div>
             <table class={style.subTable}>
-              {this.createSubTableHeader()}
+              {this.createSubTableHeader(id)}
               <tr>
                 {cols.map((key) => (
                   <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>

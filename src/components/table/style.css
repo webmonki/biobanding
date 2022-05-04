@@ -195,11 +195,6 @@ tr:hover {
 	margin-left: 50px;
 }
 
-.placeholder {
-	width: 24px;
-	height: 1px;
-}
-
 
 .btn {
 	color: var(--mdc-theme-primary);
