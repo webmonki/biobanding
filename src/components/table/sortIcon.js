@@ -6,8 +6,7 @@ import List from "preact-material-components/List";
 
 export default class SortIcon extends Component {
   componentWillMount = () => {
-    this.setState({ arrow: "arrow_downward" });
-    this.setState({ thIconClass: style.dontDisplay });
+    this.setState({ arrow: "" });
   };
 
   handleIconClick = () => {
@@ -15,6 +14,9 @@ export default class SortIcon extends Component {
       this.setState({ arrow: "arrow_upward" });
       this.props.onClickSort(true, this.props.colname);
     } else if (this.state.arrow === "arrow_upward") {
+      this.setState({ arrow: "arrow_downward" });
+      this.props.onClickSort(false, this.props.colname);
+    } else if (this.state.arrow === "") {
       this.setState({ arrow: "arrow_downward" });
       this.props.onClickSort(false, this.props.colname);
     }
@@ -25,25 +27,34 @@ export default class SortIcon extends Component {
       // DO NOTHING
     } else {
       window.removeEventListener("click", this.handleOutsideClick);
-      this.setState({ thIconClass: style.dontDisplay });
+      this.setState({ arrow: "" });
     }
+  };
+
+  getIcon = () => {
+    if (this.state.arrow !== "") {
+      return (
+        <i class={"material-icons"} aria-hidden="true">
+          {this.state.arrow}
+        </i>
+      );
+    }
+    return <div class={style.placeholder} />;
   };
 
   render() {
     return (
       <div
         id={this.props.colname}
-        class={style.headerCell}
+        class={`${this.props.alignment} ${style.headerCell}`}
         onCLick={() => {
-          this.setState({ thIconClass: style.thIcon });
           window.addEventListener("click", this.handleOutsideClick);
           this.handleIconClick();
         }}
       >
-        {this.props.colname}
-        <List.ItemGraphic class={this.state.thIconClass}>
-          {this.state.arrow}
-        </List.ItemGraphic>
+        <span>{this.props.colname}</span>
+
+        {this.getIcon()}
       </div>
     );
   }

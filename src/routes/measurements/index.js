@@ -33,9 +33,7 @@ export default class Measurements extends Component {
   };
 
   componentDidUpdate = () => {
-    console.log("UPDATE: ", this.props.reload);
     if (this.props.reload) {
-      console.log("LOAD");
       this.loadData();
       this.props.unsetReload();
     }
@@ -75,6 +73,7 @@ export default class Measurements extends Component {
             showDialog={this.openDialog}
             idKey="Id"
             title="Messungen"
+            subTableTitle="Ergebnisse"
           />
         </div>
       );
@@ -196,6 +195,29 @@ export default class Measurements extends Component {
     xhttp.send(data);
   };
 
+  transofrmData = (data) => {
+    let newData = [];
+    let cols = Object.keys(data[0]);
+
+    data.forEach((d) => {
+      let dataRow = {};
+      cols.forEach((col) => {
+        if (col !== "collapse") {
+          dataRow[col] = d[col];
+        } else {
+          let collcols = Object.keys(data[0].collapse);
+
+          collcols.forEach((cc) => {
+            dataRow[cc] = d.collapse[cc];
+          });
+        }
+      });
+
+      newData.push(dataRow);
+    });
+    return newData;
+  };
+
   getOverview = () => {
     let that = this;
     let url = Auth.url + "/api/measurements";
@@ -208,9 +230,9 @@ export default class Measurements extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         let response = JSON.parse(this.responseText);
-        // that.setState({ responseFBClass : style.feedbackSucc });
-        // that.setState({ responseFB : 'Übersicht erfolgreich geladen' });
-        that.setState({ measurements: response.measurements });
+        that.setState({
+          measurements: that.transofrmData(response.measurements),
+        });
         that.showTable(true);
       } else {
         try {
@@ -348,7 +370,6 @@ export default class Measurements extends Component {
   };
 
   showDialog = (id) => {
-    console.log("EDIT: ", id);
     this.setState({ editId: id });
 
     this.state.measurements.forEach((measurement) => {

@@ -22,6 +22,8 @@ export default class Table extends Component {
     this.setState({ newData: this.props.data });
 
     this.getPageSize();
+    this.setState({ subTableIndex: 7 });
+    this.setState({ colsHidden: ["id", "Id", "userID"] });
   };
 
   componentDidMount = () => {
@@ -91,7 +93,7 @@ export default class Table extends Component {
     data.forEach((obj) => {
       let match = false;
       cols.forEach((col) => {
-        if (col !== "id" && col !== "userID" && col !== "Id") {
+        if (!this.state.colsHidden.includes(col)) {
           if (typeof obj[col] === "number") {
             if (obj[col].toString().match(val)) {
               match = true;
@@ -117,10 +119,43 @@ export default class Table extends Component {
     this.setState({ sortParams: { ...this.sortParams, dir, key } });
   };
 
+  getTableHeadStyle = (name) => {
+    if (typeof this.props.data[0][name] === "string") {
+      return style.alignLeft;
+    } else if (typeof this.props.data[0][name] === "number") {
+      return style.alignRight;
+    }
+  };
+
+  createSubTableHeader = () => {
+    let cols = this.getRangeList(this.state.subTableIndex, this.getColCount());
+
+    let tableHeader = (
+      <tr>
+        {cols.map((name) => {
+          if (this.state.colsHidden.includes(name)) {
+            return undefined;
+          }
+
+          return (
+            <th>
+              <SortIcon
+                colname={name}
+                onClickSort={this.setSortParams}
+                alignment={this.getTableHeadStyle(name)}
+              />
+            </th>
+          );
+        })}
+      </tr>
+    );
+
+    return tableHeader;
+  };
+
   createTableHeader = () => {
     if (this.props.data !== undefined && this.props.data.length !== 0) {
-      let cols = Object.keys(this.props.data[0]);
-
+      let cols = this.getRangeList(0, this.state.subTableIndex);
       if (this.props.editable) {
         let tableHeader = (
           <tr>
@@ -138,18 +173,17 @@ export default class Table extends Component {
               </Formfield>
             </th>
             {cols.map((name) => {
-              if (
-                name === "Id" ||
-                name === "userID" ||
-                name === "collapse" ||
-                name === "id"
-              ) {
+              if (this.state.colsHidden.includes(name)) {
                 return undefined;
               }
 
               return (
                 <th>
-                  <SortIcon colname={name} onClickSort={this.setSortParams} />
+                  <SortIcon
+                    colname={name}
+                    onClickSort={this.setSortParams}
+                    alignment={this.getTableHeadStyle(name)}
+                  />
                 </th>
               );
             })}
@@ -161,12 +195,7 @@ export default class Table extends Component {
       let tableHeader = (
         <tr>
           {cols.map((name) => {
-            if (
-              name === "Id" ||
-              name === "userID" ||
-              name === "collapse" ||
-              name === "id"
-            ) {
+            if (this.state.colsHidden.includes(name)) {
               return undefined;
             }
             return <th>{name}</th>;
@@ -284,41 +313,61 @@ export default class Table extends Component {
     return style.editBtn;
   };
 
-  renderSubTable = (id, row) => {
+  getTableDataStyle = (data, key) => {
+    if (typeof data[key] === "number") {
+      return style.alignRight;
+    }
+    return style.alignLeft;
+  };
+
+  getColCount = () => {
     let cols = Object.keys(this.props.data[0]);
 
-    let data = row.collapse;
+    return cols.length;
+  };
 
-    if (data !== undefined) {
-      let tableHeaders = Object.keys(data);
-
-      return (
-        <tr class={style.subTableRow} id={"subTableRow"}>
-          <td colSpan={cols.length} class={style.subTableData}>
-            <div class={style.subTableContainer} id={id}>
-              <table class={style.subTable}>
-                <tr>
-                  {tableHeaders.map((header) => (
-                    <th>{header}</th>
-                  ))}
-                </tr>
-                <tr>
-                  {tableHeaders.map((key) => (
-                    <td>{data[key]}</td>
-                  ))}
-                </tr>
-              </table>
-            </div>
-          </td>
-        </tr>
-      );
+  getRangeList = (start, end) => {
+    if (end === undefined) {
+      end = this.getColCount();
     }
+    let cols = Object.keys(this.props.data[0]);
+    let newCols = [];
 
-    return undefined;
+    for (let i = start; i < end; i++) {
+      if (!this.state.colsHidden.includes(cols[i])) newCols.push(cols[i]);
+    }
+    return newCols;
+  };
+
+  renderSubTable = (id, row) => {
+    let cols = this.getRangeList(this.state.subTableIndex, undefined);
+    let colLength = this.getRangeList(0, this.state.subTableIndex).length + 1;
+
+    return (
+      <tr class={style.subTableRow} id={"subTableRow"}>
+        <td colSpan={colLength} class={style.subTableData}>
+          <div class={style.subTableContainer} id={id + "row"}>
+            <div class={style.subTableTitleContainer}>
+              <span class={style.subTableTitle}>
+                {this.props.subTableTitle}
+              </span>
+            </div>
+            <table class={style.subTable}>
+              {this.createSubTableHeader()}
+              <tr>
+                {cols.map((key) => (
+                  <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>
+                ))}
+              </tr>
+            </table>
+          </div>
+        </td>
+      </tr>
+    );
   };
 
   collapse = (id) => {
-    let coll = document.getElementById(id);
+    let coll = document.getElementById(id + "row");
     let collIcon = document.getElementById(id + "icon");
 
     if (coll.style.maxHeight) {
@@ -328,32 +377,30 @@ export default class Table extends Component {
       coll.style.maxHeight = coll.scrollHeight + "px";
       collIcon.innerHTML = "arrow_drop_up";
     }
+
     this.getPageSize();
   };
 
   getCollapseBtn = (key, row) => {
-    if (row.collapse !== undefined) {
-      return (
-        <button onCLick={() => this.collapse(key)} class={style.menuBtn}>
-          <i
-            class={`${"material-icons"} ${style.menuBtnIcon}`}
-            aria-hidden="true"
-            id={key + "icon"}
-          >
-            arrow_drop_down
-          </i>
-        </button>
-      );
-    }
-
-    return undefined;
+    return (
+      <button onCLick={() => this.collapse(key)} class={style.menuBtn}>
+        <i
+          class={`${"material-icons"} ${style.menuBtnIcon}`}
+          aria-hidden="true"
+          id={key + "icon"}
+        >
+          arrow_drop_down
+        </i>
+      </button>
+    );
   };
 
   renderTableContent = (key, row) => {
+    let cols = this.getRangeList(0, this.state.subTableIndex);
     return (
       <tr>
-        <td id={"tableData"}>
-          <div class={style.tdIconContainer}>
+        <td id={"tableData"} class={style.btnsData}>
+          <div class={style.tdBtnsContainer}>
             <button
               onClick={() => {
                 this.props.clickEdit(key);
@@ -381,15 +428,10 @@ export default class Table extends Component {
           </div>
         </td>
         {Object.keys(row).map((key) => {
-          if (
-            key === "Id" ||
-            key === "userID" ||
-            key === "collapse" ||
-            key === "id"
-          ) {
+          if (!cols.includes(key)) {
             return undefined;
           }
-          return <td>{row[key]}</td>;
+          return <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>;
         })}
       </tr>
     );
@@ -399,8 +441,8 @@ export default class Table extends Component {
     let page = this.state.page;
     let data = this.getData();
     if (data !== undefined) {
-      let indexEnd = page * this.state.pageSize;
-      let indexStart = indexEnd - this.state.pageSize;
+      let indexEnd = page * this.getPageSize();
+      let indexStart = indexEnd - this.getPageSize();
 
       let pageData = data.slice(indexStart, indexEnd);
 
@@ -448,29 +490,29 @@ export default class Table extends Component {
   };
 
   getPageSize = () => {
-    let maxHeight = window.innerHeight;
-    let tableData = document.getElementById("tableData");
-    let subTable = document.getElementById("subTableRow");
+    // let maxHeight = window.innerHeight;
+    // let tableData = document.getElementById("tableData");
+    // let subTable = document.getElementById("subTableRow");
 
-    if (tableData !== null) {
-      let dataHeight = tableData.offsetHeight;
-      let subTableHeight = subTable.offsetHeight;
-    }
+    // if (tableData !== null) {
+    //   let dataHeight = tableData.offsetHeight;
+    //   let subTableHeight = subTable.offsetHeight;
+    // }
 
-    this.setState({ pageSize: this.props.pageSize });
+    return this.props.pageSize;
   };
 
   getPageCount = () => {
     if (this.state.data !== undefined) {
       let pageCount;
-      if (this.state.data.length === this.state.pageSize) {
+      if (this.state.data.length === this.getPageSize()) {
         pageCount = 1;
       }
-      if (this.state.data.length < this.state.pageSize) {
+      if (this.state.data.length < this.getPageSize()) {
         pageCount = 1;
       }
-      if (this.state.data.length > this.state.pageSize) {
-        pageCount = (this.props.data.length / this.state.pageSize + 1)
+      if (this.state.data.length > this.getPageSize()) {
+        pageCount = (this.props.data.length / this.getPageSize() + 1)
           .toString()
           .split(".")[0];
 
