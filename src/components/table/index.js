@@ -383,18 +383,22 @@ export default class Table extends Component {
     this.getPageSize();
   };
 
-  getCollapseBtn = (key, row) => {
-    return (
-      <button onCLick={() => this.collapse(key)} class={style.menuBtn}>
-        <i
-          class={`${"material-icons"} ${style.menuBtnIcon}`}
-          aria-hidden="true"
-          id={key + "icon"}
-        >
-          arrow_drop_down
-        </i>
-      </button>
-    );
+  getCollapseBtn = (key) => {
+    if (this.getColCount() > this.state.subTableIndex) {
+      return (
+        <button onCLick={() => this.collapse(key)} class={style.menuBtn}>
+          <i
+            class={`${"material-icons"} ${style.menuBtnIcon}`}
+            aria-hidden="true"
+            id={key + "icon"}
+          >
+            arrow_drop_down
+          </i>
+        </button>
+      );
+    }
+
+    return undefined;
   };
 
   renderTableContent = (key, row) => {
@@ -426,7 +430,7 @@ export default class Table extends Component {
                 }}
               />
             </Formfield>
-            {this.getCollapseBtn(key, row)}
+            {this.getCollapseBtn(key)}
           </div>
         </td>
         {Object.keys(row).map((key) => {

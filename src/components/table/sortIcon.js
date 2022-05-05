@@ -10,8 +10,6 @@ export default class SortIcon extends Component {
   };
 
   handleIconClick = () => {
-    console.log("CLICKID: ", this.props.id);
-
     if (this.state.arrow === "arrow_downward") {
       this.setState({ arrow: "arrow_upward" });
       this.props.onClickSort(true, this.props.colname);
@@ -25,8 +23,6 @@ export default class SortIcon extends Component {
   };
 
   handleOutsideClick = (event) => {
-    console.log("ID: ", this.props.id);
-
     if (document.getElementById(this.props.id).contains(event.target)) {
       // DO NOTHING
     } else {
@@ -75,7 +71,6 @@ export default class SortIcon extends Component {
   };
 
   render() {
-    console.log("RENDERID: ", this.props.id);
     return this.getHeaderContent();
   }
 }
