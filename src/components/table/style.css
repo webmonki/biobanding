@@ -120,12 +120,7 @@ button {
 
 
 
-table {
-	border-collapse: collapse;
-	width: 100%;
-	border-spacing: 0;
-	table-layout: fixed;
-}
+
 
 /* th, td {
 	padding: 8px 16px;
@@ -150,6 +145,7 @@ th {
 .headerCellContainer {
 	display: flex;
 	align-items: center;
+	width: 100%;
 }
 
 .divider {
@@ -158,13 +154,17 @@ th {
 	background-color: rgba(0, 0, 0, 0.10);
 }
 
+table {
+	border-collapse: collapse;
+	width: 100%;
+	border-spacing: 0;
+}
+
 .alignLeft {
 	text-align: left;
 	justify-content: flex-start;
 	padding: 8px;
 	width: 100%;
-	/* max-width: var(--global-table-cell-width);
-	min-width: var(--global-table-cell-width); */
 	max-height: var(--global-table-cell-height);
 	height: var(--global-table-cell-height);
 	min-height: var(--global-table-cell-height);
@@ -175,8 +175,6 @@ th {
 	justify-content: flex-end;
 	padding: 8px;
 	width: 100%;
-	/* max-width: var(--global-table-cell-width);
-	min-width: var(--global-table-cell-width); */
 	max-height: var(--global-table-cell-height);
 	height: var(--global-table-cell-height);
 	min-height: var(--global-table-cell-height);
@@ -341,6 +339,7 @@ tr:hover {
 
 .subTable {
 	border-collapse: collapse;
+	table-layout: fixed;
 }
 
 .subTableRow {
@@ -361,9 +360,8 @@ tr:hover {
 	max-height: 0;
 	overflow: hidden;
 	transition: max-height 0.2s ease-out;
-	padding-left: 10%;
-	padding-right: 10%;
 	height: 200px;
+	padding: 0 10% 0 10%;
 }
 
 .search {
