@@ -184,7 +184,7 @@ export default class Table extends Component {
       if (this.props.editable) {
         let tableHeader = (
           <tr>
-            <th class={style.headerCell}>
+            <th class={style.headerCellContainer}>
               <Formfield class={style.checkAll}>
                 <Checkbox
                   name="deleteCheckAll"
@@ -234,7 +234,7 @@ export default class Table extends Component {
     }
     let tableHeader = (
       <tr>
-        <th>Keine Messungen vorhanden</th>
+        <th>Keine {this.props.title} vorhanden</th>
       </tr>
     );
     return tableHeader;

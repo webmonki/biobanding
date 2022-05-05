@@ -142,10 +142,21 @@ th {
 	min-width: 200px;
 }
 
+.headerCell {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	max-height: var(--global-table-cell-height);
+	height: var(--global-table-cell-height);
+	min-height: var(--global-table-cell-height);
+	width: 100%;
+}
+
 .headerCellContainer {
 	display: flex;
 	align-items: center;
 	width: 100%;
+	cursor: pointer;
 }
 
 .divider {
@@ -158,14 +169,12 @@ table {
 	border-collapse: collapse;
 	width: 100%;
 	border-spacing: 0;
-	table-layout: fixed;
 }
 
 .alignLeft {
 	text-align: left;
 	justify-content: flex-start;
 	padding: 8px;
-	width: 100%;
 	max-height: var(--global-table-cell-height);
 	height: var(--global-table-cell-height);
 	min-height: var(--global-table-cell-height);
@@ -175,7 +184,6 @@ table {
 	text-align: right;
 	justify-content: flex-end;
 	padding: 8px;
-	width: 100%;
 	max-height: var(--global-table-cell-height);
 	height: var(--global-table-cell-height);
 	min-height: var(--global-table-cell-height);
@@ -190,14 +198,7 @@ tr:hover {
 	background-color: #EEEEF1;
 }
 
-.headerCell {
-	display: flex;
-	align-items: center;
-	cursor: pointer;
-	max-height: var(--global-table-cell-height);
-	height: var(--global-table-cell-height);
-	min-height: var(--global-table-cell-height);
-}
+
 
 .deleteBtn {
 	margin-left: 50px;
