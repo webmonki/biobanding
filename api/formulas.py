@@ -1,12 +1,13 @@
 from datetime import datetime
 
-def mirwald(sitting_height:float,
-                    standing_height:float, 
-                    current_date:str, 
-                    birthdate:str, 
-                    weight:float,
-                    gender:int):
-    
+
+# [BEGIN mirwald]
+def mirwald(sitting_height: float,
+            standing_height: float,
+            current_date: str,
+            birthdate: str,
+            weight: float,
+            gender: int) -> dict:
     """This function returns the maturity offset according to the Mirwald method, calculated from the given parameters.
 
         Args:
@@ -27,17 +28,17 @@ def mirwald(sitting_height:float,
                 ak_bio (string): age group by phv
 
     """
-    
+
     # Convert date string to datetime object
     current_date = datetime.strptime(current_date, '%Y-%m-%d')
     birthdate = datetime.strptime(birthdate, '%Y-%m-%d')
-    
+
     # Get chronological age as rounded float
     chronological_age = round((current_date - birthdate).days / 365, 2)
 
     # Calculate leg_length
     leg_length = standing_height - sitting_height
-    
+
     # Determine gender-specific ratio
     if gender == 0:
         ratio = 0.0002708
@@ -45,15 +46,15 @@ def mirwald(sitting_height:float,
         ratio = 0.0001882
     else:
         raise ValueError("gender must be 0 (female) or 1 (male).")
-        
+
     # Calculate maturity offset according to the Mirwald method
-    offset = round(-9.236 + (ratio * leg_length * sitting_height) + (-0.001663 * chronological_age * leg_length) + (0.007216 * chronological_age * sitting_height) + (0.02292 * (weight / standing_height) * 100), 2)
+    offset = round(-9.236 + (ratio * leg_length * sitting_height) + (-0.001663 * chronological_age * leg_length) + (
+                0.007216 * chronological_age * sitting_height) + (0.02292 * (weight / standing_height) * 100), 2)
 
     # Calulate the biological age (phv)
     phv = chronological_age + offset
 
     # Calculate puberty category
-    ak_bio = None
     if offset < -2.5:
         ak_bio = "PHV -2.5"
     elif -2.5 <= offset < -1.5:
@@ -70,3 +71,28 @@ def mirwald(sitting_height:float,
         ak_bio = "PHV 2.5"
 
     return {"offset": offset, "phv": phv, "ak_bio": ak_bio}
+
+
+# [END mirwald]
+
+
+# [BEGIN bmi]
+def bmi(height: float, weight: float) -> float:
+    """
+    Calculate the body mass index (bmi)
+
+    Args:
+        height (float): persons height in cm
+        weight (float): persons weight in kg
+
+    Returns:
+        res_bmi (float): calculated bmi
+    """
+
+    # convert cm to m
+    height = height / 100
+    # calculate bmi
+    res_bmi = weight / pow(height, 2)
+
+    return round(res_bmi, 1)
+# [END bmi]
