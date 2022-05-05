@@ -145,10 +145,16 @@ export default class Table extends Component {
 
   createSubTableHeader = (id) => {
     let cols = this.getRangeList(this.state.subTableIndex, this.getColCount());
+    let divider;
 
     let tableHeader = (
       <tr>
         {cols.map((name) => {
+          if (name === cols[0]) {
+            divider = false;
+          } else {
+            divider = true;
+          }
           if (this.state.colsHidden.includes(name)) {
             return undefined;
           }
@@ -160,6 +166,7 @@ export default class Table extends Component {
                 onClickSort={this.setSortParams}
                 alignment={this.getTableHeadStyle(name)}
                 id={id + name}
+                divider={divider}
               />
             </th>
           );
@@ -171,12 +178,13 @@ export default class Table extends Component {
   };
 
   createTableHeader = () => {
+    let divider = true;
     if (this.props.data !== undefined && this.props.data.length !== 0) {
       let cols = this.getRangeList(0, this.state.subTableIndex);
       if (this.props.editable) {
         let tableHeader = (
           <tr>
-            <th>
+            <th class={style.headerCellContainer}>
               <Formfield class={style.checkAll}>
                 <Checkbox
                   name="deleteCheckAll"
@@ -201,6 +209,7 @@ export default class Table extends Component {
                     onClickSort={this.setSortParams}
                     alignment={this.getTableHeadStyle(name)}
                     id={name}
+                    divider={divider}
                   />
                 </th>
               );
@@ -225,7 +234,7 @@ export default class Table extends Component {
     }
     let tableHeader = (
       <tr>
-        <th>Keine Messungen vorhanden</th>
+        <th>Keine {this.props.title} vorhanden</th>
       </tr>
     );
     return tableHeader;

@@ -28,7 +28,7 @@ rest_api = Api(version="1.0", title="Users API", authorizations=authorizations)
 signup_model = rest_api.model('SignUpModel', {"username": fields.String(required=True, min_length=2, max_length=32),
                                               "email": fields.String(required=True, min_length=4, max_length=64),
                                               "password": fields.String(required=True, min_length=4, max_length=16),
-											  "is_admin": fields.Boolean()
+                                              "is_admin": fields.Boolean()
                                               })
 
 login_model = rest_api.model('LoginModel', {"email": fields.String(required=True, min_length=4, max_length=64),
@@ -36,76 +36,77 @@ login_model = rest_api.model('LoginModel', {"email": fields.String(required=True
                                             })
 
 user_edit_model = rest_api.model('UserEditModel', {"userID": fields.String(required=True, min_length=1, max_length=32),
-                                                   "username": fields.String(required=True, min_length=2, max_length=32),
+                                                   "username": fields.String(required=True, min_length=2,
+                                                                             max_length=32),
                                                    "email": fields.String(required=True, min_length=4, max_length=64)
                                                    })
-user_password_forget_model = rest_api.model('UserPasswordForgetModel', {"email": fields.String(required=True, min_length=4)})
+user_password_forget_model = rest_api.model('UserPasswordForgetModel',
+                                            {"email": fields.String(required=True, min_length=4)})
 
-user_password_reset_model = rest_api.model('UserPasswordResetModel', {"token": fields.String(required=True, min_length=1),
-                                                   "password": fields.String(required=True, min_length=2, max_length=16)
-                                                   })
+user_password_reset_model = rest_api.model('UserPasswordResetModel',
+                                           {"token": fields.String(required=True, min_length=1),
+                                            "password": fields.String(required=True, min_length=2, max_length=16)
+                                            })
 
-user_confirm_model = rest_api.model('UserConformModel', {"first_name": fields.String(required=True, min_length=2,max_length=32),
-                                                         "last_name": fields.String(required=True, min_length=4,
-                                                                                    max_length=64),
-                                                         "birthday": fields.Date(required=True),
-                                                         "sex_m_0_f_1": fields.Integer(required=True, min=0, max=1),
-                                                         "height_father": fields.Float(required=False, min=0, max=300),
-                                                         "height_mother": fields.Float(required=False, min=0, max=300)
-                                                         })
-
+user_confirm_model = rest_api.model('UserConformModel',
+                                    {"first_name": fields.String(required=True, min_length=2, max_length=32),
+                                     "last_name": fields.String(required=True, min_length=4,
+                                                                max_length=64),
+                                     "birthday": fields.Date(required=True),
+                                     "sex_m_0_f_1": fields.Integer(required=True, min=0, max=1),
+                                     "height_father": fields.Float(required=False, min=0, max=300),
+                                     "height_mother": fields.Float(required=False, min=0, max=300)
+                                     })
 
 config_model = rest_api.model('ConfigModel', {"days_reminder": fields.Integer(min=0, max=120,
                                                                               description='Interval in days in which '
                                                                                           'the players are reminded by '
                                                                                           'mail for a new measurement.'),
                                               "mail_server": fields.String(),
-                                              "mail_port": fields.Integer(min=0 , max=65000),
+                                              "mail_port": fields.Integer(min=0, max=65000),
                                               "mail_use_ssl": fields.Boolean(),
                                               "mail_username": fields.String(),
                                               "mail_password": fields.String()
                                               })
-test_mail_config_model = rest_api.model('TestMailConfigModel', {"test_email_address": fields.String(required=True, min_length=5,max_length=64)})
-
-
+test_mail_config_model = rest_api.model('TestMailConfigModel', {
+    "test_email_address": fields.String(required=True, min_length=5, max_length=64)})
 
 player_model = rest_api.model('PlayerModel', {"userID": fields.Integer(required=True, min=0),
-                                                   "first_name": fields.String(required=True, min_length=2, max_length=32),
-                                                   "last_name": fields.String(required=True, min_length=4, max_length=64),
-                                                    "birthday": fields.Date(required=True),
-                                                    "sex_m_0_f_1": fields.Integer(required=True, min=0, max=1),
-                                                    "height_father": fields.Float(required=True, min=0, max=300),
-                                                    "height_mother": fields.Float(required=True, min=0, max=300)
+                                              "first_name": fields.String(required=True, min_length=2, max_length=32),
+                                              "last_name": fields.String(required=True, min_length=4, max_length=64),
+                                              "birthday": fields.Date(required=True),
+                                              "sex_m_0_f_1": fields.Integer(required=True, min=0, max=1),
+                                              "height_father": fields.Float(required=True, min=0, max=300),
+                                              "height_mother": fields.Float(required=True, min=0, max=300)
                                               })
 
 anthropometric_data_model = rest_api.model('AnthropometricDataModel', {
-        "userID": fields.Integer(required=True, min=0),
-        "date_measured": fields.Date(required=True),
-        "height": fields.Integer(required=True, min=0, max=300),
-        "sitting_height": fields.Integer(required=True, min=0, max=300),
-        "body_span": fields.Integer(required=True, min=0, max=300),
-        "weight": fields.Float(required=True, min=0, max=300)
+    "userID": fields.Integer(required=True, min=0),
+    "date_measured": fields.Date(required=True),
+    "height": fields.Integer(required=True, min=0, max=300),
+    "sitting_height": fields.Integer(required=True, min=0, max=300),
+    "body_span": fields.Integer(required=True, min=0, max=300),
+    "weight": fields.Float(required=True, min=0, max=300)
 }
-)
+                                           )
 
 anthropometric_data_model = rest_api.model('AnthropometricDataModel', {
-        "userID": fields.Integer(required=True, min=0),
-        "date_measured": fields.Date(required=True),
-        "height": fields.Integer(required=True, min=0, max=300),
-        "sitting_height": fields.Integer(required=True, min=0, max=300),
-        "body_span": fields.Integer(required=True, min=0, max=300),
-        "weight": fields.Float(required=True, min=0, max=300)
+    "userID": fields.Integer(required=True, min=0),
+    "date_measured": fields.Date(required=True),
+    "height": fields.Integer(required=True, min=0, max=300),
+    "sitting_height": fields.Integer(required=True, min=0, max=300),
+    "body_span": fields.Integer(required=True, min=0, max=300),
+    "weight": fields.Float(required=True, min=0, max=300)
 }
-)
+                                           )
 
 anthropometric_data_edit_model = rest_api.model('AnthropometricDataEditModel', {
-	    "date_measured": fields.Date(required=True),
-        "height": fields.Integer(required=True, min=0, max=300),
-        "sitting_height": fields.Integer(required=True, min=0, max=300),
-        "body_span": fields.Integer(required=True, min=0, max=300),
-        "weight": fields.Float(required=True, min=0, max=300)
+    "date_measured": fields.Date(required=True),
+    "height": fields.Integer(required=True, min=0, max=300),
+    "sitting_height": fields.Integer(required=True, min=0, max=300),
+    "body_span": fields.Integer(required=True, min=0, max=300),
+    "weight": fields.Float(required=True, min=0, max=300)
 })
-
 
 """
    Helper function for JWT token required
@@ -113,7 +114,6 @@ anthropometric_data_edit_model = rest_api.model('AnthropometricDataEditModel', {
 
 
 def token_required(f):
-
     @wraps(f)
     @rest_api.doc(security='jwt')
     def decorator(*args, **kwargs):
@@ -153,16 +153,17 @@ def token_required(f):
 """
     Flask-Restx routes
 """
+
+
 @rest_api.route('/api/usercount', doc={"deprecated": True})
 class UserCount(Resource):
-
 
     def get(self):
         try:
             users = Users.get_all_users()
         except:
             return {"success": False,
-                "msg": "Could not count users"}, 500
+                    "msg": "Could not count users"}, 500
 
         return {"success": True,
                 "length": len(users)}, 200
@@ -177,7 +178,7 @@ class AllUserDetails(Resource):
             users = Users.get_all_users()
         except:
             return {"success": False,
-                "msg": "Could not read users"}, 400
+                    "msg": "Could not read users"}, 400
 
         detailsList = []
 
@@ -208,23 +209,23 @@ class AllUserDetails(Resource):
                 height = "/"
                 result = "/"
 
-
             detailsList.append(
                 {
-				"userID": user.id,
-				"measureID": measureID,
-				"username": user.username,
-				"firstname": first_name,
-				"lastname": last_name,
-				"email": user.email,
-				"birthday": birthday,
-				"sex_m_0_f_1": sex,
-				"height": height,
-				"result": result
-				}
-			)
+                    "userID": user.id,
+                    "measureID": measureID,
+                    "username": user.username,
+                    "firstname": first_name,
+                    "lastname": last_name,
+                    "email": user.email,
+                    "birthday": birthday,
+                    "sex_m_0_f_1": sex,
+                    "height": height,
+                    "result": result
+                }
+            )
         return {"success": True,
-		        "userdetails": detailsList}
+                "userdetails": detailsList}
+
 
 @rest_api.route('/api/users')
 class AllUsers(Resource):
@@ -244,9 +245,9 @@ class AllUsers(Resource):
         for row in users:
             userList.append(
                 {
-                "userID": row.id,
-                "Benutzername": row.username,
-                "E-Mail": row.email
+                    "userID": row.id,
+                    "Benutzername": row.username,
+                    "E-Mail": row.email
                 }
             )
         return {"success": True,
@@ -325,13 +326,12 @@ class ResetVerified(Resource):
 @rest_api.route('/api/user/<int:id>')
 class EditUser(Resource):
 
-
     @token_required
     def put(self, current_user, id):
         """Update user from given id."""
 
         req_data = request.get_json()
-        
+
         _new_username = req_data.get("username")
         _new_email = req_data.get("email")
         try:
@@ -355,15 +355,15 @@ class EditUser(Resource):
     @rest_api.response(400, 'Could not delete User')
     def delete(self, current_user, id):
         """Delete user with given id"""
-        
+
         try:
             user = Users.get_by_id(id)
             user.delete()
         except Exception as e:
             print(e)
             return {
-                "success": False,
-                "msg": "Could not delete User {}".format(e)}, 400
+                       "success": False,
+                       "msg": "Could not delete User {}".format(e)}, 400
 
         return {"success": True}, 200
 
@@ -448,7 +448,6 @@ class Login(Resource):
             return {"success": False,
                     "msg": "Email address is not confirmed"}, 403
 
-
         # create access token uwing JWT
         token = jwt.encode({'email': _email, 'exp': datetime.utcnow() + timedelta(minutes=30)}, BaseConfig.SECRET_KEY)
 
@@ -483,12 +482,13 @@ class EditUser(Resource):
 
         self.save()
 
-        token = jwt.encode({'email': _new_email, 'exp': datetime.utcnow() + timedelta(minutes=30)}, BaseConfig.SECRET_KEY)
+        token = jwt.encode({'email': _new_email, 'exp': datetime.utcnow() + timedelta(minutes=30)},
+                           BaseConfig.SECRET_KEY)
         self.set_jwt_auth_active(True)
         self.save()
 
         return {"success": True,
-				"token": token}, 200
+                "token": token}, 200
 
 
 @rest_api.route('/api/users/logout')
@@ -499,7 +499,6 @@ class LogoutUser(Resource):
 
     @token_required
     def post(self, current_user):
-
         _jwt_token = request.headers["authorization"]
 
         jwt_block = JWTTokenBlocklist(jwt_token=_jwt_token, created_at=datetime.now(timezone.utc))
@@ -561,7 +560,6 @@ class Confirm(Resource):
             return {"success": True,
                     "msg": "Email address already confirmed. Please login."}, 200
 
-
         # Save PlayerDetails to DB
         playerdetails = PlayerDetail(user_id=user.id, birthday=_birthday, sex_m_0_f_1=_sex_m_0_f_1)
 
@@ -588,7 +586,6 @@ class Confirm(Resource):
                 "token": token,
                 "user": user.toJSON(),
                 "msg": "Successful confirmed account. User is Logged in"}, 201
-
 
 
 @rest_api.route('/api/configurations')
@@ -641,7 +638,6 @@ class EditConfiguration(Resource):
         except:
             return {"success": False,
                     "msg": "There is no configuration."}, 500
-
 
         return {"success": True,
                 "config": config.toDICT()}, 200
@@ -803,15 +799,16 @@ class Anthropometric(Resource):
         for row in user_data:
             measurements.append(
                 {"id": row.id,
-                "userID": row.user_id,
-                "Datum": dumps(row.date_measured, default=json_serial),
-                "Größe": row.height,
-                "Sitzgröße": row.sitting_height,
-                "Körperspanne": row.body_span,
-                "Gewicht": row.weight,
-                "collapse": {"YAPHV": row.offset,
-                             "PHV": row.phv,
-                             "AK_BIO": row.ak_bio}
+                 "userID": row.user_id,
+                 "Datum": dumps(row.date_measured, default=json_serial),
+                 "Größe": row.height,
+                 "Sitzgröße": row.sitting_height,
+                 "Körperspanne": row.body_span,
+                 "Gewicht": row.weight,
+                 "YAPHV": row.offset,
+                 "PHV": row.phv,
+                 "AK_BIO": row.ak_bio,
+                 "BMI": row.bmi
                  }
             )
         return {"success": True,
@@ -828,8 +825,8 @@ class Measurement(Resource):
             measurement_data = AnthropometricData.get_by_id(id)
         except:
             return {
-                "success": False,
-                "msg": "Could not read players anthropometric data"}, 500
+                       "success": False,
+                       "msg": "Could not read players anthropometric data"}, 500
 
         return {"success": True,
                 "measurement:": {
@@ -842,7 +839,8 @@ class Measurement(Resource):
                     "weight": measurement_data.weight,
                     "YAPHV": measurement_data.offset,
                     "PHV": measurement_data.phv,
-                    "AK_BIO": measurement_data.ak_bio}
+                    "AK_BIO": measurement_data.ak_bio,
+                    "bmi": measurement_data.bmi}
                 }, 200
 
     @token_required
@@ -854,8 +852,8 @@ class Measurement(Resource):
             measurement_data.delete()
         except:
             return {
-                "success": False,
-                "msg": "Could not delete players anthropometric data"}, 500
+                       "success": False,
+                       "msg": "Could not delete players anthropometric data"}, 500
 
         return {"success": True,
                 "msg": "Measurement successfully deleted"}, 200
@@ -866,7 +864,7 @@ class Measurement(Resource):
 
         req_data = request.get_json()
 
-        print("Request",req_data)
+        print("Request", req_data)
 
         _new_date_measured = req_data.get("date_measured")
         _new_height = req_data.get("height")
@@ -910,7 +908,6 @@ class Measurements(Resource):
             result = []
 
             for a, u in query:
-
                 result_dict = {'Id': a.id,
                                'Benutzername': u,
                                'Datum': dumps(a.date_measured, default=json_serial),
@@ -920,7 +917,8 @@ class Measurements(Resource):
                                'Gewicht': a.weight,
                                'YAPHV': a.offset,
                                'PHV': a.phv,
-                               'AK_BIO': a.ak_bio}
+                               'AK_BIO': a.ak_bio,
+                               'BMI': a.bmi}
                 result.append(result_dict)
 
             return {"success": True,
@@ -928,8 +926,3 @@ class Measurements(Resource):
         except Exception:
             return {"success": False,
                     'msg': 'Could not read measurements.'}, 400
-
-
-
-
-
