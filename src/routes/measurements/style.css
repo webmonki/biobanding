@@ -19,7 +19,7 @@
 }
 
 .card {
-	overflow-x: auto;
+	height: fit-content;
 }
 
 .inputContainer {

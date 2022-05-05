@@ -165,7 +165,7 @@ th {
 
 .divider {
 	width: 2px;
-	height: calc(var(--global-table-cell-height) - 10px);
+	height: calc(var(--global-table-cell-height) - 32px);
 	background-color: rgba(0, 0, 0, 0.10);
 }
 
@@ -261,14 +261,6 @@ tr:hover {
 	padding-left: 30px;
 }
 
-.searchContainer {
-	height: var(--global-table-menu-height);
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 15px 30px 15px 0px;
-
-}
 
 .deleteContainer {
 	height: var(--global-table-menu-height);
@@ -327,14 +319,6 @@ tr:hover {
 	align-items: center;
 }
 
-.rowSelected {
-	background-color: rgba(1, 135, 134, 0.45);
-}
-
-.rowSelected:hover {
-	background-color: rgba(1, 135, 134, 0.8);
-}
-
 .selectedCount {
 	font-size: 15px;
 }
@@ -367,24 +351,53 @@ tr:hover {
 	overflow: hidden;
 	transition: max-height 0.2s ease-out;
 	height: 200px;
-	padding: 0 10% 0 10%;
 }
 
-.search {
+
+.menuContainer {
+	height: var(--global-table-menu-height);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 15px 30px 15px 30px;
+}
+
+.filterContentContainer {
 	display: flex;
 	align-items: center;
-	padding-left: 30px;
 }
 
-.searchInput {
+.filterContainer {
+	background-color: white;
+	max-height: 0;
+	width: 500px;
 	position: relative;
-	right: 5px;
+	top: 173px;
+	left: -40px;
+	overflow: hidden;
+	transition: max-height 0.2s ease-out;
+	display: flex;
+	flex-direction: column;
+	z-index: 1;
+	box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
 }
 
-.searchIcon {
-	color: rgba(0, 0, 0, 0.5);
-	font-size: 30px;
-	position: relative;
-	left: 10px;
+.addFilterContainer {
+	border-top: 1px solid rgba(0, 0, 0, 0.3);
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
+.filterListContainer {
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: 150px;
+}
+
+.filter {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 10px;
+}

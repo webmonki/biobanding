@@ -28,6 +28,8 @@ export default class Table extends Component {
     this.setState({ collapseList: {} });
 
     this.getCollapseList();
+
+    this.setState({ filterParams: [] });
   };
 
   componentDidMount = () => {
@@ -81,6 +83,32 @@ export default class Table extends Component {
     }
   };
 
+  getData = () => {
+    let sortParams = this.state.sortParams;
+    let filterParams = this.state.filterParams;
+    let data = this.props.data;
+
+    if (sortParams !== undefined) {
+      if (sortParams.dir) {
+        data = this.sortDescending(data, sortParams.key);
+      } else {
+        data = this.sortAscending(data, sortParams.key);
+      }
+    }
+
+    filterParams.forEach((filter) => {
+      if (filter.operator === 0) {
+        data = this.search(filter.val, data, filter.col);
+      } else if (filter.operator === 1) {
+        data = this.searchLesserThan(filter.val, data, filter.col);
+      } else if (filter.operator === 2) {
+        data = this.searchGreaterThan(filter.val, data, filter.col);
+      }
+    });
+
+    return data;
+  };
+
   sortDescending = (data, key) => {
     if (typeof data[0][key] === "string") {
       data.sort((a, b) => a[key].localeCompare(b[key]));
@@ -101,26 +129,19 @@ export default class Table extends Component {
     return data;
   };
 
-  search = (val, data) => {
+  searchGreaterThan = (val, data, col) => {
     let newData = [];
 
-    let cols = Object.keys(data[0]);
+    if (val === "") {
+      return data;
+    }
 
     data.forEach((obj) => {
       let match = false;
-      cols.forEach((col) => {
-        if (!this.state.colsHidden.includes(col)) {
-          if (typeof obj[col] === "number") {
-            if (obj[col].toString().match(val)) {
-              match = true;
-            }
-          } else if (typeof obj[col] === "string") {
-            if (obj[col].match(val)) {
-              match = true;
-            }
-          }
-        }
-      });
+
+      if (obj[col] > parseInt(val, 10)) {
+        match = true;
+      }
 
       if (match) {
         newData.push(obj);
@@ -128,6 +149,68 @@ export default class Table extends Component {
     });
 
     return newData;
+  };
+
+  searchLesserThan = (val, data, col) => {
+    let newData = [];
+
+    if (val === "") {
+      return data;
+    }
+
+    data.forEach((obj) => {
+      let match = false;
+
+      if (obj[col] < parseInt(val, 10)) {
+        match = true;
+      }
+
+      if (match) {
+        newData.push(obj);
+      }
+    });
+
+    return newData;
+  };
+
+  search = (val, data, col) => {
+    let newData = [];
+
+    if (val === "") {
+      return data;
+    }
+
+    if (typeof data[0][col] === "number") {
+      val = parseInt(val, 10);
+
+      data.forEach((obj) => {
+        let match = false;
+
+        if (obj[col] === val) {
+          match = true;
+        }
+
+        if (match) {
+          newData.push(obj);
+        }
+      });
+
+      return newData;
+    } else if (typeof data[0][col] === "string") {
+      data.forEach((obj) => {
+        let match = false;
+
+        if (obj[col].match(val)) {
+          match = true;
+        }
+
+        if (match) {
+          newData.push(obj);
+        }
+      });
+
+      return newData;
+    }
   };
 
   setSortParams = (dir, key) => {
@@ -266,30 +349,6 @@ export default class Table extends Component {
     this.setState({ checkList: [] });
   };
 
-  setSearchVal = (val) => {
-    this.setState({ searchVal: val });
-  };
-
-  getData = () => {
-    let sortParams = this.state.sortParams;
-    let searchVal = this.state.searchVal;
-    let data = this.props.data;
-
-    if (sortParams !== undefined) {
-      if (sortParams.dir) {
-        data = this.sortDescending(data, sortParams.key);
-      } else {
-        data = this.sortAscending(data, sortParams.key);
-      }
-    }
-
-    if (searchVal !== undefined) {
-      data = this.search(searchVal, data);
-    }
-
-    return data;
-  };
-
   getCheckState = (id) => {
     let checkList = this.state.checkList;
 
@@ -351,6 +410,23 @@ export default class Table extends Component {
     let cols = Object.keys(this.props.data[0]);
 
     return cols.length;
+  };
+
+  getCols = () => {
+    if (this.props.data !== undefined) {
+      let cols = Object.keys(this.props.data[0]);
+      let newCols = [];
+
+      cols.forEach((col) => {
+        if (!this.state.colsHidden.includes(col)) {
+          newCols.push(col);
+        }
+      });
+
+      return newCols;
+    }
+
+    return [];
   };
 
   getRangeList = (start, end) => {
@@ -681,17 +757,55 @@ export default class Table extends Component {
     csvString = "data:text/csv;charset=utf-8," + csvString;
 
     let encodedUri = encodeURI(csvString);
-    // window.open(encodedUri);
 
     let link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", this.props.title + ".csv");
-    document.body.appendChild(link); // Required for FF
+    document.body.appendChild(link);
 
-    link.click(); // This will download the data file named "my_data.csv".
+    link.click();
   };
 
   getSelectedCount = () => this.state.checkList.length;
+
+  getFilters = (id, col, operator, val) => {
+    let filterParams = this.state.filterParams;
+    let filterObj = { id, col, operator, val };
+    let idList = [];
+
+    filterParams.forEach((filter) => {
+      idList.push(filter.id);
+    });
+
+    if (idList.includes(id)) {
+      filterParams.forEach((filter) => {
+        if (filter.id === id) {
+          filter.col = col;
+          filter.operator = operator;
+          filter.val = val;
+        }
+      });
+    } else {
+      filterParams.push(filterObj);
+    }
+
+    this.setState({ filterParams });
+  };
+
+  deleteFilterParams = (id) => {
+    let filterParams = this.state.filterParams;
+
+    filterParams.forEach((filter) => {
+      if (filter.id === id) {
+        let index = filterParams.indexOf(filter);
+        if (index !== -1) {
+          filterParams.splice(index, 1);
+        }
+      }
+    });
+
+    this.setState({ filterParams });
+  };
 
   render() {
     return (
@@ -705,6 +819,10 @@ export default class Table extends Component {
             count={this.getSelectedCount()}
             exportFile={this.exportFile}
             title={this.props.title}
+            cols={this.getCols()}
+            data={this.props.data}
+            getFilters={this.getFilters}
+            deleteFilterParams={this.deleteFilterParams}
           />
         </div>
 
