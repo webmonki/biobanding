@@ -840,7 +840,9 @@ class Measurement(Resource):
                     "sitting_height": measurement_data.sitting_height,
                     "body_span": measurement_data.body_span,
                     "weight": measurement_data.weight,
-                    "result": measurement_data.result}
+                    "YAPHV": measurement_data.offset,
+                    "PHV": measurement_data.phv,
+                    "AK_BIO": measurement_data.ak_bio}
                 }, 200
 
     @token_required
@@ -864,6 +866,8 @@ class Measurement(Resource):
 
         req_data = request.get_json()
 
+        print("Request",req_data)
+
         _new_date_measured = req_data.get("date_measured")
         _new_height = req_data.get("height")
         _new_sitting_height = req_data.get("sitting_height")
@@ -871,6 +875,7 @@ class Measurement(Resource):
         _new_weight = req_data.get("weight")
 
         measurement_data = AnthropometricData.get_by_id(id)
+        print("Measurement_Data: ", measurement_data)
 
         if _new_date_measured:
             measurement_data.update_date_measured(_new_date_measured)
@@ -913,9 +918,9 @@ class Measurements(Resource):
                                'Sitzgröße': a.sitting_height,
                                'Körperspanne': a.body_span,
                                'Gewicht': a.weight,
-                                'collapse': {'YAPHV': a.offset,
-                                             'PHV': a.phv,
-                                             'AK_BIO': a.ak_bio}}
+                               'YAPHV': a.offset,
+                               'PHV': a.phv,
+                               'AK_BIO': a.ak_bio}
                 result.append(result_dict)
 
             return {"success": True,
