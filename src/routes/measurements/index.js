@@ -195,29 +195,6 @@ export default class Measurements extends Component {
     xhttp.send(data);
   };
 
-  transofrmData = (data) => {
-    let newData = [];
-    let cols = Object.keys(data[0]);
-
-    data.forEach((d) => {
-      let dataRow = {};
-      cols.forEach((col) => {
-        if (col !== "collapse") {
-          dataRow[col] = d[col];
-        } else {
-          let collcols = Object.keys(data[0].collapse);
-
-          collcols.forEach((cc) => {
-            dataRow[cc] = d.collapse[cc];
-          });
-        }
-      });
-
-      newData.push(dataRow);
-    });
-    return newData;
-  };
-
   getOverview = () => {
     let that = this;
     let url = Auth.url + "/api/measurements";
@@ -228,16 +205,16 @@ export default class Measurements extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
+      if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
         that.setState({
-          measurements: that.transofrmData(response.measurements),
+          measurements: response.measurements,
         });
         that.showTable(true);
       } else {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg == "Token is invalid") {
+          if (response.msg === "Token is invalid") {
             Auth.logout();
             location.reload();
           }

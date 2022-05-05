@@ -24,6 +24,10 @@ export default class Table extends Component {
     this.getPageSize();
     this.setState({ subTableIndex: 7 });
     this.setState({ colsHidden: ["id", "Id", "userID"] });
+
+    this.setState({ collapseList: {} });
+
+    this.getCollapseList();
   };
 
   componentDidMount = () => {
@@ -43,6 +47,15 @@ export default class Table extends Component {
 
     // this.checkAll();
     this.toggleShowDelete();
+    this.collapseAll();
+  };
+
+  getCollapseList = () => {
+    let collapseList = this.state.collapseList;
+    this.props.data.forEach((d) => {
+      collapseList[d[this.props.idKey]] = false;
+    });
+    this.setState({ collapseList });
   };
 
   toggleShowDelete = () => {
@@ -368,14 +381,36 @@ export default class Table extends Component {
     );
   };
 
+  collapseAll = () => {
+    let collList = this.state.collapseList;
+    let keys = Object.keys(collList);
+
+    keys.forEach((key) => {
+      if (collList[key]) {
+        this.unCollapse(key);
+      } else if (!collList[key]) {
+        this.collapse(key);
+      }
+    });
+  };
+
   collapse = (id) => {
     let coll = document.getElementById(id + "row");
     let collIcon = document.getElementById(id + "icon");
 
-    if (coll.style.maxHeight) {
+    if (coll) {
       coll.style.maxHeight = null;
       collIcon.innerHTML = "arrow_drop_down";
-    } else {
+    }
+
+    this.getPageSize();
+  };
+
+  unCollapse = (id) => {
+    let coll = document.getElementById(id + "row");
+    let collIcon = document.getElementById(id + "icon");
+
+    if (coll) {
       coll.style.maxHeight = coll.scrollHeight + "px";
       collIcon.innerHTML = "arrow_drop_up";
     }
@@ -383,10 +418,25 @@ export default class Table extends Component {
     this.getPageSize();
   };
 
+  addToCollapseList = (id) => {
+    let collList = this.state.collapseList;
+
+    if (collList[id]) {
+      collList[id] = false;
+    } else if (!collList[id]) {
+      collList[id] = true;
+    }
+
+    this.setState({ collapseList: collList });
+  };
+
   getCollapseBtn = (key) => {
     if (this.getColCount() > this.state.subTableIndex) {
       return (
-        <button onCLick={() => this.collapse(key)} class={style.menuBtn}>
+        <button
+          onCLick={() => this.addToCollapseList(key)}
+          class={style.menuBtn}
+        >
           <i
             class={`${"material-icons"} ${style.menuBtnIcon}`}
             aria-hidden="true"
