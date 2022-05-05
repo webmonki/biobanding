@@ -54,7 +54,6 @@ export default class App extends Component {
   };
 
   setReload = () => {
-    console.log("SET");
     this.setState({ reload: true });
   };
 
