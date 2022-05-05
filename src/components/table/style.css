@@ -158,6 +158,7 @@ table {
 	border-collapse: collapse;
 	width: 100%;
 	border-spacing: 0;
+	table-layout: fixed;
 }
 
 .alignLeft {
