@@ -22,6 +22,12 @@ export default class Table extends Component {
     this.setState({ newData: this.props.data });
 
     this.getPageSize();
+    this.setState({ subTableIndex: 7 });
+    this.setState({ colsHidden: ["id", "Id", "userID"] });
+
+    this.setState({ collapseList: {} });
+
+    this.getCollapseList();
   };
 
   componentDidMount = () => {
@@ -41,6 +47,15 @@ export default class Table extends Component {
 
     // this.checkAll();
     this.toggleShowDelete();
+    this.collapseAll();
+  };
+
+  getCollapseList = () => {
+    let collapseList = this.state.collapseList;
+    this.props.data.forEach((d) => {
+      collapseList[d[this.props.idKey]] = false;
+    });
+    this.setState({ collapseList });
   };
 
   toggleShowDelete = () => {
@@ -91,7 +106,7 @@ export default class Table extends Component {
     data.forEach((obj) => {
       let match = false;
       cols.forEach((col) => {
-        if (col !== "id" && col !== "userID") {
+        if (!this.state.colsHidden.includes(col)) {
           if (typeof obj[col] === "number") {
             if (obj[col].toString().match(val)) {
               match = true;
@@ -117,10 +132,44 @@ export default class Table extends Component {
     this.setState({ sortParams: { ...this.sortParams, dir, key } });
   };
 
+  getTableHeadStyle = (name) => {
+    if (typeof this.props.data[0][name] === "string") {
+      return style.alignLeft;
+    } else if (typeof this.props.data[0][name] === "number") {
+      return style.alignRight;
+    }
+  };
+
+  createSubTableHeader = (id) => {
+    let cols = this.getRangeList(this.state.subTableIndex, this.getColCount());
+
+    let tableHeader = (
+      <tr>
+        {cols.map((name) => {
+          if (this.state.colsHidden.includes(name)) {
+            return undefined;
+          }
+
+          return (
+            <th>
+              <SortIcon
+                colname={name}
+                onClickSort={this.setSortParams}
+                alignment={this.getTableHeadStyle(name)}
+                id={id + name}
+              />
+            </th>
+          );
+        })}
+      </tr>
+    );
+
+    return tableHeader;
+  };
+
   createTableHeader = () => {
     if (this.props.data !== undefined && this.props.data.length !== 0) {
-      let cols = Object.keys(this.props.data[0]);
-
+      let cols = this.getRangeList(0, this.state.subTableIndex);
       if (this.props.editable) {
         let tableHeader = (
           <tr>
@@ -138,13 +187,18 @@ export default class Table extends Component {
               </Formfield>
             </th>
             {cols.map((name) => {
-              if (name === "Id" || name === "userID") {
+              if (this.state.colsHidden.includes(name)) {
                 return undefined;
               }
 
               return (
                 <th>
-                  <SortIcon colname={name} onClickSort={this.setSortParams} />
+                  <SortIcon
+                    colname={name}
+                    onClickSort={this.setSortParams}
+                    alignment={this.getTableHeadStyle(name)}
+                    id={name}
+                  />
                 </th>
               );
             })}
@@ -156,7 +210,7 @@ export default class Table extends Component {
       let tableHeader = (
         <tr>
           {cols.map((name) => {
-            if (name === "Id" || name === "userID") {
+            if (this.state.colsHidden.includes(name)) {
               return undefined;
             }
             return <th>{name}</th>;
@@ -274,34 +328,51 @@ export default class Table extends Component {
     return style.editBtn;
   };
 
-  renderSubTable = (id) => {
+  getTableDataStyle = (data, key) => {
+    if (typeof data[key] === "number") {
+      return style.alignRight;
+    }
+    return style.alignLeft;
+  };
+
+  getColCount = () => {
     let cols = Object.keys(this.props.data[0]);
+
+    return cols.length;
+  };
+
+  getRangeList = (start, end) => {
+    if (end === undefined) {
+      end = this.getColCount();
+    }
+    let cols = Object.keys(this.props.data[0]);
+    let newCols = [];
+
+    for (let i = start; i < end; i++) {
+      if (!this.state.colsHidden.includes(cols[i])) newCols.push(cols[i]);
+    }
+    return newCols;
+  };
+
+  renderSubTable = (id, row) => {
+    let cols = this.getRangeList(this.state.subTableIndex, undefined);
+    let colLength = this.getRangeList(0, this.state.subTableIndex).length + 1;
 
     return (
       <tr class={style.subTableRow} id={"subTableRow"}>
-        <td colSpan={cols.length} class={style.subTableData}>
-          <div class={style.subTableContainer} id={id}>
+        <td colSpan={colLength} class={style.subTableData}>
+          <div class={style.subTableContainer} id={id + "row"}>
+            <div class={style.subTableTitleContainer}>
+              <span class={style.subTableTitle}>
+                {this.props.subTableTitle}
+              </span>
+            </div>
             <table class={style.subTable}>
-              <caption>Unter Tabelle</caption>
+              {this.createSubTableHeader(id)}
               <tr>
-                <th>Result</th>
-                <th>Ergebnis</th>
-                <th>Solution</th>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>5</td>
-                <td>6</td>
-              </tr>
-              <tr>
-                <td>7</td>
-                <td>8</td>
-                <td>9</td>
+                {cols.map((key) => (
+                  <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>
+                ))}
               </tr>
             </table>
           </div>
@@ -310,74 +381,124 @@ export default class Table extends Component {
     );
   };
 
+  collapseAll = () => {
+    let collList = this.state.collapseList;
+    let keys = Object.keys(collList);
+
+    keys.forEach((key) => {
+      if (collList[key]) {
+        this.unCollapse(key);
+      } else if (!collList[key]) {
+        this.collapse(key);
+      }
+    });
+  };
+
   collapse = (id) => {
-    let coll = document.getElementById(id);
+    let coll = document.getElementById(id + "row");
     let collIcon = document.getElementById(id + "icon");
 
-    if (coll.style.maxHeight) {
+    if (coll) {
       coll.style.maxHeight = null;
       collIcon.innerHTML = "arrow_drop_down";
-    } else {
-      coll.style.maxHeight = coll.scrollHeight + "px";
-      collIcon.innerHTML = "arrow_drop_up";
     }
+
     this.getPageSize();
   };
 
-  renderTableContent = (key, row) => {
-    if (this.props.title === "measurements")
+  unCollapse = (id) => {
+    let coll = document.getElementById(id + "row");
+    let collIcon = document.getElementById(id + "icon");
+
+    if (coll) {
+      coll.style.maxHeight = coll.scrollHeight + "px";
+      collIcon.innerHTML = "arrow_drop_up";
+    }
+
+    this.getPageSize();
+  };
+
+  addToCollapseList = (id) => {
+    let collList = this.state.collapseList;
+
+    if (collList[id]) {
+      collList[id] = false;
+    } else if (!collList[id]) {
+      collList[id] = true;
+    }
+
+    this.setState({ collapseList: collList });
+  };
+
+  getCollapseBtn = (key) => {
+    if (this.getColCount() > this.state.subTableIndex) {
       return (
-        <tr>
-          <td id={"tableData"}>
-            <div class={style.tdIconContainer}>
-              <button
-                onClick={() => this.props.clickEdit}
-                class={style.editBtn}
-              >
-                <i
-                  class={`${"material-icons"} ${style.editIcon}`}
-                  aria-hidden="true"
-                >
-                  edit
-                </i>
-              </button>
-              <Formfield>
-                <Checkbox
-                  name="deleteCheck"
-                  value={key}
-                  checked={this.getCheckState(key)}
-                  onChange={(e) => {
-                    this.addToCheckList(key);
-                  }}
-                />
-              </Formfield>
-              <button onCLick={() => this.collapse(key)} class={style.menuBtn}>
-                <i
-                  class={`${"material-icons"} ${style.menuBtnIcon}`}
-                  aria-hidden="true"
-                  id={key + "icon"}
-                >
-                  arrow_drop_down
-                </i>
-              </button>
-            </div>
-          </td>
-          {Object.keys(row).map((key) => {
-            if (key === "Id" || key === "userID") {
-              return undefined;
-            }
-            return <td>{row[key]}</td>;
-          })}
-        </tr>
+        <button
+          onCLick={() => this.addToCollapseList(key)}
+          class={style.menuBtn}
+        >
+          <i
+            class={`${"material-icons"} ${style.menuBtnIcon}`}
+            aria-hidden="true"
+            id={key + "icon"}
+          >
+            arrow_drop_down
+          </i>
+        </button>
       );
+    }
+
+    return undefined;
+  };
+
+  renderTableContent = (key, row) => {
+    let cols = this.getRangeList(0, this.state.subTableIndex);
+    return (
+      <tr>
+        <td id={"tableData"} class={style.btnsData}>
+          <div class={style.tdBtnsContainer}>
+            <button
+              onClick={() => {
+                this.props.clickEdit(key);
+              }}
+              class={style.editBtn}
+            >
+              <i
+                class={`${"material-icons"} ${style.editIcon}`}
+                aria-hidden="true"
+              >
+                edit
+              </i>
+            </button>
+            <Formfield>
+              <Checkbox
+                name="deleteCheck"
+                value={key}
+                checked={this.getCheckState(key)}
+                onChange={(e) => {
+                  this.addToCheckList(key);
+                }}
+              />
+            </Formfield>
+            {this.getCollapseBtn(key)}
+          </div>
+        </td>
+        {Object.keys(row).map((key) => {
+          if (!cols.includes(key)) {
+            return undefined;
+          }
+          return <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>;
+        })}
+      </tr>
+    );
   };
 
   createTableBody = () => {
     let page = this.state.page;
     let data = this.getData();
     if (data !== undefined) {
-      let indexEnd = page * this.state.pageSize;
-      let indexStart = indexEnd - this.state.pageSize;
+      let indexEnd = page * this.getPageSize();
+      let indexStart = indexEnd - this.getPageSize();
 
       let pageData = data.slice(indexStart, indexEnd);
 
@@ -387,7 +508,7 @@ export default class Table extends Component {
           return (
             <tbody>
               {this.renderTableContent(key, row)}
-              {this.renderSubTable(key)}
+              {this.renderSubTable(key, row)}
             </tbody>
           );
         });
@@ -425,29 +546,29 @@ export default class Table extends Component {
   };
 
   getPageSize = () => {
-    let maxHeight = window.innerHeight;
-    let tableData = document.getElementById("tableData");
-    let subTable = document.getElementById("subTableRow");
+    // let maxHeight = window.innerHeight;
+    // let tableData = document.getElementById("tableData");
+    // let subTable = document.getElementById("subTableRow");
 
-    if (tableData !== null) {
-      let dataHeight = tableData.offsetHeight;
-      let subTableHeight = subTable.offsetHeight;
-    }
+    // if (tableData !== null) {
+    //   let dataHeight = tableData.offsetHeight;
+    //   let subTableHeight = subTable.offsetHeight;
+    // }
 
-    this.setState({ pageSize: this.props.pageSize });
+    return this.props.pageSize;
   };
 
   getPageCount = () => {
     if (this.state.data !== undefined) {
       let pageCount;
-      if (this.state.data.length === this.state.pageSize) {
+      if (this.state.data.length === this.getPageSize()) {
         pageCount = 1;
       }
-      if (this.state.data.length < this.state.pageSize) {
+      if (this.state.data.length < this.getPageSize()) {
         pageCount = 1;
       }
-      if (this.state.data.length > this.state.pageSize) {
-        pageCount = (this.props.data.length / this.state.pageSize + 1)
+      if (this.state.data.length > this.getPageSize()) {
+        pageCount = (this.props.data.length / this.getPageSize() + 1)
           .toString()
           .split(".")[0];
 

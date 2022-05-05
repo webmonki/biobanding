@@ -32,6 +32,13 @@ export default class Measurements extends Component {
     }
   };
 
+  componentDidUpdate = () => {
+    if (this.props.reload) {
+      this.loadData();
+      this.props.unsetReload();
+    }
+  };
+
   loadData = () => {
     if (Auth.check_admin()) {
       this.getOverview();
@@ -66,6 +73,7 @@ export default class Measurements extends Component {
             showDialog={this.openDialog}
             idKey="Id"
             title="Messungen"
+            subTableTitle="Ergebnisse"
           />
         </div>
       );
@@ -79,7 +87,7 @@ export default class Measurements extends Component {
             clickEdit={this.showDialog}
             delete={this.delete}
             showDialog={this.openDialog}
-            idKey="Id"
+            idKey="id"
             title="Messungen"
           />
         </div>
@@ -106,7 +114,7 @@ export default class Measurements extends Component {
         let idList = [];
         let usernameList = [];
         response["users:"].forEach((user) => {
-          usernameList.push(user.username);
+          usernameList.push(user.Benutzername);
           idList.push(user.userID);
         });
         that.setState({ usernames: usernameList });
@@ -197,16 +205,16 @@ export default class Measurements extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
+      if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
-        // that.setState({ responseFBClass : style.feedbackSucc });
-        // that.setState({ responseFB : 'Übersicht erfolgreich geladen' });
-        that.setState({ measurements: response.measurements });
+        that.setState({
+          measurements: response.measurements,
+        });
         that.showTable(true);
       } else {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg == "Token is invalid") {
+          if (response.msg === "Token is invalid") {
             Auth.logout();
             location.reload();
           }

@@ -49,10 +49,18 @@ export default class App extends Component {
     this.setState({ showInstruction: val });
   };
 
+  unsetReload = () => {
+    this.setState({ reload: false });
+  };
+
+  setReload = () => {
+    this.setState({ reload: true });
+  };
+
   render() {
     return (
       <div id="app">
-        <Header />
+        <Header setReload={this.setReload} />
         <Router onChange={this.handleRoute}>
           <Login
             path="/login"
@@ -62,7 +70,11 @@ export default class App extends Component {
           <Signup path="/signup" setInstructions={this.setInstructions} />
           <Profile path="/profile/" user="me" />
           <Profile path="/profile/:user" />
-          <Measurements path="/measurements" />
+          <Measurements
+            path="/measurements"
+            reload={this.state.reload}
+            unsetReload={this.unsetReload}
+          />
           <Users path="/users" />
           <Forgot path="/forgot" />
           <Reset path="/reset" />

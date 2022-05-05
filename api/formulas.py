@@ -21,7 +21,11 @@ def mirwald(sitting_height:float,
             ValueError: gender must be 0 or 1.
 
         Returns:
-            phv (float): Maturity offset rounded to two decimal places. Value can be negative and positive.
+            result (dict):
+                offset (float): Maturity offset rounded to two decimal places. Value can be negative and positive.
+                phv (float): peak height velocity
+                ak_bio (string): age group by phv
+
     """
     
     # Convert date string to datetime object
@@ -43,6 +47,26 @@ def mirwald(sitting_height:float,
         raise ValueError("gender must be 0 (female) or 1 (male).")
         
     # Calculate maturity offset according to the Mirwald method
-    phv = round(-9.236 + (ratio * leg_length * sitting_height) + (-0.001663 * chronological_age * leg_length) + (0.007216 * chronological_age * sitting_height) + (0.02292 * (weight / standing_height) * 100), 2)
-    
-    return phv
+    offset = round(-9.236 + (ratio * leg_length * sitting_height) + (-0.001663 * chronological_age * leg_length) + (0.007216 * chronological_age * sitting_height) + (0.02292 * (weight / standing_height) * 100), 2)
+
+    # Calulate the biological age (phv)
+    phv = chronological_age + offset
+
+    # Calculate puberty category
+    ak_bio = None
+    if offset < -2.5:
+        ak_bio = "PHV -2.5"
+    elif -2.5 <= offset < -1.5:
+        ak_bio = "PHV -2.5 bis -1.5"
+    elif -1.5 <= offset < -0.5:
+        ak_bio = "PHV -1.5 bis -0.5"
+    elif -0.5 <= offset < 0.5:
+        ak_bio = "PHV -0.5 bis 0.5"
+    elif 0.5 <= offset < 1.5:
+        ak_bio = "PHV 0.5 bis 1.5"
+    elif 1.5 <= offset < 2.5:
+        ak_bio = "PHV 1.5 bis 2.5"
+    else:
+        ak_bio = "PHV 2.5"
+
+    return {"offset": offset, "phv": phv, "ak_bio": ak_bio}

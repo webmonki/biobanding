@@ -229,7 +229,6 @@ class AllUserDetails(Resource):
 @rest_api.route('/api/users')
 class AllUsers(Resource):
 
-
     @token_required
     @rest_api.response(200, 'Success')
     @rest_api.response(500, 'Could not read players anthropometric data')
@@ -246,8 +245,9 @@ class AllUsers(Resource):
             userList.append(
                 {
                 "userID": row.id,
-                "username": row.username,
-                "email": row.email}
+                "Benutzername": row.username,
+                "E-Mail": row.email
+                }
             )
         return {"success": True,
                 "users:": userList}, 200
@@ -258,6 +258,7 @@ class AllUsers(Resource):
 class ResetPasswort(Resource):
 
     @rest_api.response(200, 'Success')
+    @rest_api.response(403, 'Only one password reset email can be sent per minute')
     @rest_api.response(404, 'The email address does not exist')
     def put(self):
         """Send email to given address with option to reset the password."""
@@ -271,12 +272,27 @@ class ResetPasswort(Resource):
         url = "{}/reset?token={}".format(os.environ['PREACT_APP_HOST_URI'], token)
 
         if user:
-            send_email_with_token(user, 'Passwort vergessen', 'reset_email.html', url)
-            return {"success": True,
-                    "msg": "Link to reset the password was sent via email to {}.".format(_email)}, 200
+            block_reset = False
+            # Check id user has already requested a password reset
+            if user.date_last_password_reset is not None:
+                # Get seconds since last reset
+                delta = (datetime.utcnow() - user.date_last_password_reset).total_seconds() / 60
+                # Check if the last mail was sent more than one minute ago
+                if delta <= 1:
+                    block_reset = True
+            if not block_reset:
+                user.date_last_password_reset = datetime.utcnow()
+                user.save()
+                send_email_with_token(user, 'Passwort vergessen', 'reset_email.html', url)
 
-        return {"success": False,
-                "msg": "The email address {} does not exist.".format(_email)}, 404
+                return {"success": True,
+                        "msg": "Link to reset the password was sent via email to {}.".format(_email)}, 200
+            else:
+                return {"success": False,
+                        "msg": "Only one password reset email can be sent per minute."}, 403
+        else:
+            return {"success": False,
+                    "msg": "The email address {} does not exist.".format(_email)}, 404
 
 
 @rest_api.expect((user_password_reset_model))
@@ -309,10 +325,8 @@ class ResetVerified(Resource):
 @rest_api.route('/api/user/<int:id>')
 class EditUser(Resource):
 
+
     @token_required
-    @rest_api.doc(security='apikey')
-    @rest_api.response(200, 'Success')
-    @rest_api.response(400, 'No user found with given id')
     def put(self, current_user, id):
         """Update user from given id."""
 
@@ -663,8 +677,6 @@ class PlayerDetails(Resource):
 
     @rest_api.expect(player_model)
     @token_required
-    @rest_api.response(200, "Success")
-    @rest_api.response(400, "Player details could not be created")
     def post(self, current_user, userID):
         """create player details"""
 
@@ -677,14 +689,35 @@ class PlayerDetails(Resource):
         _height_mother = req_data.get("height_mother")
 
         try:
-            _new_player_master = PlayerMaster(user_id=userID, first_name=_first_name, last_name=_last_name)
-            _new_player_master.save()
+            # Check if user has already PlayerMaster row
+            master_exists = db.session.query(PlayerMaster).filter_by(user_id=userID).first()
+            # Check if user has already PlayerDetails row
+            details_exists = db.session.query(PlayerDetail).filter_by(user_id=userID).first()
 
-            _new_player_detail = PlayerDetail(user_id=userID, birthday=_birthday, sex_m_0_f_1=_sex_m_0_f_1, height_father=_height_father, height_mother=_height_mother )
-            _new_player_detail.save()
+            # INSERT or UPDATE users PlayerMaster row
+            if master_exists:
+                master_exists.first_name = _first_name
+                master_exists.last_name = _last_name
+                master_exists.save()
+            else:
+                _new_player_master = PlayerMaster(user_id=userID, first_name=_first_name, last_name=_last_name)
+                _new_player_master.save()
+
+            # INSERT or UPDATE users PlayerDetails row
+            if details_exists:
+                details_exists.birthday = _birthday
+                details_exists.sex_m_0_f_1 = _sex_m_0_f_1
+                details_exists.height_father = _height_father
+                details_exists.height_mother = _height_mother
+                details_exists.save()
+            else:
+                _new_player_detail = PlayerDetail(user_id=userID, birthday=_birthday, sex_m_0_f_1=_sex_m_0_f_1,
+                                                  height_father=_height_father, height_mother=_height_mother)
+                _new_player_detail.save()
+
         except:
             return {"success": False,
-                    "msg": "Player details could not be created"}, 400
+                    "msg": "Player details could not be created "}, 400
 
         return {"success": True,
                 "msg": "Player details were successfully created"}, 200
@@ -726,7 +759,6 @@ class Anthropometric(Resource):
         _sitting_height = req_data.get("sitting_height")
         _body_span = req_data.get("body_span")
         _weight = req_data.get("weight")
-        _result = 1
 
         try:
             _new_anthropometric_data = AnthropometricData(
@@ -735,13 +767,12 @@ class Anthropometric(Resource):
                 height=_height,
                 sitting_height=_sitting_height,
                 body_span=_body_span,
-                weight=_weight,
-                result=_result
+                weight=_weight
             )
             _new_anthropometric_data.save()
         except:
             return {"success": False,
-                    "msg": "Anthropometric data could not be created"}, 500
+                    "msg": "Anthropometric data could not be created"}, 400
 
         return {"success": True,
                 "anthropometric_data": {
@@ -749,10 +780,12 @@ class Anthropometric(Resource):
                     "userID": userID,
                     "date_measured": dumps(_date_measured, default=json_serial),
                     "height": _height,
-                    "sitting_height": _sitting_height,
-                    "body_span": _body_span,
-                    "weight": _weight,
-                    "result": _result
+                    "sitting_height": _new_anthropometric_data.sitting_height,
+                    "body_span": _new_anthropometric_data.body_span,
+                    "weight": _new_anthropometric_data.weight,
+                    "offset": _new_anthropometric_data.offset,
+                    "phv": _new_anthropometric_data.phv,
+                    "ak_bio": _new_anthropometric_data.ak_bio
                 },
                 "msg": "Anthropometric data was successfully created"}, 200
 
@@ -765,17 +798,21 @@ class Anthropometric(Resource):
         except:
             return {"success": False,
                     "msg": "Could not read players anthropometric data"}, 500
+
         measurements = []
         for row in user_data:
             measurements.append(
                 {"id": row.id,
                 "userID": row.user_id,
-                "date_measured": dumps(row.date_measured, default=json_serial),
-                "height": row.height,
-                "sitting_height": row.sitting_height,
-                "body_span": row.body_span,
-                "weight": row.weight,
-                "result": row.result}
+                "Datum": dumps(row.date_measured, default=json_serial),
+                "Größe": row.height,
+                "Sitzgröße": row.sitting_height,
+                "Körperspanne": row.body_span,
+                "Gewicht": row.weight,
+                "collapse": {"YAPHV": row.offset,
+                             "PHV": row.phv,
+                             "AK_BIO": row.ak_bio}
+                 }
             )
         return {"success": True,
                 "measurements:": measurements}, 200
@@ -803,7 +840,9 @@ class Measurement(Resource):
                     "sitting_height": measurement_data.sitting_height,
                     "body_span": measurement_data.body_span,
                     "weight": measurement_data.weight,
-                    "result": measurement_data.result}
+                    "YAPHV": measurement_data.offset,
+                    "PHV": measurement_data.phv,
+                    "AK_BIO": measurement_data.ak_bio}
                 }, 200
 
     @token_required
@@ -827,6 +866,8 @@ class Measurement(Resource):
 
         req_data = request.get_json()
 
+        print("Request",req_data)
+
         _new_date_measured = req_data.get("date_measured")
         _new_height = req_data.get("height")
         _new_sitting_height = req_data.get("sitting_height")
@@ -834,6 +875,7 @@ class Measurement(Resource):
         _new_weight = req_data.get("weight")
 
         measurement_data = AnthropometricData.get_by_id(id)
+        print("Measurement_Data: ", measurement_data)
 
         if _new_date_measured:
             measurement_data.update_date_measured(_new_date_measured)
@@ -869,10 +911,16 @@ class Measurements(Resource):
 
             for a, u in query:
 
-                result_dict = {'Id': a.id, 'Benutzername': u, 'Datum': dumps(a.date_measured, default=json_serial),
-                               'Größe': a.height, 'Sitzgröße': a.sitting_height,
-                               'Körperspanne': a.body_span, 'Gewicht': a.weight, 'YAPHV': a.result}
-
+                result_dict = {'Id': a.id,
+                               'Benutzername': u,
+                               'Datum': dumps(a.date_measured, default=json_serial),
+                               'Größe': a.height,
+                               'Sitzgröße': a.sitting_height,
+                               'Körperspanne': a.body_span,
+                               'Gewicht': a.weight,
+                               'YAPHV': a.offset,
+                               'PHV': a.phv,
+                               'AK_BIO': a.ak_bio}
                 result.append(result_dict)
 
             return {"success": True,

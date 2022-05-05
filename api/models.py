@@ -28,6 +28,7 @@ class Users(db.Model):
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
     confirmed_on = db.Column(db.DateTime, nullable=True)
     is_activ = db.Column(db.Boolean(), nullable=False, default=True)
+    date_last_password_reset = db.Column(db.DateTime())
 
     playermaster = db.relationship("PlayerMaster", back_populates="users", uselist=False)
 
@@ -65,8 +66,12 @@ class Users(db.Model):
 
     def delete(self):
         # Anonymize PlayerMaster
-        self.playermaster.first_name = "DELETED"
-        self.playermaster.last_name = "DELETED"
+        has_record = db.session.query(PlayerMaster).filter_by(user_id=self.id).scalar()
+
+        if has_record:
+            self.playermaster.first_name = "DELETED"
+            self.playermaster.last_name = "DELETED"
+
         self.email = "DELETED"
         self.username = "DELETED"
         self.is_activ = False
@@ -154,7 +159,7 @@ class PlayerMaster(db.Model):
 @dataclass
 class PlayerDetail(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), primary_key=True)
-    birthday = db.Column(db.DateTime(), nullable=False)
+    birthday = db.Column(db.Date(), nullable=False)
     sex_m_0_f_1 = db.Column(db.Integer(), nullable=False)
     height_father = db.Column(db.Integer())
     height_mother = db.Column(db.Integer())
@@ -177,8 +182,11 @@ class AnthropometricData(db.Model):
     sitting_height = db.Column(db.Integer(), nullable=False)
     body_span = db.Column(db.Integer(), nullable=False)
     weight = db.Column(db.Float(), nullable=False)
-    result = db.Column(db.Float(), nullable=False)
+    phv = db.Column(db.Float(), nullable=False)
+    offset = db.Column(db.Float(), nullable=False)
+    ak_bio = db.Column(db.String, nullable=False)
 
+    """
     def mirwald(self, a, b, c, d):
         '''
             a: Groesse stehend
@@ -190,6 +198,7 @@ class AnthropometricData(db.Model):
         res = -9.376 + (0.0001882 * ((a-b) * b))+(0.0022 * (c * (a - b))) \
             + (0.005841 * (c * b))-(0.002658 * (c * d))+(0.07693 * ((d / a) * 100))
         return res
+        """
 
     def save(self):
         playerDetail = PlayerDetail.get_by_id(self.user_id)
@@ -197,13 +206,19 @@ class AnthropometricData(db.Model):
         # Strip Time from Datetime if exists
         birthdate = str(playerDetail.birthday).split(' ')[0]
         date_measured = str(self.date_measured).split(' ')[0]
-        # Calculate PHV age
-        self.result = mirwald(self.sitting_height,
+        # Run mirwald equation
+        res = mirwald(self.sitting_height,
                                       self.height,
                                       date_measured,
                                       birthdate,
                                       self.weight,
                                       gender)
+
+        # Get pvh, offset and ak_bio from result dict
+        self.phv = res['phv']
+        self.ak_bio = res['ak_bio']
+        self.offset = res['offset']
+        # Add and commit results to db
         db.session.add(self)
         db.session.commit()
 
@@ -267,7 +282,6 @@ class AdminConfig(db.Model):
         self.mail_port = mail_port
 
     def update_mail_use_ssl(self, mail_use_ssl):
-        print('SSL: ', mail_use_ssl)
         self.mail_use_ssl = mail_use_ssl
 
     def update_mail_username(self, mail_username):

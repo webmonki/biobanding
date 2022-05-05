@@ -6,8 +6,7 @@ import List from "preact-material-components/List";
 
 export default class SortIcon extends Component {
   componentWillMount = () => {
-    this.setState({ arrow: "arrow_downward" });
-    this.setState({ thIconClass: style.dontDisplay });
+    this.setState({ arrow: "" });
   };
 
   handleIconClick = () => {
@@ -17,34 +16,61 @@ export default class SortIcon extends Component {
     } else if (this.state.arrow === "arrow_upward") {
       this.setState({ arrow: "arrow_downward" });
       this.props.onClickSort(false, this.props.colname);
+    } else if (this.state.arrow === "") {
+      this.setState({ arrow: "arrow_downward" });
+      this.props.onClickSort(false, this.props.colname);
     }
   };
 
   handleOutsideClick = (event) => {
-    if (document.getElementById(this.props.colname).contains(event.target)) {
+    if (document.getElementById(this.props.id).contains(event.target)) {
       // DO NOTHING
     } else {
       window.removeEventListener("click", this.handleOutsideClick);
-      this.setState({ thIconClass: style.dontDisplay });
+      this.setState({ arrow: "" });
+    }
+  };
+
+  getHeaderContent = () => {
+    if (this.props.alignment === style.alignLeft) {
+      return (
+        <div
+          id={this.props.id}
+          class={`${this.props.alignment} ${style.headerCell}`}
+          onCLick={() => {
+            window.addEventListener("click", this.handleOutsideClick);
+            this.handleIconClick();
+          }}
+        >
+          <span>{this.props.colname}</span>
+
+          <i class={"material-icons"} aria-hidden="true">
+            {this.state.arrow}
+          </i>
+        </div>
+      );
+    }
+
+    if (this.props.alignment === style.alignRight) {
+      return (
+        <div
+          id={this.props.id}
+          class={`${this.props.alignment} ${style.headerCell}`}
+          onCLick={() => {
+            window.addEventListener("click", this.handleOutsideClick);
+            this.handleIconClick();
+          }}
+        >
+          <i class={"material-icons"} aria-hidden="true">
+            {this.state.arrow}
+          </i>
+          <span>{this.props.colname}</span>
+        </div>
+      );
     }
   };
 
   render() {
-    return (
-      <div
-        id={this.props.colname}
-        class={style.headerCell}
-        onCLick={() => {
-          this.setState({ thIconClass: style.thIcon });
-          window.addEventListener("click", this.handleOutsideClick);
-          this.handleIconClick();
-        }}
-      >
-        {this.props.colname}
-        <List.ItemGraphic class={this.state.thIconClass}>
-          {this.state.arrow}
-        </List.ItemGraphic>
-      </div>
-    );
+    return this.getHeaderContent();
   }
 }
