@@ -52,10 +52,13 @@ export default class Table extends Component {
 
   getCollapseList = () => {
     let collapseList = this.state.collapseList;
-    this.props.data.forEach((d) => {
-      collapseList[d[this.props.idKey]] = false;
-    });
-    this.setState({ collapseList });
+
+    if (this.props.data !== undefined) {
+      this.props.data.forEach((d) => {
+        collapseList[d[this.props.idKey]] = false;
+      });
+      this.setState({ collapseList });
+    }
   };
 
   toggleShowDelete = () => {
