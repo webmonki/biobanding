@@ -17,6 +17,10 @@
 	height: fit-content;
 }
 
+.sortIcon {
+	color: rgba(0, 0, 0, 0.3);
+}
+
 button {
 	border: none;
 	outline: none;

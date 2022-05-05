@@ -53,7 +53,7 @@ export default class SortIcon extends Component {
             <span>{this.props.colname}</span>
 
             <i
-              class={"material-icons"}
+              class={`${"material-icons"} ${style.sortIcon}`}
               aria-hidden="true"
               style={{ visibility: this.state.visibility }}
             >
@@ -77,7 +77,7 @@ export default class SortIcon extends Component {
             }}
           >
             <i
-              class={"material-icons"}
+              class={`${"material-icons"} ${style.sortIcon}`}
               aria-hidden="true"
               style={{ visibility: this.state.visibility }}
             >
