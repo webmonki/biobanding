@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from dataclasses import dataclass
-from api.formulas import mirwald
+from api.formulas import mirwald, bmi
 from .config import BaseConfig
 import jwt
 
@@ -31,7 +31,6 @@ class Users(db.Model):
     date_last_password_reset = db.Column(db.DateTime())
 
     playermaster = db.relationship("PlayerMaster", back_populates="users", uselist=False)
-
 
     def __repr__(self):
         return f"User {self.username}"
@@ -78,7 +77,6 @@ class Users(db.Model):
         self.save()
 
         # Anonymize user data
-
 
         db.session.commit()
 
@@ -156,6 +154,7 @@ class PlayerMaster(db.Model):
         db.session.add(self)
         db.session.commit()
 
+
 @dataclass
 class PlayerDetail(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), primary_key=True)
@@ -168,10 +167,10 @@ class PlayerDetail(db.Model):
     def get_by_id(cls, id):
         return cls.query.get_or_404(id)
 
-
     def save(self):
         db.session.add(self)
         db.session.commit()
+
 
 @dataclass
 class AnthropometricData(db.Model):
@@ -185,6 +184,7 @@ class AnthropometricData(db.Model):
     phv = db.Column(db.Float(), nullable=False)
     offset = db.Column(db.Float(), nullable=False)
     ak_bio = db.Column(db.String, nullable=False)
+    bmi = db.Column(db.Float(), nullable=False)
 
     """
     def mirwald(self, a, b, c, d):
@@ -208,16 +208,19 @@ class AnthropometricData(db.Model):
         date_measured = str(self.date_measured).split(' ')[0]
         # Run mirwald equation
         res = mirwald(self.sitting_height,
-                                      self.height,
-                                      date_measured,
-                                      birthdate,
-                                      self.weight,
-                                      gender)
+                      self.height,
+                      date_measured,
+                      birthdate,
+                      self.weight,
+                      gender)
 
         # Get pvh, offset and ak_bio from result dict
         self.phv = res['phv']
         self.ak_bio = res['ak_bio']
         self.offset = res['offset']
+
+        # calculate bmi
+        self.bmi = bmi(self.height, self.weight)
         # Add and commit results to db
         db.session.add(self)
         db.session.commit()
@@ -262,10 +265,11 @@ class AnthropometricData(db.Model):
         user_data = cls.query.all()
         return user_data
 
+
 @dataclass
 class AdminConfig(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    days_reminder = db.Column(db.Integer(),default=90)
+    days_reminder = db.Column(db.Integer(), default=90)
     mail_server = db.Column(db.String(), default='smtp.example.org')
     mail_port = db.Column(db.Integer(), default=465)
     mail_use_ssl = db.Column(db.Boolean(), default=True)
@@ -294,9 +298,8 @@ class AdminConfig(db.Model):
         db.session.add(self)
         db.session.commit()
 
-
     @classmethod
-    def update_days_reminder (cls, _days_reminder):
+    def update_days_reminder(cls, _days_reminder):
         config = cls.query.filter_by(id=1).first()
         config.days_reminder = _days_reminder
         db.session.commit()
@@ -311,17 +314,10 @@ class AdminConfig(db.Model):
         return cls.query.filter_by(id=1).first()
 
     def toDICT(self):
-
         cls_dict = {}
         cls_dict['days_reminder'] = self.days_reminder
         cls_dict['mail_server'] = self.mail_server
         cls_dict['mail_port'] = self.mail_port
-        cls_dict['mail_use_ssl'] = self. mail_use_ssl
+        cls_dict['mail_use_ssl'] = self.mail_use_ssl
         cls_dict['mail_username'] = self.mail_username
         return cls_dict
-
-
-
-
-
-
