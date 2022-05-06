@@ -110,9 +110,12 @@ export default class Table extends Component {
   };
 
   sortDescending = (data, key) => {
-    if (typeof data[0][key] === "string") {
+    let type = typeof data[0][key];
+    if (type === "string") {
       data.sort((a, b) => a[key].localeCompare(b[key]));
-    } else if (typeof data[0][key] === "number") {
+    } else if (type === "number") {
+      data.sort((a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0));
+    } else if (type === "object") {
       data.sort((a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0));
     }
 
@@ -120,9 +123,13 @@ export default class Table extends Component {
   };
 
   sortAscending = (data, key) => {
-    if (typeof data[0][key] === "string") {
+    let type = typeof data[0][key];
+
+    if (type === "string") {
       data.sort((a, b) => b[key].localeCompare(a[key]));
-    } else if (typeof data[0][key] === "number") {
+    } else if (type === "number") {
+      data.sort((a, b) => (a[key] < b[key] ? 1 : b[key] < a[key] ? -1 : 0));
+    } else if (type === "object") {
       data.sort((a, b) => (a[key] < b[key] ? 1 : b[key] < a[key] ? -1 : 0));
     }
 
