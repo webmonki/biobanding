@@ -401,3 +401,19 @@ tr:hover {
 	justify-content: space-between;
 	margin-bottom: 10px;
 }
+
+.filterCountContainer {
+	background-color: var(--mdc-theme-primary);
+	color: white;
+	border-radius: 100px;
+	width: 25px;
+	height: 25px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	right: 15px;
+	bottom: 5px;
+	cursor: pointer;
+	padding-top: 2px;
+}

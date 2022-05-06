@@ -103,6 +103,23 @@ export default class Menu extends Component {
     return content;
   };
 
+  getFilterCount = () => {
+    let length = this.state.filterList.length;
+
+    if (length > 0) {
+      return (
+        <div
+          class={style.filterCountContainer}
+          onCLick={this.collapseFilterContainer}
+        >
+          {length}
+        </div>
+      );
+    }
+
+    return undefined;
+  };
+
   render() {
     let content;
     if (this.props.showDelete) {
@@ -129,6 +146,7 @@ export default class Menu extends Component {
                 filter_list
               </i>
             </button>
+            {this.getFilterCount()}
             <div id={"filterContainer"} class={style.filterContainer}>
               {this.renderFilterList()}
             </div>
