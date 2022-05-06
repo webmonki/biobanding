@@ -167,9 +167,16 @@ th {
 }
 
 .divider {
+	position:relative;
+	left: -5px;
 	width: 2px;
 	height: calc(var(--global-table-cell-height) - 32px);
 	background-color: rgba(0, 0, 0, 0.10);
+}
+
+.colname {
+	position: relative;
+	left: -5px;
 }
 
 table {

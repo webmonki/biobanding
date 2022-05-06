@@ -645,8 +645,8 @@ export default class Table extends Component {
           }
           let year = date.getFullYear();
 
-          let output = day + "." + month + "." + year;
-          return <td>{output}</td>;
+          let output = month + "-" + day + "-" + year;
+          return <td class={this.getTableDataStyle(row, key)}>{output}</td>;
         })}
       </tr>
     );
