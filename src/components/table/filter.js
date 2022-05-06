@@ -90,6 +90,7 @@ export default class Filter extends Component {
       return (
         <TextField
           type="text"
+          autocomplete="off"
           outlined
           onInput={(e) => {
             this.setState({ value: e.target.value });
@@ -101,6 +102,7 @@ export default class Filter extends Component {
       return (
         <TextField
           type="number"
+          autocomplete="off"
           outlined
           onInput={(e) => {
             this.setState({ value: e.target.value });
@@ -112,6 +114,7 @@ export default class Filter extends Component {
       return (
         <TextField
           class={style.filterDatePicker}
+          autocomplete="off"
           outlined
           type="date"
           onInput={(e) => {
@@ -146,7 +149,7 @@ export default class Filter extends Component {
         </button>
         <Select
           outlined
-          selectedIndex={this.state.chosenIndex}
+          selectedIndex={0}
           onChange={(e) => {
             this.setState({ chosenIndex: e.target.selectedIndex });
             this.setState({ value: "" });

@@ -38,7 +38,7 @@ export default class Menu extends Component {
     if (coll.style.maxHeight) {
       coll.style.maxHeight = null;
     } else {
-      coll.style.maxHeight = coll.scrollHeight + "px";
+      coll.style.maxHeight = "fit-content";
     }
   };
 
@@ -82,20 +82,20 @@ export default class Menu extends Component {
 
     let content = (
       <div id={"filterContainer"} class={style.filterContainer}>
-        <div class={style.filterListContainer}>
-          {filterList.map((filter) => (
-            <div>{filter}</div>
-          ))}
-        </div>
         <div class={style.addFilterContainer}>
           <button class={style.menuBtn} onClick={this.addFilter}>
             <i
               class={`${"material-icons"} ${style.menuBtnIcon}`}
               aria-hidden="true"
             >
-              add_circle_outline
+              add_circle
             </i>
           </button>
+        </div>
+        <div class={style.filterListContainer}>
+          {filterList.map((filter) => (
+            <div>{filter}</div>
+          ))}
         </div>
       </div>
     );
@@ -128,11 +128,11 @@ export default class Menu extends Component {
         <div class={style.menuContainer}>
           <div class={style.filterContentContainer}>
             <button
-              class={style.menuBtn}
+              class={style.invertBtn}
               onClick={this.collapseFilterContainer}
             >
               <i
-                class={`${"material-icons"} ${style.menuBtnIcon}`}
+                class={`${"material-icons"} ${style.invertIcon}`}
                 aria-hidden="true"
               >
                 filter_list
@@ -149,9 +149,9 @@ export default class Menu extends Component {
           </div>
 
           <div class={style.menuBtnContainer}>
-            <button class={style.menuBtn} onClick={this.props.exportFile}>
+            <button class={style.invertBtn} onClick={this.props.exportFile}>
               <i
-                class={`${"material-icons"} ${style.menuBtnIcon}`}
+                class={`${"material-icons"} ${style.invertIcon}`}
                 aria-hidden="true"
               >
                 file_download
@@ -162,7 +162,7 @@ export default class Menu extends Component {
                 class={`${"material-icons"} ${style.menuBtnIcon}`}
                 aria-hidden="true"
               >
-                add_circle_outline
+                add_circle
               </i>
             </button>
           </div>
