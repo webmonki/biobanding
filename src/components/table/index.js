@@ -21,15 +21,17 @@ export default class Table extends Component {
 
     this.setState({ newData: this.props.data });
 
-    this.getPageSize();
     this.setState({ subTableIndex: 7 });
     this.setState({ colsHidden: ["id", "Id", "userID"] });
 
     this.setState({ collapseList: {} });
 
-    this.getCollapseList();
-
     this.setState({ filterParams: [] });
+    this.getPageSize();
+
+    this.setState({ pages: {} });
+    this.setPages();
+    this.getCollapseList();
   };
 
   componentDidMount = () => {
@@ -75,6 +77,15 @@ export default class Table extends Component {
     if (showDelete !== this.state.showDelete) {
       this.setState({ showDelete });
     }
+  };
+
+  setPages = () => {
+    let data = this.props.data;
+    let pageSize = this.props.pageSize;
+
+    let pageCount = Math.ceil(data.length / pageSize);
+
+    for (let i = 1; i <= pageCount; i++) {}
   };
 
   setPage = (page) => {
@@ -546,8 +557,6 @@ export default class Table extends Component {
       coll.style.maxHeight = null;
       collIcon.innerHTML = "arrow_drop_down";
     }
-
-    this.getPageSize();
   };
 
   unCollapse = (id) => {
@@ -558,18 +567,23 @@ export default class Table extends Component {
       coll.style.maxHeight = coll.scrollHeight + "px";
       collIcon.innerHTML = "arrow_drop_up";
     }
-
-    this.getPageSize();
   };
 
   addToCollapseList = (id) => {
     let collList = this.state.collapseList;
+    let keys = Object.keys(collList);
 
-    if (collList[id]) {
-      collList[id] = false;
-    } else if (!collList[id]) {
-      collList[id] = true;
-    }
+    keys.forEach((key) => {
+      if (parseInt(key, 10) === id) {
+        if (collList[id]) {
+          collList[id] = false;
+        } else if (!collList[id]) {
+          collList[id] = true;
+        }
+      } else {
+        collList[key] = false;
+      }
+    });
 
     this.setState({ collapseList: collList });
   };
@@ -598,7 +612,7 @@ export default class Table extends Component {
   renderTableContent = (key, row) => {
     let cols = this.getRangeList(0, this.state.subTableIndex);
     return (
-      <tr>
+      <tr id={key + "mainRow"}>
         <td id={"tableData"} class={style.btnsData}>
           <div class={style.tdBtnsContainer}>
             <button
@@ -655,9 +669,10 @@ export default class Table extends Component {
   createTableBody = () => {
     let page = this.state.page;
     let data = this.getData();
+    let pageSize = this.getPageSize();
     if (data !== undefined) {
-      let indexEnd = page * this.getPageSize();
-      let indexStart = indexEnd - this.getPageSize();
+      let indexEnd = page * pageSize;
+      let indexStart = indexEnd - pageSize;
 
       let pageData = data.slice(indexStart, indexEnd);
 
@@ -705,29 +720,27 @@ export default class Table extends Component {
   };
 
   getPageSize = () => {
-    // let maxHeight = window.innerHeight;
-    // let tableData = document.getElementById("tableData");
-    // let subTable = document.getElementById("subTableRow");
+    let coll = this.state.collapseList;
+    let collKeys = Object.keys(coll);
+    let collLength = 0;
 
-    // if (tableData !== null) {
-    //   let dataHeight = tableData.offsetHeight;
-    //   let subTableHeight = subTable.offsetHeight;
-    // }
+    let pageSize = this.props.pageSize;
 
-    return this.props.pageSize;
+    return pageSize;
   };
 
   getPageCount = () => {
     if (this.state.data !== undefined) {
       let pageCount;
-      if (this.state.data.length === this.getPageSize()) {
+      let pageSize = this.getPageSize();
+      if (this.state.data.length === pageSize) {
         pageCount = 1;
       }
-      if (this.state.data.length < this.getPageSize()) {
+      if (this.state.data.length < pageSize) {
         pageCount = 1;
       }
-      if (this.state.data.length > this.getPageSize()) {
-        pageCount = (this.props.data.length / this.getPageSize() + 1)
+      if (this.state.data.length > pageSize) {
+        pageCount = (this.props.data.length / pageSize + 1)
           .toString()
           .split(".")[0];
 
@@ -880,23 +893,20 @@ export default class Table extends Component {
 
   render() {
     return (
-      <div>
-        <div>
-          <Menu
-            setSearchVal={this.setSearchVal}
-            showDialog={this.props.showDialog}
-            showDelete={this.state.showDelete}
-            checkDelete={this.checkDelete}
-            count={this.getSelectedCount()}
-            exportFile={this.exportFile}
-            title={this.props.title}
-            cols={this.getCols()}
-            data={this.props.data}
-            getFilters={this.getFilters}
-            deleteFilterParams={this.deleteFilterParams}
-          />
-        </div>
-
+      <div class={style.tableContentContainer}>
+        <Menu
+          setSearchVal={this.setSearchVal}
+          showDialog={this.props.showDialog}
+          showDelete={this.state.showDelete}
+          checkDelete={this.checkDelete}
+          count={this.getSelectedCount()}
+          exportFile={this.exportFile}
+          title={this.props.title}
+          cols={this.getCols()}
+          data={this.props.data}
+          getFilters={this.getFilters}
+          deleteFilterParams={this.deleteFilterParams}
+        />
         <div class={style.tableContainer}>
           <table>
             {this.createTableHeader()}

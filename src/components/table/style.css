@@ -122,19 +122,11 @@ button {
 	top: 0;
 }
 
+.tableContentContainer {
+	padding-left: 30px;
+	padding-right: 30px;
+}
 
-
-
-
-/* th, td {
-	padding: 8px 16px;
-	overflow: hidden;
-} */
-/* 
-th {
-	height: 30px;
-	max-height: 30px;
-} */
 
 .tdBtnsContainer {
 	display: flex;
@@ -267,8 +259,6 @@ tr:hover {
 
 .tableContainer {
 	overflow-x: auto;
-	padding-right: 30px;
-	padding-left: 30px;
 }
 
 
@@ -296,7 +286,7 @@ tr:hover {
 }
 
 .subTableTitleContainer {
-	margin: 20px 0 20px 0;
+	margin: 10px 0 0 0;
 }
 
 .checkAll {
@@ -361,6 +351,8 @@ tr:hover {
 	overflow: hidden;
 	transition: max-height 0.2s ease-out;
 	height: 200px;
+	padding-left: 70px;
+	padding-right: 70px;
 }
 
 
@@ -369,7 +361,7 @@ tr:hover {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 15px 30px 15px 30px;
+	padding: 15px 0 15px 0;
 }
 
 .filterContentContainer {

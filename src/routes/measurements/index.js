@@ -63,35 +63,31 @@ export default class Measurements extends Component {
     let content;
     if (Auth.check_admin()) {
       content = (
-        <div>
-          <Table
-            editable={editable}
-            data={data}
-            pageSize={10}
-            clickEdit={this.showDialog}
-            delete={this.delete}
-            showDialog={this.openDialog}
-            idKey="Id"
-            title="Messungen"
-            subTableTitle="Ergebnisse"
-          />
-        </div>
+        <Table
+          editable={editable}
+          data={data}
+          pageSize={9}
+          clickEdit={this.showDialog}
+          delete={this.delete}
+          showDialog={this.openDialog}
+          idKey="Id"
+          title="Messungen"
+          subTableTitle="Ergebnisse"
+        />
       );
     } else {
       content = (
-        <div>
-          <Table
-            editable={editable}
-            data={data}
-            pageSize={10}
-            clickEdit={this.showDialog}
-            delete={this.delete}
-            showDialog={this.openDialog}
-            idKey="id"
-            title="Messungen"
-            subTableTitle="Ergebnisse"
-          />
-        </div>
+        <Table
+          editable={editable}
+          data={data}
+          pageSize={9}
+          clickEdit={this.showDialog}
+          delete={this.delete}
+          showDialog={this.openDialog}
+          idKey="id"
+          title="Messungen"
+          subTableTitle="Ergebnisse"
+        />
       );
     }
 
