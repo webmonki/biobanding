@@ -634,8 +634,19 @@ export default class Table extends Component {
           if (key !== "Datum") {
             return <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>;
           }
-          let date = row[key].toDateString();
-          return <td>{date}</td>;
+          let date = row[key];
+          let day = date.getDay() + 1;
+          if (day < 10) {
+            day = "0" + day;
+          }
+          let month = date.getMonth() + 1;
+          if (month < 10) {
+            month = "0" + month;
+          }
+          let year = date.getFullYear();
+
+          let output = day + "." + month + "." + year;
+          return <td>{output}</td>;
         })}
       </tr>
     );
