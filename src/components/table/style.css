@@ -17,6 +17,10 @@
 	height: fit-content;
 }
 
+.sortIcon {
+	color: rgba(0, 0, 0, 0.3);
+}
+
 button {
 	border: none;
 	outline: none;
@@ -38,12 +42,6 @@ button {
 	align-items: center;
 }
 
-/* .tdIconContainer {
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-	margin-left: 26px;
-} */
 
 .editBtn {
 	width: 40px;
@@ -126,11 +124,7 @@ button {
 
 
 
-table {
-	border-collapse: collapse;
-	width: 100%;
-	border-spacing: 0;
-}
+
 
 /* th, td {
 	padding: 8px 16px;
@@ -144,42 +138,12 @@ th {
 
 .tdBtnsContainer {
 	display: flex;
-	padding: 8px 16px;
+	padding: 8px;
 }
 
 .btnsData {
 	max-width: 200px;
 	min-width: 200px;
-}
-
-.alignLeft {
-	text-align: left;
-	justify-content: flex-start;
-	padding: 8px 16px;
-	max-width: var(--global-table-cell-width);
-	min-width: var(--global-table-cell-width);
-	max-height: var(--global-table-cell-height);
-	height: var(--global-table-cell-height);
-	min-height: var(--global-table-cell-height);
-}
-
-.alignRight {
-	text-align: right;
-	justify-content: flex-end;
-	padding: 8px 16px;
-	max-width: var(--global-table-cell-width);
-	min-width: var(--global-table-cell-width);
-	max-height: var(--global-table-cell-height);
-	height: var(--global-table-cell-height);
-	min-height: var(--global-table-cell-height);
-}
-
-td {
-	border-top: 1px solid #C7C1C1;
-}
-
-tr:hover {
-	background-color: #EEEEF1;
 }
 
 .headerCell {
@@ -189,12 +153,60 @@ tr:hover {
 	max-height: var(--global-table-cell-height);
 	height: var(--global-table-cell-height);
 	min-height: var(--global-table-cell-height);
+	width: 100%;
 }
+
+.headerCellContainer {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	cursor: pointer;
+}
+
+.divider {
+	width: 2px;
+	height: calc(var(--global-table-cell-height) - 10px);
+	background-color: rgba(0, 0, 0, 0.10);
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+	border-spacing: 0;
+}
+
+.alignLeft {
+	text-align: left;
+	justify-content: flex-start;
+	padding: 8px;
+	max-height: var(--global-table-cell-height);
+	height: var(--global-table-cell-height);
+	min-height: var(--global-table-cell-height);
+}
+
+.alignRight {
+	text-align: right;
+	justify-content: flex-end;
+	padding: 8px;
+	max-height: var(--global-table-cell-height);
+	height: var(--global-table-cell-height);
+	min-height: var(--global-table-cell-height);
+}
+
+td {
+	border-top: 1px solid #C7C1C1;
+}
+
+
+tr:hover {
+	background-color: #EEEEF1;
+}
+
+
 
 .deleteBtn {
 	margin-left: 50px;
 }
-
 
 .btn {
 	color: var(--mdc-theme-primary);
@@ -245,6 +257,8 @@ tr:hover {
 
 .tableContainer {
 	overflow-x: auto;
+	padding-right: 30px;
+	padding-left: 30px;
 }
 
 .searchContainer {
@@ -285,7 +299,7 @@ tr:hover {
 
 .checkAll {
 	width: fit-content;
-	margin-left: 55px;
+	margin-left: 48px;
 }
 
 .roundBtn {
@@ -331,6 +345,7 @@ tr:hover {
 
 .subTable {
 	border-collapse: collapse;
+	table-layout: fixed;
 }
 
 .subTableRow {
@@ -351,9 +366,8 @@ tr:hover {
 	max-height: 0;
 	overflow: hidden;
 	transition: max-height 0.2s ease-out;
-	padding-left: 10%;
-	padding-right: 10%;
 	height: 200px;
+	padding: 0 10% 0 10%;
 }
 
 .search {
