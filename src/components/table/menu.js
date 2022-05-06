@@ -81,7 +81,7 @@ export default class Menu extends Component {
     let filterList = this.state.filterList;
 
     let content = (
-      <div>
+      <div id={"filterContainer"} class={style.filterContainer}>
         <div class={style.filterListContainer}>
           {filterList.map((filter) => (
             <div>{filter}</div>
@@ -103,21 +103,13 @@ export default class Menu extends Component {
     return content;
   };
 
-  getFilterCount = () => {
+  getVisibility = () => {
     let length = this.state.filterList.length;
 
     if (length > 0) {
-      return (
-        <div
-          class={style.filterCountContainer}
-          onCLick={this.collapseFilterContainer}
-        >
-          {length}
-        </div>
-      );
+      return "visible";
     }
-
-    return undefined;
+    return "hidden";
   };
 
   render() {
@@ -146,10 +138,14 @@ export default class Menu extends Component {
                 filter_list
               </i>
             </button>
-            {this.getFilterCount()}
-            <div id={"filterContainer"} class={style.filterContainer}>
-              {this.renderFilterList()}
+            <div
+              class={style.filterCountContainer}
+              onCLick={this.collapseFilterContainer}
+              style={{ visibility: this.getVisibility() }}
+            >
+              {this.state.filterList.length}
             </div>
+            {this.renderFilterList()}
           </div>
 
           <div class={style.menuBtnContainer}>

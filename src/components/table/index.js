@@ -130,57 +130,92 @@ export default class Table extends Component {
   };
 
   searchGreaterThan = (val, data, col) => {
+    let type = typeof data[0][col];
     let newData = [];
 
     if (val === "") {
       return data;
     }
 
-    data.forEach((obj) => {
-      let match = false;
+    if (type === "number") {
+      data.forEach((obj) => {
+        let match = false;
 
-      if (obj[col] > parseInt(val, 10)) {
-        match = true;
-      }
+        if (obj[col] > parseInt(val, 10)) {
+          match = true;
+        }
 
-      if (match) {
-        newData.push(obj);
-      }
-    });
+        if (match) {
+          newData.push(obj);
+        }
+      });
 
-    return newData;
+      return newData;
+    } else if (type === "object") {
+      data.forEach((obj) => {
+        let match = false;
+
+        if (obj[col] > val) {
+          match = true;
+        }
+
+        if (match) {
+          newData.push(obj);
+        }
+      });
+
+      return newData;
+    }
   };
 
   searchLesserThan = (val, data, col) => {
+    let type = typeof data[0][col];
     let newData = [];
 
     if (val === "") {
       return data;
     }
 
-    data.forEach((obj) => {
-      let match = false;
+    if (type === "number") {
+      data.forEach((obj) => {
+        let match = false;
 
-      if (obj[col] < parseInt(val, 10)) {
-        match = true;
-      }
+        if (obj[col] < parseInt(val, 10)) {
+          match = true;
+        }
 
-      if (match) {
-        newData.push(obj);
-      }
-    });
+        if (match) {
+          newData.push(obj);
+        }
+      });
 
-    return newData;
+      return newData;
+    } else if (type === "object") {
+      data.forEach((obj) => {
+        let match = false;
+
+        if (obj[col] < val) {
+          match = true;
+        }
+
+        if (match) {
+          newData.push(obj);
+        }
+      });
+
+      return newData;
+    }
   };
 
   search = (val, data, col) => {
+    let type = typeof data[0][col];
     let newData = [];
 
     if (val === "") {
       return data;
     }
 
-    if (typeof data[0][col] === "number") {
+    if (type === "number") {
       val = parseInt(val, 10);
 
       data.forEach((obj) => {
@@ -196,11 +231,24 @@ export default class Table extends Component {
       });
 
       return newData;
-    } else if (typeof data[0][col] === "string") {
+    } else if (type === "string") {
       data.forEach((obj) => {
         let match = false;
 
         if (obj[col].match(val)) {
+          match = true;
+        }
+
+        if (match) {
+          newData.push(obj);
+        }
+      });
+
+      return newData;
+    } else if (type === "object") {
+      data.forEach((obj) => {
+        let match = false;
+        if (obj[col].toDateString() === val.toDateString()) {
           match = true;
         }
 
@@ -223,6 +271,8 @@ export default class Table extends Component {
       return style.alignLeft;
     } else if (typeof this.props.data[0][name] === "number") {
       return style.alignRight;
+    } else if (typeof this.props.data[0][name] === "object") {
+      return style.alignLeft;
     }
   };
 
@@ -284,7 +334,6 @@ export default class Table extends Component {
               if (this.state.colsHidden.includes(name)) {
                 return undefined;
               }
-
               return (
                 <th>
                   <SortIcon
@@ -575,7 +624,11 @@ export default class Table extends Component {
           if (!cols.includes(key)) {
             return undefined;
           }
-          return <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>;
+          if (key !== "Datum") {
+            return <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>;
+          }
+          let date = row[key].toDateString();
+          return <td>{date}</td>;
         })}
       </tr>
     );

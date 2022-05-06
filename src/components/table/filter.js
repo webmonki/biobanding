@@ -7,6 +7,7 @@ import TextField from "preact-material-components/TextField";
 import "preact-material-components/TextField/style.css";
 import Select from "preact-material-components/Select";
 import "preact-material-components/Select/style.css";
+import NewMeasurementAdmin from "../dialogs/newMeasurementAdmin";
 
 export default class Filter extends Component {
   componentWillMount = () => {
@@ -39,20 +40,37 @@ export default class Filter extends Component {
         this.setState({ operator: 0 });
       }
       return <div>enthält</div>;
-    } else if (type === "number") {
+    } else if (type === "number" || type === "object") {
       return (
-        <Select
-          outlined
-          onChange={(e) => {
-            this.setState({ operator: e.target.selectedIndex });
+        <button
+          class={style.operatorBtn}
+          onClick={() => {
+            let operator = this.state.operator;
+
+            if (operator === 0 || operator === 1) {
+              this.setState({ operator: this.state.operator + 1 });
+            } else if (operator === 2) {
+              this.setState({ operator: 0 });
+            }
+
             this.hanldeChange();
           }}
         >
-          <Select.Item>ist gleich</Select.Item>
-          <Select.Item>kleiner als</Select.Item>
-          <Select.Item>größer als</Select.Item>
-        </Select>
+          {this.getOperatorSign()}
+        </button>
       );
+    }
+  };
+
+  getOperatorSign = () => {
+    let operator = this.state.operator;
+
+    if (operator === 0) {
+      return "=";
+    } else if (operator === 1) {
+      return "<";
+    } else if (operator === 2) {
+      return ">";
     }
   };
 
@@ -90,6 +108,25 @@ export default class Filter extends Component {
           }}
         />
       );
+    } else if (type === "object") {
+      return (
+        <TextField
+          class={style.filterDatePicker}
+          outlined
+          type="date"
+          onInput={(e) => {
+            let dateString = e.target.value;
+            dateString = dateString.replace('"', "");
+            dateString = dateString.replace('"', "");
+
+            let parts = dateString.split("-");
+            let newDate = new Date(parts[0], parts[1] - 1, parts[2]);
+            this.setState({ value: newDate });
+
+            this.hanldeChange();
+          }}
+        />
+      );
     }
   };
 
@@ -119,7 +156,7 @@ export default class Filter extends Component {
             <Select.Item>{col}</Select.Item>
           ))}
         </Select>
-        {this.getOperators()}
+        <div class={style.operatorContainer}>{this.getOperators()}</div>
         {this.getInputField()}
       </div>
     );

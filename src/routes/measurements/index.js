@@ -89,6 +89,7 @@ export default class Measurements extends Component {
             showDialog={this.openDialog}
             idKey="id"
             title="Messungen"
+            subTableTitle="Ergebnisse"
           />
         </div>
       );
@@ -195,6 +196,22 @@ export default class Measurements extends Component {
     xhttp.send(data);
   };
 
+  convertDate = (measurements) => {
+    measurements.forEach((measurement) => {
+      measurement.Datum = measurement.Datum.replace('"', "");
+      measurement.Datum = measurement.Datum.replace('"', "");
+
+      let parts = measurement.Datum.split("-");
+
+      let newDate = new Date(parts[0], parts[1] - 1, parts[2]);
+
+      //   newDate = newDate.toDateString();
+
+      measurement.Datum = newDate;
+    });
+    return measurements;
+  };
+
   getOverview = () => {
     let that = this;
     let url = Auth.url + "/api/measurements";
@@ -207,8 +224,9 @@ export default class Measurements extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
+
         that.setState({
-          measurements: response.measurements,
+          measurements: that.convertDate(response.measurements),
         });
         that.showTable(true);
       } else {
@@ -238,7 +256,9 @@ export default class Measurements extends Component {
         let response = JSON.parse(this.responseText);
         // that.setState({ responseFBClass : style.feedbackSucc });
         // that.setState({ responseFB : 'Messungen erfolgreich geladen' });
-        that.setState({ measurements: response["measurements:"] });
+        that.setState({
+          measurements: that.convertDate(response["measurements:"]),
+        });
         that.showTable(true);
       } else {
         try {
