@@ -9,6 +9,7 @@ from flask import Flask
 from flask_cors import CORS
 from sqlalchemy import func, and_
 from datetime import date, datetime
+from random import randrange
 
 from .routes import rest_api
 from .models import db, AdminConfig, Users, AnthropometricData
@@ -41,9 +42,10 @@ def initialize_database():
         db.session.commit()
 
     if db.session.query(AdminConfig).first() is None:
-        config = AdminConfig(days_reminder=90)
+        config = AdminConfig(days_reminder=90, registration_code=randrange(1000, 9999, 4))
         db.session.add(config)
         db.session.commit()
+
 
 """
    Custom responses
@@ -64,7 +66,7 @@ def after_request(response):
         response.headers.add('Content-Type', 'application/json')
     return response
 
-
+# [BEGIN reminder]
 @app.cli.command()
 def reminder():
     """Send a scheduled reminder to all users."""
@@ -105,6 +107,7 @@ def reminder():
                         url = "{}/measurement?token={}".format(os.environ['PREACT_APP_HOST_URI'], token)
                         # Send email reminder to user
                         send_email_with_token(user, 'Neue Messung eintragen', 'measurement_reminder.html', url)
+# [END reminder]
 
 
 

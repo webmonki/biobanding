@@ -6,6 +6,7 @@ Copyright (c) 2022 - VP-Systeme GmbH, Lyrenstr. 13, 44866 Bochum
 from datetime import datetime, timezone, timedelta
 from functools import wraps
 from json import dumps
+from random import randrange
 
 import jwt
 import os
@@ -30,6 +31,7 @@ rest_api = Api(version="1.0", title="Users API", authorizations=authorizations)
 signup_model = rest_api.model('SignUpModel', {"username": fields.String(required=True, min_length=2, max_length=32),
                                               "email": fields.String(required=True, min_length=4, max_length=64),
                                               "password": fields.String(required=True, min_length=4, max_length=16),
+                                              "registration_code" : fields.Integer(required=True, min=1000, max=9999),
                                               "is_admin": fields.Boolean()
                                               })
 
@@ -378,6 +380,11 @@ class Register(Resource):
         _email = req_data.get("email")
         _password = req_data.get("password")
         _is_admin = req_data.get("is_admin")
+        _registration_code = req_data.get("registration_code")
+
+        if not AdminConfig.check_registration_code(_registration_code):
+            return {"success": False,
+                    "msg": "Registration code {} is not valid".format(_registration_code)}, 400
 
         if not emailIsValid(_email):
             return {"success": False,
@@ -633,6 +640,38 @@ class EditConfiguration(Resource):
 
         return {"success": True,
                 "config": config.toDICT()}, 200
+
+
+@rest_api.route('/api/configurations/code')
+class Configuration(Resource):
+
+    @rest_api.response(200, 'Success')
+    @rest_api.response(400, 'Could not save new registration code')
+    @rest_api.response(404, 'Authenticated, but no permissions')
+    @token_required
+    def post(self, current_user):
+        """Generate new registration code"""
+
+        if self.is_admin:
+            # Generate new registration code
+            new_code = randrange(1000, 9999, 4)
+            try:
+                # Get configuration from db
+                config = AdminConfig.get_config()
+                # Save new code to AdminConfig in db
+                config.registration_code = new_code
+                config.save()
+
+            except Exception:
+                return {"success": False,
+                        "msg": "Could not save new registration code"}, 400
+
+            return {"success": True,
+                    "registration_code": new_code,
+                    "msg": "Successfully generated new registration code"}, 200
+        else:
+            return {"success": False,
+                    "msg": "Authenticated, but no permissions"}, 403
 
 
 @rest_api.route('/api/configurations/testmail')
