@@ -456,14 +456,12 @@ tr:hover {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	text-align: center;
 }
 
 .invertBtn {
 	border: none;
 	background: none;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 	border-radius: 100px;
 	cursor: pointer;
 	height: 40px;

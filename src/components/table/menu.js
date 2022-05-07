@@ -17,6 +17,7 @@ export default class Menu extends Component {
     this.setState({ filterCount: 0 });
   };
 
+  // Count meassage of selected rows for delete
   getSelectedCountMsg = () => {
     let msg = this.props.count.toString();
     if (this.props.count === 1) {
@@ -32,6 +33,7 @@ export default class Menu extends Component {
     return msg;
   };
 
+  // Collapse filter Container
   collapseFilterContainer = () => {
     let coll = document.getElementById("filterContainer");
 
@@ -42,6 +44,14 @@ export default class Menu extends Component {
     }
   };
 
+  showIds = () => {
+    let filterList = this.state.filterList;
+
+    filterList.forEach((filter) => console.log(filter.attributes.id));
+    console.log("---------------------------");
+  };
+
+  // Delete a Filter from Filterlist
   deleteFilter = (id) => {
     this.props.deleteFilterParams(id);
     let filterList = this.state.filterList;
@@ -56,17 +66,45 @@ export default class Menu extends Component {
     });
 
     this.setState({ filterList });
+    this.showIds();
   };
 
+  // Add a Filter to Filterlist
   addFilter = () => {
     let filterList = this.state.filterList;
     let keys = Object.keys(filterList);
+    let id;
+    let i = 0;
+
+    let loop = true;
+    let match = false;
+
+    while (loop) {
+      if (filterList.length === 0) {
+        loop = false;
+        id = 0;
+      }
+
+      filterList.forEach((filter) => {
+        if (i + "filter" === filter.attributes.id) {
+          match = true;
+        }
+      });
+
+      if (match) {
+        i++;
+        match = false;
+      } else {
+        id = i;
+        loop = false;
+      }
+    }
 
     let filter = (
       <Filter
         cols={this.props.cols}
         deleteFilter={this.deleteFilter}
-        id={keys.length + 1 + "filter"}
+        id={id + "filter"}
         data={this.props.data}
         getFilters={this.props.getFilters}
       />
@@ -75,6 +113,8 @@ export default class Menu extends Component {
     filterList.push(filter);
 
     this.setState({ filterList });
+
+    this.showIds();
   };
 
   renderFilterList = () => {
@@ -83,6 +123,7 @@ export default class Menu extends Component {
     let content = (
       <div id={"filterContainer"} class={style.filterContainer}>
         <div class={style.addFilterContainer}>
+          {/* Add Filter Button */}
           <button class={style.menuBtn} onClick={this.addFilter}>
             <i
               class={`${"material-icons"} ${style.menuBtnIcon}`}
@@ -92,6 +133,7 @@ export default class Menu extends Component {
             </i>
           </button>
         </div>
+        {/* Container in which the Filters will be rendered */}
         <div class={style.filterListContainer}>
           {filterList.map((filter) => (
             <div>{filter}</div>
@@ -103,6 +145,7 @@ export default class Menu extends Component {
     return content;
   };
 
+  // Return visibility of the filter Counter Icon
   getVisibility = () => {
     let length = this.state.filterList.length;
 
@@ -115,6 +158,7 @@ export default class Menu extends Component {
   render() {
     let content;
     if (this.props.showDelete) {
+      // Delete Button
       content = (
         <div class={style.deleteContainer} onClick={this.props.checkDelete}>
           <span class={style.selectedCount}>{this.getSelectedCountMsg()}</span>
@@ -124,9 +168,11 @@ export default class Menu extends Component {
         </div>
       );
     } else {
+      // Table Menu Bar
       content = (
         <div class={style.menuContainer}>
           <div class={style.filterContentContainer}>
+            {/* Button to open Filterlist */}
             <button
               class={style.invertBtn}
               onClick={this.collapseFilterContainer}
@@ -138,6 +184,7 @@ export default class Menu extends Component {
                 filter_list
               </i>
             </button>
+            {/* Filter Count */}
             <div
               class={style.filterCountContainer}
               onCLick={this.collapseFilterContainer}
@@ -145,9 +192,11 @@ export default class Menu extends Component {
             >
               {this.state.filterList.length}
             </div>
+            {/* Filter list */}
             {this.renderFilterList()}
           </div>
 
+          {/* Add and Export Button */}
           <div class={style.menuBtnContainer}>
             <button class={style.invertBtn} onClick={this.props.exportFile}>
               <i

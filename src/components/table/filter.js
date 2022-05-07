@@ -11,7 +11,7 @@ import NewMeasurementAdmin from "../dialogs/newMeasurementAdmin";
 
 export default class Filter extends Component {
   componentWillMount = () => {
-    this.setState({ chosenIndex: 0 });
+    this.setState({ chosenIndex: 2 });
   };
 
   hanldeChange = () => {
@@ -35,11 +35,14 @@ export default class Filter extends Component {
 
     let type = typeof data[col];
 
+    // Operator for Strings
     if (type === "string") {
       if (this.state.operator !== 0) {
         this.setState({ operator: 0 });
       }
       return <div>enthält</div>;
+
+      // Operator for number and date-object
     } else if (type === "number" || type === "object") {
       return (
         <button
@@ -136,6 +139,7 @@ export default class Filter extends Component {
   render() {
     return (
       <div class={style.filter}>
+        {/* Cancel Button */}
         <button
           class={style.menuBtn}
           onClick={() => this.props.deleteFilter(this.props.id)}
@@ -147,6 +151,8 @@ export default class Filter extends Component {
             cancel
           </i>
         </button>
+
+        {/* dropdown to choose column */}
         <Select
           outlined
           selectedIndex={0}
