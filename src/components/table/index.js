@@ -670,6 +670,7 @@ export default class Table extends Component {
     let page = this.state.page;
     let data = this.getData();
     let pageSize = this.getPageSize();
+
     if (data !== undefined) {
       let indexEnd = page * pageSize;
       let indexStart = indexEnd - pageSize;
@@ -720,11 +721,46 @@ export default class Table extends Component {
   };
 
   getPageSize = () => {
-    let coll = this.state.collapseList;
-    let collKeys = Object.keys(coll);
-    let collLength = 0;
+    // let pageSize = this.props.pageSize;
 
-    let pageSize = this.props.pageSize;
+    let tables = document.getElementsByTagName("table");
+
+    let tableCellHeight = getComputedStyle(
+      document.documentElement
+    ).getPropertyValue("--global-table-cell-height");
+
+    tableCellHeight = parseInt(tableCellHeight.replace("px", ""), 10);
+
+    let topBarHeight = getComputedStyle(
+      document.documentElement
+    ).getPropertyValue("--global-header-height");
+    topBarHeight = parseInt(topBarHeight.replace("px", ""), 10);
+
+    let mrgn = getComputedStyle(document.documentElement).getPropertyValue(
+      "--global-page-mrgn"
+    );
+    mrgn = parseInt(mrgn.replace("px", ""), 10);
+
+    let headerHeight = getComputedStyle(
+      document.documentElement
+    ).getPropertyValue("--global-header-size");
+    headerHeight = parseInt(headerHeight.replace("px", ""), 10);
+
+    let pageHeaderHeight = document.getElementsByClassName("pageLarge");
+
+    if (pageHeaderHeight.length === 0) {
+      pageHeaderHeight = document.getElementsByClassName("pageSmall");
+    }
+
+    console.log("PHH: ", pageHeaderHeight);
+
+    console.log(topBarHeight + mrgn + headerHeight + tableCellHeight * 3);
+
+    let vpHeight =
+      window.innerHeight -
+      (190 + topBarHeight + mrgn + headerHeight + tableCellHeight * 3);
+
+    let pageSize = Math.floor(vpHeight / tableCellHeight);
 
     return pageSize;
   };

@@ -12,6 +12,7 @@ import NewMeasurementAdmin from "../dialogs/newMeasurementAdmin";
 export default class Filter extends Component {
   componentWillMount = () => {
     this.setState({ chosenIndex: 2 });
+    this.setState({ operator: 0 });
   };
 
   hanldeChange = () => {
@@ -155,10 +156,11 @@ export default class Filter extends Component {
         {/* dropdown to choose column */}
         <Select
           outlined
-          selectedIndex={0}
+          selectedIndex={this.state.chosenIndex}
           onChange={(e) => {
             this.setState({ chosenIndex: e.target.selectedIndex });
             this.setState({ value: "" });
+            this.hanldeChange();
           }}
         >
           {this.props.cols.map((col) => (

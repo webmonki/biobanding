@@ -44,13 +44,6 @@ export default class Menu extends Component {
     }
   };
 
-  showIds = () => {
-    let filterList = this.state.filterList;
-
-    filterList.forEach((filter) => console.log(filter.attributes.id));
-    console.log("---------------------------");
-  };
-
   // Delete a Filter from Filterlist
   deleteFilter = (id) => {
     this.props.deleteFilterParams(id);
@@ -66,7 +59,6 @@ export default class Menu extends Component {
     });
 
     this.setState({ filterList });
-    this.showIds();
   };
 
   // Add a Filter to Filterlist
@@ -79,6 +71,7 @@ export default class Menu extends Component {
     let loop = true;
     let match = false;
 
+    // get Unique Id for Filter
     while (loop) {
       if (filterList.length === 0) {
         loop = false;
@@ -100,6 +93,7 @@ export default class Menu extends Component {
       }
     }
 
+    // Create Filter
     let filter = (
       <Filter
         cols={this.props.cols}
@@ -113,8 +107,6 @@ export default class Menu extends Component {
     filterList.push(filter);
 
     this.setState({ filterList });
-
-    this.showIds();
   };
 
   renderFilterList = () => {
