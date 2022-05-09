@@ -125,6 +125,7 @@ button {
 .tableContentContainer {
 	padding-left: 30px;
 	padding-right: 30px;
+	overflow-y: auto;
 }
 
 
@@ -195,10 +196,15 @@ table {
 	min-height: var(--global-table-cell-height);
 }
 
+
+
 td {
-	border-top: 1px solid #C7C1C1;
+	padding: 0;
 }
 
+/* tbody {
+	border-bottom: 1px solid #C7C1C1;
+} */
 
 tr:hover {
 	background-color: #EEEEF1;
@@ -332,21 +338,8 @@ tr:hover {
 	table-layout: fixed;
 }
 
-.subTableRow {
-	padding: 0 0 0 0;
-	border: none;
-}
-
-.subTableRow:hover {
-	background-color: white;
-}
-
-.subTableData {
-	padding: 0 0 !important;
-	border: none;
-}
-
 .subTableContainer {
+	border-bottom: 1px solid #C7C1C1;
 	max-height: 0;
 	overflow: hidden;
 	transition: max-height 0.2s ease-out;

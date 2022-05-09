@@ -752,10 +752,6 @@ export default class Table extends Component {
       pageHeaderHeight = document.getElementsByClassName("pageSmall");
     }
 
-    console.log("PHH: ", pageHeaderHeight);
-
-    console.log(topBarHeight + mrgn + headerHeight + tableCellHeight * 3);
-
     let vpHeight =
       window.innerHeight -
       (190 + topBarHeight + mrgn + headerHeight + tableCellHeight * 3);
