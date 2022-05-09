@@ -7,25 +7,10 @@ import TextField from "preact-material-components/TextField";
 import "preact-material-components/TextField/style.css";
 import Select from "preact-material-components/Select";
 import "preact-material-components/Select/style.css";
-import NewMeasurementAdmin from "../dialogs/newMeasurementAdmin";
 
 export default class Filter extends Component {
-  componentWillMount = () => {
-    this.setState({ chosenIndex: 2 });
-    this.setState({ operator: 0 });
-  };
-
-  hanldeChange = () => {
-    this.props.getFilters(
-      this.props.id,
-      this.props.cols[this.state.chosenIndex],
-      this.state.operator,
-      this.state.value
-    );
-  };
-
   getOperators = () => {
-    let col = this.props.cols[this.state.chosenIndex];
+    let col = this.props.cols[this.props.chosenIndex];
     let data;
 
     if (this.props.data !== undefined) {
@@ -35,7 +20,6 @@ export default class Filter extends Component {
     }
 
     let type = typeof data[col];
-
     // Operator for Strings
     if (type === "string") {
       if (this.state.operator !== 0) {
@@ -57,7 +41,12 @@ export default class Filter extends Component {
               this.setState({ operator: 0 });
             }
 
-            this.hanldeChange();
+            this.props.updateFilter(
+              this.props.id,
+              undefined,
+              this.state.operator,
+              undefined
+            );
           }}
         >
           {this.getOperatorSign()}
@@ -67,7 +56,7 @@ export default class Filter extends Component {
   };
 
   getOperatorSign = () => {
-    let operator = this.state.operator;
+    let operator = this.props.operator;
 
     if (operator === 0) {
       return "=";
@@ -79,7 +68,7 @@ export default class Filter extends Component {
   };
 
   getInputField = () => {
-    let col = this.props.cols[this.state.chosenIndex];
+    let col = this.props.cols[this.props.chosenIndex];
     let data;
 
     if (this.props.data !== undefined) {
@@ -96,9 +85,14 @@ export default class Filter extends Component {
           type="text"
           autocomplete="off"
           outlined
+          value={this.props.value}
           onInput={(e) => {
-            this.setState({ value: e.target.value });
-            this.hanldeChange();
+            this.props.updateFilter(
+              this.props.id,
+              undefined,
+              undefined,
+              e.target.value
+            );
           }}
         />
       );
@@ -108,34 +102,83 @@ export default class Filter extends Component {
           type="number"
           autocomplete="off"
           outlined
+          value={this.props.value}
           onInput={(e) => {
-            this.setState({ value: e.target.value });
-            this.hanldeChange();
+            this.props.updateFilter(
+              this.props.id,
+              undefined,
+              undefined,
+              e.target.value
+            );
           }}
         />
       );
     } else if (type === "object") {
+      let date;
+      if (typeof this.props.value === "object") {
+        let year = this.props.value.getFullYear();
+        let month = this.props.value.getMonth();
+        if (month < 10) {
+          month = "0" + month;
+        }
+        let day = this.props.value.getDate();
+        if (day < 10) {
+          day = "0" + day;
+        }
+
+        date = year + "-" + month + "-" + day;
+      }
       return (
         <TextField
           class={style.filterDatePicker}
           autocomplete="off"
           outlined
           type="date"
+          value={date}
           onInput={(e) => {
             let dateString = e.target.value;
             dateString = dateString.replace('"', "");
             dateString = dateString.replace('"', "");
 
             let parts = dateString.split("-");
-            let newDate = new Date(parts[0], parts[1] - 1, parts[2]);
-            this.setState({ value: newDate });
 
-            this.hanldeChange();
+            if (parts.length === 3) {
+              if (parts[0].length === 4 && parts[0][0] !== "0") {
+                let newDate = new Date(parts[0], parts[1], parts[2]);
+
+                this.props.updateFilter(
+                  this.props.id,
+                  undefined,
+                  undefined,
+                  newDate
+                );
+              }
+            }
           }}
         />
       );
     }
   };
+
+  renderDrowpdown = () => (
+    <select
+      class={style.filterSelect}
+      outlined
+      selectedIndex={this.props.chosenIndex}
+      onChange={(e) => {
+        this.props.updateFilter(
+          this.props.id,
+          e.target.selectedIndex,
+          undefined,
+          undefined
+        );
+      }}
+    >
+      {this.props.cols.map((col) => (
+        <option>{col}</option>
+      ))}
+    </select>
+  );
 
   render() {
     return (
@@ -152,21 +195,8 @@ export default class Filter extends Component {
             cancel
           </i>
         </button>
-
         {/* dropdown to choose column */}
-        <Select
-          outlined
-          selectedIndex={this.state.chosenIndex}
-          onChange={(e) => {
-            this.setState({ chosenIndex: e.target.selectedIndex });
-            this.setState({ value: "" });
-            this.hanldeChange();
-          }}
-        >
-          {this.props.cols.map((col) => (
-            <Select.Item>{col}</Select.Item>
-          ))}
-        </Select>
+        {this.renderDrowpdown()}
         <div class={style.operatorContainer}>{this.getOperators()}</div>
         {this.getInputField()}
       </div>

@@ -44,79 +44,14 @@ export default class Menu extends Component {
     }
   };
 
-  // Delete a Filter from Filterlist
-  deleteFilter = (id) => {
-    this.props.deleteFilterParams(id);
-    let filterList = this.state.filterList;
-
-    filterList.forEach((filter) => {
-      if (filter.attributes.id === id) {
-        let index = filterList.indexOf(filter);
-        if (index !== -1) {
-          filterList.splice(index, 1);
-        }
-      }
-    });
-
-    this.setState({ filterList });
-  };
-
-  // Add a Filter to Filterlist
-  addFilter = () => {
-    let filterList = this.state.filterList;
-    let keys = Object.keys(filterList);
-    let id;
-    let i = 0;
-
-    let loop = true;
-    let match = false;
-
-    // get Unique Id for Filter
-    while (loop) {
-      if (filterList.length === 0) {
-        loop = false;
-        id = 0;
-      }
-
-      filterList.forEach((filter) => {
-        if (i + "filter" === filter.attributes.id) {
-          match = true;
-        }
-      });
-
-      if (match) {
-        i++;
-        match = false;
-      } else {
-        id = i;
-        loop = false;
-      }
-    }
-
-    // Create Filter
-    let filter = (
-      <Filter
-        cols={this.props.cols}
-        deleteFilter={this.deleteFilter}
-        id={id + "filter"}
-        data={this.props.data}
-        getFilters={this.props.getFilters}
-      />
-    );
-
-    filterList.push(filter);
-
-    this.setState({ filterList });
-  };
-
   renderFilterList = () => {
-    let filterList = this.state.filterList;
+    let filterList = this.props.filters;
 
     let content = (
       <div id={"filterContainer"} class={style.filterContainer}>
         <div class={style.addFilterContainer}>
           {/* Add Filter Button */}
-          <button class={style.menuBtn} onClick={this.addFilter}>
+          <button class={style.menuBtn} onClick={this.props.addFilter}>
             <i
               class={`${"material-icons"} ${style.menuBtnIcon}`}
               aria-hidden="true"
@@ -128,7 +63,19 @@ export default class Menu extends Component {
         {/* Container in which the Filters will be rendered */}
         <div class={style.filterListContainer}>
           {filterList.map((filter) => (
-            <div>{filter}</div>
+            <div>
+              <Filter
+                cols={this.props.cols}
+                deleteFilter={this.props.deleteFilter}
+                id={filter.id}
+                data={this.props.data}
+                updateFilter={this.props.updateFilter}
+                chosenIndex={filter.chosenIndex}
+                operator={filter.operator}
+                value={filter.val}
+                setData={this.setData}
+              />
+            </div>
           ))}
         </div>
       </div>
@@ -139,7 +86,7 @@ export default class Menu extends Component {
 
   // Return visibility of the filter Counter Icon
   getVisibility = () => {
-    let length = this.state.filterList.length;
+    let length = this.props.filters.length;
 
     if (length > 0) {
       return "visible";
@@ -182,7 +129,7 @@ export default class Menu extends Component {
               onCLick={this.collapseFilterContainer}
               style={{ visibility: this.getVisibility() }}
             >
-              {this.state.filterList.length}
+              {this.props.filters.length}
             </div>
             {/* Filter list */}
             {this.renderFilterList()}

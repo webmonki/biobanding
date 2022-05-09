@@ -436,6 +436,17 @@ tr:hover {
 
 .filterDatePicker {
 	width: 233px;
+	height: 50px;
+}
+
+.filterSelect {
+	height: 55px;
+	width: 210px;
+	border: 1px solid #C7C1C1;
+	border-radius: 5px;
+	background-color: white;
+	outline: none;
+	font-size: 15px;
 }
 
 .invertIcon {
@@ -458,6 +469,10 @@ tr:hover {
 	cursor: pointer;
 	height: 40px;
 	width: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
 }
 
 .invertBtn:hover {

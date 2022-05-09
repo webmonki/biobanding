@@ -109,11 +109,11 @@ export default class Table extends Component {
 
     filterParams.forEach((filter) => {
       if (filter.operator === 0) {
-        data = this.search(filter.val, data, filter.col);
+        data = this.search(filter.val, data, filter.chosenIndex);
       } else if (filter.operator === 1) {
-        data = this.searchLesserThan(filter.val, data, filter.col);
+        data = this.searchLesserThan(filter.val, data, filter.chosenIndex);
       } else if (filter.operator === 2) {
-        data = this.searchGreaterThan(filter.val, data, filter.col);
+        data = this.searchGreaterThan(filter.val, data, filter.chosenIndex);
       }
     });
 
@@ -147,8 +147,9 @@ export default class Table extends Component {
     return data;
   };
 
-  searchGreaterThan = (val, data, col) => {
-    let type = typeof data[0][col];
+  searchGreaterThan = (val, data, chosenIndex) => {
+    let cols = this.getCols();
+    let type = typeof data[0][cols[chosenIndex]];
     let newData = [];
 
     if (val === "") {
@@ -159,7 +160,7 @@ export default class Table extends Component {
       data.forEach((obj) => {
         let match = false;
 
-        if (obj[col] > parseInt(val, 10)) {
+        if (obj[cols[chosenIndex]] > parseInt(val, 10)) {
           match = true;
         }
 
@@ -173,7 +174,7 @@ export default class Table extends Component {
       data.forEach((obj) => {
         let match = false;
 
-        if (obj[col] > val) {
+        if (obj[cols[chosenIndex]] > val) {
           match = true;
         }
 
@@ -186,8 +187,9 @@ export default class Table extends Component {
     }
   };
 
-  searchLesserThan = (val, data, col) => {
-    let type = typeof data[0][col];
+  searchLesserThan = (val, data, chosenIndex) => {
+    let cols = this.getCols();
+    let type = typeof data[0][cols[chosenIndex]];
     let newData = [];
 
     if (val === "") {
@@ -198,7 +200,7 @@ export default class Table extends Component {
       data.forEach((obj) => {
         let match = false;
 
-        if (obj[col] < parseInt(val, 10)) {
+        if (obj[cols[chosenIndex]] < parseInt(val, 10)) {
           match = true;
         }
 
@@ -212,7 +214,7 @@ export default class Table extends Component {
       data.forEach((obj) => {
         let match = false;
 
-        if (obj[col] < val) {
+        if (obj[cols[chosenIndex]] < val) {
           match = true;
         }
 
@@ -225,8 +227,10 @@ export default class Table extends Component {
     }
   };
 
-  search = (val, data, col) => {
-    let type = typeof data[0][col];
+  search = (val, data, chosenIndex) => {
+    let cols = this.getCols();
+
+    let type = typeof data[0][cols[chosenIndex]];
     let newData = [];
 
     if (val === "") {
@@ -239,7 +243,7 @@ export default class Table extends Component {
       data.forEach((obj) => {
         let match = false;
 
-        if (obj[col] === val) {
+        if (obj[cols[chosenIndex]] === val) {
           match = true;
         }
 
@@ -253,7 +257,7 @@ export default class Table extends Component {
       data.forEach((obj) => {
         let match = false;
 
-        if (obj[col].match(val)) {
+        if (obj[cols[chosenIndex]].match(val)) {
           match = true;
         }
 
@@ -266,7 +270,7 @@ export default class Table extends Component {
     } else if (type === "object") {
       data.forEach((obj) => {
         let match = false;
-        if (obj[col].toDateString() === val.toDateString()) {
+        if (obj[cols[chosenIndex]].toDateString() === val.toDateString()) {
           match = true;
         }
 
@@ -649,7 +653,7 @@ export default class Table extends Component {
             return <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>;
           }
           let date = row[key];
-          let day = date.getDay() + 1;
+          let day = date.getDate();
           if (day < 10) {
             day = "0" + day;
           }
@@ -849,9 +853,45 @@ export default class Table extends Component {
 
   getSelectedCount = () => this.state.checkList.length;
 
-  getFilters = (id, col, operator, val) => {
+  addFilter = () => {
+    let filterList = this.state.filterParams;
+    let id;
+    let i = 0;
+
+    let loop = true;
+    let match = false;
+
+    // get Unique Id for Filter
+    while (loop) {
+      if (filterList.length === 0) {
+        loop = false;
+        id = 0;
+      }
+
+      filterList.forEach((filter) => {
+        if (i + "filter" === filter.id) {
+          match = true;
+        }
+      });
+
+      if (match) {
+        i++;
+        match = false;
+      } else {
+        id = i;
+        loop = false;
+      }
+    }
+
+    id = id + "filter";
+    let filter = { id, chosenIndex: 0, operator: 0, val: "" };
+
+    this.setState({ filterParams: [...this.state.filterParams, filter] });
+  };
+
+  updateFilter = (id, chosenIndex, operator, val) => {
     let filterParams = this.state.filterParams;
-    let filterObj = { id, col, operator, val };
+    let filterObj = { id, chosenIndex, operator, val };
     let idList = [];
 
     filterParams.forEach((filter) => {
@@ -861,9 +901,17 @@ export default class Table extends Component {
     if (idList.includes(id)) {
       filterParams.forEach((filter) => {
         if (filter.id === id) {
-          filter.col = col;
-          filter.operator = operator;
-          filter.val = val;
+          if (chosenIndex !== undefined) {
+            filter.chosenIndex = chosenIndex;
+          }
+
+          if (operator !== undefined) {
+            filter.operator = operator;
+          }
+
+          if (val !== undefined) {
+            filter.val = val;
+          }
         }
       });
     } else {
@@ -873,7 +921,7 @@ export default class Table extends Component {
     this.setState({ filterParams });
   };
 
-  deleteFilterParams = (id) => {
+  deleteFilter = (id) => {
     let filterParams = this.state.filterParams;
 
     filterParams.forEach((filter) => {
@@ -892,7 +940,6 @@ export default class Table extends Component {
     return (
       <div class={style.tableContentContainer}>
         <Menu
-          setSearchVal={this.setSearchVal}
           showDialog={this.props.showDialog}
           showDelete={this.state.showDelete}
           checkDelete={this.checkDelete}
@@ -901,8 +948,10 @@ export default class Table extends Component {
           title={this.props.title}
           cols={this.getCols()}
           data={this.props.data}
-          getFilters={this.getFilters}
-          deleteFilterParams={this.deleteFilterParams}
+          updateFilter={this.updateFilter}
+          deleteFilter={this.deleteFilter}
+          filters={this.state.filterParams}
+          addFilter={this.addFilter}
         />
         <div class={style.tableContainer}>
           <table>
