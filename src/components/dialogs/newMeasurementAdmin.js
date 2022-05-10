@@ -112,7 +112,7 @@ export default class NewMeasurementAdmin extends Component {
                   autocomplete="off"
                   type="number"
                   class={style.fullWidth}
-                  min={0}
+                  min={90}
                   max={300}
                   outlined
                   label="Größe"
@@ -164,9 +164,9 @@ export default class NewMeasurementAdmin extends Component {
                     this.setState({ sittingHeight: val });
                     this.validateInput();
 
-                    if (val < 60) {
+                    if (val < 0) {
                       this.setState({ sittingFBClass: style.feedbackErr });
-                      this.setState({ sittingFB: "Mindestens 60" });
+                      this.setState({ sittingFB: "Mindestens 0" });
                       this.setState({ disabled: true });
                     }
                     if (val > 125) {
@@ -176,7 +176,7 @@ export default class NewMeasurementAdmin extends Component {
                       });
                       this.setState({ disabled: true });
                     }
-                    if (val >= 60 && val <= 125) {
+                    if (val >= 0 && val <= 125) {
                       this.setState({ sittingFBClass: style.feedbackSucc });
                       this.setState({ sittingFB: "" });
                       this.setState({ disabled: false });
@@ -197,7 +197,7 @@ export default class NewMeasurementAdmin extends Component {
                   autocomplete="off"
                   type="number"
                   class={style.fullWidth}
-                  min={0}
+                  min={60}
                   max={300}
                   outlined
                   label="Arm Spannweite"
@@ -208,9 +208,9 @@ export default class NewMeasurementAdmin extends Component {
                     this.setState({ span: val });
                     this.validateInput();
 
-                    if (val < 0) {
+                    if (val < 60) {
                       this.setState({ spanFBClass: style.feedbackErr });
-                      this.setState({ spanFB: "Mindestens 0" });
+                      this.setState({ spanFB: "Mindestens 60" });
                       this.setState({ disabled: true });
                     }
                     if (val > 300) {
@@ -218,7 +218,7 @@ export default class NewMeasurementAdmin extends Component {
                       this.setState({ spanFB: "Maximal 300" });
                       this.setState({ disabled: true });
                     }
-                    if (val >= 0 && val <= 300) {
+                    if (val >= 60 && val <= 300) {
                       this.setState({ spanFBClass: style.feedbackSucc });
                       this.setState({ spanFB: "" });
                       this.setState({ disabled: false });

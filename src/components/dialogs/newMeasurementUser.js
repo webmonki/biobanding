@@ -117,7 +117,7 @@ export default class NewMeasurementUser extends Component {
                   autocomplete="off"
                   type="number"
                   class={style.fullWidth}
-                  min={0}
+                  min={90}
                   max={300}
                   outlined
                   label="Größe"
@@ -128,9 +128,9 @@ export default class NewMeasurementUser extends Component {
                     let val = e.target.value;
                     this.setFormValue("height", val);
 
-                    if (val < 0) {
+                    if (val < 90) {
                       this.setState({ heightFBClass: style.feedbackErr });
-                      this.setState({ heightFB: "Mindestens 0" });
+                      this.setState({ heightFB: "Mindestens 90" });
                       this.setState({ disabled: true });
                     }
                     if (val > 250) {
@@ -141,7 +141,7 @@ export default class NewMeasurementUser extends Component {
                       });
                       this.setState({ disabled: true });
                     }
-                    if (val >= 0 && val <= 300) {
+                    if (val >= 90 && val <= 300) {
                       this.setState({ heightFBClass: style.feedbackSucc });
                       this.setState({ heightFB: "" });
                       this.setState({ disabled: false });
@@ -169,7 +169,7 @@ export default class NewMeasurementUser extends Component {
                     this.setFormValue("sittingHeight", val);
                     if (val < 0) {
                       this.setState({ sittingFBClass: style.feedbackErr });
-                      this.setState({ sittingFB: "Mindestens 0" });
+                      this.setState({ sittingFB: "Mindestens 00" });
                       this.setState({ disabled: true });
                     }
                     if (val > 125) {
@@ -179,7 +179,7 @@ export default class NewMeasurementUser extends Component {
                       });
                       this.setState({ disabled: true });
                     }
-                    if (val >= 0 && val <= 300) {
+                    if (val >= 0 && val <= 125) {
                       this.setState({ sittingFBClass: style.feedbackSucc });
                       this.setState({ sittingFB: "" });
                       this.setState({ disabled: false });
@@ -199,7 +199,7 @@ export default class NewMeasurementUser extends Component {
                   autocomplete="off"
                   type="number"
                   class={style.fullWidth}
-                  min={0}
+                  min={60}
                   max={300}
                   outlined
                   label="Arm Spannweite"
@@ -208,9 +208,9 @@ export default class NewMeasurementUser extends Component {
                     document.addEventListener("keyup", this.handleKey);
                     let val = e.target.value;
                     this.setFormValue("span", val);
-                    if (val < 0) {
+                    if (val < 60) {
                       this.setState({ spanFBClass: style.feedbackErr });
-                      this.setState({ spanFB: "Mindestens 0" });
+                      this.setState({ spanFB: "Mindestens 60" });
                       this.setState({ disabled: true });
                     }
                     if (val > 300) {
@@ -218,7 +218,7 @@ export default class NewMeasurementUser extends Component {
                       this.setState({ spanFB: "Maximal 300" });
                       this.setState({ disabled: true });
                     }
-                    if (val >= 0 && val <= 300) {
+                    if (val >= 60 && val <= 300) {
                       this.setState({ spanFBClass: style.feedbackSucc });
                       this.setState({ spanFB: "" });
                       this.setState({ disabled: false });
