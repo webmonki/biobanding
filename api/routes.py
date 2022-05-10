@@ -6,19 +6,21 @@ Copyright (c) 2022 - VP-Systeme GmbH, Lyrenstr. 13, 44866 Bochum
 from datetime import datetime, timezone, timedelta
 from functools import wraps
 from json import dumps
+
+import jwt
+import os
 from flask import request
 from flask_restx import Api, Resource, fields
 
-import jwt, os
-
-from .models import db, Users, JWTTokenBlocklist, AnthropometricData, AdminConfig, PlayerMaster, PlayerDetail
 from .config import BaseConfig
-from .utils import json_serial, emailIsValid
 from .email import send_email_with_token, send_email
+from .models import db, Users, JWTTokenBlocklist, AnthropometricData, AdminConfig, PlayerMaster, PlayerDetail
+from .utils import json_serial, emailIsValid
 
 # Define authorization method for SWAGGER UI
 authorizations = {"jwt": {"type": "apiKey", "in": "header", "name": "authorization"}}
 
+# Create Flask_RESTx Object
 rest_api = Api(version="1.0", title="Users API", authorizations=authorizations)
 
 """
@@ -90,16 +92,6 @@ anthropometric_data_model = rest_api.model('AnthropometricDataModel', {
 }
                                            )
 
-anthropometric_data_model = rest_api.model('AnthropometricDataModel', {
-    "userID": fields.Integer(required=True, min=0),
-    "date_measured": fields.Date(required=True),
-    "height": fields.Integer(required=True, min=0, max=300),
-    "sitting_height": fields.Integer(required=True, min=0, max=300),
-    "body_span": fields.Integer(required=True, min=0, max=300),
-    "weight": fields.Float(required=True, min=0, max=300)
-}
-                                           )
-
 anthropometric_data_edit_model = rest_api.model('AnthropometricDataEditModel', {
     "date_measured": fields.Date(required=True),
     "height": fields.Integer(required=True, min=0, max=300),
@@ -108,12 +100,12 @@ anthropometric_data_edit_model = rest_api.model('AnthropometricDataEditModel', {
     "weight": fields.Float(required=True, min=0, max=300)
 })
 
-"""
-   Helper function for JWT token required
-"""
-
 
 def token_required(f):
+    """
+       Helper function for JWT token required
+    """
+
     @wraps(f)
     @rest_api.doc(security='jwt')
     def decorator(*args, **kwargs):
@@ -230,9 +222,9 @@ class AllUserDetails(Resource):
 @rest_api.route('/api/users')
 class AllUsers(Resource):
 
-    @token_required
     @rest_api.response(200, 'Success')
-    @rest_api.response(500, 'Could not read players anthropometric data')
+    @rest_api.response(400, 'Could not read players anthropometric data')
+    @token_required
     def get(self, current_user):
         """Return all users"""
 
@@ -240,7 +232,7 @@ class AllUsers(Resource):
             users = Users.get_all_users()
         except:
             return {"success": False,
-                    "msg": "Could not read players anthropometric data"}, 500
+                    "msg": "Could not read players anthropometric data"}, 400
         userList = []
         for row in users:
             userList.append(
@@ -296,7 +288,7 @@ class ResetPasswort(Resource):
                     "msg": "The email address {} does not exist.".format(_email)}, 404
 
 
-@rest_api.expect((user_password_reset_model))
+@rest_api.expect(user_password_reset_model)
 @rest_api.route('/api/user/reset')
 class ResetVerified(Resource):
 
@@ -350,9 +342,9 @@ class EditUser(Resource):
 
         return {"success": True}, 200
 
-    @token_required
     @rest_api.response(200, 'Success')
     @rest_api.response(400, 'Could not delete User')
+    @token_required
     def delete(self, current_user, id):
         """Delete user with given id"""
 
@@ -520,7 +512,7 @@ class Confirm(Resource):
     @rest_api.response(200, 'Email address already confirmed')
     @rest_api.response(201, 'Account Confirmed and created player details')
     @rest_api.response(401, 'No valid token')
-    @rest_api.doc(security='jwt')
+    @token_required
     def post(self):
         req_data = request.get_json()
 
@@ -756,33 +748,21 @@ class Anthropometric(Resource):
         _body_span = req_data.get("body_span")
         _weight = req_data.get("weight")
 
-        try:
-            _new_anthropometric_data = AnthropometricData(
-                user_id=userID,
-                date_measured=_date_measured,
-                height=_height,
-                sitting_height=_sitting_height,
-                body_span=_body_span,
-                weight=_weight
-            )
-            _new_anthropometric_data.save()
-        except:
-            return {"success": False,
-                    "msg": "Anthropometric data could not be created"}, 400
+        _new_anthropometric_data = AnthropometricData(
+            user_id=userID,
+            date_measured=_date_measured,
+            height=_height,
+            sitting_height=_sitting_height,
+            body_span=_body_span,
+            weight=_weight
+        )
+        _new_anthropometric_data.save()
+
+        return {"success": False,
+                "msg": "Anthropometric data could not be created"}, 400
 
         return {"success": True,
-                "anthropometric_data": {
-                    "id": _new_anthropometric_data.id,
-                    "userID": userID,
-                    "date_measured": dumps(_date_measured, default=json_serial),
-                    "height": _height,
-                    "sitting_height": _new_anthropometric_data.sitting_height,
-                    "body_span": _new_anthropometric_data.body_span,
-                    "weight": _new_anthropometric_data.weight,
-                    "offset": _new_anthropometric_data.offset,
-                    "phv": _new_anthropometric_data.phv,
-                    "ak_bio": _new_anthropometric_data.ak_bio
-                },
+                "anthropometric_data": anthropometric_data_model.toDICT(),
                 "msg": "Anthropometric data was successfully created"}, 200
 
     @token_required
@@ -796,21 +776,8 @@ class Anthropometric(Resource):
                     "msg": "Could not read players anthropometric data"}, 500
 
         measurements = []
-        for row in user_data:
-            measurements.append(
-                {"id": row.id,
-                 "userID": row.user_id,
-                 "Datum": dumps(row.date_measured, default=json_serial),
-                 "Größe": row.height,
-                 "Sitzgröße": row.sitting_height,
-                 "Körperspanne": row.body_span,
-                 "Gewicht": row.weight,
-                 "YAPHV": row.offset,
-                 "PHV": row.phv,
-                 "AK_BIO": row.ak_bio,
-                 "BMI": row.bmi
-                 }
-            )
+        for measurement in user_data:
+            measurements.append(measurement.toDICT())
         return {"success": True,
                 "measurements:": measurements}, 200
 
@@ -822,25 +789,14 @@ class Measurement(Resource):
         """Return anthropometric measurement"""
 
         try:
-            measurement_data = AnthropometricData.get_by_id(id)
+            measurement = AnthropometricData.get_by_id(id)
         except:
             return {
                        "success": False,
                        "msg": "Could not read players anthropometric data"}, 500
 
         return {"success": True,
-                "measurement:": {
-                    "id": measurement_data.id,
-                    "userID": measurement_data.user_id,
-                    "date_measured": dumps(measurement_data.date_measured, default=json_serial),
-                    "height": measurement_data.height,
-                    "sitting_height": measurement_data.sitting_height,
-                    "body_span": measurement_data.body_span,
-                    "weight": measurement_data.weight,
-                    "YAPHV": measurement_data.offset,
-                    "PHV": measurement_data.phv,
-                    "AK_BIO": measurement_data.ak_bio,
-                    "bmi": measurement_data.bmi}
+                "measurement:": measurement.toDICT()
                 }, 200
 
     @token_required
@@ -901,28 +857,20 @@ class Measurements(Resource):
 
     @token_required
     def get(self, current_user):
-        """Return all anthropometric measurements"""
+        """Return all anthropometric measurements for all users"""
 
         try:
             query = db.session.query(AnthropometricData, Users.username).join(Users).all()
             result = []
 
             for a, u in query:
-                result_dict = {'Id': a.id,
-                               'Benutzername': u,
-                               'Datum': dumps(a.date_measured, default=json_serial),
-                               'Größe': a.height,
-                               'Sitzgröße': a.sitting_height,
-                               'Körperspanne': a.body_span,
-                               'Gewicht': a.weight,
-                               'YAPHV': a.offset,
-                               'PHV': a.phv,
-                               'AK_BIO': a.ak_bio,
-                               'BMI': a.bmi}
-                result.append(result_dict)
+                # Merge dicts
+                measurement = {**{'Benutzer': u}, **a.toDICT()}
+                result.append(measurement)
 
             return {"success": True,
                     'measurements': result}, 200
-        except Exception:
+        except Exception as e:
+            print(e)
             return {"success": False,
                     'msg': 'Could not read measurements.'}, 400

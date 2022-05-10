@@ -6,9 +6,11 @@ Copyright (c) 2019 - present AppSeed.us
 from datetime import datetime, timedelta, date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
+from json import dumps
 from dataclasses import dataclass
-from api.formulas import mirwald, bmi
+from api.formulas import mirwald, bmi, predicted_adult_height
 from .config import BaseConfig
+from .utils import json_serial
 import jwt
 
 db = SQLAlchemy()
@@ -155,7 +157,7 @@ class PlayerMaster(db.Model):
         db.session.commit()
 
 
-@dataclass
+
 class PlayerDetail(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), primary_key=True)
     birthday = db.Column(db.Date(), nullable=False)
@@ -171,8 +173,18 @@ class PlayerDetail(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def toDICT(self):
+        cls_dict = {}
+        cls_dict['user_id'] = self.user_id
+        cls_dict['birthday'] = dumps(self.birthday, default=json_serial)
+        cls_dict['sex_m_0_f_1'] = self.sex_m_0_f_1
+        cls_dict['height_father'] = self.height_father
+        cls_dict['height_mother'] = self.height_mother
 
-@dataclass
+        return cls_dict
+
+
+
 class AnthropometricData(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), nullable=False)
@@ -185,21 +197,12 @@ class AnthropometricData(db.Model):
     offset = db.Column(db.Float(), nullable=False)
     ak_bio = db.Column(db.String, nullable=False)
     bmi = db.Column(db.Float(), nullable=False)
+    pah = db.Column(db.Float())
+    pmh = db.Column(db.Float())
+    remaining_growth = db.Column(db.Float())
+    age_at_measurement = db.Column(db.Float, nullable=False)
 
-    """
-    def mirwald(self, a, b, c, d):
-        '''
-            a: Groesse stehend
-            b: Groesse sitzend
-            c: Chronologisches Alter in Jahren
-                := (d2.year-d1.year) + (d2.month-d1.month)/12 + (d2.day-d1.day)/365
-            d: Gewicht
-        '''
-        res = -9.376 + (0.0001882 * ((a-b) * b))+(0.0022 * (c * (a - b))) \
-            + (0.005841 * (c * b))-(0.002658 * (c * d))+(0.07693 * ((d / a) * 100))
-        return res
-        """
-
+    # [BEGIN save()] #######
     def save(self):
         playerDetail = PlayerDetail.get_by_id(self.user_id)
         gender = playerDetail.sex_m_0_f_1
@@ -221,9 +224,27 @@ class AnthropometricData(db.Model):
 
         # calculate bmi
         self.bmi = bmi(self.height, self.weight)
+
+        # Check if user as saved parent height
+        if playerDetail.height_father is not None and playerDetail.height_mother is not None:
+            date_measured = datetime.strptime(date_measured, '%Y-%m-%d')
+            birthdate = datetime.strptime(birthdate, '%Y-%m-%d')
+            # Calculate chronological age
+            age = round((date_measured - birthdate).days / 365, 2)
+            # Calculate predicted adult height with Khamos Roche method
+            res = predicted_adult_height(gender, self.height, self.weight, age,
+                                         playerDetail.height_father, playerDetail.height_mother)
+
+
+            self.pah = res['pah']
+            self.pmh = res['pmh']
+            self.remaining_growth = res['remaining_growth']
+            self.age_at_measurement = age
+
         # Add and commit results to db
         db.session.add(self)
         db.session.commit()
+    # [END save()] ######
 
     def delete(self):
         db.session.delete(self)
@@ -265,8 +286,27 @@ class AnthropometricData(db.Model):
         user_data = cls.query.all()
         return user_data
 
+    def toDICT(self):
+        cls_dict = {}
+        cls_dict['Id'] = self.id
+        cls_dict['UserId'] = self.user_id
+        cls_dict['Datum'] = dumps(self.date_measured, default=json_serial)
+        cls_dict['Alter'] = self.age_at_measurement
+        cls_dict['YAPHV'] = self.offset
+        cls_dict['PHV'] = self.phv
+        cls_dict['AK_BIO'] = self.ak_bio
+        cls_dict['BMI'] = self.bmi
+        cls_dict['PMH'] = self.pmh
+        cls_dict['PAH'] = self.pah
+        cls_dict['CM until PAH'] = self.remaining_growth
+        cls_dict["Größe"] = self.height
+        cls_dict['Sitzgröße'] = self. sitting_height
+        cls_dict['Körperspanne'] = self.body_span
+        cls_dict['Gewicht'] = self.weight
 
-@dataclass
+        return cls_dict
+
+
 class AdminConfig(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     days_reminder = db.Column(db.Integer(), default=90)
