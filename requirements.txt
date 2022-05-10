@@ -6,3 +6,5 @@ Flask-Cors==3.0.10
 pytest
 gunicorn==20.1.0
 pandas
+
+Werkzeug~=2.0.3
