@@ -12,6 +12,7 @@ export default class NewMeasurementUser extends Component {
   state = { formValues: {} };
   componentWillMount = () => {
     this.setState({ header: this.props.header });
+    this.setState({ msg: [] });
   };
 
   handleKey = (event) => {
@@ -52,6 +53,24 @@ export default class NewMeasurementUser extends Component {
     });
   };
 
+  validateInput = () => {
+    let height = this.getFormValue("height");
+    let sittingHeight = this.getFormValue("sittingHeight");
+    let span = this.getFormValue("span");
+
+    let msg = [];
+
+    if (sittingHeight > height * 0.5) {
+      msg.push("Das Verhältnis von Sitzgröße zu Größe ist nicht plausibel");
+    }
+
+    if (span > height * 1.15) {
+      msg.push("Das Verhältnis von Spannweite zu Größe ist nicht plausibel");
+    }
+
+    this.setState({ msg });
+  };
+
   render() {
     return (
       <Dialog
@@ -80,6 +99,7 @@ export default class NewMeasurementUser extends Component {
 
                     let val = e.target.value;
                     this.setFormValue("height", val);
+                    this.validateInput();
 
                     if (val < 0) {
                       this.setState({ heightFBClass: style.feedbackErr });
@@ -113,6 +133,7 @@ export default class NewMeasurementUser extends Component {
                     document.addEventListener("keyup", this.handleKey);
                     let val = e.target.value;
                     this.setFormValue("sittingHeight", val);
+                    this.validateInput();
                     if (val < 0) {
                       this.setState({ sittingFBClass: style.feedbackErr });
                       this.setState({ sittingFB: "Mindestens 0" });
@@ -147,6 +168,7 @@ export default class NewMeasurementUser extends Component {
                     document.addEventListener("keyup", this.handleKey);
                     let val = e.target.value;
                     this.setFormValue("span", val);
+                    this.validateInput();
                     if (val < 0) {
                       this.setState({ spanFBClass: style.feedbackErr });
                       this.setState({ spanFB: "Mindestens 0" });
@@ -196,15 +218,20 @@ export default class NewMeasurementUser extends Component {
                 </span>
               </div>
             </div>
+            <div class={style.feedbackContainer}>
+              {this.state.msg.map((msg) => (
+                <p class={style.feedbackErr}>{msg}</p>
+              ))}
+            </div>
           </div>
         </Dialog.Body>
         <Dialog.Footer class={style.footer}>
-          <Dialog.FooterButton cancel={true}>Abbrechen</Dialog.FooterButton>
+          <Dialog.FooterButton cancel>Abbrechen</Dialog.FooterButton>
           <Dialog.FooterButton
             style={{ color: "white" }}
             class="mdc-button mdc-theme--primary-bg"
             raised
-            accept={true}
+            accept
           >
             Speichern
           </Dialog.FooterButton>
