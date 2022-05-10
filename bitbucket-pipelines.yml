@@ -1,0 +1,12 @@
+image: python:3.9-slim
+
+pipelines:
+  default:
+    - step:
+        runs-on: self.hosted # die wichtigste Zeile, notwendig bei jedem 'step'
+        name: API Tests
+        caches:
+          - pip
+        script:
+          - pip install -r requirements.txt
+          - pytest tests.py -v --junitxml=test-results/report.xml -s
