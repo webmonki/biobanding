@@ -829,7 +829,7 @@ export default class Table extends Component {
   };
 
   exportFile = () => {
-    let data = this.props.data;
+    let data = this.getData();
     let cols = Object.keys(this.props.data[0]);
 
     let csvString = [
