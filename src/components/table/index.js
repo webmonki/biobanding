@@ -30,7 +30,6 @@ export default class Table extends Component {
     this.getPageSize();
 
     this.setState({ pages: {} });
-    this.setPages();
     this.getCollapseList();
   };
 
@@ -38,10 +37,6 @@ export default class Table extends Component {
     if (this.state.data !== this.props.data) {
       this.setState({ data: this.props.data });
     }
-
-    // if (this.state.newData !== this.props.data) {
-    //   this.setState({ data: this.state.newData });
-    // }
   };
 
   componentDidUpdate = () => {
@@ -49,7 +44,6 @@ export default class Table extends Component {
       this.setState({ data: this.props.data });
     }
 
-    // this.checkAll();
     this.toggleShowDelete();
     this.collapseAll();
   };
@@ -77,15 +71,6 @@ export default class Table extends Component {
     if (showDelete !== this.state.showDelete) {
       this.setState({ showDelete });
     }
-  };
-
-  setPages = () => {
-    let data = this.props.data;
-    let pageSize = this.props.pageSize;
-
-    let pageCount = Math.ceil(data.length / pageSize);
-
-    for (let i = 1; i <= pageCount; i++) {}
   };
 
   setPage = (page) => {
