@@ -21,12 +21,16 @@ export default class Table extends Component {
 
     this.setState({ newData: this.props.data });
 
-    this.getPageSize();
     this.setState({ subTableIndex: 7 });
     this.setState({ colsHidden: ["id", "Id", "userID"] });
 
     this.setState({ collapseList: {} });
 
+    this.setState({ filterParams: [] });
+    this.getPageSize();
+
+    this.setState({ pages: {} });
+    this.setPages();
     this.getCollapseList();
   };
 
@@ -75,16 +79,54 @@ export default class Table extends Component {
     }
   };
 
+  setPages = () => {
+    let data = this.props.data;
+    let pageSize = this.props.pageSize;
+
+    let pageCount = Math.ceil(data.length / pageSize);
+
+    for (let i = 1; i <= pageCount; i++) {}
+  };
+
   setPage = (page) => {
     if (this.state.page !== page) {
       this.setState({ page });
     }
   };
 
+  getData = () => {
+    let sortParams = this.state.sortParams;
+    let filterParams = this.state.filterParams;
+    let data = this.props.data;
+
+    if (sortParams !== undefined) {
+      if (sortParams.dir) {
+        data = this.sortDescending(data, sortParams.key);
+      } else {
+        data = this.sortAscending(data, sortParams.key);
+      }
+    }
+
+    filterParams.forEach((filter) => {
+      if (filter.operator === 0) {
+        data = this.search(filter.val, data, filter.chosenIndex);
+      } else if (filter.operator === 1) {
+        data = this.searchLesserThan(filter.val, data, filter.chosenIndex);
+      } else if (filter.operator === 2) {
+        data = this.searchGreaterThan(filter.val, data, filter.chosenIndex);
+      }
+    });
+
+    return data;
+  };
+
   sortDescending = (data, key) => {
-    if (typeof data[0][key] === "string") {
+    let type = typeof data[0][key];
+    if (type === "string") {
       data.sort((a, b) => a[key].localeCompare(b[key]));
-    } else if (typeof data[0][key] === "number") {
+    } else if (type === "number") {
+      data.sort((a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0));
+    } else if (type === "object") {
       data.sort((a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0));
     }
 
@@ -92,42 +134,153 @@ export default class Table extends Component {
   };
 
   sortAscending = (data, key) => {
-    if (typeof data[0][key] === "string") {
+    let type = typeof data[0][key];
+
+    if (type === "string") {
       data.sort((a, b) => b[key].localeCompare(a[key]));
-    } else if (typeof data[0][key] === "number") {
+    } else if (type === "number") {
+      data.sort((a, b) => (a[key] < b[key] ? 1 : b[key] < a[key] ? -1 : 0));
+    } else if (type === "object") {
       data.sort((a, b) => (a[key] < b[key] ? 1 : b[key] < a[key] ? -1 : 0));
     }
 
     return data;
   };
 
-  search = (val, data) => {
+  searchGreaterThan = (val, data, chosenIndex) => {
+    let cols = this.getCols();
+    let type = typeof data[0][cols[chosenIndex]];
     let newData = [];
 
-    let cols = Object.keys(data[0]);
+    if (val === "") {
+      return data;
+    }
 
-    data.forEach((obj) => {
-      let match = false;
-      cols.forEach((col) => {
-        if (!this.state.colsHidden.includes(col)) {
-          if (typeof obj[col] === "number") {
-            if (obj[col].toString().match(val)) {
-              match = true;
-            }
-          } else if (typeof obj[col] === "string") {
-            if (obj[col].match(val)) {
-              match = true;
-            }
-          }
+    if (type === "number") {
+      data.forEach((obj) => {
+        let match = false;
+
+        if (obj[cols[chosenIndex]] > parseInt(val, 10)) {
+          match = true;
+        }
+
+        if (match) {
+          newData.push(obj);
         }
       });
 
-      if (match) {
-        newData.push(obj);
-      }
-    });
+      return newData;
+    } else if (type === "object") {
+      data.forEach((obj) => {
+        let match = false;
 
-    return newData;
+        if (obj[cols[chosenIndex]] > val) {
+          match = true;
+        }
+
+        if (match) {
+          newData.push(obj);
+        }
+      });
+
+      return newData;
+    }
+  };
+
+  searchLesserThan = (val, data, chosenIndex) => {
+    let cols = this.getCols();
+    let type = typeof data[0][cols[chosenIndex]];
+    let newData = [];
+
+    if (val === "") {
+      return data;
+    }
+
+    if (type === "number") {
+      data.forEach((obj) => {
+        let match = false;
+
+        if (obj[cols[chosenIndex]] < parseInt(val, 10)) {
+          match = true;
+        }
+
+        if (match) {
+          newData.push(obj);
+        }
+      });
+
+      return newData;
+    } else if (type === "object") {
+      data.forEach((obj) => {
+        let match = false;
+
+        if (obj[cols[chosenIndex]] < val) {
+          match = true;
+        }
+
+        if (match) {
+          newData.push(obj);
+        }
+      });
+
+      return newData;
+    }
+  };
+
+  search = (val, data, chosenIndex) => {
+    let cols = this.getCols();
+
+    let type = typeof data[0][cols[chosenIndex]];
+    let newData = [];
+
+    if (val === "") {
+      return data;
+    }
+
+    if (type === "number") {
+      val = parseInt(val, 10);
+
+      data.forEach((obj) => {
+        let match = false;
+
+        if (obj[cols[chosenIndex]] === val) {
+          match = true;
+        }
+
+        if (match) {
+          newData.push(obj);
+        }
+      });
+
+      return newData;
+    } else if (type === "string") {
+      data.forEach((obj) => {
+        let match = false;
+
+        if (obj[cols[chosenIndex]].match(val)) {
+          match = true;
+        }
+
+        if (match) {
+          newData.push(obj);
+        }
+      });
+
+      return newData;
+    } else if (type === "object") {
+      data.forEach((obj) => {
+        let match = false;
+        if (obj[cols[chosenIndex]].toDateString() === val.toDateString()) {
+          match = true;
+        }
+
+        if (match) {
+          newData.push(obj);
+        }
+      });
+
+      return newData;
+    }
   };
 
   setSortParams = (dir, key) => {
@@ -140,6 +293,8 @@ export default class Table extends Component {
       return style.alignLeft;
     } else if (typeof this.props.data[0][name] === "number") {
       return style.alignRight;
+    } else if (typeof this.props.data[0][name] === "object") {
+      return style.alignLeft;
     }
   };
 
@@ -201,7 +356,6 @@ export default class Table extends Component {
               if (this.state.colsHidden.includes(name)) {
                 return undefined;
               }
-
               return (
                 <th>
                   <SortIcon
@@ -264,30 +418,6 @@ export default class Table extends Component {
     });
 
     this.setState({ checkList: [] });
-  };
-
-  setSearchVal = (val) => {
-    this.setState({ searchVal: val });
-  };
-
-  getData = () => {
-    let sortParams = this.state.sortParams;
-    let searchVal = this.state.searchVal;
-    let data = this.props.data;
-
-    if (sortParams !== undefined) {
-      if (sortParams.dir) {
-        data = this.sortDescending(data, sortParams.key);
-      } else {
-        data = this.sortAscending(data, sortParams.key);
-      }
-    }
-
-    if (searchVal !== undefined) {
-      data = this.search(searchVal, data);
-    }
-
-    return data;
   };
 
   getCheckState = (id) => {
@@ -353,6 +483,23 @@ export default class Table extends Component {
     return cols.length;
   };
 
+  getCols = () => {
+    if (this.props.data !== undefined && this.props.data.length !== 0) {
+      let cols = Object.keys(this.props.data[0]);
+      let newCols = [];
+
+      cols.forEach((col) => {
+        if (!this.state.colsHidden.includes(col)) {
+          newCols.push(col);
+        }
+      });
+
+      return newCols;
+    }
+
+    return [];
+  };
+
   getRangeList = (start, end) => {
     if (end === undefined) {
       end = this.getColCount();
@@ -414,8 +561,6 @@ export default class Table extends Component {
       coll.style.maxHeight = null;
       collIcon.innerHTML = "arrow_drop_down";
     }
-
-    this.getPageSize();
   };
 
   unCollapse = (id) => {
@@ -426,18 +571,23 @@ export default class Table extends Component {
       coll.style.maxHeight = coll.scrollHeight + "px";
       collIcon.innerHTML = "arrow_drop_up";
     }
-
-    this.getPageSize();
   };
 
   addToCollapseList = (id) => {
     let collList = this.state.collapseList;
+    let keys = Object.keys(collList);
 
-    if (collList[id]) {
-      collList[id] = false;
-    } else if (!collList[id]) {
-      collList[id] = true;
-    }
+    keys.forEach((key) => {
+      if (parseInt(key, 10) === id) {
+        if (collList[id]) {
+          collList[id] = false;
+        } else if (!collList[id]) {
+          collList[id] = true;
+        }
+      } else {
+        collList[key] = false;
+      }
+    });
 
     this.setState({ collapseList: collList });
   };
@@ -466,7 +616,7 @@ export default class Table extends Component {
   renderTableContent = (key, row) => {
     let cols = this.getRangeList(0, this.state.subTableIndex);
     return (
-      <tr>
+      <tr id={key + "mainRow"}>
         <td id={"tableData"} class={style.btnsData}>
           <div class={style.tdBtnsContainer}>
             <button
@@ -499,7 +649,22 @@ export default class Table extends Component {
           if (!cols.includes(key)) {
             return undefined;
           }
-          return <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>;
+          if (key !== "Datum") {
+            return <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>;
+          }
+          let date = row[key];
+          let day = date.getDate();
+          if (day < 10) {
+            day = "0" + day;
+          }
+          let month = date.getMonth() + 1;
+          if (month < 10) {
+            month = "0" + month;
+          }
+          let year = date.getFullYear();
+
+          let output = month + "-" + day + "-" + year;
+          return <td class={this.getTableDataStyle(row, key)}>{output}</td>;
         })}
       </tr>
     );
@@ -508,9 +673,11 @@ export default class Table extends Component {
   createTableBody = () => {
     let page = this.state.page;
     let data = this.getData();
+    let pageSize = this.getPageSize();
+
     if (data !== undefined) {
-      let indexEnd = page * this.getPageSize();
-      let indexStart = indexEnd - this.getPageSize();
+      let indexEnd = page * pageSize;
+      let indexStart = indexEnd - pageSize;
 
       let pageData = data.slice(indexStart, indexEnd);
 
@@ -558,29 +725,23 @@ export default class Table extends Component {
   };
 
   getPageSize = () => {
-    // let maxHeight = window.innerHeight;
-    // let tableData = document.getElementById("tableData");
-    // let subTable = document.getElementById("subTableRow");
+    let pageSize = this.props.pageSize;
 
-    // if (tableData !== null) {
-    //   let dataHeight = tableData.offsetHeight;
-    //   let subTableHeight = subTable.offsetHeight;
-    // }
-
-    return this.props.pageSize;
+    return pageSize;
   };
 
   getPageCount = () => {
     if (this.state.data !== undefined) {
       let pageCount;
-      if (this.state.data.length === this.getPageSize()) {
+      let pageSize = this.getPageSize();
+      if (this.state.data.length === pageSize) {
         pageCount = 1;
       }
-      if (this.state.data.length < this.getPageSize()) {
+      if (this.state.data.length < pageSize) {
         pageCount = 1;
       }
-      if (this.state.data.length > this.getPageSize()) {
-        pageCount = (this.props.data.length / this.getPageSize() + 1)
+      if (this.state.data.length > pageSize) {
+        pageCount = (this.props.data.length / pageSize + 1)
           .toString()
           .split(".")[0];
 
@@ -668,7 +829,7 @@ export default class Table extends Component {
   };
 
   exportFile = () => {
-    let data = this.props.data;
+    let data = this.getData();
     let cols = Object.keys(this.props.data[0]);
 
     let csvString = [
@@ -681,33 +842,117 @@ export default class Table extends Component {
     csvString = "data:text/csv;charset=utf-8," + csvString;
 
     let encodedUri = encodeURI(csvString);
-    // window.open(encodedUri);
 
     let link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", this.props.title + ".csv");
-    document.body.appendChild(link); // Required for FF
+    document.body.appendChild(link);
 
-    link.click(); // This will download the data file named "my_data.csv".
+    link.click();
   };
 
   getSelectedCount = () => this.state.checkList.length;
 
+  addFilter = () => {
+    let filterList = this.state.filterParams;
+    let id;
+    let i = 0;
+
+    let loop = true;
+    let match = false;
+
+    // get Unique Id for Filter
+    while (loop) {
+      if (filterList.length === 0) {
+        loop = false;
+        id = 0;
+      }
+
+      filterList.forEach((filter) => {
+        if (i + "filter" === filter.id) {
+          match = true;
+        }
+      });
+
+      if (match) {
+        i++;
+        match = false;
+      } else {
+        id = i;
+        loop = false;
+      }
+    }
+
+    id = id + "filter";
+    let filter = { id, chosenIndex: 0, operator: 0, val: "" };
+
+    this.setState({ filterParams: [...this.state.filterParams, filter] });
+  };
+
+  updateFilter = (id, chosenIndex, operator, val) => {
+    let filterParams = this.state.filterParams;
+    let filterObj = { id, chosenIndex, operator, val };
+    let idList = [];
+
+    filterParams.forEach((filter) => {
+      idList.push(filter.id);
+    });
+
+    if (idList.includes(id)) {
+      filterParams.forEach((filter) => {
+        if (filter.id === id) {
+          if (chosenIndex !== undefined) {
+            filter.chosenIndex = chosenIndex;
+          }
+
+          if (operator !== undefined) {
+            filter.operator = operator;
+          }
+
+          if (val !== undefined) {
+            filter.val = val;
+          }
+        }
+      });
+    } else {
+      filterParams.push(filterObj);
+    }
+
+    this.setState({ filterParams });
+  };
+
+  deleteFilter = (id) => {
+    let filterParams = this.state.filterParams;
+
+    filterParams.forEach((filter) => {
+      if (filter.id === id) {
+        let index = filterParams.indexOf(filter);
+        if (index !== -1) {
+          filterParams.splice(index, 1);
+        }
+      }
+    });
+
+    this.setState({ filterParams });
+  };
+
   render() {
     return (
-      <div>
-        <div>
-          <Menu
-            setSearchVal={this.setSearchVal}
-            showDialog={this.props.showDialog}
-            showDelete={this.state.showDelete}
-            checkDelete={this.checkDelete}
-            count={this.getSelectedCount()}
-            exportFile={this.exportFile}
-            title={this.props.title}
-          />
-        </div>
-
+      <div class={style.tableContentContainer}>
+        <Menu
+          showDialog={this.props.showDialog}
+          showDelete={this.state.showDelete}
+          checkDelete={this.checkDelete}
+          count={this.getSelectedCount()}
+          exportFile={this.exportFile}
+          title={this.props.title}
+          cols={this.getCols()}
+          data={this.props.data}
+          updateFilter={this.updateFilter}
+          deleteFilter={this.deleteFilter}
+          filters={this.state.filterParams}
+          addFilter={this.addFilter}
+        />
         <div class={style.tableContainer}>
           <table>
             {this.createTableHeader()}

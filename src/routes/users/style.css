@@ -1,3 +1,7 @@
+.card {
+	height: fit-content;
+}
+
 .pageLarge {
 	margin-left: var(--global-navrail-width);
 	height: calc(100% - var(--global-header-height));
