@@ -3,16 +3,36 @@
 Copyright (c) 2022 - present VP-Systeme GmbH, Lyrenstr. 13, 44866
 """
 
-from api.models import Users
-
+from numpy import datetime_as_string
+from api.models import PlayerDetail, Users
+from datetime import date, datetime
 import pytest
 
+# variables for Users model
 DUMMY_USER_NAME = "johndoe"
 DUMMY_USER_MAIL = "doe@example.org"
 DUMMY_USER_PASS = "secret-pass"
 
+DUMMIER_USER_NAME = "yetanother"
+DUMMIER_USER_MAIL = "mail@internet.com"
+DUMMIER_USER_PASS = "secret-password"
+DB_ENTRY_AFTER_DELETING_USER = "DELETED"
 
-def test_new_user(app_generator):
+TO_EDIT_USER_NAME = "beforeedit"
+TO_EDIT_USER_NEW_NAME = "afteredit"
+TO_EDIT_USER_MAIL = "tobe@edited.com"
+TO_EDIT_USER_NEW_MAIL = "edited-address@after.de"
+TO_EDIT_USER_PASS = "to@edit-com"
+TO_EDIT_USER_NEW_PASS = "edited9$password"
+# variables for PlayerDetail
+DATE_OF_BIRTH = datetime.strptime("1990-01-01", "%Y-%m-%d").date()
+DETAILS_FOR_USER_WITH_ID = 2
+SEX = 0
+HEIGHT_FATHER = 189
+HEIGHT_MOTHER = 169
+
+
+def test_new_user(app_generator): # app_generator type: <class 'flask.app.Flask'>
     """
     GIVEN a User model
     WHEN a new User is created
@@ -22,49 +42,111 @@ def test_new_user(app_generator):
     with app_generator.app_context():
         # Create new user
         user = Users(username=DUMMY_USER_NAME, email=DUMMY_USER_MAIL)
-        # Set password
         user.set_password(DUMMY_USER_PASS)
-        # Set admin = True
         user.set_is_admin(True)
         user.save()
         # Check results
+        assert user.id == 2
+        assert type(user.id) == int
         assert DUMMY_USER_NAME == user.username
         assert DUMMY_USER_MAIL == user.email
         assert user.check_password(DUMMY_USER_PASS)
+        assert (user.date_joined).date() == date.today()
+        assert user.check_jwt_auth_active() == None
         assert user.check_is_admin()
-        assert user.is_activ
+        assert user.is_activ == 1
         assert not user.confirmed
+        assert user.confirmed_on == None
+        assert user.date_last_password_reset == None
 
 
-# Todo
-@pytest.mark.skip(reason="Not implemented")
 def test_delete_user(app_generator):
     """
     GIVEN a user Model
     WHEN a user is deleted
     THEN check if username, email and data from playermaster table is anonymize with 'DELETED'
     """
+    with app_generator.app_context():
+        # Add user to delete
+        user = Users(username=DUMMIER_USER_NAME, email=DUMMIER_USER_MAIL)
+        user.set_password(DUMMIER_USER_PASS)
+        user.set_is_admin(True)
+        user.set_jwt_auth_active(True)
+        user.save()
+        # Detele user
+        user.delete()
+        # Check results
+        assert user.id == 1
+        assert DUMMIER_USER_NAME is not user.username
+        assert user.username == DB_ENTRY_AFTER_DELETING_USER
+        assert DUMMIER_USER_MAIL is not user.email
+        assert user.username == DB_ENTRY_AFTER_DELETING_USER
+        assert user.check_password(DUMMIER_USER_PASS)
+        assert (user.date_joined).date() == date.today()
+        assert user.check_jwt_auth_active() is not None
+        assert user.check_jwt_auth_active() is not 0
+        assert user.check_jwt_auth_active() == 1
+        assert user.check_is_admin()
+        assert user.is_activ == 0
+        assert not user.confirmed
+        assert user.confirmed_on == None
+        assert user.date_last_password_reset == None
 
 
-# Todo
-@pytest.mark.skip(reason="Not implemented")
 def test_edit_user(app_generator):
     """
     GIVEN a user Model
     WHEN a user is updated
     THEN check if username, email, is_admin, confirmed and password fields are updated correctly'
     """
+    with app_generator.app_context():
+        # Add user to edit
+        user = Users(username=TO_EDIT_USER_NAME, email=TO_EDIT_USER_MAIL)
+        user.set_password(TO_EDIT_USER_PASS)
+        user.set_is_admin(1)
+        user.save()
+        # Edit user data
+        user.update_username(TO_EDIT_USER_NEW_NAME)
+        user.update_email(TO_EDIT_USER_NEW_MAIL)
+        user.set_password(TO_EDIT_USER_NEW_PASS)
+        user.set_is_admin(0)
+        user.set_jwt_auth_active(1)
+        # Check results
+        assert user.id == 1
+        assert TO_EDIT_USER_NAME is not user.username
+        assert user.username == TO_EDIT_USER_NEW_NAME
+        assert TO_EDIT_USER_MAIL is not user.email
+        assert user.email == TO_EDIT_USER_NEW_MAIL
+        assert user.check_password(TO_EDIT_USER_PASS) == False
+        assert user.check_password(TO_EDIT_USER_NEW_PASS)
+        assert user.check_is_admin() == 0
 
 
-# Todo
-@pytest.mark.skip(reason="Not implemented")
 def test_new_player_details(app_generator):
     """
     GIVEN a PlayerDetails model
     WHEN the playerdetails for an existing user are set
     THEN check the birthdays, sex_m_0_f_1, height_father and height_mother fields are defined correctly
     """
-
+    with app_generator.app_context():
+        # define details for a player
+        playerDetail = PlayerDetail(user_id=DETAILS_FOR_USER_WITH_ID,
+                                    birthday=DATE_OF_BIRTH,
+                                    sex_m_0_f_1=SEX,
+                                    height_father=HEIGHT_FATHER,
+                                    height_mother=HEIGHT_MOTHER)
+        playerDetail.save()
+        # Check results
+        assert playerDetail.user_id == DETAILS_FOR_USER_WITH_ID
+        assert playerDetail.birthday == DATE_OF_BIRTH # both are <class 'datetime.date'>
+        assert playerDetail.sex_m_0_f_1 == SEX
+        assert playerDetail.height_father == HEIGHT_FATHER
+        assert playerDetail.height_mother == HEIGHT_MOTHER
+        assert playerDetail.toDICT().get("user_id") == DETAILS_FOR_USER_WITH_ID
+        assert playerDetail.toDICT().get("birthday") == DATE_OF_BIRTH.strftime("%Y-%m-%d")
+        assert playerDetail.toDICT().get("sex_m_0_f_1") == SEX
+        assert playerDetail.toDICT().get("height_father") == HEIGHT_FATHER
+        assert playerDetail.toDICT().get("height_mother") == HEIGHT_MOTHER
 
 # Todo
 @pytest.mark.skip(reason="Not implemented")
