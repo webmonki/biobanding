@@ -265,7 +265,7 @@ export default class Users extends Component {
         <Table
           editable={editable}
           data={this.state.users}
-          pageSize={10}
+          pageSize={9}
           clickEdit={this.showDialog}
           delete={this.delete}
           showDialog={this.showNewUserDialog}

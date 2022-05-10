@@ -2,12 +2,14 @@
 	margin-left: var(--global-navrail-width);
 	height: calc(100% - var(--global-header-height));
 	padding: var(--global-page-margin);
+	overflow: auto;
 }
 
 .pageSmall {
 	margin-left: var(--global-navbar-width);
 	height: calc(100% - var(--global-header-height));
 	padding: var(--global-page-margin);
+	overflow: auto;
 }
 
 .white {
@@ -19,7 +21,7 @@
 }
 
 .card {
-	overflow-x: auto;
+	height: fit-content;
 }
 
 .inputContainer {

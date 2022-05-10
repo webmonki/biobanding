@@ -3,6 +3,7 @@
 
 html, body {
 	height: 100%;
+	overflow: hidden;
 	width: 100%;
 	padding: 0;
 	margin: 0;
@@ -47,9 +48,12 @@ html, body {
 }
 
 :root {
+	/* navbar */
 	--global-navbar-width: 250px;
 	--global-navrail-width: 58px;
+	/* header */
 	--global-header-height: 65px;
+	/* page */
 	--global-page-mrgn: 48px;
 	--global-page-margin: 48px 48px 48px 48px;
 	--global-line-space: 24px;
@@ -66,6 +70,7 @@ html, body {
 	--global-feedback-size: small;
 	--global-error-color: #B1262D;
 	--global-success-color: #3C9052;
+	/* header */
 	--global-header-size: 25px;
 	--global-header-line-size: 1px;
 	--global-header-line-color: rgba(0, 0, 0, 0.6);

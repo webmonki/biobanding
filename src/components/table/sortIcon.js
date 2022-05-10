@@ -50,7 +50,7 @@ export default class SortIcon extends Component {
               this.handleIconClick();
             }}
           >
-            <span>{this.props.colname}</span>
+            <span class={style.colname}>{this.props.colname}</span>
 
             <i
               class={`${"material-icons"} ${style.sortIcon}`}
