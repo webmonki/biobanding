@@ -484,7 +484,7 @@ export default class Table extends Component {
   };
 
   getCols = () => {
-    if (this.props.data !== undefined) {
+    if (this.props.data !== undefined && this.props.data.length !== 0) {
       let cols = Object.keys(this.props.data[0]);
       let newCols = [];
 
