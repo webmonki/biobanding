@@ -290,6 +290,7 @@ export default class Signup extends Component {
               class={style.codeInput}
               type="text"
               maxLength={1}
+              autocomplete="off"
               onInput={(e) => {
                 let code = this.state.code;
                 code = code + e.target.value;
@@ -303,6 +304,7 @@ export default class Signup extends Component {
               class={style.codeInput}
               type="text"
               maxLength={1}
+              autocomplete="off"
               onInput={(e) => {
                 let code = this.state.code;
                 code = code + e.target.value;
@@ -316,6 +318,7 @@ export default class Signup extends Component {
               class={style.codeInput}
               type="text"
               maxLength={1}
+              autocomplete="off"
               onInput={(e) => {
                 let code = this.state.code;
                 code = code + e.target.value;
@@ -329,6 +332,7 @@ export default class Signup extends Component {
               class={style.codeInput}
               type="text"
               maxLength={1}
+              autocomplete="off"
               onInput={(e) => {
                 let code = this.state.code;
                 code = code + e.target.value;
