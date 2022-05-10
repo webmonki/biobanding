@@ -340,7 +340,8 @@ class EditUser(Resource):
 
         user.save()
 
-        return {"success": True}, 200
+        return {"success": True,
+                "msg": "Successfully updated user data"}, 200
 
     @rest_api.response(200, 'Success')
     @rest_api.response(400, 'Could not delete User')
@@ -357,7 +358,8 @@ class EditUser(Resource):
                        "success": False,
                        "msg": "Could not delete User {}".format(e)}, 400
 
-        return {"success": True}, 200
+        return {"success": True,
+                "msg": "Successfully deleted user"}, 200
 
 
 @rest_api.route('/api/users/register')
@@ -512,7 +514,6 @@ class Confirm(Resource):
     @rest_api.response(200, 'Email address already confirmed')
     @rest_api.response(201, 'Account Confirmed and created player details')
     @rest_api.response(401, 'No valid token')
-    @token_required
     def post(self):
         req_data = request.get_json()
 
@@ -619,6 +620,7 @@ class EditConfiguration(Resource):
                     "msg": "Configuration could not be loaded"}, 400
 
         return {"success": True,
+                "config": config.toDICT(),
                 "msg": "The config was successfully updated"}, 200
 
     @token_required
