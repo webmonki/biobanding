@@ -9,4 +9,4 @@ pipelines:
           - pip
         script:
           - pip install -r requirements.txt
-          - pytest tests.py -v --junitxml=test-results/report.xml -s
+          - pytest -v --junitxml=test-results/report.xml -s
