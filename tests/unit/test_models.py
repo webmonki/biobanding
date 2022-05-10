@@ -5,6 +5,8 @@ Copyright (c) 2022 - present VP-Systeme GmbH, Lyrenstr. 13, 44866
 
 from api.models import Users
 
+import pytest
+
 DUMMY_USER_NAME = "johndoe"
 DUMMY_USER_MAIL = "doe@example.org"
 DUMMY_USER_PASS = "secret-pass"
@@ -35,6 +37,7 @@ def test_new_user(app_generator):
 
 
 # Todo
+@pytest.mark.skip(reason="Not implemented")
 def test_delete_user(app_generator):
     """
     GIVEN a user Model
@@ -44,6 +47,7 @@ def test_delete_user(app_generator):
 
 
 # Todo
+@pytest.mark.skip(reason="Not implemented")
 def test_edit_user(app_generator):
     """
     GIVEN a user Model
@@ -53,6 +57,7 @@ def test_edit_user(app_generator):
 
 
 # Todo
+@pytest.mark.skip(reason="Not implemented")
 def test_new_player_details(app_generator):
     """
     GIVEN a PlayerDetails model
@@ -62,6 +67,7 @@ def test_new_player_details(app_generator):
 
 
 # Todo
+@pytest.mark.skip(reason="Not implemented")
 def test_edit_player_details(app_generator):
     """
     GIVEN a PlayerDetails model
@@ -71,6 +77,7 @@ def test_edit_player_details(app_generator):
 
 
 # Todo
+@pytest.mark.skip(reason="Not implemented")
 def test_new_admin_config(app_generator):
     """
     GIVEN a AdminConfig model
@@ -81,6 +88,7 @@ def test_new_admin_config(app_generator):
 
 
 # Todo
+@pytest.mark.skip(reason="Not implemented")
 def test_edit_admin_config(app_generator):
     """
     GIVEN a AdminConfig model
@@ -91,6 +99,7 @@ def test_edit_admin_config(app_generator):
 
 
 # Todo
+@pytest.mark.skip(reason="Not implemented")
 def test_new_anthropometric_data(app_generator):
     """
     GIVEN a AnthropometricData model
@@ -102,6 +111,7 @@ def test_new_anthropometric_data(app_generator):
 
 
 # Todo
+@pytest.mark.skip(reason="Not implemented")
 def test_edit_anthropometric_data(app_generator):
     """
     GIVEN a AnthropometricData model
