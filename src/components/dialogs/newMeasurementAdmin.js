@@ -12,6 +12,7 @@ export default class NewMeasurementAdmin extends Component {
   componentWillMount = () => {
     this.setState({ chosenIndex: 0 });
     this.setState({ msg: [] });
+    this.setState({ disabled: true });
   };
 
   handleKey = (event) => {
@@ -31,18 +32,45 @@ export default class NewMeasurementAdmin extends Component {
     let height = this.state.height;
     let sittingHeight = this.state.sittingHeight;
     let span = this.state.span;
+    let weight = this.state.weight;
 
     let msg = [];
 
     if (sittingHeight > height * 0.5) {
       msg.push("Das Verhältnis von Sitzgröße zu Größe ist nicht plausibel");
+      this.setState({ disabled: true });
     }
 
     if (span > height * 1.15) {
       msg.push("Das Verhältnis von Spannweite zu Größe ist nicht plausibel");
+      this.setState({ disabled: true });
+    }
+
+    if (height === "" || height === undefined) {
+      this.setState({ disabled: true });
+    }
+
+    if (sittingHeight === "" || sittingHeight === undefined) {
+      this.setState({ disabled: true });
+    }
+
+    if (span === "" || span === undefined) {
+      this.setState({ disabled: true });
+    }
+
+    if (weight === "" || weight === undefined) {
+      this.setState({ disabled: true });
     }
 
     this.setState({ msg });
+  };
+
+  getBtnStyle = () => {
+    if (this.state.disabled) {
+      return style.btnDisabled;
+    }
+
+    return style.btnEnabled;
   };
 
   render() {
@@ -93,22 +121,26 @@ export default class NewMeasurementAdmin extends Component {
                     document.addEventListener("keyup", this.handleKey);
                     let val = e.target.value;
                     this.setState({ height: val });
-                    this.validateInput();
 
                     if (val < 0) {
                       this.setState({ heightFBClass: style.feedbackErr });
                       this.setState({ heightFB: "Mindestens 0" });
+                      this.setState({ disabled: true });
                     }
                     if (val > 250) {
                       this.setState({ heightFBClass: style.feedbackErr });
                       this.setState({
                         heightFB: "Deine eingegebene Größe ist nicht plausibel",
                       });
+                      this.setState({ disabled: true });
                     }
                     if (val >= 0 && val <= 250) {
                       this.setState({ heightFBClass: style.feedbackSucc });
                       this.setState({ heightFB: "" });
+                      this.setState({ disabled: false });
                     }
+
+                    this.validateInput();
                   }}
                 />
                 <span class={this.state.heightFBClass}>
@@ -135,17 +167,22 @@ export default class NewMeasurementAdmin extends Component {
                     if (val < 0) {
                       this.setState({ sittingFBClass: style.feedbackErr });
                       this.setState({ sittingFB: "Mindestens 0" });
+                      this.setState({ disabled: true });
                     }
                     if (val > 125) {
                       this.setState({ sittingFBClass: style.feedbackErr });
                       this.setState({
                         sittingFB: "Deine Sitzgröße ist nicht plausibel",
                       });
+                      this.setState({ disabled: true });
                     }
                     if (val >= 0 && val <= 125) {
                       this.setState({ sittingFBClass: style.feedbackSucc });
                       this.setState({ sittingFB: "" });
+                      this.setState({ disabled: false });
                     }
+
+                    this.validateInput();
                   }}
                 />
                 <span class={this.state.sittingFBClass}>
@@ -174,15 +211,20 @@ export default class NewMeasurementAdmin extends Component {
                     if (val < 0) {
                       this.setState({ spanFBClass: style.feedbackErr });
                       this.setState({ spanFB: "Mindestens 0" });
+                      this.setState({ disabled: true });
                     }
                     if (val > 300) {
                       this.setState({ spanFBClass: style.feedbackErr });
                       this.setState({ spanFB: "Maximal 300" });
+                      this.setState({ disabled: true });
                     }
                     if (val >= 0 && val <= 300) {
                       this.setState({ spanFBClass: style.feedbackSucc });
                       this.setState({ spanFB: "" });
+                      this.setState({ disabled: false });
                     }
+
+                    this.validateInput();
                   }}
                 />
                 <span class={this.state.spanFBClass}>{this.state.spanFB}</span>
@@ -206,15 +248,20 @@ export default class NewMeasurementAdmin extends Component {
                     if (val < 0) {
                       this.setState({ weightFBClass: style.feedbackErr });
                       this.setState({ weightFB: "Mindestens 0" });
+                      this.setState({ disabled: true });
                     }
                     if (val > 300) {
                       this.setState({ weightFBClass: style.feedbackErr });
                       this.setState({ weightFB: "Maximal 300" });
+                      this.setState({ disabled: true });
                     }
                     if (val >= 0 && val <= 300) {
                       this.setState({ weightFBClass: style.feedbackSucc });
                       this.setState({ weightFB: "" });
+                      this.setState({ disabled: false });
                     }
+
+                    this.validateInput();
                   }}
                 />
                 <span class={this.state.weightFBClass}>
@@ -232,10 +279,10 @@ export default class NewMeasurementAdmin extends Component {
         <Dialog.Footer class={style.footer}>
           <Dialog.FooterButton cancel>Abbrechen</Dialog.FooterButton>
           <Dialog.FooterButton
-            style={{ color: "white" }}
-            class="mdc-button mdc-theme--primary-bg"
             raised
             accept
+            class={this.getBtnStyle()}
+            disabled={this.state.disabled}
           >
             Speichern
           </Dialog.FooterButton>

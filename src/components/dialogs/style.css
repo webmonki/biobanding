@@ -65,3 +65,12 @@
 	justify-content: center;
 	align-items: center;
 }
+
+.btnDisabled {
+	background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.btnEnabled {
+	background-color: var(--mdc-theme-primary) !important;
+	color: white !important;
+}
