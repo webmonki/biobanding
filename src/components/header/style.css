@@ -105,3 +105,7 @@
 	color: var(--global-snackbar-font-color) !important;
 }
 
+.feedbackBtn {
+	margin-left: 50px;
+}
+
