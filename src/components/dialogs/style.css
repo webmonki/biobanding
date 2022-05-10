@@ -51,9 +51,26 @@
 .feedbackErr {
 	color: var(--global-error-color);
 	font-size: var(--global-feedback-size);
+	height: 10px;
 }
 
 .feedbackSucc {
 	color: var(--global-success-color);
 	font-size: var(--global-feedback-size);
+}
+
+.feedbackContainer {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.btnDisabled {
+	background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.btnEnabled {
+	background-color: var(--mdc-theme-primary) !important;
+	color: white !important;
 }

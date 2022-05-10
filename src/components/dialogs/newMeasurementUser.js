@@ -12,6 +12,8 @@ export default class NewMeasurementUser extends Component {
   state = { formValues: {} };
   componentWillMount = () => {
     this.setState({ header: this.props.header });
+    this.setState({ msg: [] });
+    this.setState({ disabled: true });
   };
 
   handleKey = (event) => {
@@ -52,6 +54,51 @@ export default class NewMeasurementUser extends Component {
     });
   };
 
+  validateInput = () => {
+    let height = this.getFormValue("height");
+    let sittingHeight = this.getFormValue("sittingHeight");
+    let span = this.getFormValue("span");
+    let weight = this.getFormValue("weight");
+
+    let msg = [];
+
+    if (sittingHeight > height * 0.5) {
+      msg.push("Das Verhältnis von Sitzgröße zu Größe ist nicht plausibel");
+      this.setState({ disabled: true });
+    }
+
+    if (span > height * 1.15) {
+      msg.push("Das Verhältnis von Spannweite zu Größe ist nicht plausibel");
+      this.setState({ disabled: true });
+    }
+
+    if (height === "" || height === undefined) {
+      this.setState({ disabled: true });
+    }
+
+    if (sittingHeight === "" || sittingHeight === undefined) {
+      this.setState({ disabled: true });
+    }
+
+    if (span === "" || span === undefined) {
+      this.setState({ disabled: true });
+    }
+
+    if (weight === "" || weight === undefined) {
+      this.setState({ disabled: true });
+    }
+
+    this.setState({ msg });
+  };
+
+  getBtnStyle = () => {
+    if (this.state.disabled) {
+      return style.btnDisabled;
+    }
+
+    return style.btnEnabled;
+  };
+
   render() {
     return (
       <Dialog
@@ -70,7 +117,7 @@ export default class NewMeasurementUser extends Component {
                   autocomplete="off"
                   type="number"
                   class={style.fullWidth}
-                  min={0}
+                  min={90}
                   max={300}
                   outlined
                   label="Größe"
@@ -81,18 +128,25 @@ export default class NewMeasurementUser extends Component {
                     let val = e.target.value;
                     this.setFormValue("height", val);
 
-                    if (val < 0) {
+                    if (val < 90) {
                       this.setState({ heightFBClass: style.feedbackErr });
-                      this.setState({ heightFB: "Mindestens 0" });
+                      this.setState({ heightFB: "Mindestens 90" });
+                      this.setState({ disabled: true });
                     }
-                    if (val > 300) {
+                    if (val > 250) {
                       this.setState({ heightFBClass: style.feedbackErr });
-                      this.setState({ heightFB: "Maximal 300" });
+                      this.setState({
+                        heightFB:
+                          "Deine eingegebene Größe ist  nicht plausibel",
+                      });
+                      this.setState({ disabled: true });
                     }
-                    if (val >= 0 && val <= 300) {
+                    if (val >= 90 && val <= 300) {
                       this.setState({ heightFBClass: style.feedbackSucc });
                       this.setState({ heightFB: "" });
+                      this.setState({ disabled: false });
                     }
+                    this.validateInput();
                   }}
                 />
                 <span class={this.state.heightFBClass}>
@@ -115,16 +169,23 @@ export default class NewMeasurementUser extends Component {
                     this.setFormValue("sittingHeight", val);
                     if (val < 0) {
                       this.setState({ sittingFBClass: style.feedbackErr });
-                      this.setState({ sittingFB: "Mindestens 0" });
+                      this.setState({ sittingFB: "Mindestens 00" });
+                      this.setState({ disabled: true });
                     }
-                    if (val > 300) {
+                    if (val > 125) {
                       this.setState({ sittingFBClass: style.feedbackErr });
-                      this.setState({ sittingFB: "Maximal 300" });
+                      this.setState({
+                        sittingFB: "Deine Sitzgröße ist nicht plausibel",
+                      });
+                      this.setState({ disabled: true });
                     }
-                    if (val >= 0 && val <= 300) {
+                    if (val >= 0 && val <= 125) {
                       this.setState({ sittingFBClass: style.feedbackSucc });
                       this.setState({ sittingFB: "" });
+                      this.setState({ disabled: false });
                     }
+
+                    this.validateInput();
                   }}
                 />
                 <span class={this.state.sittingFBClass}>
@@ -138,7 +199,7 @@ export default class NewMeasurementUser extends Component {
                   autocomplete="off"
                   type="number"
                   class={style.fullWidth}
-                  min={0}
+                  min={60}
                   max={300}
                   outlined
                   label="Arm Spannweite"
@@ -147,18 +208,23 @@ export default class NewMeasurementUser extends Component {
                     document.addEventListener("keyup", this.handleKey);
                     let val = e.target.value;
                     this.setFormValue("span", val);
-                    if (val < 0) {
+                    if (val < 60) {
                       this.setState({ spanFBClass: style.feedbackErr });
-                      this.setState({ spanFB: "Mindestens 0" });
+                      this.setState({ spanFB: "Mindestens 60" });
+                      this.setState({ disabled: true });
                     }
                     if (val > 300) {
                       this.setState({ spanFBClass: style.feedbackErr });
                       this.setState({ spanFB: "Maximal 300" });
+                      this.setState({ disabled: true });
                     }
-                    if (val >= 0 && val <= 300) {
+                    if (val >= 60 && val <= 300) {
                       this.setState({ spanFBClass: style.feedbackSucc });
                       this.setState({ spanFB: "" });
+                      this.setState({ disabled: false });
                     }
+
+                    this.validateInput();
                   }}
                 />
                 <span class={this.state.spanFBClass}>{this.state.spanFB}</span>
@@ -180,15 +246,20 @@ export default class NewMeasurementUser extends Component {
                     if (val < 0) {
                       this.setState({ weightFBClass: style.feedbackErr });
                       this.setState({ weightFB: "Mindestens 0" });
+                      this.setState({ disabled: true });
                     }
                     if (val > 300) {
                       this.setState({ weightFBClass: style.feedbackErr });
                       this.setState({ weightFB: "Maximal 300" });
+                      this.setState({ disabled: true });
                     }
                     if (val >= 0 && val <= 300) {
                       this.setState({ weightFBClass: style.feedbackSucc });
                       this.setState({ weightFB: "" });
+                      this.setState({ disabled: false });
                     }
+
+                    this.validateInput();
                   }}
                 />
                 <span class={this.state.weightFBClass}>
@@ -196,15 +267,20 @@ export default class NewMeasurementUser extends Component {
                 </span>
               </div>
             </div>
+            <div class={style.feedbackContainer}>
+              {this.state.msg.map((msg) => (
+                <p class={style.feedbackErr}>{msg}</p>
+              ))}
+            </div>
           </div>
         </Dialog.Body>
         <Dialog.Footer class={style.footer}>
-          <Dialog.FooterButton cancel={true}>Abbrechen</Dialog.FooterButton>
+          <Dialog.FooterButton cancel>Abbrechen</Dialog.FooterButton>
           <Dialog.FooterButton
-            style={{ color: "white" }}
-            class="mdc-button mdc-theme--primary-bg"
             raised
-            accept={true}
+            accept
+            class={this.getBtnStyle()}
+            disabled={this.state.disabled}
           >
             Speichern
           </Dialog.FooterButton>
