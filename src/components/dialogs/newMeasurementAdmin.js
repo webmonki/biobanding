@@ -122,9 +122,9 @@ export default class NewMeasurementAdmin extends Component {
                     let val = e.target.value;
                     this.setState({ height: val });
 
-                    if (val < 0) {
+                    if (val < 90) {
                       this.setState({ heightFBClass: style.feedbackErr });
-                      this.setState({ heightFB: "Mindestens 0" });
+                      this.setState({ heightFB: "Mindestens 90" });
                       this.setState({ disabled: true });
                     }
                     if (val > 250) {
@@ -134,7 +134,7 @@ export default class NewMeasurementAdmin extends Component {
                       });
                       this.setState({ disabled: true });
                     }
-                    if (val >= 0 && val <= 250) {
+                    if (val >= 90 && val <= 250) {
                       this.setState({ heightFBClass: style.feedbackSucc });
                       this.setState({ heightFB: "" });
                       this.setState({ disabled: false });
@@ -164,9 +164,9 @@ export default class NewMeasurementAdmin extends Component {
                     this.setState({ sittingHeight: val });
                     this.validateInput();
 
-                    if (val < 0) {
+                    if (val < 60) {
                       this.setState({ sittingFBClass: style.feedbackErr });
-                      this.setState({ sittingFB: "Mindestens 0" });
+                      this.setState({ sittingFB: "Mindestens 60" });
                       this.setState({ disabled: true });
                     }
                     if (val > 125) {
@@ -176,7 +176,7 @@ export default class NewMeasurementAdmin extends Component {
                       });
                       this.setState({ disabled: true });
                     }
-                    if (val >= 0 && val <= 125) {
+                    if (val >= 60 && val <= 125) {
                       this.setState({ sittingFBClass: style.feedbackSucc });
                       this.setState({ sittingFB: "" });
                       this.setState({ disabled: false });
