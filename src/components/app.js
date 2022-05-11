@@ -13,6 +13,7 @@ import Forgot from "../routes/forgot";
 import Reset from "../routes/reset";
 import Settings from "../routes/settings";
 import Confirm from "../routes/confirm";
+import measurementDialog from "./dialogs/measurementDialog";
 // import Home from 'async!../routes/home';
 // import Profile from 'async!../routes/profile';
 
@@ -42,7 +43,8 @@ export default class App extends Component {
       route("/measurements", true);
     }
 
-    route(e.url, true);
+    this.setState({ currentUrl: e.url });
+    // route(e.url, true);
   };
 
   setInstructions = (val) => {
@@ -57,6 +59,11 @@ export default class App extends Component {
     this.setState({ reload: true });
   };
 
+  openMeasurementDialog = () => {
+    console.log("OPEN");
+    this.measurementDialog.MDComponent.show();
+  };
+
   render() {
     return (
       <div id="app">
@@ -66,6 +73,14 @@ export default class App extends Component {
         />
 
         <Header setReload={this.setReload} />
+        <Measurements
+          reference={(measurementDialog) => {
+            this.measurementDialog = measurementDialog;
+          }}
+          //   admin={this.Auth.check_admin()}
+          header="TEST"
+          subHeader="TEST2"
+        />
         <Router onChange={this.handleRoute}>
           <Login
             path="/login"
@@ -79,6 +94,7 @@ export default class App extends Component {
             path="/measurements"
             reload={this.state.reload}
             unsetReload={this.unsetReload}
+            openDialog={this.openMeasurementDialog}
           />
           <Users path="/users" />
           <Forgot path="/forgot" />

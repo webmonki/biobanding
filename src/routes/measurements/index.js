@@ -466,6 +466,13 @@ export default class Measurements extends Component {
       <div class={this.state.pageClass}>
         <Navbar selectedRoute="/measurements" fitPageSize={this.fitPageSize} />
         <span class={style.pageHeader}>Messungen</span>
+        <Button
+          onCLick={() => {
+            console.log(this.props.openDialog);
+          }}
+        >
+          CLICK
+        </Button>
         <Card class={style.card}>{this.state.content}</Card>
         <div class={style.mySnackbar}>
           <Snackbar
