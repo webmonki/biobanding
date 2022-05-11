@@ -63,10 +63,6 @@ export default class Forgot extends Component {
         } else {
           try {
             let response = JSON.parse(this.responseText);
-            if (response.msg == "Token is invalid") {
-              Auth.logout();
-              location.reload();
-            }
             that.setState({ responseFBClass: style.feedbackSucc });
             that.setState({ responseFB: response.msg });
           } catch (err) {}

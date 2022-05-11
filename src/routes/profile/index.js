@@ -69,7 +69,6 @@ export default class Profile extends Component {
           let response = JSON.parse(this.responseText);
           if (response.msg == "Token is invalid") {
             Auth.logout();
-            location.reload();
           }
           that.setState({ responseFBClass: style.feedbackErr });
           that.setState({ responseFB: response.msg });
@@ -146,7 +145,6 @@ export default class Profile extends Component {
           let response = JSON.parse(this.responseText);
           if (response.msg == "Token is invalid") {
             Auth.logout();
-            location.reload();
           }
           that.setState({ responseFBClass: style.feedbackErr });
           that.setState({ responseFB: response.msg });
@@ -177,7 +175,6 @@ export default class Profile extends Component {
           let response = JSON.parse(this.responseText);
           if (response.msg == "Token is invalid") {
             Auth.logout();
-            location.reload();
           }
           that.setState({ responseFBClass: style.feedbackErr });
           that.setState({ responseFB: response.msg });

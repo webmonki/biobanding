@@ -74,10 +74,6 @@ export default class Login extends Component {
         } else {
           try {
             let response = JSON.parse(this.responseText);
-            if (response.msg == "Token is invalid") {
-              Auth.logout();
-              location.reload();
-            }
             that.setState({ responseFBClass: style.feedbackErr });
             that.setState({ responseFB: response.msg });
           } catch (err) {}

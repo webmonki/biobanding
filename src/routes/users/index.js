@@ -58,7 +58,6 @@ export default class Users extends Component {
           let response = JSON.parse(this.responseText);
           if (response.msg == "Token is invalid") {
             Auth.logout();
-            location.reload();
           }
         } catch (err) {}
       }
@@ -88,7 +87,6 @@ export default class Users extends Component {
           let response = JSON.parse(this.responseText);
           if (response.msg == "Token is invalid") {
             Auth.logout();
-            location.reload();
           }
         } catch (err) {}
       }
@@ -164,7 +162,6 @@ export default class Users extends Component {
           let response = JSON.parse(this.responseText);
           if (response.msg == "Token is invalid") {
             Auth.logout();
-            location.reload();
           }
         } catch (err) {}
       }
@@ -201,7 +198,6 @@ export default class Users extends Component {
           let response = JSON.parse(this.responseText);
           if (response.msg === "Token is invalid") {
             Auth.logout();
-            location.reload();
           }
         } catch (err) {}
       }

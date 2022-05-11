@@ -122,7 +122,6 @@ export default class Measurements extends Component {
           let response = JSON.parse(this.responseText);
           if (response.msg == "Token is invalid") {
             Auth.logout();
-            location.reload();
           }
         } catch (err) {}
       }
@@ -175,7 +174,6 @@ export default class Measurements extends Component {
           let response = JSON.parse(this.responseText);
           if (response.msg == "Token is invalid") {
             Auth.logout();
-            location.reload();
           }
         } catch (err) {}
       }
@@ -230,7 +228,6 @@ export default class Measurements extends Component {
           let response = JSON.parse(this.responseText);
           if (response.msg === "Token is invalid") {
             Auth.logout();
-            location.reload();
           }
         } catch (err) {}
       }
@@ -261,7 +258,6 @@ export default class Measurements extends Component {
           let response = JSON.parse(this.responseText);
           if (response.msg == "Token is invalid") {
             Auth.logout();
-            location.reload();
           }
         } catch (err) {}
       }
@@ -294,7 +290,6 @@ export default class Measurements extends Component {
           let response = JSON.parse(this.responseText);
           if (response.msg == "Token is invalid") {
             Auth.logout();
-            location.reload();
           }
         } catch (err) {}
       }
