@@ -4,8 +4,8 @@ Copyright (c) 2022 - present VP-Systeme GmbH, Lyrenstr. 13, 44866
 """
 
 from numpy import datetime_as_string
-from api.models import PlayerDetail, Users
-from datetime import date, datetime
+from api.models import AdminConfig, AnthropometricData, PlayerDetail, Users
+from datetime import date, datetime, timedelta
 import pytest
 
 
@@ -19,18 +19,61 @@ DUMMIER_USER_PASS = "secret-password"
 DB_ENTRY_AFTER_DELETING_USER = "DELETED"
 
 TO_EDIT_USER_NAME = "beforeedit"
-TO_EDIT_USER_NEW_NAME = "afteredit"
+EDITED_USER_NAME = "afteredit"
 TO_EDIT_USER_MAIL = "tobe@edited.com"
-TO_EDIT_USER_NEW_MAIL = "edited-address@after.de"
+EDITED_USER_MAIL = "edited-address@after.de"
 TO_EDIT_USER_PASS = "to@edit-com"
-TO_EDIT_USER_NEW_PASS = "edited9$password"
+EDITED_USER_PASS = "edited9$password"
 
 DATE_OF_BIRTH = datetime.strptime("1990-01-01", "%Y-%m-%d").date() # <class 'datetime.date'>
-DETAILS_FOR_USER_WITH_ID = 2
+DATE_OF_BIRTH_TEENAGER = date.today() - timedelta(days=5000) # 13,68 years
+DETAILS_FOR_USER_WITH_ID = 1
 SEX = 0
 HEIGHT_FATHER = 189
 HEIGHT_MOTHER = 169
 
+ACONF_DAYS_REMINDER = 30
+ACONF_MAIL_SERVER = "smtp.example.org"
+ACONF_MAIL_PORT = 465
+ACONF_MAIL_USE_SSL = 1
+ACONF_MAIL_USERNAME = "mark"
+ACONF_MAIL_PASS = "simple-pass"
+
+EDITED_ACONF_DAYS_REMINDER = 10
+EDITED_ACONF_MAIL_SERVER = "smtp.unreal.org"
+EDITED_ACONF_MAIL_PORT = 467
+EDITED_ACONF_MAIL_USE_SSL = 0
+EDITED_ACONF_MAIL_USERNAME = "adam"
+EDITED_ACONF_MAIL_PASS = "complex-pass"
+
+ANTH_DATA_DATE_MEASURED = "2022-01-01"
+ANTH_DATA_HEIGHT = 182
+ANTH_DATA_SITTING_HEIGHT = 99
+ANTH_DATA_BODY_SPAN = 64
+ANTH_DATA_WEIGHT = 89.9
+ANTH_DATA_PHV = 15.15
+ANTH_DATA_OFFSET = 1.81
+ANTH_DATA_AK_BIO = "PHV 1.5 bis 2.5"
+ANTH_DATA_BMI = 27.1
+ANTH_DATA_PAH = 198.73
+ANTH_DATA_PMH = 0.92
+ANTH_DATA_REMAINING_GROWTH = 16.73
+ANTH_DATA_AGE_AT_MEASURMENT = 13.34
+
+ANTH_EDITED_DATA_DATE_MEASURED = "2022-03-03"
+ANTH_EDITED_DATA_HEIGHT = 188
+ANTH_EDITED_DATA_SITTING_HEIGHT = 101
+ANTH_EDITED_DATA_BODY_SPAN = 71
+ANTH_EDITED_DATA_WEIGHT = 92.3
+
+ANTH_EDITED_DATA_PHV = 15.15
+ANTH_EDITED_DATA_OFFSET = 1.81
+ANTH_EDITED_DATA_AK_BIO = "PHV 1.5 bis 2.5"
+ANTH_EDITED_DATA_BMI = 27.1
+ANTH_EDITED_DATA_PAH = 198.73
+ANTH_EDITED_DATA_PMH = 0.92
+ANTH_EDITED_DATA_REMAINING_GROWTH = 16.73
+ANTH_EDITED_DATA_AGE_AT_MEASURMENT = 13.34
 
 def test_new_user(app_generator): # app_generator type: <class 'flask.app.Flask'>
     """
@@ -46,10 +89,6 @@ def test_new_user(app_generator): # app_generator type: <class 'flask.app.Flask'
         user.set_is_admin(True)
         user.save()
         # Check results
-        print("all users:")
-        print(user.get_all_users())
-        assert user.id == 2
-        assert type(user.id) == int
         assert DUMMY_USER_NAME == user.username
         assert DUMMY_USER_MAIL == user.email
         assert user.check_password(DUMMY_USER_PASS)
@@ -78,7 +117,6 @@ def test_delete_user(app_generator):
         # Detele user
         user.delete()
         # Check results
-        assert user.id == 1
         assert DUMMIER_USER_NAME is not user.username
         assert user.username == DB_ENTRY_AFTER_DELETING_USER
         assert DUMMIER_USER_MAIL is not user.email
@@ -108,19 +146,18 @@ def test_edit_user(app_generator):
         user.set_is_admin(1)
         user.save()
         # Edit user data
-        user.update_username(TO_EDIT_USER_NEW_NAME)
-        user.update_email(TO_EDIT_USER_NEW_MAIL)
-        user.set_password(TO_EDIT_USER_NEW_PASS)
+        user.update_username(EDITED_USER_NAME)
+        user.update_email(EDITED_USER_MAIL)
+        user.set_password(EDITED_USER_PASS)
         user.set_is_admin(0)
         user.set_jwt_auth_active(1)
         # Check results
-        assert user.id == 1
         assert TO_EDIT_USER_NAME is not user.username
-        assert user.username == TO_EDIT_USER_NEW_NAME
+        assert user.username == EDITED_USER_NAME
         assert TO_EDIT_USER_MAIL is not user.email
-        assert user.email == TO_EDIT_USER_NEW_MAIL
+        assert user.email == EDITED_USER_MAIL
         assert user.check_password(TO_EDIT_USER_PASS) == False
-        assert user.check_password(TO_EDIT_USER_NEW_PASS)
+        assert user.check_password(EDITED_USER_PASS)
         assert user.check_is_admin() == 0
 
 
@@ -131,7 +168,7 @@ def test_new_player_details(app_generator):
     THEN check the birthdays, sex_m_0_f_1, height_father and height_mother fields are defined correctly
     """
     with app_generator.app_context():
-        # Define new player details
+        # Define new PlayerDetails
         playerDetail = PlayerDetail(user_id=DETAILS_FOR_USER_WITH_ID,
                                     birthday=DATE_OF_BIRTH,
                                     sex_m_0_f_1=SEX,
@@ -174,7 +211,6 @@ def test_edit_player_details(app_generator):
         playerDetail.height_mother = HEIGHT_MOTHER+14
         # Check results
         assert playerDetail.user_id is not DETAILS_FOR_USER_WITH_ID - 1
-        assert playerDetail.user_id == 4
         assert playerDetail.birthday is not DATE_OF_BIRTH.replace(year=DATE_OF_BIRTH.year+10)
         assert playerDetail.birthday == DATE_OF_BIRTH.replace(year=DATE_OF_BIRTH.year-20)
         assert playerDetail.sex_m_0_f_1 is not SEX+1
@@ -188,8 +224,6 @@ def test_edit_player_details(app_generator):
         assert playerDetail.toDICT().get("height_mother") == HEIGHT_MOTHER+14
 
 
-# Todo
-@pytest.mark.skip(reason="Not implemented")
 def test_new_admin_config(app_generator):
     """
     GIVEN a AdminConfig model
@@ -197,10 +231,25 @@ def test_new_admin_config(app_generator):
     THEN check the days_reminder, mail_server, mail_port, mail_use_ssl, mail_password and
         mail_username fields are defined correctly
     """
+    with app_generator.app_context():
+        # Create new AdminConfig
+        adminConf = AdminConfig(days_reminder=ACONF_DAYS_REMINDER, mail_server=ACONF_MAIL_SERVER, mail_port=ACONF_MAIL_PORT, mail_use_ssl=ACONF_MAIL_USE_SSL, mail_username=ACONF_MAIL_USERNAME)
+        adminConf.update_mail_passwort(ACONF_MAIL_PASS)
+        adminConf.save()
+        # Check results
+        assert adminConf.days_reminder == ACONF_DAYS_REMINDER
+        assert adminConf.mail_server == ACONF_MAIL_SERVER
+        assert adminConf.mail_port == ACONF_MAIL_PORT
+        assert adminConf.mail_use_ssl == ACONF_MAIL_USE_SSL
+        assert adminConf.mail_username == ACONF_MAIL_USERNAME
+        assert adminConf.mail_password == ACONF_MAIL_PASS
+        assert adminConf.toDICT().get("days_reminder") == ACONF_DAYS_REMINDER
+        assert adminConf.toDICT().get("mail_server") == ACONF_MAIL_SERVER
+        assert adminConf.toDICT().get("mail_port") == ACONF_MAIL_PORT
+        assert adminConf.toDICT().get("mail_use_ssl") == ACONF_MAIL_USE_SSL
+        assert adminConf.toDICT().get("mail_username") == ACONF_MAIL_USERNAME
 
 
-# Todo
-@pytest.mark.skip(reason="Not implemented")
 def test_edit_admin_config(app_generator):
     """
     GIVEN a AdminConfig model
@@ -208,35 +257,220 @@ def test_edit_admin_config(app_generator):
     THEN check the days_reminder, mail_server, mail_port, mail_use_ssl, mail_password and
         mail_username fields are updated correctly
     """
+    with app_generator.app_context():
+        # Create AdminConfig to edit
+        adminConf = AdminConfig(days_reminder=ACONF_DAYS_REMINDER, mail_server=ACONF_MAIL_SERVER, mail_port=ACONF_MAIL_PORT, mail_use_ssl=ACONF_MAIL_USE_SSL, mail_username=ACONF_MAIL_USERNAME,
+        mail_password=ACONF_MAIL_PASS)
+        adminConf.save()
+        # Edit AdminConfig
+        adminConf.update_days_reminder(EDITED_ACONF_DAYS_REMINDER)
+        adminConf.update_mail_server(EDITED_ACONF_MAIL_SERVER)
+        adminConf.update_mail_port(EDITED_ACONF_MAIL_PORT)
+        adminConf.update_mail_use_ssl(EDITED_ACONF_MAIL_USE_SSL)
+        adminConf.update_mail_username(EDITED_ACONF_MAIL_USERNAME)
+        adminConf.update_mail_passwort(EDITED_ACONF_MAIL_PASS)
+        # Check results
+        assert adminConf.days_reminder is not ACONF_DAYS_REMINDER
+        assert adminConf.days_reminder == EDITED_ACONF_DAYS_REMINDER
+        assert adminConf.mail_server is not ACONF_MAIL_SERVER
+        assert adminConf.mail_server == EDITED_ACONF_MAIL_SERVER
+        assert adminConf.mail_port is not ACONF_MAIL_PORT
+        assert adminConf.mail_port == EDITED_ACONF_MAIL_PORT
+        assert adminConf.mail_use_ssl is not ACONF_MAIL_USE_SSL
+        assert adminConf.mail_use_ssl == EDITED_ACONF_MAIL_USE_SSL
+        assert adminConf.mail_username is not ACONF_MAIL_USERNAME
+        assert adminConf.mail_username == EDITED_ACONF_MAIL_USERNAME
+        assert adminConf.mail_password is not ACONF_MAIL_PASS
+        assert adminConf.mail_password == EDITED_ACONF_MAIL_PASS
 
 
-# Todo
-@pytest.mark.skip(reason="Not implemented")
 def test_new_anthropometric_data(app_generator):
     """
     GIVEN a AnthropometricData model
     WHEN a AnthropometricData is created
     THEN check if all fields are defined correctly and the results a calculated correctly
     """
+    with app_generator.app_context():
+        # Add user
+        user = Users(username=DUMMIER_USER_NAME, email=DUMMIER_USER_MAIL)
+        user.set_password(DUMMIER_USER_PASS)
+        user.set_is_admin(True)
+        user.set_jwt_auth_active(True)
+        user.save()
+        # Add PlayerDetails
+        playerDetail = PlayerDetail(user_id=DETAILS_FOR_USER_WITH_ID,
+                                    birthday=DATE_OF_BIRTH_TEENAGER,
+                                    sex_m_0_f_1=SEX,
+                                    height_father=HEIGHT_FATHER,
+                                    height_mother=HEIGHT_MOTHER)
+        playerDetail.save()
+        # Define anthropometric data for that user
+        anthData = AnthropometricData(user_id=1, age_at_measurement=ANTH_DATA_AGE_AT_MEASURMENT)
+        anthData.update_date_measured(ANTH_DATA_DATE_MEASURED)
+        anthData.update_height(ANTH_DATA_HEIGHT)
+        anthData.update_sitting_height(ANTH_DATA_SITTING_HEIGHT)
+        anthData.update_body_span(ANTH_DATA_BODY_SPAN)
+        anthData.update_weight(ANTH_DATA_WEIGHT)
+        anthData.save()
+        # Check results
+        assert anthData.user_id == DETAILS_FOR_USER_WITH_ID
+        assert anthData.date_measured == datetime.strptime(ANTH_DATA_DATE_MEASURED, "%Y-%m-%d").date()
+        assert anthData.height == ANTH_DATA_HEIGHT
+        assert anthData.sitting_height == ANTH_DATA_SITTING_HEIGHT
+        assert anthData.body_span == ANTH_DATA_BODY_SPAN
+        assert anthData.weight == ANTH_DATA_WEIGHT
+        assert anthData.phv == ANTH_DATA_PHV
+        assert anthData.offset == ANTH_DATA_OFFSET
+        assert anthData.ak_bio == ANTH_DATA_AK_BIO
+        assert anthData.bmi == ANTH_DATA_BMI
+        assert anthData.pah == ANTH_DATA_PAH
+        assert anthData.pmh == ANTH_DATA_PMH
+        assert anthData.remaining_growth == ANTH_DATA_REMAINING_GROWTH
+        assert anthData.age_at_measurement == ANTH_DATA_AGE_AT_MEASURMENT
+        assert anthData.toDICT().get("UserId") == DETAILS_FOR_USER_WITH_ID
+#        assert anthData.toDICT().get("Datum") == ANTH_DATA_DATE_MEASURED
+        assert anthData.toDICT().get("Alter") == ANTH_DATA_AGE_AT_MEASURMENT
+        assert anthData.toDICT().get("YAPHV") == ANTH_DATA_OFFSET 
+        assert anthData.toDICT().get("PHV") == ANTH_DATA_PHV
+        assert anthData.toDICT().get("AK_BIO") == ANTH_DATA_AK_BIO
+        assert anthData.toDICT().get("BMI") == ANTH_DATA_BMI
+        assert anthData.toDICT().get("PMH") == ANTH_DATA_PMH
+        assert anthData.toDICT().get("PAH") == ANTH_DATA_PAH
+        assert anthData.toDICT().get("CM until PAH") == ANTH_DATA_REMAINING_GROWTH
+        assert anthData.toDICT().get("Größe") == ANTH_DATA_HEIGHT
+        assert anthData.toDICT().get("Sitzgröße") == ANTH_DATA_SITTING_HEIGHT
+        assert anthData.toDICT().get("Körperspanne") == ANTH_DATA_BODY_SPAN
+        assert anthData.toDICT().get("Gewicht") == ANTH_DATA_WEIGHT
 
     # Hint: User formulas.py for validation
 
 
-# Todo
-@pytest.mark.skip(reason="Not implemented")
+@pytest.mark.xfail(reason = "Age outside of 4-17,5")
+def test_new_anthropometric_data_WHEN_AGE_IS_NOT_BETWEEN_4and17(app_generator):
+    """
+    GIVEN a AnthropometricData model
+    WHEN a AnthropometricData is created
+    THEN check if all fields are defined correctly and the results a calculated correctly
+    """
+    with app_generator.app_context():
+        # Add user
+        user = Users(username=DUMMIER_USER_NAME, email=DUMMIER_USER_MAIL)
+        user.set_password(DUMMIER_USER_PASS)
+        user.set_is_admin(True)
+        user.set_jwt_auth_active(True)
+        user.save()
+        # Add PlayerDetails
+        playerDetail = PlayerDetail(user_id=DETAILS_FOR_USER_WITH_ID,
+                                    birthday=DATE_OF_BIRTH,
+                                    sex_m_0_f_1=SEX,
+                                    height_father=HEIGHT_FATHER,
+                                    height_mother=HEIGHT_MOTHER)
+        playerDetail.save()
+        # Define anthropometric data for that user
+        anthData = AnthropometricData(user_id=1, age_at_measurement=ANTH_DATA_AGE_AT_MEASURMENT)
+        anthData.update_date_measured(ANTH_DATA_DATE_MEASURED)
+        anthData.update_height(ANTH_DATA_HEIGHT)
+        anthData.update_sitting_height(ANTH_DATA_SITTING_HEIGHT)
+        anthData.update_body_span(ANTH_DATA_BODY_SPAN)
+        anthData.update_weight(ANTH_DATA_WEIGHT)
+        anthData.save()
+        # Check results
+        assert anthData.user_id == DETAILS_FOR_USER_WITH_ID
+        assert anthData.date_measured == datetime.strptime(ANTH_DATA_DATE_MEASURED, "%Y-%m-%d").date()
+        assert anthData.height == ANTH_DATA_HEIGHT
+        assert anthData.sitting_height == ANTH_DATA_SITTING_HEIGHT
+        assert anthData.body_span == ANTH_DATA_BODY_SPAN
+        assert anthData.weight == ANTH_DATA_WEIGHT
+        assert anthData.phv == ANTH_DATA_PHV
+        assert anthData.offset == ANTH_DATA_OFFSET
+        assert anthData.ak_bio == ANTH_DATA_AK_BIO
+        assert anthData.bmi == ANTH_DATA_BMI
+        assert anthData.pah == ANTH_DATA_PAH
+        assert anthData.pmh == ANTH_DATA_PMH
+        assert anthData.remaining_growth == ANTH_DATA_REMAINING_GROWTH
+        assert anthData.age_at_measurement == ANTH_DATA_AGE_AT_MEASURMENT
+
+
 def test_edit_anthropometric_data(app_generator):
     """
     GIVEN a AnthropometricData model
     WHEN a AnthropometricData is edited
     THEN check if all fields are updated correctly and the results a calculated correctly again
     """
+    with app_generator.app_context():
+        # Add user
+        user = Users(username=DUMMIER_USER_NAME, email=DUMMIER_USER_MAIL)
+        user.set_password(DUMMIER_USER_PASS)
+        user.set_is_admin(True)
+        user.set_jwt_auth_active(True)
+        user.save()
+        # Add PlayerDetails
+        playerDetail = PlayerDetail(user_id=DETAILS_FOR_USER_WITH_ID,
+                                    birthday=DATE_OF_BIRTH_TEENAGER,
+                                    sex_m_0_f_1=SEX,
+                                    height_father=HEIGHT_FATHER,
+                                    height_mother=HEIGHT_MOTHER)
+        playerDetail.save()
+        # Define anthropometric data for that user
+        anthData = AnthropometricData(user_id=1, age_at_measurement=ANTH_DATA_AGE_AT_MEASURMENT)
+        anthData.update_date_measured(ANTH_DATA_DATE_MEASURED)
+        anthData.update_height(ANTH_DATA_HEIGHT)
+        anthData.update_sitting_height(ANTH_DATA_SITTING_HEIGHT)
+        anthData.update_body_span(ANTH_DATA_BODY_SPAN)
+        anthData.update_weight(ANTH_DATA_WEIGHT)
+        anthData.save()
+        # Edit data
+        anthData.update_date_measured(ANTH_EDITED_DATA_DATE_MEASURED)
+        anthData.update_height(ANTH_EDITED_DATA_HEIGHT)
+        anthData.update_sitting_height(ANTH_EDITED_DATA_SITTING_HEIGHT)
+        anthData.update_body_span(ANTH_EDITED_DATA_BODY_SPAN)
+        anthData.update_weight(ANTH_EDITED_DATA_WEIGHT)
+        # Check results
+        assert anthData.user_id == DETAILS_FOR_USER_WITH_ID
+        assert anthData.date_measured == datetime.strptime(ANTH_EDITED_DATA_DATE_MEASURED, "%Y-%m-%d")
+        assert anthData.height == ANTH_EDITED_DATA_HEIGHT
+        assert anthData.sitting_height == ANTH_EDITED_DATA_SITTING_HEIGHT
+        assert anthData.body_span == ANTH_EDITED_DATA_BODY_SPAN
+        assert anthData.weight == ANTH_EDITED_DATA_WEIGHT
+        assert anthData.phv == ANTH_EDITED_DATA_PHV
+        assert anthData.offset == ANTH_DATA_OFFSET
+        assert anthData.ak_bio == ANTH_DATA_AK_BIO
+        assert anthData.bmi == ANTH_DATA_BMI
+        assert anthData.pah == ANTH_DATA_PAH
+        assert anthData.pmh == ANTH_DATA_PMH
+        assert anthData.remaining_growth == ANTH_DATA_REMAINING_GROWTH
+        assert anthData.age_at_measurement == ANTH_DATA_AGE_AT_MEASURMENT
 
 
-
-
-
-
-
-
-
-
+def test_delete_anthropometric_data(app_generator):
+    """
+    GIVEN a AnthropometricData model
+    WHEN an AnthropometricData is deleted
+    THEN check if data has been removed from the table
+    """
+    with app_generator.app_context():
+        # Add user
+        user = Users(username=DUMMIER_USER_NAME, email=DUMMIER_USER_MAIL)
+        user.set_password(DUMMIER_USER_PASS)
+        user.set_is_admin(True)
+        user.set_jwt_auth_active(True)
+        user.save()
+        # Add PlayerDetails
+        playerDetail = PlayerDetail(user_id=DETAILS_FOR_USER_WITH_ID,
+                                    birthday=DATE_OF_BIRTH_TEENAGER,
+                                    sex_m_0_f_1=SEX,
+                                    height_father=HEIGHT_FATHER,
+                                    height_mother=HEIGHT_MOTHER)
+        playerDetail.save()
+        # Define anthropometric data for that user
+        anthData = AnthropometricData(user_id=1, age_at_measurement=ANTH_DATA_AGE_AT_MEASURMENT)
+        anthData.update_date_measured(ANTH_DATA_DATE_MEASURED)
+        anthData.update_height(ANTH_DATA_HEIGHT)
+        anthData.update_sitting_height(ANTH_DATA_SITTING_HEIGHT)
+        anthData.update_body_span(ANTH_DATA_BODY_SPAN)
+        anthData.update_weight(ANTH_DATA_WEIGHT)
+        anthData.save()
+        # Delete anthropometric data
+        anthData.delete()
+        # Check results
+        assert AnthropometricData.get_all() == []
