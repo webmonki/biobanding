@@ -7,7 +7,6 @@ from datetime import datetime, timedelta, date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from json import dumps
-from dataclasses import dataclass
 from api.formulas import mirwald, bmi, predicted_adult_height
 from .config import BaseConfig
 from .utils import json_serial
@@ -113,11 +112,10 @@ class Users(db.Model):
 
     def toDICT(self):
 
-        cls_dict = {}
-        cls_dict['_id'] = self.id
-        cls_dict['username'] = self.username
-        cls_dict['email'] = self.email
-        cls_dict['is_admin'] = self.is_admin
+        cls_dict = {'_id': self.id,
+                    'username': self.username,
+                    'email': self.email,
+                    'is_admin': self.is_admin}
 
         return cls_dict
 
@@ -157,7 +155,6 @@ class PlayerMaster(db.Model):
         db.session.commit()
 
 
-
 class PlayerDetail(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'), primary_key=True)
     birthday = db.Column(db.Date(), nullable=False)
@@ -174,15 +171,13 @@ class PlayerDetail(db.Model):
         db.session.commit()
 
     def toDICT(self):
-        cls_dict = {}
-        cls_dict['user_id'] = self.user_id
-        cls_dict['birthday'] = dumps(self.birthday, default=json_serial)
-        cls_dict['sex_m_0_f_1'] = self.sex_m_0_f_1
-        cls_dict['height_father'] = self.height_father
-        cls_dict['height_mother'] = self.height_mother
+        cls_dict = {'user_id': self.user_id,
+                    'birthday': dumps(self.birthday, default=json_serial),
+                    'sex_m_0_f_1': self.sex_m_0_f_1,
+                    'height_father': self.height_father,
+                    'height_mother': self.height_mother}
 
         return cls_dict
-
 
 
 class AnthropometricData(db.Model):
@@ -235,7 +230,6 @@ class AnthropometricData(db.Model):
             res = predicted_adult_height(gender, self.height, self.weight, age,
                                          playerDetail.height_father, playerDetail.height_mother)
 
-
             self.pah = res['pah']
             self.pmh = res['pmh']
             self.remaining_growth = res['remaining_growth']
@@ -244,6 +238,7 @@ class AnthropometricData(db.Model):
         # Add and commit results to db
         db.session.add(self)
         db.session.commit()
+
     # [END save()] ######
 
     def delete(self):
@@ -287,22 +282,21 @@ class AnthropometricData(db.Model):
         return user_data
 
     def toDICT(self):
-        cls_dict = {}
-        cls_dict['Id'] = self.id
-        cls_dict['UserId'] = self.user_id
-        cls_dict['Datum'] = dumps(self.date_measured, default=json_serial)
-        cls_dict['Alter'] = self.age_at_measurement
-        cls_dict['YAPHV'] = self.offset
-        cls_dict['PHV'] = self.phv
-        cls_dict['AK_BIO'] = self.ak_bio
-        cls_dict['BMI'] = self.bmi
-        cls_dict['PMH'] = self.pmh
-        cls_dict['PAH'] = self.pah
-        cls_dict['CM until PAH'] = self.remaining_growth
-        cls_dict["Größe"] = self.height
-        cls_dict['Sitzgröße'] = self. sitting_height
-        cls_dict['Körperspanne'] = self.body_span
-        cls_dict['Gewicht'] = self.weight
+        cls_dict = {'Id': self.id,
+                    'UserId': self.user_id,
+                    'Datum': dumps(self.date_measured, default=json_serial),
+                    'Alter': self.age_at_measurement,
+                    'YAPHV': self.offset,
+                    'PHV': self.phv,
+                    'AK_BIO': self.ak_bio,
+                    'BMI': self.bmi,
+                    'PMH': self.pmh,
+                    'PAH': self.pah,
+                    'CM until PAH': self.remaining_growth,
+                    "Größe": self.height,
+                    'Sitzgröße': self.sitting_height,
+                    'Körperspanne': self.body_span,
+                    'Gewicht': self.weight}
 
         return cls_dict
 
@@ -315,6 +309,7 @@ class AdminConfig(db.Model):
     mail_use_ssl = db.Column(db.Boolean(), default=True)
     mail_username = db.Column(db.String(64), default='doe')
     mail_password = db.Column(db.String(64))
+    registration_code = db.Column(db.Integer, nullable=False)
 
     def update_days_reminder(self, days_reminder):
         self.days_reminder = days_reminder
@@ -350,14 +345,25 @@ class AdminConfig(db.Model):
         return config.days_reminder
 
     @classmethod
+    def check_registration_code(cls, code):
+        code_exists = cls.query.filter_by(registration_code=code).first()
+
+        if code_exists is None:
+            return False
+        else:
+            return True
+
+    @classmethod
     def get_config(cls):
         return cls.query.filter_by(id=1).first()
 
     def toDICT(self):
-        cls_dict = {}
-        cls_dict['days_reminder'] = self.days_reminder
-        cls_dict['mail_server'] = self.mail_server
-        cls_dict['mail_port'] = self.mail_port
-        cls_dict['mail_use_ssl'] = self.mail_use_ssl
-        cls_dict['mail_username'] = self.mail_username
+
+        cls_dict = {'days_reminder': self.days_reminder,
+                    'mail_server': self.mail_server,
+                    'mail_port': self.mail_port,
+                    'mail_use_ssl': self.mail_use_ssl,
+                    'mail_username': self.mail_username,
+                    'registration_code': self.registration_code}
+
         return cls_dict

@@ -7,18 +7,22 @@ import Button from "preact-material-components/Button";
 import style from "./style";
 import { route } from "preact-router";
 import Auth from "../../components/state";
-import { Link } from "preact-router/match";
 import TextField from "preact-material-components/TextField";
-import "preact-material-components/TextField/style.css";
 
 export default class Signup extends Component {
   componentWillMount = () => {
     this.setState({ btnDisabled: true });
+    this.setState({ codeSet: false });
+    this.setState({ code: "" });
   };
 
   componentDidMount = () => {
-    this.handleChange();
-    document.addEventListener("keyup", this.handleKey);
+    if (this.state.codeSet) {
+      this.handleChange();
+      document.addEventListener("keyup", this.handleKey);
+    }
+
+    document.getElementById("code1").focus();
   };
 
   componentWillUnmount = () => {
@@ -93,181 +97,257 @@ export default class Signup extends Component {
             "username": "${this.state.username}",
             "email": "${this.state.email}",
             "password": "${this.state.password}",
+			"registration_code": ${this.state.code},
 			"is_admin": ${false}
         }`;
 
     xhttp.send(data);
   };
 
-  render() {
+  renderContent = () => {
+    if (this.state.codeSet) {
+      return (
+        <Card class={style.card}>
+          <div class={style.logoContainer}>
+            <img class={style.logo} src="../../assets/StarsLogoTrans.png" />
+          </div>
+          <div class={style.inputContainer}>
+            <div class={style.loginLabel}>Registrierung</div>
+            <div class={style.input}>
+              <TextField
+                autocomplete="off"
+                id="usernameInput"
+                outlined
+                label="Benutzername"
+                value={this.state.editUsername}
+                onKeyUp={(e) => {
+                  this.handleChange();
+                  this.setState({ editUsername: e.target.value });
+                  let val = e.target.value;
+                  if (val.length < 1) {
+                    this.setState({ usernameFBClass: style.feedbackErr });
+                    this.setState({ usernameFB: "Mindestens 1 Zeichen" });
+                  }
+                  if (val.length > 32) {
+                    this.setState({ usernameFBClass: style.feedbackErr });
+                    this.setState({ usernameFB: "Maximal 32 Zeichen" });
+                  }
+                  if (val.length > 0 && val.length < 33) {
+                    this.setState({ usernameFBClass: style.feedbackSucc });
+                    this.setState({ usernameFB: "" });
+                  }
+                }}
+              />
+              <span class={this.state.usernameFBClass}>
+                {this.state.usernameFB}
+              </span>
+            </div>
+            <div class={style.input}>
+              <TextField
+                autocomplete="off"
+                id="emailInput"
+                outlined
+                label="E-Mail"
+                value={this.state.email}
+                onInput={(e) => {
+                  this.handleChange();
+                  this.setState({ email: e.target.value });
+                  let val = e.target.value;
+                  if (
+                    val.match(
+                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                    )
+                  ) {
+                    this.setState({ emailFBClass: style.feedbackSucc });
+                    this.setState({ emailFB: "" });
+                  } else {
+                    this.setState({ emailFBClass: style.feedbackErr });
+                    this.setState({ emailFB: "keine E-Mail" });
+                  }
+                }}
+              />
+              <span class={this.state.emailFBClass}>{this.state.emailFB}</span>
+            </div>
+            <div class={style.input}>
+              <TextField
+                autocomplete="off"
+                id="passwordInput"
+                type="password"
+                outlined
+                label="Passwort"
+                value={this.state.password}
+                onKeyUp={(e) => {
+                  this.handleChange();
+                  this.setState({ password: e.target.value });
+                  let val = e.target.value;
+                  if (val.length < 4) {
+                    this.setState({ passwordFBClass: style.feedbackErr });
+                    this.setState({ passwordFB: "Mindetsens 4 Zeichen" });
+                  }
+                  if (val.length > 16) {
+                    this.setState({ passwordFBClass: style.feedbackErr });
+                    this.setState({ passwordFB: "Maximal 16 Zeichen" });
+                  }
+                  if (val.length > 3 && val.length < 17) {
+                    this.setState({ passwordFBClass: style.feedbackSucc });
+                    this.setState({ passwordFB: "" });
+                  }
+                  if (this.state.password == this.state.password2) {
+                    this.setState({ passwordSameFBClass: style.feedbackSucc });
+                    this.setState({ passwordSameFB: "" });
+                  } else {
+                    this.setState({ passwordSameFBClass: style.feedbackErr });
+                    this.setState({
+                      passwordSameFB: "Passwörter stimmen nicht überein",
+                    });
+                  }
+                }}
+              />
+              <span class={this.state.passwordFBClass}>
+                {this.state.passwordFB}
+              </span>
+            </div>
+            <div class={style.input}>
+              <TextField
+                autocomplete="off"
+                id="password2Input"
+                type="password"
+                outlined
+                label="Passwort wiederholen"
+                value={this.state.password2}
+                onKeyUp={(e) => {
+                  this.handleChange();
+                  this.setState({ password2: e.target.value });
+                  let val = e.target.value;
+                  if (val.length < 4) {
+                    this.setState({ password2FBClass: style.feedbackErr });
+                    this.setState({ password2FB: "Mindetsens 4 Zeichen" });
+                  }
+                  if (val.length > 16) {
+                    this.setState({ password2FBClass: style.feedbackErr });
+                    this.setState({ password2FB: "Maximal 16 Zeichen" });
+                  }
+                  if (val.length > 3 && val.length < 17) {
+                    this.setState({ password2FBClass: style.feedbackSucc });
+                    this.setState({ password2FB: "" });
+                  }
+                  if (this.state.password == this.state.password2) {
+                    this.setState({ passwordSameFBClass: style.feedbackSucc });
+                    this.setState({ passwordSameFB: "" });
+                  } else {
+                    this.setState({ passwordSameFBClass: style.feedbackErr });
+                    this.setState({
+                      passwordSameFB: "Passwörter stimmen nicht überein",
+                    });
+                  }
+                }}
+              />
+              <span class={this.state.password2FBClass}>
+                {this.state.password2FB}
+              </span>
+            </div>
+            <div class={style.pwVal}>
+              <span class={this.state.passwordSameFBClass}>
+                {this.state.passwordSameFB}
+              </span>
+            </div>
+            <span class={this.state.responseFBClass}>
+              {this.state.responseFB}
+            </span>
+            <div class={style.btnContainer}>
+              <Button
+                class={style.secondaryBtn}
+                onClick={() => {
+                  route("/login", true);
+                }}
+              >
+                Anmelden
+              </Button>
+              <Button
+                class={style.input}
+                raised
+                onClick={this.signup}
+                disabled={this.state.btnDisabled}
+              >
+                registrieren
+              </Button>
+            </div>
+          </div>
+        </Card>
+      );
+    }
+
     return (
       <Card class={style.card}>
         <div class={style.logoContainer}>
           <img class={style.logo} src="../../assets/breaking_bounds_logo.png" />
         </div>
-        <div class={style.inputContainer}>
-          <div class={style.loginLabel}>Registrierung</div>
-          <div class={style.input}>
-            <TextField
+        <div class={style.loginLabel}>Registrierungscode eingeben</div>
+        <div class={style.codeInputRow}>
+          <div class={style.codeInputContainer}>
+            <input
+              id={"code1"}
+              class={style.codeInput}
+              type="text"
+              maxLength={1}
               autocomplete="off"
-              id="usernameInput"
-              outlined
-              label="Benutzername"
-              value={this.state.editUsername}
-              onKeyUp={(e) => {
-                this.handleChange();
-                this.setState({ editUsername: e.target.value });
-                let val = e.target.value;
-                if (val.length < 1) {
-                  this.setState({ usernameFBClass: style.feedbackErr });
-                  this.setState({ usernameFB: "Mindestens 1 Zeichen" });
-                }
-                if (val.length > 32) {
-                  this.setState({ usernameFBClass: style.feedbackErr });
-                  this.setState({ usernameFB: "Maximal 32 Zeichen" });
-                }
-                if (val.length > 0 && val.length < 33) {
-                  this.setState({ usernameFBClass: style.feedbackSucc });
-                  this.setState({ usernameFB: "" });
-                }
-              }}
-            />
-            <span class={this.state.usernameFBClass}>
-              {this.state.usernameFB}
-            </span>
-          </div>
-          <div class={style.input}>
-            <TextField
-              autocomplete="off"
-              id="emailInput"
-              outlined
-              label="E-Mail"
-              value={this.state.email}
               onInput={(e) => {
-                this.handleChange();
-                this.setState({ email: e.target.value });
-                let val = e.target.value;
-                if (
-                  val.match(
-                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                  )
-                ) {
-                  this.setState({ emailFBClass: style.feedbackSucc });
-                  this.setState({ emailFB: "" });
-                } else {
-                  this.setState({ emailFBClass: style.feedbackErr });
-                  this.setState({ emailFB: "keine E-Mail" });
-                }
+                let code = this.state.code;
+                code = code + e.target.value;
+                this.setState({ code });
+
+                document.getElementById("code2").focus();
               }}
             />
-            <span class={this.state.emailFBClass}>{this.state.emailFB}</span>
-          </div>
-          <div class={style.input}>
-            <TextField
+            <input
+              id={"code2"}
+              class={style.codeInput}
+              type="text"
+              maxLength={1}
               autocomplete="off"
-              id="passwordInput"
-              type="password"
-              outlined
-              label="Passwort"
-              value={this.state.password}
-              onKeyUp={(e) => {
-                this.handleChange();
-                this.setState({ password: e.target.value });
-                let val = e.target.value;
-                if (val.length < 4) {
-                  this.setState({ passwordFBClass: style.feedbackErr });
-                  this.setState({ passwordFB: "Mindetsens 4 Zeichen" });
-                }
-                if (val.length > 16) {
-                  this.setState({ passwordFBClass: style.feedbackErr });
-                  this.setState({ passwordFB: "Maximal 16 Zeichen" });
-                }
-                if (val.length > 3 && val.length < 17) {
-                  this.setState({ passwordFBClass: style.feedbackSucc });
-                  this.setState({ passwordFB: "" });
-                }
-                if (this.state.password == this.state.password2) {
-                  this.setState({ passwordSameFBClass: style.feedbackSucc });
-                  this.setState({ passwordSameFB: "" });
-                } else {
-                  this.setState({ passwordSameFBClass: style.feedbackErr });
-                  this.setState({
-                    passwordSameFB: "Passwörter stimmen nicht überein",
-                  });
-                }
+              onInput={(e) => {
+                let code = this.state.code;
+                code = code + e.target.value;
+                this.setState({ code });
+
+                document.getElementById("code3").focus();
               }}
             />
-            <span class={this.state.passwordFBClass}>
-              {this.state.passwordFB}
-            </span>
-          </div>
-          <div class={style.input}>
-            <TextField
+            <input
+              id={"code3"}
+              class={style.codeInput}
+              type="text"
+              maxLength={1}
               autocomplete="off"
-              id="password2Input"
-              type="password"
-              outlined
-              label="Passwort wiederholen"
-              value={this.state.password2}
-              onKeyUp={(e) => {
-                this.handleChange();
-                this.setState({ password2: e.target.value });
-                let val = e.target.value;
-                if (val.length < 4) {
-                  this.setState({ password2FBClass: style.feedbackErr });
-                  this.setState({ password2FB: "Mindetsens 4 Zeichen" });
-                }
-                if (val.length > 16) {
-                  this.setState({ password2FBClass: style.feedbackErr });
-                  this.setState({ password2FB: "Maximal 16 Zeichen" });
-                }
-                if (val.length > 3 && val.length < 17) {
-                  this.setState({ password2FBClass: style.feedbackSucc });
-                  this.setState({ password2FB: "" });
-                }
-                if (this.state.password == this.state.password2) {
-                  this.setState({ passwordSameFBClass: style.feedbackSucc });
-                  this.setState({ passwordSameFB: "" });
-                } else {
-                  this.setState({ passwordSameFBClass: style.feedbackErr });
-                  this.setState({
-                    passwordSameFB: "Passwörter stimmen nicht überein",
-                  });
-                }
+              onInput={(e) => {
+                let code = this.state.code;
+                code = code + e.target.value;
+                this.setState({ code });
+
+                document.getElementById("code4").focus();
               }}
             />
-            <span class={this.state.password2FBClass}>
-              {this.state.password2FB}
-            </span>
-          </div>
-          <div class={style.pwVal}>
-            <span class={this.state.passwordSameFBClass}>
-              {this.state.passwordSameFB}
-            </span>
-          </div>
-          <span class={this.state.responseFBClass}>
-            {this.state.responseFB}
-          </span>
-          <div class={style.btnContainer}>
-            <Button
-              class={style.secondaryBtn}
-              onClick={() => {
-                route("/login", true);
+            <input
+              id={"code4"}
+              class={style.codeInput}
+              type="text"
+              maxLength={1}
+              autocomplete="off"
+              onInput={(e) => {
+                let code = this.state.code;
+                code = code + e.target.value;
+                this.setState({ code });
+
+                this.setState({ codeSet: true });
               }}
-            >
-              Anmelden
-            </Button>
-            <Button
-              class={style.input}
-              raised
-              onClick={this.signup}
-              disabled={this.state.btnDisabled}
-            >
-              registrieren
-            </Button>
+            />
           </div>
         </div>
       </Card>
     );
+  };
+
+  render() {
+    return this.renderContent();
   }
 }
