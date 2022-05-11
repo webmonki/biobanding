@@ -43,8 +43,11 @@ export default class App extends Component {
       route("/measurements", true);
     }
 
-    this.setState({ currentUrl: e.url });
-    // route(e.url, true);
+    if (e.url === "/") {
+      route("/login", true);
+    } else {
+      route(e.url, true);
+    }
   };
 
   setInstructions = (val) => {

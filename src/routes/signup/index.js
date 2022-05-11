@@ -88,8 +88,6 @@ export default class Signup extends Component {
             that.setState({ responseFB: response.msg });
           } catch (err) {}
         }
-      } else {
-        this.setState({ signupResponse: "Ups, something went wrong" });
       }
     };
 
@@ -99,6 +97,47 @@ export default class Signup extends Component {
             "password": "${this.state.password}",
 			"registration_code": ${this.state.code},
 			"is_admin": ${false}
+        }`;
+
+    xhttp.send(data);
+  };
+
+  checkCode = () => {
+    let that = this;
+    let url = Auth.url + "/api/configurations/check_code";
+    let xhttp = new XMLHttpRequest();
+
+    xhttp.open("POST", url);
+    xhttp.setRequestHeader("Accept", "application/json");
+    xhttp.setRequestHeader("Content-Type", "application/json");
+
+    xhttp.onreadystatechange = function () {
+      if ([1, 2, 3, 4].includes(this.readyState)) {
+        if (this.status === 200) {
+          that.setState({ codeSet: true });
+          that.setState({ responseFB: "" });
+        } else {
+          try {
+            let response = JSON.parse(this.responseText);
+            if (response.msg == "Token is invalid") {
+              Auth.logout();
+              location.reload();
+            }
+            that.setState({ responseFBClass: style.feedbackErr });
+            that.setState({ responseFB: response.msg });
+            that.setState({ code: "" });
+            that.setState({ code1: "" });
+            that.setState({ code2: "" });
+            that.setState({ code3: "" });
+            that.setState({ code4: "" });
+            document.getElementById("code1").focus();
+          } catch (err) {}
+        }
+      }
+    };
+
+    let data = `{
+		"registration_code": ${parseInt(this.state.code, 10)}
         }`;
 
     xhttp.send(data);
@@ -291,7 +330,9 @@ export default class Signup extends Component {
               type="text"
               maxLength={1}
               autocomplete="off"
+              value={this.state.code1}
               onInput={(e) => {
+                this.setState({ code1: e.target.value });
                 let code = this.state.code;
                 code = code + e.target.value;
                 this.setState({ code });
@@ -305,7 +346,9 @@ export default class Signup extends Component {
               type="text"
               maxLength={1}
               autocomplete="off"
+              value={this.state.code2}
               onInput={(e) => {
+                this.setState({ code2: e.target.value });
                 let code = this.state.code;
                 code = code + e.target.value;
                 this.setState({ code });
@@ -319,7 +362,9 @@ export default class Signup extends Component {
               type="text"
               maxLength={1}
               autocomplete="off"
+              value={this.state.code3}
               onInput={(e) => {
+                this.setState({ code3: e.target.value });
                 let code = this.state.code;
                 code = code + e.target.value;
                 this.setState({ code });
@@ -333,15 +378,22 @@ export default class Signup extends Component {
               type="text"
               maxLength={1}
               autocomplete="off"
+              value={this.state.code4}
               onInput={(e) => {
+                this.setState({ code4: e.target.value });
                 let code = this.state.code;
                 code = code + e.target.value;
                 this.setState({ code });
 
-                this.setState({ codeSet: true });
+                this.checkCode();
               }}
             />
           </div>
+        </div>
+        <div class={style.feedbackContainer}>
+          <span class={this.state.responseFBClass}>
+            {this.state.responseFB}
+          </span>
         </div>
       </Card>
     );

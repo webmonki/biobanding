@@ -87,8 +87,14 @@
 .codeInput:focus {
 	border: 2px solid var(--mdc-theme-primary);
 	border-radius: 5px;
-	/* border: 1x solid red !important;
-	outline: none; */
+}
+
+.feedbackContainer {
+	display: flex;
+	justify-content: center;
+	position: relative;
+	bottom: 40px;
+	height: 10px;
 }
 
 
