@@ -190,7 +190,7 @@ export default class Header extends Component {
 
   render() {
     if (Auth.getUser()) {
-      if (this.state.dialog == undefined) {
+      if (this.state.dialog === undefined) {
         this.getPlayerDetails();
       }
       return (
