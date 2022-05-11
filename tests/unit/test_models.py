@@ -25,7 +25,7 @@ TO_EDIT_USER_NEW_MAIL = "edited-address@after.de"
 TO_EDIT_USER_PASS = "to@edit-com"
 TO_EDIT_USER_NEW_PASS = "edited9$password"
 
-DATE_OF_BIRTH = datetime.strptime("1990-01-01", "%Y-%m-%d").date()
+DATE_OF_BIRTH = datetime.strptime("1990-01-01", "%Y-%m-%d").date() # <class 'datetime.date'>
 DETAILS_FOR_USER_WITH_ID = 2
 SEX = 0
 HEIGHT_FATHER = 189
@@ -46,6 +46,8 @@ def test_new_user(app_generator): # app_generator type: <class 'flask.app.Flask'
         user.set_is_admin(True)
         user.save()
         # Check results
+        print("all users:")
+        print(user.get_all_users())
         assert user.id == 2
         assert type(user.id) == int
         assert DUMMY_USER_NAME == user.username
@@ -145,11 +147,11 @@ def test_new_player_details(app_generator):
         assert playerDetail.height_mother == HEIGHT_MOTHER
         assert playerDetail.toDICT().get("user_id") == DETAILS_FOR_USER_WITH_ID
 #        assert playerDetail.toDICT().get("birthday") == DATE_OF_BIRTH.strftime("%Y-%m-%d")
-#        assert playerDetail.toDICT().get("sex_m_0_f_1") == SEX
-#        assert playerDetail.toDICT().get("height_father") == HEIGHT_FATHER
-#        assert playerDetail.toDICT().get("height_mother") == HEIGHT_MOTHER
+        assert playerDetail.toDICT().get("sex_m_0_f_1") == SEX
+        assert playerDetail.toDICT().get("height_father") == HEIGHT_FATHER
+        assert playerDetail.toDICT().get("height_mother") == HEIGHT_MOTHER
 
-# Todo
+
 def test_edit_player_details(app_generator):
     """
     GIVEN a PlayerDetails model
@@ -166,26 +168,24 @@ def test_edit_player_details(app_generator):
         playerDetail.save()
         # Edit data
         playerDetail.user_id += playerDetail.user_id + 2
-        playerDetail.birthday == DATE_OF_BIRTH.replace(year=DATE_OF_BIRTH.year-20)
-        playerDetail.sex_m_0_f_1 == SEX-1
-        playerDetail.height_father == HEIGHT_FATHER+50
-        playerDetail.height_mother == HEIGHT_MOTHER+40
+        playerDetail.birthday = DATE_OF_BIRTH.replace(year=DATE_OF_BIRTH.year-20)
+        playerDetail.sex_m_0_f_1 = SEX-1
+        playerDetail.height_father = HEIGHT_FATHER+15
+        playerDetail.height_mother = HEIGHT_MOTHER+14
         # Check results
-        print("uid: ", playerDetail.user_id)
         assert playerDetail.user_id is not DETAILS_FOR_USER_WITH_ID - 1
         assert playerDetail.user_id == 4
-        # assert playerDetail.birthday == DATE_OF_BIRTH.replace(year=DATE_OF_BIRTH.year+10)
-        # assert playerDetail.sex_m_0_f_1 == SEX+1
-        # assert playerDetail.height_father == HEIGHT_FATHER-20
-        # assert playerDetail.height_mother == HEIGHT_MOTHER-20
-        # assert playerDetail.toDICT().get("user_id") == DETAILS_FOR_USER_WITH_ID - 1
-#        assert playerDetail.toDICT().get("birthday") == DATE_OF_BIRTH.replace(year=DATE_OF_BIRTH.year+10)
-        # assert playerDetail.toDICT().get("sex_m_0_f_1") == SEX+1
-        # assert playerDetail.toDICT().get("height_father") == HEIGHT_FATHER - 20
-        # assert playerDetail.toDICT().get("height_mother") == HEIGHT_MOTHER - 20
-######>>        ADD SOME WAIT HERE AND CHECK HOW MANY playerDetail ARE IN DB!
-        print("aaaaaaa")
-        print(playerDetail.toDICT())
+        assert playerDetail.birthday is not DATE_OF_BIRTH.replace(year=DATE_OF_BIRTH.year+10)
+        assert playerDetail.birthday == DATE_OF_BIRTH.replace(year=DATE_OF_BIRTH.year-20)
+        assert playerDetail.sex_m_0_f_1 is not SEX+1
+        assert playerDetail.sex_m_0_f_1 == SEX-1
+        assert playerDetail.height_father is not HEIGHT_FATHER-20
+        assert playerDetail.height_father == HEIGHT_FATHER+15
+        assert playerDetail.height_mother == HEIGHT_MOTHER+14
+#        assert playerDetail.toDICT().get("birthday") == DATE_OF_BIRTH.replace(year=DATE_OF_BIRTH.year-20).strftime("%Y-%m-%d")
+        assert playerDetail.toDICT().get("sex_m_0_f_1") == SEX-1
+        assert playerDetail.toDICT().get("height_father") == HEIGHT_FATHER+15
+        assert playerDetail.toDICT().get("height_mother") == HEIGHT_MOTHER+14
 
 
 # Todo
