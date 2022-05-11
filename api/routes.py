@@ -72,6 +72,10 @@ config_model = rest_api.model('ConfigModel', {"days_reminder": fields.Integer(mi
                                               "mail_username": fields.String(),
                                               "mail_password": fields.String()
                                               })
+
+
+config_check_code_model = rest_api.model('ConfigCheckCodeModel', {"registration_code": fields.Integer(required=True, max=9999)})
+
 test_mail_config_model = rest_api.model('TestMailConfigModel', {
     "test_email_address": fields.String(required=True, min_length=5, max_length=64)})
 
@@ -696,6 +700,26 @@ class EditConfiguration(Resource):
         else:
             return {"success": False,
                     "msg": "Authenticated, but no permissions"}, 403
+
+
+@rest_api.route('/api/configurations/check_code')
+class Configuration(Resource):
+
+    @rest_api.response(200, 'Code is valid')
+    @rest_api.response(400, 'Code is not valid')
+    @rest_api.expect(config_check_code_model)
+    def post(self):
+        req_data = request.get_json()
+        _registration_code = req_data.get("registration_code")
+
+        is_valid = AdminConfig.check_registration_code(_registration_code)
+
+        if is_valid:
+            return {"success": True,
+                    "msg": "Code is valid"}, 200
+        else:
+            return {"success": False,
+                    "msg": "Code is not valid"}, 400
 
 
 @rest_api.route('/api/user/<int:userID>/details')
