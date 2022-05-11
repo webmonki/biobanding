@@ -99,7 +99,6 @@ export default class Profile extends Component {
   };
 
   getDetails = () => {
-    console.log("GET");
     let that = this;
     let url = Auth.url + "/api/user/" + Auth.getUser().id + "/details";
     let xhttp = new XMLHttpRequest();
