@@ -4,7 +4,7 @@ Copyright (c) 2022 - present VP-Systeme GmbH, Lyrenstr. 13, 44866
 """
 
 from numpy import datetime_as_string
-from api.models import AdminConfig, AnthropometricData, PlayerDetail, Users
+from api.models import AdminConfig, AnthropometricData, PlayerDetail, PlayerMaster, Users
 from datetime import date, datetime, timedelta
 import pytest
 
@@ -75,7 +75,12 @@ ANTH_EDITED_DATA_PMH = 0.92
 ANTH_EDITED_DATA_REMAINING_GROWTH = 16.73
 ANTH_EDITED_DATA_AGE_AT_MEASURMENT = 13.34
 
-def test_new_user(app_generator): # app_generator type: <class 'flask.app.Flask'>
+PLMAS_FIRST_NAME = "Kevin"
+PLMAS_LAST_NAME = "Brügger"
+
+### Users
+
+def test_new_user(app_generator):
     """
     GIVEN a User model
     WHEN a new User is created
@@ -160,6 +165,7 @@ def test_edit_user(app_generator):
         assert user.check_password(EDITED_USER_PASS)
         assert user.check_is_admin() == 0
 
+### PlayerDetail
 
 def test_new_player_details(app_generator):
     """
@@ -223,6 +229,7 @@ def test_edit_player_details(app_generator):
         assert playerDetail.toDICT().get("height_father") == HEIGHT_FATHER+15
         assert playerDetail.toDICT().get("height_mother") == HEIGHT_MOTHER+14
 
+### AdminConfig
 
 def test_new_admin_config(app_generator):
     """
@@ -283,6 +290,7 @@ def test_edit_admin_config(app_generator):
         assert adminConf.mail_password is not ACONF_MAIL_PASS
         assert adminConf.mail_password == EDITED_ACONF_MAIL_PASS
 
+### AnthropometricData
 
 def test_new_anthropometric_data(app_generator):
     """
@@ -474,3 +482,25 @@ def test_delete_anthropometric_data(app_generator):
         anthData.delete()
         # Check results
         assert AnthropometricData.get_all() == []
+
+### PlayerMaster
+
+def test_new_player_master(app_generator):
+    """
+    GIVEN a PlayerMaster model
+    WHEN a PlayerMaster is added to database
+    THEN check if data has been added successfully
+    """
+    with app_generator.app_context():
+        # Add user
+        user = Users(username=DUMMIER_USER_NAME, email=DUMMIER_USER_MAIL)
+        user.set_password(DUMMIER_USER_PASS)
+        user.set_is_admin(True)
+        user.set_jwt_auth_active(True)
+        user.save()
+        # Add PlayerMaster
+        playerMaster = PlayerMaster(user_id=1, first_name=PLMAS_FIRST_NAME, last_name=PLMAS_LAST_NAME)
+        playerMaster.save()
+        # Check results
+        assert playerMaster.first_name == PLMAS_FIRST_NAME
+        assert playerMaster.last_name == PLMAS_LAST_NAME
