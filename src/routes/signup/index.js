@@ -103,7 +103,7 @@ export default class Signup extends Component {
     return (
       <Card class={style.card}>
         <div class={style.logoContainer}>
-          <img class={style.logo} src="../../assets/StarsLogoTrans.png" />
+          <img class={style.logo} src="../../assets/breaking_bounds_logo.png" />
         </div>
         <div class={style.inputContainer}>
           <div class={style.loginLabel}>Registrierung</div>
