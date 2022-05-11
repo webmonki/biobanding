@@ -315,6 +315,8 @@ def test_new_anthropometric_data(app_generator):
 
     # Hint: User formulas.py for validation
 
+
+@pytest.mark.xfail(reason = "Age outside of 4-17,5")
 def test_new_anthropometric_data_WHEN_AGE_IS_NOT_BETWEEN_4and17(app_generator):
     """
     GIVEN a AnthropometricData model
