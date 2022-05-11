@@ -27,9 +27,8 @@ export default class Login extends Component {
   };
 
   handleKey = (event) => {
-    if (this.state.btnDisabled == false && event.code == "Enter") {
+    if (this.state.btnDisabled === false && event.code === "Enter") {
       this.login();
-      document.removeEventListener("keyup", this.handleKey);
     }
   };
 
@@ -66,10 +65,10 @@ export default class Login extends Component {
           try {
             let response = JSON.parse(this.responseText);
             Auth.createUser(response);
+            // If Request Ok go to Home
+            document.removeEventListener("keyup", this.handleKey);
+            route("/measurements", true);
           } catch (err) {}
-          // If Request Ok go to Home
-          route("/measurements", true);
-          location.reload();
         } else if (this.status === 403) {
           that.setState({ loginStatus: false });
         } else {

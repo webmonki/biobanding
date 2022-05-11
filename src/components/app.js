@@ -49,6 +49,14 @@ export default class App extends Component {
     }
   };
 
+  renderTopAppBar = (userLoggedIn) => {
+    if (userLoggedIn === undefined || userLoggedIn === false) {
+      return undefined;
+    }
+
+    return <Header setReload={this.setReload} />;
+  };
+
   setInstructions = (val) => {
     this.setState({ showInstruction: val });
   };
@@ -61,6 +69,16 @@ export default class App extends Component {
     this.setState({ reload: true });
   };
 
+  handleChange = (e) => {
+    this.handleRoute(e);
+
+    if (Auth.getUser() === undefined) {
+      this.setState({ userLoggedIn: false });
+    } else {
+      this.setState({ userLoggedIn: true });
+    }
+  };
+
   render() {
     return (
       <div id="app">
@@ -68,9 +86,8 @@ export default class App extends Component {
           type="text/javascript"
           src="https://vp-systeme.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/-onpk8x/b/7/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=de-DE&collectorId=cc9af09f"
         />
-
-        <Header setReload={this.setReload} />
-        <Router onChange={this.handleRoute}>
+        {this.renderTopAppBar(this.state.userLoggedIn)}
+        <Router onChange={this.handleChange}>
           <Login
             path="/login"
             showInstruction={this.state.showInstruction}

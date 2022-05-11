@@ -120,7 +120,7 @@ export default class Header extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
+      if (this.readyState === 4 && this.status === 200) {
         that.sbar.MDComponent.show({
           message: "Messung erfolgreich gesendet",
         });
@@ -128,7 +128,7 @@ export default class Header extends Component {
       } else {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg == "Token is invalid") {
+          if (response.msg === "Token is invalid") {
             Auth.logout();
             location.reload();
           }
@@ -189,46 +189,42 @@ export default class Header extends Component {
   };
 
   render() {
-    if (Auth.getUser()) {
-      if (this.state.dialog === undefined) {
-        this.getPlayerDetails();
-      }
-      return (
-        <div class={`${"mdc-theme--primary-bg"} ${style.topAppBar}`}>
-          <div class={style.btnContainer}>
-            <Button class={style.secondaryBtn} onClick={this.logOut}>
-              Abmelden
-            </Button>
-            <Button
-              raised
-              class={`${"mdc-button mdc-theme--secondary-bg"} ${
-                style.roundBtn
-              }`}
-              onClick={() => {
-                this.newMeasurementsDialog.MDComponent.show();
-              }}
-            >
-              <i
-                class="material-icons mdc-button__icon mdc-theme--text-secondary-on-light"
-                aria-hidden="true"
-              >
-                add
-              </i>
-              <span class="mdc-button__label mdc-theme--text-secondary-on-light">
-                Messung
-              </span>
-            </Button>
-          </div>
-          <div class={style.mySnackbar}>
-            <Snackbar
-              ref={(sbar) => {
-                this.sbar = sbar;
-              }}
-            />
-          </div>
-          {this.state.dialog}
-        </div>
-      );
+    if (this.state.dialog === undefined) {
+      this.getPlayerDetails();
     }
+    return (
+      <div class={`${"mdc-theme--primary-bg"} ${style.topAppBar}`}>
+        <div class={style.btnContainer}>
+          <Button class={style.secondaryBtn} onClick={this.logOut}>
+            Abmelden
+          </Button>
+          <Button
+            raised
+            class={`${"mdc-button mdc-theme--secondary-bg"} ${style.roundBtn}`}
+            onClick={() => {
+              this.newMeasurementsDialog.MDComponent.show();
+            }}
+          >
+            <i
+              class="material-icons mdc-button__icon mdc-theme--text-secondary-on-light"
+              aria-hidden="true"
+            >
+              add
+            </i>
+            <span class="mdc-button__label mdc-theme--text-secondary-on-light">
+              Messung
+            </span>
+          </Button>
+        </div>
+        <div class={style.mySnackbar}>
+          <Snackbar
+            ref={(sbar) => {
+              this.sbar = sbar;
+            }}
+          />
+        </div>
+        {this.state.dialog}
+      </div>
+    );
   }
 }
