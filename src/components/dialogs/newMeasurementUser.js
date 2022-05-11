@@ -60,15 +60,13 @@ export default class NewMeasurementUser extends Component {
     let span = this.getFormValue("span");
     let weight = this.getFormValue("weight");
 
-    let msg = [];
+    this.setState({ disabled: false });
 
     if (sittingHeight > height * 0.5) {
-      msg.push("Das Verhältnis von Sitzgröße zu Größe ist nicht plausibel");
       this.setState({ disabled: true });
     }
 
     if (span > height * 1.15) {
-      msg.push("Das Verhältnis von Spannweite zu Größe ist nicht plausibel");
       this.setState({ disabled: true });
     }
 
@@ -87,8 +85,6 @@ export default class NewMeasurementUser extends Component {
     if (weight === "" || weight === undefined) {
       this.setState({ disabled: true });
     }
-
-    this.setState({ msg });
   };
 
   getBtnStyle = () => {
@@ -167,19 +163,28 @@ export default class NewMeasurementUser extends Component {
                     document.addEventListener("keyup", this.handleKey);
                     let val = e.target.value;
                     this.setFormValue("sittingHeight", val);
+                    let height = this.getFormValue("height");
+
                     if (val < 0) {
                       this.setState({ sittingFBClass: style.feedbackErr });
-                      this.setState({ sittingFB: "Mindestens 00" });
+                      this.setState({ sittingFB: "Mindestens 0" });
                       this.setState({ disabled: true });
                     }
                     if (val > 125) {
+                      this.setState({ sittingFBClass: style.feedbackErr });
+                      this.setState({
+                        sittingFB: "Maximal 125",
+                      });
+                      this.setState({ disabled: true });
+                    }
+                    if (val > height * 0.5) {
                       this.setState({ sittingFBClass: style.feedbackErr });
                       this.setState({
                         sittingFB: "Deine Sitzgröße ist nicht plausibel",
                       });
                       this.setState({ disabled: true });
                     }
-                    if (val >= 0 && val <= 125) {
+                    if (val >= 0 && val <= 125 && val < height * 0.5) {
                       this.setState({ sittingFBClass: style.feedbackSucc });
                       this.setState({ sittingFB: "" });
                       this.setState({ disabled: false });
@@ -208,6 +213,8 @@ export default class NewMeasurementUser extends Component {
                     document.addEventListener("keyup", this.handleKey);
                     let val = e.target.value;
                     this.setFormValue("span", val);
+                    let height = this.getFormValue("height");
+
                     if (val < 60) {
                       this.setState({ spanFBClass: style.feedbackErr });
                       this.setState({ spanFB: "Mindestens 60" });
@@ -218,7 +225,15 @@ export default class NewMeasurementUser extends Component {
                       this.setState({ spanFB: "Maximal 300" });
                       this.setState({ disabled: true });
                     }
-                    if (val >= 60 && val <= 300) {
+                    if (val > height * 1.15) {
+                      this.setState({ spanFBClass: style.feedbackErr });
+                      this.setState({
+                        spanFB: "Deine Armspanne ist nicht plausibel",
+                      });
+                      this.setState({ disabled: true });
+                    }
+
+                    if (val >= 60 && val <= 300 && val < height * 1.15) {
                       this.setState({ spanFBClass: style.feedbackSucc });
                       this.setState({ spanFB: "" });
                       this.setState({ disabled: false });
