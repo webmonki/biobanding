@@ -94,6 +94,23 @@ export default class Menu extends Component {
     return "hidden";
   };
 
+  renderFilterButton = () => {
+    if (this.props.cols.length > 0) {
+      return (
+        <button class={style.invertBtn} onClick={this.collapseFilterContainer}>
+          <i
+            class={`${"material-icons"} ${style.invertIcon}`}
+            aria-hidden="true"
+          >
+            filter_list
+          </i>
+        </button>
+      );
+    }
+
+    return undefined;
+  };
+
   render() {
     let content;
     if (this.props.showDelete) {
@@ -112,17 +129,7 @@ export default class Menu extends Component {
         <div class={style.menuContainer}>
           <div class={style.filterContentContainer}>
             {/* Button to open Filterlist */}
-            <button
-              class={style.invertBtn}
-              onClick={this.collapseFilterContainer}
-            >
-              <i
-                class={`${"material-icons"} ${style.invertIcon}`}
-                aria-hidden="true"
-              >
-                filter_list
-              </i>
-            </button>
+            {this.renderFilterButton()}
             {/* Filter Count */}
             <div
               class={style.filterCountContainer}
