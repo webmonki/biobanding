@@ -132,7 +132,6 @@ export default class Login extends Component {
           <div class={style.input}>
             <TextField
               id="emailInput"
-              outlined
               label="E-Mail"
               value={this.state.email}
               onKeyUp={(e) => {
@@ -158,7 +157,6 @@ export default class Login extends Component {
             <TextField
               id="passwordInput"
               type="password"
-              outlined
               label="Passwort"
               value={this.state.password}
               onKeyUp={(e) => {

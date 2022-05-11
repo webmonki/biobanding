@@ -238,7 +238,6 @@ export default class Profile extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
-                outlined
                 label="Benutzername"
                 value={this.state.username}
                 onInput={(e) => {
@@ -265,7 +264,6 @@ export default class Profile extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
-                outlined
                 label="E-Mail"
                 value={this.state.email}
                 onInput={(e) => {
@@ -298,7 +296,6 @@ export default class Profile extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
-                outlined
                 label="Vorname"
                 value={this.state.firstname}
                 onInput={(e) => {
@@ -325,7 +322,6 @@ export default class Profile extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
-                outlined
                 label="Nachname"
                 value={this.state.lastname}
                 onInput={(e) => {
@@ -353,7 +349,6 @@ export default class Profile extends Component {
           <div class={style.row}>
             <div class={style.dateContainer}>
               <TextField
-                outlined
                 type="date"
                 value={this.state.birthday}
                 onInput={(e) => this.setState({ birthday: e.target.value })}
@@ -387,7 +382,6 @@ export default class Profile extends Component {
                 type="number"
                 min={0}
                 max={300}
-                outlined
                 label="Größe der Mutter"
                 value={this.state.motherHeight}
                 onInput={(e) => {
@@ -418,7 +412,6 @@ export default class Profile extends Component {
                 type="number"
                 min={0}
                 max={300}
-                outlined
                 label="Größe des Vaters"
                 value={this.state.fatherHeight}
                 onInput={(e) => {

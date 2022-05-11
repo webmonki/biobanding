@@ -197,7 +197,6 @@ export default class Settings extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
-                outlined
                 label="Erinnerung in Tagen"
                 value={this.state.reminder}
                 onInput={(e) => {
@@ -223,7 +222,6 @@ export default class Settings extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
-                outlined
                 label="E-Mail-Server"
                 value={this.state.mailService}
                 onInput={(e) => {
@@ -237,7 +235,6 @@ export default class Settings extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
-                outlined
                 label="Port"
                 value={this.state.mailPort}
                 onInput={(e) => {
@@ -251,7 +248,6 @@ export default class Settings extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
-                outlined
                 label="Benutzername"
                 value={this.state.mailUsername}
                 onInput={(e) => {
@@ -262,7 +258,6 @@ export default class Settings extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
-                outlined
                 label="Passwort"
                 type="password"
                 value={this.state.password}

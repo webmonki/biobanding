@@ -157,7 +157,6 @@ export default class Confirm extends Component {
             <TextField
               autocomplete="off"
               class={style.fullWidth}
-              outlined
               label="Vorname"
               value={this.state.firstname}
               onInput={(e) => {
@@ -182,7 +181,6 @@ export default class Confirm extends Component {
             <TextField
               autocomplete="off"
               class={style.fullWidth}
-              outlined
               label="Nachname"
               value={this.state.lastname}
               onInput={(e) => {
@@ -207,7 +205,6 @@ export default class Confirm extends Component {
             <div class={style.dateContainer}>
               <TextField
                 class={style.dateInput}
-                outlined
                 type="date"
                 value={this.state.birthday}
                 onInput={(e) => this.setState({ birthday: e.target.value })}
@@ -241,7 +238,6 @@ export default class Confirm extends Component {
               type="number"
               min={0}
               max={300}
-              outlined
               label="Größe der Mutter"
               helperText="optional"
               helperTextPersistent
@@ -271,7 +267,6 @@ export default class Confirm extends Component {
               type="number"
               min={0}
               max={300}
-              outlined
               label="Größe des Vaters"
               helperText="optional"
               helperTextPersistent

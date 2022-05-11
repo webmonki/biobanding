@@ -5,15 +5,9 @@ import "preact-material-components/Button/style.css";
 import style from "./style";
 import Navbar from "../../components/navbar/navbar";
 import Auth from "../../components/state";
-import Button from "preact-material-components/Button";
-import "preact-material-components/Button/style.css";
-import Dialog from "preact-material-components/Dialog";
 import "preact-material-components/Dialog/style.css";
-import TextField from "preact-material-components/TextField";
 import "preact-material-components/TextField/style.css";
 import "preact-material-components/List/style.css";
-import List from "preact-material-components/List";
-import Drawer from "preact-material-components/Drawer";
 import "preact-material-components/Drawer/style.css";
 import Table from "../../components/table";
 import NewMeasurementAdmin from "../../components/dialogs/newMeasurementAdmin";
@@ -27,7 +21,7 @@ export default class Measurements extends Component {
 
     this.loadData();
 
-    if (Auth.check_admin() == false) {
+    if (Auth.check_admin() === false) {
       this.getDialog();
     }
   };
@@ -412,6 +406,7 @@ export default class Measurements extends Component {
   };
 
   getDialog = () => {
+    console.log("GET DIALOG");
     let dialog;
 
     if (Auth.check_admin()) {
@@ -466,13 +461,6 @@ export default class Measurements extends Component {
       <div class={this.state.pageClass}>
         <Navbar selectedRoute="/measurements" fitPageSize={this.fitPageSize} />
         <span class={style.pageHeader}>Messungen</span>
-        <Button
-          onCLick={() => {
-            console.log(this.props.openDialog);
-          }}
-        >
-          CLICK
-        </Button>
         <Card class={style.card}>{this.state.content}</Card>
         <div class={style.mySnackbar}>
           <Snackbar

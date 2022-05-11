@@ -105,7 +105,6 @@ export default class Reset extends Component {
               autocomplete="off"
               id="passwordInput"
               type="password"
-              outlined
               label="Passwort"
               value={this.state.password}
               onKeyUp={(e) => {
@@ -144,7 +143,6 @@ export default class Reset extends Component {
               autocomplete="off"
               id="password2Input"
               type="password"
-              outlined
               label="Passwort wiederholen"
               value={this.state.password2}
               onKeyUp={(e) => {
