@@ -4,10 +4,9 @@ Copyright (c) 2022 - present VP-Systeme GmbH, Lyrenstr. 13, 44866
 """
 
 from numpy import datetime_as_string
-from api.models import AdminConfig, PlayerDetail, Users
-from datetime import date, datetime
+from api.models import AdminConfig, AnthropometricData, PlayerDetail, Users
+from datetime import date, datetime, timedelta
 import pytest
-import time
 
 
 DUMMY_USER_NAME = "johndoe"
@@ -27,7 +26,8 @@ TO_EDIT_USER_PASS = "to@edit-com"
 EDITED_USER_PASS = "edited9$password"
 
 DATE_OF_BIRTH = datetime.strptime("1990-01-01", "%Y-%m-%d").date() # <class 'datetime.date'>
-DETAILS_FOR_USER_WITH_ID = 2
+DATE_OF_BIRTH_TEENAGER = date.today() - timedelta(days=5000)
+DETAILS_FOR_USER_WITH_ID = 1
 SEX = 0
 HEIGHT_FATHER = 189
 HEIGHT_MOTHER = 169
@@ -45,6 +45,20 @@ EDITED_ACONF_MAIL_PORT = 467
 EDITED_ACONF_MAIL_USE_SSL = 0
 EDITED_ACONF_MAIL_USERNAME = "adam"
 EDITED_ACONF_MAIL_PASS = "complex-pass"
+
+ANTH_DATA_DATE_MEASURED = "2022-01-01"
+ANTH_DATA_HEIGHT = 182
+ANTH_DATA_SITTING_HEIGHT = 99
+ANTH_DATA_BODY_SPAN = 64
+ANTH_DATA_WEIGHT = 89.9
+ANTH_DATA_PHV = 15.15
+ANTH_DATA_OFFSET = 1.81
+ANTH_DATA_AK_BIO = "PHV 1.5 bis 2.5"
+ANTH_DATA_BMI = 27.1
+ANTH_DATA_PAH = 198.73
+ANTH_DATA_PMH = 0.92
+ANTH_DATA_REMAINING_GROWTH = 16.73
+ANTH_DATA_AGE_AT_MEASURMENT = 13.34
 
 def test_new_user(app_generator): # app_generator type: <class 'flask.app.Flask'>
     """
@@ -139,7 +153,7 @@ def test_new_player_details(app_generator):
     THEN check the birthdays, sex_m_0_f_1, height_father and height_mother fields are defined correctly
     """
     with app_generator.app_context():
-        # Define new player details
+        # Define new PlayerDetails
         playerDetail = PlayerDetail(user_id=DETAILS_FOR_USER_WITH_ID,
                                     birthday=DATE_OF_BIRTH,
                                     sex_m_0_f_1=SEX,
@@ -254,16 +268,96 @@ def test_edit_admin_config(app_generator):
         assert adminConf.mail_password is not ACONF_MAIL_PASS
         assert adminConf.mail_password == EDITED_ACONF_MAIL_PASS
 
-# Todo
-@pytest.mark.skip(reason="Not implemented")
+
 def test_new_anthropometric_data(app_generator):
     """
     GIVEN a AnthropometricData model
     WHEN a AnthropometricData is created
     THEN check if all fields are defined correctly and the results a calculated correctly
     """
+    with app_generator.app_context():
+        # Add user
+        user = Users(username=DUMMIER_USER_NAME, email=DUMMIER_USER_MAIL)
+        user.set_password(DUMMIER_USER_PASS)
+        user.set_is_admin(True)
+        user.set_jwt_auth_active(True)
+        user.save()
+        # Add PlayerDetails
+        playerDetail = PlayerDetail(user_id=DETAILS_FOR_USER_WITH_ID,
+                                    birthday=DATE_OF_BIRTH_TEENAGER,
+                                    sex_m_0_f_1=SEX,
+                                    height_father=HEIGHT_FATHER,
+                                    height_mother=HEIGHT_MOTHER)
+        playerDetail.save()
+        # Define anthropometric data for that user
+        anthData = AnthropometricData(user_id=1, age_at_measurement=ANTH_DATA_AGE_AT_MEASURMENT)
+        anthData.update_date_measured(ANTH_DATA_DATE_MEASURED)
+        anthData.update_height(ANTH_DATA_HEIGHT)
+        anthData.update_sitting_height(ANTH_DATA_SITTING_HEIGHT)
+        anthData.update_body_span(ANTH_DATA_BODY_SPAN)
+        anthData.update_weight(ANTH_DATA_WEIGHT)
+        anthData.save()
+        # Check results
+        assert anthData.user_id == DETAILS_FOR_USER_WITH_ID
+        assert anthData.date_measured == datetime.strptime(ANTH_DATA_DATE_MEASURED, "%Y-%m-%d").date()
+        assert anthData.height == ANTH_DATA_HEIGHT
+        assert anthData.sitting_height == ANTH_DATA_SITTING_HEIGHT
+        assert anthData.body_span == ANTH_DATA_BODY_SPAN
+        assert anthData.weight == ANTH_DATA_WEIGHT
+        assert anthData.phv == ANTH_DATA_PHV
+        assert anthData.offset == ANTH_DATA_OFFSET
+        assert anthData.ak_bio == ANTH_DATA_AK_BIO
+        assert anthData.bmi == ANTH_DATA_BMI
+        assert anthData.pah == ANTH_DATA_PAH
+        assert anthData.pmh == ANTH_DATA_PMH
+        assert anthData.remaining_growth == ANTH_DATA_REMAINING_GROWTH
+        assert anthData.age_at_measurement == ANTH_DATA_AGE_AT_MEASURMENT
 
     # Hint: User formulas.py for validation
+
+def test_new_anthropometric_data_WHEN_AGE_IS_NOT_BETWEEN_4and17(app_generator):
+    """
+    GIVEN a AnthropometricData model
+    WHEN a AnthropometricData is created
+    THEN check if all fields are defined correctly and the results a calculated correctly
+    """
+    with app_generator.app_context():
+        # Add user
+        user = Users(username=DUMMIER_USER_NAME, email=DUMMIER_USER_MAIL)
+        user.set_password(DUMMIER_USER_PASS)
+        user.set_is_admin(True)
+        user.set_jwt_auth_active(True)
+        user.save()
+        # Add PlayerDetails
+        playerDetail = PlayerDetail(user_id=DETAILS_FOR_USER_WITH_ID,
+                                    birthday=DATE_OF_BIRTH,
+                                    sex_m_0_f_1=SEX,
+                                    height_father=HEIGHT_FATHER,
+                                    height_mother=HEIGHT_MOTHER)
+        playerDetail.save()
+        # Define anthropometric data for that user
+        anthData = AnthropometricData(user_id=1, age_at_measurement=ANTH_DATA_AGE_AT_MEASURMENT)
+        anthData.update_date_measured(ANTH_DATA_DATE_MEASURED)
+        anthData.update_height(ANTH_DATA_HEIGHT)
+        anthData.update_sitting_height(ANTH_DATA_SITTING_HEIGHT)
+        anthData.update_body_span(ANTH_DATA_BODY_SPAN)
+        anthData.update_weight(ANTH_DATA_WEIGHT)
+        anthData.save()
+        # Check results
+        assert anthData.user_id == DETAILS_FOR_USER_WITH_ID
+        assert anthData.date_measured == datetime.strptime(ANTH_DATA_DATE_MEASURED, "%Y-%m-%d").date()
+        assert anthData.height == ANTH_DATA_HEIGHT
+        assert anthData.sitting_height == ANTH_DATA_SITTING_HEIGHT
+        assert anthData.body_span == ANTH_DATA_BODY_SPAN
+        assert anthData.weight == ANTH_DATA_WEIGHT
+        assert anthData.phv == ANTH_DATA_PHV
+        assert anthData.offset == ANTH_DATA_OFFSET
+        assert anthData.ak_bio == ANTH_DATA_AK_BIO
+        assert anthData.bmi == ANTH_DATA_BMI
+        assert anthData.pah == ANTH_DATA_PAH
+        assert anthData.pmh == ANTH_DATA_PMH
+        assert anthData.remaining_growth == ANTH_DATA_REMAINING_GROWTH
+        assert anthData.age_at_measurement == ANTH_DATA_AGE_AT_MEASURMENT
 
 
 # Todo
