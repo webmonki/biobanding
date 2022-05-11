@@ -27,7 +27,7 @@ export default class Profile extends Component {
   handleKey = (event) => {
     if (event.code == "Enter") {
       this.sendData();
-      document.removeEventListener("keyup", this.handleKey);
+      //   document.removeEventListener("keyup", this.handleKey);
     }
   };
 
@@ -64,7 +64,6 @@ export default class Profile extends Component {
 
         Auth.setEmail(that.state.email);
         Auth.setUsername(that.state.username);
-        location.reload();
       } else {
         try {
           let response = JSON.parse(this.responseText);
@@ -140,6 +139,8 @@ export default class Profile extends Component {
         } else if (sex === 1) {
           document.getElementById("radioFemale").checked = true;
         }
+
+        that.handleRadioChange();
       } else {
         try {
           let response = JSON.parse(this.responseText);
@@ -168,9 +169,6 @@ export default class Profile extends Component {
 
     xhttp.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
-        let response = JSON.parse(this.responseText);
-        // that.setState({ responseFBClass : style.feedbackSucc });
-        // that.setState({ responseFB : 'Spieler Details erfolgreich angelegt'});
         that.bar.MDComponent.show({
           message: `Spielerdetails erfolgreich angelegt`,
         });
@@ -186,6 +184,8 @@ export default class Profile extends Component {
         } catch (err) {}
       }
     };
+
+    console.log("SEX: ", this.state.sex);
 
     switch (this.state.sex) {
       case "male":
@@ -207,6 +207,8 @@ export default class Profile extends Component {
 			"height_father": ${this.state.fatherHeight},
 			"height_mother": ${this.state.motherHeight}
         }`;
+
+    console.log(data);
     xhttp.send(data);
   };
 
@@ -354,7 +356,6 @@ export default class Profile extends Component {
           <div class={style.row}>
             <div class={style.dateContainer}>
               <TextField
-                class={style.dateInput}
                 outlined
                 type="date"
                 value={this.state.birthday}
