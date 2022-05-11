@@ -24,13 +24,13 @@ db.init_app(app)
 rest_api.init_app(app)
 CORS(app)
 
+
 # Setup database
 @app.before_first_request
 def initialize_database():
     db.create_all()
 
     # Create initial admin user and setting if not exists
-    print(db.session.query(Users).first())
     if db.session.query(Users).first() is None:
         admin = Users(username='admin',
                       email='admin@example.org',
@@ -46,10 +46,10 @@ def initialize_database():
         db.session.add(config)
         db.session.commit()
 
-
 """
    Custom responses
 """
+
 
 @app.after_request
 def after_request(response):
@@ -65,6 +65,7 @@ def after_request(response):
             response.set_data(json.dumps(response_data))
         response.headers.add('Content-Type', 'application/json')
     return response
+
 
 # [BEGIN reminder]
 @app.cli.command()

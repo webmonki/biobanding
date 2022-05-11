@@ -8,7 +8,9 @@ import json
 import pytest
 import jwt
 
+from api import app
 from api.config import BaseConfig
+from api.models import AdminConfig
 
 
 """
@@ -30,13 +32,25 @@ def test_user_signup(client):
     """
        Tests /users/register API
     """
+
+    # Trigger initial request to create db
+    _ = client.post("/")
+
+    # Access db within app context to get default registration code
+    with app.app_context():
+        config = AdminConfig.get_config()
+        config = config.toDICT()
+
+    code = config["registration_code"]
+
     response = client.post(
         "api/users/register",
         data=json.dumps(
             {
                 "username": DUMMY_USERNAME,
                 "email": DUMMY_EMAIL,
-                "password": DUMMY_PASS
+                "password": DUMMY_PASS,
+                "registration_code": code
             }
         ),
         content_type="application/json")
@@ -56,7 +70,8 @@ def test_user_signup_invalid_data(client):
             {
                 "username": DUMMY_USERNAME,
                 "email": "",
-                "password": DUMMY_PASS
+                "password": DUMMY_PASS,
+                "registration_code": 1111
             }
         ),
         content_type="application/json")
@@ -92,6 +107,7 @@ def test_user_confirm_signup(client):
     """
 
     token = jwt.encode({'email': DUMMY_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+
     response = client.post(
         '/api/users/confirm',
         headers={"authorization": token},
