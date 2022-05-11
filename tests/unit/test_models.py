@@ -26,7 +26,7 @@ TO_EDIT_USER_PASS = "to@edit-com"
 EDITED_USER_PASS = "edited9$password"
 
 DATE_OF_BIRTH = datetime.strptime("1990-01-01", "%Y-%m-%d").date() # <class 'datetime.date'>
-DATE_OF_BIRTH_TEENAGER = date.today() - timedelta(days=5000)
+DATE_OF_BIRTH_TEENAGER = date.today() - timedelta(days=5000) # 13,68 years
 DETAILS_FOR_USER_WITH_ID = 1
 SEX = 0
 HEIGHT_FATHER = 189
@@ -59,6 +59,21 @@ ANTH_DATA_PAH = 198.73
 ANTH_DATA_PMH = 0.92
 ANTH_DATA_REMAINING_GROWTH = 16.73
 ANTH_DATA_AGE_AT_MEASURMENT = 13.34
+
+ANTH_EDITED_DATA_DATE_MEASURED = "2022-03-03"
+ANTH_EDITED_DATA_HEIGHT = 188
+ANTH_EDITED_DATA_SITTING_HEIGHT = 101
+ANTH_EDITED_DATA_BODY_SPAN = 71
+ANTH_EDITED_DATA_WEIGHT = 92.3
+
+ANTH_EDITED_DATA_PHV = 15.15
+ANTH_EDITED_DATA_OFFSET = 1.81
+ANTH_EDITED_DATA_AK_BIO = "PHV 1.5 bis 2.5"
+ANTH_EDITED_DATA_BMI = 27.1
+ANTH_EDITED_DATA_PAH = 198.73
+ANTH_EDITED_DATA_PMH = 0.92
+ANTH_EDITED_DATA_REMAINING_GROWTH = 16.73
+ANTH_EDITED_DATA_AGE_AT_MEASURMENT = 13.34
 
 def test_new_user(app_generator): # app_generator type: <class 'flask.app.Flask'>
     """
@@ -312,6 +327,20 @@ def test_new_anthropometric_data(app_generator):
         assert anthData.pmh == ANTH_DATA_PMH
         assert anthData.remaining_growth == ANTH_DATA_REMAINING_GROWTH
         assert anthData.age_at_measurement == ANTH_DATA_AGE_AT_MEASURMENT
+        assert anthData.toDICT().get("UserId") == DETAILS_FOR_USER_WITH_ID
+#        assert anthData.toDICT().get("Datum") == ANTH_DATA_DATE_MEASURED
+        assert anthData.toDICT().get("Alter") == ANTH_DATA_AGE_AT_MEASURMENT
+        assert anthData.toDICT().get("YAPHV") == ANTH_DATA_OFFSET 
+        assert anthData.toDICT().get("PHV") == ANTH_DATA_PHV
+        assert anthData.toDICT().get("AK_BIO") == ANTH_DATA_AK_BIO
+        assert anthData.toDICT().get("BMI") == ANTH_DATA_BMI
+        assert anthData.toDICT().get("PMH") == ANTH_DATA_PMH
+        assert anthData.toDICT().get("PAH") == ANTH_DATA_PAH
+        assert anthData.toDICT().get("CM until PAH") == ANTH_DATA_REMAINING_GROWTH
+        assert anthData.toDICT().get("Größe") == ANTH_DATA_HEIGHT
+        assert anthData.toDICT().get("Sitzgröße") == ANTH_DATA_SITTING_HEIGHT
+        assert anthData.toDICT().get("Körperspanne") == ANTH_DATA_BODY_SPAN
+        assert anthData.toDICT().get("Gewicht") == ANTH_DATA_WEIGHT
 
     # Hint: User formulas.py for validation
 
@@ -362,21 +391,86 @@ def test_new_anthropometric_data_WHEN_AGE_IS_NOT_BETWEEN_4and17(app_generator):
         assert anthData.age_at_measurement == ANTH_DATA_AGE_AT_MEASURMENT
 
 
-# Todo
-@pytest.mark.skip(reason="Not implemented")
 def test_edit_anthropometric_data(app_generator):
     """
     GIVEN a AnthropometricData model
     WHEN a AnthropometricData is edited
     THEN check if all fields are updated correctly and the results a calculated correctly again
     """
+    with app_generator.app_context():
+        # Add user
+        user = Users(username=DUMMIER_USER_NAME, email=DUMMIER_USER_MAIL)
+        user.set_password(DUMMIER_USER_PASS)
+        user.set_is_admin(True)
+        user.set_jwt_auth_active(True)
+        user.save()
+        # Add PlayerDetails
+        playerDetail = PlayerDetail(user_id=DETAILS_FOR_USER_WITH_ID,
+                                    birthday=DATE_OF_BIRTH_TEENAGER,
+                                    sex_m_0_f_1=SEX,
+                                    height_father=HEIGHT_FATHER,
+                                    height_mother=HEIGHT_MOTHER)
+        playerDetail.save()
+        # Define anthropometric data for that user
+        anthData = AnthropometricData(user_id=1, age_at_measurement=ANTH_DATA_AGE_AT_MEASURMENT)
+        anthData.update_date_measured(ANTH_DATA_DATE_MEASURED)
+        anthData.update_height(ANTH_DATA_HEIGHT)
+        anthData.update_sitting_height(ANTH_DATA_SITTING_HEIGHT)
+        anthData.update_body_span(ANTH_DATA_BODY_SPAN)
+        anthData.update_weight(ANTH_DATA_WEIGHT)
+        anthData.save()
+        # Edit data
+        anthData.update_date_measured(ANTH_EDITED_DATA_DATE_MEASURED)
+        anthData.update_height(ANTH_EDITED_DATA_HEIGHT)
+        anthData.update_sitting_height(ANTH_EDITED_DATA_SITTING_HEIGHT)
+        anthData.update_body_span(ANTH_EDITED_DATA_BODY_SPAN)
+        anthData.update_weight(ANTH_EDITED_DATA_WEIGHT)
+        # Check results
+        assert anthData.user_id == DETAILS_FOR_USER_WITH_ID
+        assert anthData.date_measured == datetime.strptime(ANTH_EDITED_DATA_DATE_MEASURED, "%Y-%m-%d")
+        assert anthData.height == ANTH_EDITED_DATA_HEIGHT
+        assert anthData.sitting_height == ANTH_EDITED_DATA_SITTING_HEIGHT
+        assert anthData.body_span == ANTH_EDITED_DATA_BODY_SPAN
+        assert anthData.weight == ANTH_EDITED_DATA_WEIGHT
+        assert anthData.phv == ANTH_EDITED_DATA_PHV
+        assert anthData.offset == ANTH_DATA_OFFSET
+        assert anthData.ak_bio == ANTH_DATA_AK_BIO
+        assert anthData.bmi == ANTH_DATA_BMI
+        assert anthData.pah == ANTH_DATA_PAH
+        assert anthData.pmh == ANTH_DATA_PMH
+        assert anthData.remaining_growth == ANTH_DATA_REMAINING_GROWTH
+        assert anthData.age_at_measurement == ANTH_DATA_AGE_AT_MEASURMENT
 
 
-
-
-
-
-
-
-
-
+def test_delete_anthropometric_data(app_generator):
+    """
+    GIVEN a AnthropometricData model
+    WHEN an AnthropometricData is deleted
+    THEN check if data has been removed from the table
+    """
+    with app_generator.app_context():
+        # Add user
+        user = Users(username=DUMMIER_USER_NAME, email=DUMMIER_USER_MAIL)
+        user.set_password(DUMMIER_USER_PASS)
+        user.set_is_admin(True)
+        user.set_jwt_auth_active(True)
+        user.save()
+        # Add PlayerDetails
+        playerDetail = PlayerDetail(user_id=DETAILS_FOR_USER_WITH_ID,
+                                    birthday=DATE_OF_BIRTH_TEENAGER,
+                                    sex_m_0_f_1=SEX,
+                                    height_father=HEIGHT_FATHER,
+                                    height_mother=HEIGHT_MOTHER)
+        playerDetail.save()
+        # Define anthropometric data for that user
+        anthData = AnthropometricData(user_id=1, age_at_measurement=ANTH_DATA_AGE_AT_MEASURMENT)
+        anthData.update_date_measured(ANTH_DATA_DATE_MEASURED)
+        anthData.update_height(ANTH_DATA_HEIGHT)
+        anthData.update_sitting_height(ANTH_DATA_SITTING_HEIGHT)
+        anthData.update_body_span(ANTH_DATA_BODY_SPAN)
+        anthData.update_weight(ANTH_DATA_WEIGHT)
+        anthData.save()
+        # Delete anthropometric data
+        anthData.delete()
+        # Check results
+        assert AnthropometricData.get_all() == []
