@@ -43,7 +43,7 @@ export default class App extends Component {
     }
 
     if (e.url === "/") {
-      this.setState({ currentUrl: e.url });
+      route("/login", true);
     } else {
       route(e.url, true);
     }
