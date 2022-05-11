@@ -42,7 +42,14 @@ export default class App extends Component {
       route("/measurements", true);
     }
 
-    route(e.url, true);
+    console.log(e.url);
+
+    if (e.url === "/") {
+      console.log("HERE");
+      this.setState({ currentUrl: e.url });
+    } else {
+      route(e.url, true);
+    }
   };
 
   setInstructions = (val) => {
