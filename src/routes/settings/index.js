@@ -285,7 +285,7 @@ export default class Settings extends Component {
                 />
               </Formfield>
             </div>
-            <Button onClick={this.checkConfig}>Konfiguration testen</Button>
+            <Button onClick={this.checkConfig}>Testmail senden</Button>
           </div>
           <div class={style.btnContainer}>
             <Button
