@@ -645,9 +645,9 @@ class EditConfiguration(Resource):
     def post(self, current_user):
         """Send test mail to given e-mail address"""
 
-        if current_user.is_admin:
+        if self.is_admin:
             try:
-                send_email(current_user.email, 'Testmail: Mail-Server ist korrekt konfiguriert.', 'Testmail')
+                send_email(self.email, 'Testmail: Mail-Server ist korrekt konfiguriert.', 'Testmail')
             except Exception:
                 return {"success": False,
                         "msg": "Test email could not be sent"}, 400
