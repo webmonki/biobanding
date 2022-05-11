@@ -162,8 +162,8 @@ export default class NewMeasurementUser extends Component {
                   onKeyUp={(e) => {
                     document.addEventListener("keyup", this.handleKey);
                     let val = e.target.value;
-                    this.setState({ sittingHeight: val });
-                    let height = this.state.height;
+                    this.setFormValue("sittingHeight", val);
+                    let height = this.getFormValue("height");
 
                     if (val < 0) {
                       this.setState({ sittingFBClass: style.feedbackErr });
@@ -212,9 +212,8 @@ export default class NewMeasurementUser extends Component {
                   onKeyUp={(e) => {
                     document.addEventListener("keyup", this.handleKey);
                     let val = e.target.value;
-                    this.setState({ span: val });
-                    let height = this.state.height;
-                    this.validateInput();
+                    this.setFormValue("span", val);
+                    let height = this.getFormValue("height");
 
                     if (val < 60) {
                       this.setState({ spanFBClass: style.feedbackErr });
