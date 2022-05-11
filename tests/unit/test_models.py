@@ -4,9 +4,10 @@ Copyright (c) 2022 - present VP-Systeme GmbH, Lyrenstr. 13, 44866
 """
 
 from numpy import datetime_as_string
-from api.models import PlayerDetail, Users
+from api.models import AdminConfig, PlayerDetail, Users
 from datetime import date, datetime
 import pytest
+import time
 
 
 DUMMY_USER_NAME = "johndoe"
@@ -19,11 +20,11 @@ DUMMIER_USER_PASS = "secret-password"
 DB_ENTRY_AFTER_DELETING_USER = "DELETED"
 
 TO_EDIT_USER_NAME = "beforeedit"
-TO_EDIT_USER_NEW_NAME = "afteredit"
+EDITED_USER_NAME = "afteredit"
 TO_EDIT_USER_MAIL = "tobe@edited.com"
-TO_EDIT_USER_NEW_MAIL = "edited-address@after.de"
+EDITED_USER_MAIL = "edited-address@after.de"
 TO_EDIT_USER_PASS = "to@edit-com"
-TO_EDIT_USER_NEW_PASS = "edited9$password"
+EDITED_USER_PASS = "edited9$password"
 
 DATE_OF_BIRTH = datetime.strptime("1990-01-01", "%Y-%m-%d").date() # <class 'datetime.date'>
 DETAILS_FOR_USER_WITH_ID = 2
@@ -31,6 +32,19 @@ SEX = 0
 HEIGHT_FATHER = 189
 HEIGHT_MOTHER = 169
 
+ACONF_DAYS_REMINDER = 30
+ACONF_MAIL_SERVER = "smtp.example.org"
+ACONF_MAIL_PORT = 465
+ACONF_MAIL_USE_SSL = 1
+ACONF_MAIL_USERNAME = "mark"
+ACONF_MAIL_PASS = "simple-pass"
+
+EDITED_ACONF_DAYS_REMINDER = 10
+EDITED_ACONF_MAIL_SERVER = "smtp.unreal.org"
+EDITED_ACONF_MAIL_PORT = 467
+EDITED_ACONF_MAIL_USE_SSL = 0
+EDITED_ACONF_MAIL_USERNAME = "adam"
+EDITED_ACONF_MAIL_PASS = "complex-pass"
 
 def test_new_user(app_generator): # app_generator type: <class 'flask.app.Flask'>
     """
@@ -46,10 +60,6 @@ def test_new_user(app_generator): # app_generator type: <class 'flask.app.Flask'
         user.set_is_admin(True)
         user.save()
         # Check results
-        print("all users:")
-        print(user.get_all_users())
-        assert user.id == 2
-        assert type(user.id) == int
         assert DUMMY_USER_NAME == user.username
         assert DUMMY_USER_MAIL == user.email
         assert user.check_password(DUMMY_USER_PASS)
@@ -78,7 +88,6 @@ def test_delete_user(app_generator):
         # Detele user
         user.delete()
         # Check results
-        assert user.id == 1
         assert DUMMIER_USER_NAME is not user.username
         assert user.username == DB_ENTRY_AFTER_DELETING_USER
         assert DUMMIER_USER_MAIL is not user.email
@@ -108,19 +117,18 @@ def test_edit_user(app_generator):
         user.set_is_admin(1)
         user.save()
         # Edit user data
-        user.update_username(TO_EDIT_USER_NEW_NAME)
-        user.update_email(TO_EDIT_USER_NEW_MAIL)
-        user.set_password(TO_EDIT_USER_NEW_PASS)
+        user.update_username(EDITED_USER_NAME)
+        user.update_email(EDITED_USER_MAIL)
+        user.set_password(EDITED_USER_PASS)
         user.set_is_admin(0)
         user.set_jwt_auth_active(1)
         # Check results
-        assert user.id == 1
         assert TO_EDIT_USER_NAME is not user.username
-        assert user.username == TO_EDIT_USER_NEW_NAME
+        assert user.username == EDITED_USER_NAME
         assert TO_EDIT_USER_MAIL is not user.email
-        assert user.email == TO_EDIT_USER_NEW_MAIL
+        assert user.email == EDITED_USER_MAIL
         assert user.check_password(TO_EDIT_USER_PASS) == False
-        assert user.check_password(TO_EDIT_USER_NEW_PASS)
+        assert user.check_password(EDITED_USER_PASS)
         assert user.check_is_admin() == 0
 
 
@@ -174,7 +182,6 @@ def test_edit_player_details(app_generator):
         playerDetail.height_mother = HEIGHT_MOTHER+14
         # Check results
         assert playerDetail.user_id is not DETAILS_FOR_USER_WITH_ID - 1
-        assert playerDetail.user_id == 4
         assert playerDetail.birthday is not DATE_OF_BIRTH.replace(year=DATE_OF_BIRTH.year+10)
         assert playerDetail.birthday == DATE_OF_BIRTH.replace(year=DATE_OF_BIRTH.year-20)
         assert playerDetail.sex_m_0_f_1 is not SEX+1
@@ -188,8 +195,6 @@ def test_edit_player_details(app_generator):
         assert playerDetail.toDICT().get("height_mother") == HEIGHT_MOTHER+14
 
 
-# Todo
-@pytest.mark.skip(reason="Not implemented")
 def test_new_admin_config(app_generator):
     """
     GIVEN a AdminConfig model
@@ -197,10 +202,25 @@ def test_new_admin_config(app_generator):
     THEN check the days_reminder, mail_server, mail_port, mail_use_ssl, mail_password and
         mail_username fields are defined correctly
     """
+    with app_generator.app_context():
+        # Create new AdminConfig
+        adminConf = AdminConfig(days_reminder=ACONF_DAYS_REMINDER, mail_server=ACONF_MAIL_SERVER, mail_port=ACONF_MAIL_PORT, mail_use_ssl=ACONF_MAIL_USE_SSL, mail_username=ACONF_MAIL_USERNAME)
+        adminConf.update_mail_passwort(ACONF_MAIL_PASS)
+        adminConf.save()
+        # Check results
+        assert adminConf.days_reminder == ACONF_DAYS_REMINDER
+        assert adminConf.mail_server == ACONF_MAIL_SERVER
+        assert adminConf.mail_port == ACONF_MAIL_PORT
+        assert adminConf.mail_use_ssl == ACONF_MAIL_USE_SSL
+        assert adminConf.mail_username == ACONF_MAIL_USERNAME
+        assert adminConf.mail_password == ACONF_MAIL_PASS
+        assert adminConf.toDICT().get("days_reminder") == ACONF_DAYS_REMINDER
+        assert adminConf.toDICT().get("mail_server") == ACONF_MAIL_SERVER
+        assert adminConf.toDICT().get("mail_port") == ACONF_MAIL_PORT
+        assert adminConf.toDICT().get("mail_use_ssl") == ACONF_MAIL_USE_SSL
+        assert adminConf.toDICT().get("mail_username") == ACONF_MAIL_USERNAME
 
 
-# Todo
-@pytest.mark.skip(reason="Not implemented")
 def test_edit_admin_config(app_generator):
     """
     GIVEN a AdminConfig model
@@ -208,7 +228,31 @@ def test_edit_admin_config(app_generator):
     THEN check the days_reminder, mail_server, mail_port, mail_use_ssl, mail_password and
         mail_username fields are updated correctly
     """
-
+    with app_generator.app_context():
+        # Create AdminConfig to edit
+        adminConf = AdminConfig(days_reminder=ACONF_DAYS_REMINDER, mail_server=ACONF_MAIL_SERVER, mail_port=ACONF_MAIL_PORT, mail_use_ssl=ACONF_MAIL_USE_SSL, mail_username=ACONF_MAIL_USERNAME,
+        mail_password=ACONF_MAIL_PASS)
+        adminConf.save()
+        # Edit AdminConfig
+        adminConf.update_days_reminder(EDITED_ACONF_DAYS_REMINDER)
+        adminConf.update_mail_server(EDITED_ACONF_MAIL_SERVER)
+        adminConf.update_mail_port(EDITED_ACONF_MAIL_PORT)
+        adminConf.update_mail_use_ssl(EDITED_ACONF_MAIL_USE_SSL)
+        adminConf.update_mail_username(EDITED_ACONF_MAIL_USERNAME)
+        adminConf.update_mail_passwort(EDITED_ACONF_MAIL_PASS)
+        # Check results
+        assert adminConf.days_reminder is not ACONF_DAYS_REMINDER
+        assert adminConf.days_reminder == EDITED_ACONF_DAYS_REMINDER
+        assert adminConf.mail_server is not ACONF_MAIL_SERVER
+        assert adminConf.mail_server == EDITED_ACONF_MAIL_SERVER
+        assert adminConf.mail_port is not ACONF_MAIL_PORT
+        assert adminConf.mail_port == EDITED_ACONF_MAIL_PORT
+        assert adminConf.mail_use_ssl is not ACONF_MAIL_USE_SSL
+        assert adminConf.mail_use_ssl == EDITED_ACONF_MAIL_USE_SSL
+        assert adminConf.mail_username is not ACONF_MAIL_USERNAME
+        assert adminConf.mail_username == EDITED_ACONF_MAIL_USERNAME
+        assert adminConf.mail_password is not ACONF_MAIL_PASS
+        assert adminConf.mail_password == EDITED_ACONF_MAIL_PASS
 
 # Todo
 @pytest.mark.skip(reason="Not implemented")
