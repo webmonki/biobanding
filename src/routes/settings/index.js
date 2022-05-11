@@ -136,6 +136,50 @@ export default class Settings extends Component {
     this.setState({ ssl: checkbox[0].checked });
   };
 
+  checkConfig = () => {
+    let that = this;
+    let url = Auth.url + "/api/configurations/testmail";
+    let xhttp = new XMLHttpRequest();
+
+    xhttp.open("POST", url);
+    xhttp.setRequestHeader("Accept", "application/json");
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.setRequestHeader("authorization", Auth.getUser().token);
+
+    xhttp.onreadystatechange = function () {
+      if ([1, 2, 3, 4].includes(this.readyState)) {
+        if (this.status === 200) {
+          try {
+            let response = JSON.parse(this.responseText);
+            console.log(response);
+            // that.setState({ responseFB: response.msg });
+          } catch (err) {}
+
+          that.bar.MDComponent.show({
+            message: `E-Mail erfolgreich gesendet`,
+          });
+
+          // that.setState({ responseFBClass: style.feedbackSucc });
+        } else {
+          try {
+            let response = JSON.parse(this.responseText);
+            console.log(response);
+            that.setState({ responseFB: response.msg });
+          } catch (err) {}
+
+          that.setState({ responseFBClass: style.feedbackErr });
+        }
+      }
+    };
+
+    let data = `{
+		"test_email_address": "${Auth.getUser().email}"
+        }`;
+
+    console.log(data);
+    xhttp.send(data);
+  };
+
   render() {
     return (
       <div class={this.state.pageClass}>
@@ -241,6 +285,7 @@ export default class Settings extends Component {
                 />
               </Formfield>
             </div>
+            <Button onClick={this.checkConfig}>Konfiguration testen</Button>
           </div>
           <div class={style.btnContainer}>
             <Button
