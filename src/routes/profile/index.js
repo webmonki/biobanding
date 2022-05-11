@@ -185,8 +185,6 @@ export default class Profile extends Component {
       }
     };
 
-    console.log("SEX: ", this.state.sex);
-
     switch (this.state.sex) {
       case "male":
         this.sex = 0;
@@ -208,7 +206,6 @@ export default class Profile extends Component {
 			"height_mother": ${this.state.motherHeight}
         }`;
 
-    console.log(data);
     xhttp.send(data);
   };
 
