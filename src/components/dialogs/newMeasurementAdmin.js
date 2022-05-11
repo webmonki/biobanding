@@ -34,15 +34,13 @@ export default class NewMeasurementAdmin extends Component {
     let span = this.state.span;
     let weight = this.state.weight;
 
-    let msg = [];
+    this.setState({ disabled: false });
 
     if (sittingHeight > height * 0.5) {
-      msg.push("Das Verhältnis von Sitzgröße zu Größe ist nicht plausibel");
       this.setState({ disabled: true });
     }
 
     if (span > height * 1.15) {
-      msg.push("Das Verhältnis von Spannweite zu Größe ist nicht plausibel");
       this.setState({ disabled: true });
     }
 
@@ -61,8 +59,6 @@ export default class NewMeasurementAdmin extends Component {
     if (weight === "" || weight === undefined) {
       this.setState({ disabled: true });
     }
-
-    this.setState({ msg });
   };
 
   getBtnStyle = () => {
@@ -162,7 +158,7 @@ export default class NewMeasurementAdmin extends Component {
                     document.addEventListener("keyup", this.handleKey);
                     let val = e.target.value;
                     this.setState({ sittingHeight: val });
-                    this.validateInput();
+                    let height = this.state.height;
 
                     if (val < 0) {
                       this.setState({ sittingFBClass: style.feedbackErr });
@@ -172,11 +168,18 @@ export default class NewMeasurementAdmin extends Component {
                     if (val > 125) {
                       this.setState({ sittingFBClass: style.feedbackErr });
                       this.setState({
+                        sittingFB: "Maximal 125",
+                      });
+                      this.setState({ disabled: true });
+                    }
+                    if (val > height * 0.5) {
+                      this.setState({ sittingFBClass: style.feedbackErr });
+                      this.setState({
                         sittingFB: "Deine Sitzgröße ist nicht plausibel",
                       });
                       this.setState({ disabled: true });
                     }
-                    if (val >= 0 && val <= 125) {
+                    if (val >= 0 && val <= 125 && val < height * 0.5) {
                       this.setState({ sittingFBClass: style.feedbackSucc });
                       this.setState({ sittingFB: "" });
                       this.setState({ disabled: false });
@@ -206,6 +209,7 @@ export default class NewMeasurementAdmin extends Component {
                     document.addEventListener("keyup", this.handleKey);
                     let val = e.target.value;
                     this.setState({ span: val });
+                    let height = this.state.height;
                     this.validateInput();
 
                     if (val < 60) {
@@ -218,7 +222,15 @@ export default class NewMeasurementAdmin extends Component {
                       this.setState({ spanFB: "Maximal 300" });
                       this.setState({ disabled: true });
                     }
-                    if (val >= 60 && val <= 300) {
+                    if (val > height * 1.15) {
+                      this.setState({ spanFBClass: style.feedbackErr });
+                      this.setState({
+                        spanFB: "Deine Armspanne ist nicht plausibel",
+                      });
+                      this.setState({ disabled: true });
+                    }
+
+                    if (val >= 60 && val <= 300 && val < height * 1.15) {
                       this.setState({ spanFBClass: style.feedbackSucc });
                       this.setState({ spanFB: "" });
                       this.setState({ disabled: false });
@@ -268,11 +280,6 @@ export default class NewMeasurementAdmin extends Component {
                   {this.state.weightFB}
                 </span>
               </div>
-            </div>
-            <div class={style.feedbackContainer}>
-              {this.state.msg.map((msg) => (
-                <p class={style.feedbackErr}>{msg}</p>
-              ))}
             </div>
           </div>
         </Dialog.Body>
