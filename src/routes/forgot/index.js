@@ -89,7 +89,6 @@ export default class Forgot extends Component {
             <TextField
               autocomplete="off"
               id="emailInput"
-              outlined
               label="E-Mail"
               value={this.state.email}
               onKeyUp={(e) => {

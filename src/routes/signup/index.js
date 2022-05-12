@@ -149,7 +149,6 @@ export default class Signup extends Component {
               <TextField
                 autocomplete="off"
                 id="usernameInput"
-                outlined
                 label="Benutzername"
                 value={this.state.editUsername}
                 onKeyUp={(e) => {
@@ -178,7 +177,6 @@ export default class Signup extends Component {
               <TextField
                 autocomplete="off"
                 id="emailInput"
-                outlined
                 label="E-Mail"
                 value={this.state.email}
                 onInput={(e) => {
@@ -205,7 +203,6 @@ export default class Signup extends Component {
                 autocomplete="off"
                 id="passwordInput"
                 type="password"
-                outlined
                 label="Passwort"
                 value={this.state.password}
                 onKeyUp={(e) => {
@@ -244,7 +241,6 @@ export default class Signup extends Component {
                 autocomplete="off"
                 id="password2Input"
                 type="password"
-                outlined
                 label="Passwort wiederholen"
                 value={this.state.password2}
                 onKeyUp={(e) => {
