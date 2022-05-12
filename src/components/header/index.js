@@ -194,6 +194,13 @@ export default class Header extends Component {
     }
     return (
       <div class={`${"mdc-theme--primary-bg"} ${style.topAppBar}`}>
+        <i
+          class={style.menuIcon}
+          aria-hidden="true"
+          onClick={this.props.toggleNavbar}
+        >
+          menu
+        </i>
         <div class={style.btnContainer}>
           <Button class={style.secondaryBtn} onClick={this.logOut}>
             Abmelden

@@ -1,15 +1,9 @@
-.pageLarge {
-	margin-left: var(--global-navrail-width);
+.page {
+	position: static;
 	height: calc(100% - var(--global-header-height));
 	padding: var(--global-page-margin);
-	width: calc(100% - var(--global-navrail-width));
-}
-
-.pageSmall {
-	margin-left: var(--global-navbar-width);
-	height: calc(100% - var(--global-header-height));
-	padding: var(--global-page-margin);
-	width: calc(100% - var(--global-navbar-width));
+	overflow: auto;
+	width: 100%;
 }
 
 .settingsContainer {

@@ -223,8 +223,7 @@ export default class Settings extends Component {
 
   render() {
     return (
-      <div class={this.state.pageClass}>
-        <Navbar selectedRoute="/settings" fitPageSize={this.fitPageSize} />
+      <div class={style.page}>
         <span class={style.pageHeader}>Einstellungen</span>
         <div class={style.settingsContainer}>
           <div class={style.headerContainer}>
