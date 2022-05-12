@@ -221,7 +221,7 @@ export default class Profile extends Component {
 
   render() {
     return (
-      <div class={this.state.pageClass}>
+      <div class={style.page}>
         <span class={style.pageHeader}>Profil</span>
         <div class={style.profileContainer}>
           <div class={style.headerContainer}>

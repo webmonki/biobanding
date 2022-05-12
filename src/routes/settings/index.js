@@ -176,13 +176,12 @@ export default class Settings extends Component {
 		"test_email_address": "${Auth.getUser().email}"
         }`;
 
-    console.log(data);
     xhttp.send(data);
   };
 
   render() {
     return (
-      <div class={this.state.pageClass}>
+      <div class={style.page}>
         <span class={style.pageHeader}>Einstellungen</span>
         <div class={style.settingsContainer}>
           <div class={style.headerContainer}>

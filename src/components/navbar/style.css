@@ -4,24 +4,14 @@
 }
 
 aside {
-	background-color: aqua !important; 
 	position: static !important;
-	/* z-index: 1; */
 	box-shadow: var(--global-shadow);
-	width: fit-content !important;
-	height: 100%
-}
-
-.navrail {
-	height: calc(100% - var(--global-header-height));
+	height: 100%;
+	transition: max-width 0.2s ease-out !important;
 }
 
 .navbarContent {
-	width: var(--global-navbar-width);
-}
-
-.navrailContent{
-	width: var(--global-navrail-width);
+	/* padding-top: 5px; */
 }
 
 .versionContainerRail {
@@ -29,8 +19,6 @@ aside {
 }
 
 .versionContainer {
-	/* height: 100px;
-	width: 100px; */
 	position: absolute;
 	left: 10px;
 	bottom: 15px;

@@ -2,16 +2,12 @@
 	height: fit-content;
 }
 
-.pageLarge {
-	margin-left: var(--global-navrail-width);
+.page {
+	position: static;
 	height: calc(100% - var(--global-header-height));
 	padding: var(--global-page-margin);
-}
-
-.pageSmall {
-	margin-left: var(--global-navbar-width);
-	height: calc(100% - var(--global-header-height));
-	padding: var(--global-page-margin);
+	overflow: auto;
+	width: 100%;
 }
 
 .icon {

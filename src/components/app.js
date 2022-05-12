@@ -45,31 +45,23 @@ export default class App extends Component {
       route("/measurements", true);
     }
 
-    if (e.url === "/") {
-      route("/login", true);
-    } else {
-      route(e.url, true);
-    }
+    this.setState({ selectedRoute: e.url });
   };
 
   toggleDrawer = () => {
-    console.log("TOGGLE");
-    if (this.drawer.MDComponent.open === false) {
-      console.log("OPEN DRAWER");
-      this.drawer.MDComponent.open = true;
-      this.rail.MDComponent.open = false;
+    if (this.state.drawerOpen === false) {
       this.setState({ drawerOpen: true });
-      this.setState({ railOpen: false });
-      //   this.setState({ versionClass: style.versionContainer });
     } else {
-      console.log("OPEN RAIL");
-      this.drawer.MDComponent.open = false;
-      this.rail.MDComponent.open = true;
       this.setState({ drawerOpen: false });
-      this.setState({ railOpen: true });
-      //   this.setState({ versionClass: style.versionContainerRail });
     }
-    // this.getNavbarContent(this.props);
+
+    let coll = document.getElementById("navbar");
+
+    if (coll.style.maxWidth === "250px") {
+      coll.style.maxWidth = "60px";
+    } else {
+      coll.style.maxWidth = "250px";
+    }
   };
 
   renderTopAppBar = (userLoggedIn) => {
@@ -93,18 +85,10 @@ export default class App extends Component {
     return true;
   };
 
-  getRailOpen = () => {
-    if (this.state.railOpen === undefined || this.state.railOpen === false) {
-      return false;
-    }
-
-    return true;
-  };
-
   drawerRef = (drawer) => (this.drawer = drawer);
   railRef = (rail) => (this.rail = rail);
 
-  renderNavbar = (userLoggedIn, drawerOpen, railOpen) => {
+  renderNavbar = (userLoggedIn, drawerOpen) => {
     if (userLoggedIn === undefined || userLoggedIn === false) {
       return undefined;
     }
@@ -112,11 +96,18 @@ export default class App extends Component {
     return (
       <Navbar
         drawerRef={this.drawerRef}
-        railRef={this.railRef}
-        drawer={drawerOpen}
-        rail={railOpen}
+        drawerOpen={drawerOpen}
+        openDrawer={this.openDrawer}
+        selectedRoute={this.state.selectedRoute}
       />
     );
+  };
+
+  openDrawer = () => {
+    let drawer = document.getElementById("navbar");
+
+    drawer.style.maxWidth = "250px";
+    this.drawer.MDComponent.open = true;
   };
 
   setInstructions = (val) => {
@@ -150,11 +141,7 @@ export default class App extends Component {
         />
         {this.renderTopAppBar(this.state.userLoggedIn)}
         <div id="page">
-          {this.renderNavbar(
-            this.state.userLoggedIn,
-            this.state.drawerOpen,
-            this.state.railOpen
-          )}
+          {this.renderNavbar(this.state.userLoggedIn, this.state.drawerOpen)}
           <Router onChange={this.handleChange}>
             <Login
               path="/login"

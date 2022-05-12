@@ -1,6 +1,5 @@
 
 .page {
-	background-color: red;
 	position: static;
 	height: calc(100% - var(--global-header-height));
 	padding: var(--global-page-margin);
