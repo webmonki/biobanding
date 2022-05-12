@@ -276,7 +276,6 @@ export default class Users extends Component {
   render() {
     return (
       <div class={this.state.pageClass}>
-        <Navbar selectedRoute="/users" fitPageSize={this.fitPageSize} />
         <span class={style.pageHeader}>Benutzer</span>
         <Card class={style.card}>{this.showTable(true)}</Card>
         <div class={style.feedbackContainer}>

@@ -1,36 +1,19 @@
-.menuIcon {
-	color: var(--mdc-theme-primary);
-	font-family: 'Material Icons';
-    font-style: normal;
-    font-size: 40px;
-	position: absolute;
-	top: calc((var(--global-header-height) / 2) - 18px);
-	left: var(--global-topbar-margin-left);
-	z-index: 8;
-}
 
 .navbar {
-	position: absolute;
-	top: var(--global-header-height);
-	left: 0;
 	height: calc(100% - var(--global-header-height));
 }
 
 aside {
-	position: absolute;
-	z-index: 1;
+	background-color: aqua !important; 
+	position: static !important;
+	/* z-index: 1; */
 	box-shadow: var(--global-shadow);
+	width: fit-content !important;
+	height: 100%
 }
 
 .navrail {
-	position: absolute;
-	top: var(--global-header-height);
-	left: 0;
 	height: calc(100% - var(--global-header-height));
-}
-
-aside {
-	width: fit-content !important;
 }
 
 .navbarContent {
@@ -39,16 +22,6 @@ aside {
 
 .navrailContent{
 	width: var(--global-navrail-width);
-}
-
-.icon {
-	background-color: white;
-	position: absolute;
-	display: flex;
-	flex-direction: row;
-	width: 400px;
-	right: 70px;
-	border-radius: 50px;
 }
 
 .versionContainerRail {

@@ -1,15 +1,11 @@
-.pageLarge {
-	margin-left: var(--global-navrail-width);
-	height: calc(100% - var(--global-header-height));
-	padding: var(--global-page-margin);
-	overflow: auto;
-}
 
-.pageSmall {
-	margin-left: var(--global-navbar-width);
+.page {
+	background-color: red;
+	position: static;
 	height: calc(100% - var(--global-header-height));
 	padding: var(--global-page-margin);
 	overflow: auto;
+	width: 100%;
 }
 
 .white {

@@ -222,7 +222,6 @@ export default class Profile extends Component {
   render() {
     return (
       <div class={this.state.pageClass}>
-        <Navbar selectedRoute="/profile" fitPageSize={this.fitPageSize} />
         <span class={style.pageHeader}>Profil</span>
         <div class={style.profileContainer}>
           <div class={style.headerContainer}>

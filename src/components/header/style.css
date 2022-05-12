@@ -109,3 +109,13 @@
 	margin-left: 50px;
 }
 
+.menuIcon {
+	color: var(--mdc-theme-primary);
+	font-family: 'Material Icons';
+    font-style: normal;
+    font-size: 40px;
+	position: absolute;
+	top: calc((var(--global-header-height) / 2) - 18px);
+	left: var(--global-topbar-margin-left);
+	z-index: 8;
+}

@@ -1,166 +1,175 @@
-import Drawer from 'preact-material-components/Drawer';
-import 'preact-material-components/Drawer/style.css';
-import { h, Component } from 'preact';
-import 'preact-material-components/List/style.css';
-import List from 'preact-material-components/List';
-import style from './style'
-import { route } from 'preact-router';
-import Auth from '../state';
-
+import Drawer from "preact-material-components/Drawer";
+import "preact-material-components/Drawer/style.css";
+import { h, Component } from "preact";
+import "preact-material-components/List/style.css";
+import List from "preact-material-components/List";
+import style from "./style";
+import { route } from "preact-router";
+import Auth from "../state";
 
 export default class Navbar extends Component {
+  dialogRef = (dialog) => (this.dialog = dialog);
 
+  componentWillMount = () => {
+    this.setState({ versionClass: style.versionContainer });
 
-	drawerRef = drawer => (this.drawer = drawer);
-	dialogRef = dialog => (this.dialog = dialog);
+    this.getNavbarContent(this.props);
+  };
 
-	railRef = rail => (this.rail = rail)
+  linkTo = (path) => () => {
+    route(path);
+  };
 
-	componentWillMount = () => {
-		this.setState({ versionClass : style.versionContainer })
+  goHome = this.linkTo("/");
+  goToMyProfile = this.linkTo("/profile");
+  goToMeasurements = this.linkTo("/measurements");
+  goToUsers = this.linkTo("/users");
+  goToSettings = this.linkTo("/settings");
 
-		this.getNavbarContent(this.props);
-	}
-	
-	componentDidMount = () => {
+  getDisplayBar = () => {
+    if (this.props.drawer === true) {
+      console.log("DISPLAY DRAWER");
+      return { display: "block" };
+    }
+    console.log("DONT DISPLAY DRAWER");
+    return { display: "none" };
+  };
 
-		if (this.drawer.MDComponent.open == true) {
-			this.drawer.MDComponent.open = true;
-			this.rail.MDComponent.open = false;
-			this.props.fitPageSize(false);
+  getDisplayRail = () => {
+    if (this.props.rail === true) {
+      console.log("DISPLAY RAIL");
+      return { display: "block" };
+    }
+    console.log("DONT DISPLAY RAIL");
+    return { display: "none" };
+  };
 
-		}
-		else if (this.rail.MDComponent.open == true){
-			this.drawer.MDComponent.open = false;
-			this.rail.MDComponent.open = true;
-			this.props.fitPageSize(true);
+  getNavbarContent = (props) => {
+    let content;
+    if (Auth.check_admin()) {
+      content = (
+        <div id="navbar">
+          <div class={this.state.versionClass}>
+            <span>{Auth.version}</span>
+          </div>
 
-		} else {
-			this.props.fitPageSize(false);
-			this.drawer.MDComponent.open = true;
-			this.rail.MDComponent.open = false;
-		}
+          <Drawer
+            dismissible
+            ref={this.props.drawerRef}
+            class={style.navbar}
+            style={{ display: this.getDisplayBar() }}
+          >
+            <Drawer.DrawerContent class={style.navbarContent}>
+              <Drawer.DrawerItem
+                selected={props.selectedRoute === "/measurements"}
+                onClick={this.goToMeasurements}
+              >
+                <List.ItemGraphic>equalizer</List.ItemGraphic>
+                <span>Messungen</span>
+              </Drawer.DrawerItem>
+              <Drawer.DrawerItem
+                selected={props.selectedRoute === "/users"}
+                onClick={this.goToUsers}
+              >
+                <List.ItemGraphic>group</List.ItemGraphic>
+                <span>Benutzer</span>
+              </Drawer.DrawerItem>
+              <Drawer.DrawerItem
+                selected={props.selectedRoute === "/profile"}
+                onClick={this.goToMyProfile}
+              >
+                <List.ItemGraphic>account_circle</List.ItemGraphic>
+                <span>Profil</span>
+              </Drawer.DrawerItem>
+              <Drawer.DrawerItem
+                selected={props.selectedRoute === "/settings"}
+                onClick={this.goToSettings}
+              >
+                <List.ItemGraphic>build</List.ItemGraphic>
+                <span>Einstellungen</span>
+              </Drawer.DrawerItem>
+            </Drawer.DrawerContent>
+          </Drawer>
+          <Drawer
+            dismissible
+            ref={this.props.railRef}
+            class={style.navrail}
+            style={this.getDisplayRail()}
+          >
+            <Drawer.DrawerContent class={style.navrailContent}>
+              <Drawer.DrawerItem
+                selected={props.selectedRoute === "/measurements"}
+                onClick={this.goToMeasurements}
+              >
+                <List.ItemGraphic>equalizer</List.ItemGraphic>
+              </Drawer.DrawerItem>
+              <Drawer.DrawerItem
+                selected={props.selectedRoute === "/users"}
+                onClick={this.goToUsers}
+              >
+                <List.ItemGraphic>group</List.ItemGraphic>
+              </Drawer.DrawerItem>
+              <Drawer.DrawerItem
+                selected={props.selectedRoute === "/profile"}
+                onClick={this.goToMyProfile}
+              >
+                <List.ItemGraphic>account_circle</List.ItemGraphic>
+              </Drawer.DrawerItem>
+              <Drawer.DrawerItem
+                selected={props.selectedRoute === "/settings"}
+                onClick={this.goToSettings}
+              >
+                <List.ItemGraphic>build</List.ItemGraphic>
+              </Drawer.DrawerItem>
+            </Drawer.DrawerContent>
+          </Drawer>
+        </div>
+      );
+    } else {
+      content = (
+        <div id="navbar">
+          <Drawer dismissible ref={this.props.drawerRef} class={style.navbar}>
+            <Drawer.DrawerContent class={style.navbarContent}>
+              <Drawer.DrawerItem
+                selected={props.selectedRoute === "/measurements"}
+                onClick={this.goToMeasurements}
+              >
+                <List.ItemGraphic>equalizer</List.ItemGraphic>
+                <span>Messungen</span>
+              </Drawer.DrawerItem>
+              <Drawer.DrawerItem
+                selected={props.selectedRoute === "/profile"}
+                onClick={this.goToMyProfile}
+              >
+                <List.ItemGraphic>account_circle</List.ItemGraphic>
+                <span>Profil</span>
+              </Drawer.DrawerItem>
+            </Drawer.DrawerContent>
+          </Drawer>
+          <Drawer dismissible ref={this.props.railRef} class={style.navrail}>
+            <Drawer.DrawerContent class={style.navrailContent}>
+              <Drawer.DrawerItem
+                selected={props.selectedRoute === "/measurements"}
+                onClick={this.goToMeasurements}
+              >
+                <List.ItemGraphic>equalizer</List.ItemGraphic>
+              </Drawer.DrawerItem>
+              <Drawer.DrawerItem
+                selected={props.selectedRoute === "/profile"}
+                onClick={this.goToMyProfile}
+              >
+                <List.ItemGraphic>account_circle</List.ItemGraphic>
+              </Drawer.DrawerItem>
+            </Drawer.DrawerContent>
+          </Drawer>
+        </div>
+      );
+    }
 
-	}
+    this.setState({ content });
+  };
 
-
-
-	linkTo = path => () => {
-		route(path);
-	};
-
-	goHome = this.linkTo('/');
-	goToMyProfile = this.linkTo('/profile');
-	goToMeasurements = this.linkTo('/measurements')
-	goToUsers = this.linkTo('/users')
-	goToSettings = this.linkTo('/settings');
-
-	toggleDrawer = () => {
-		if (this.drawer.MDComponent.open == false) {
-			this.drawer.MDComponent.open = true;
-			this.rail.MDComponent.open = false;
-			this.props.fitPageSize(false);
-			this.setState({ versionClass : style.versionContainer });
-
-
-		}
-		else {
-			this.props.fitPageSize(true);
-			this.drawer.MDComponent.open = false;
-			this.rail.MDComponent.open = true;
-			this.setState({ versionClass : style.versionContainerRail });
-
-		}
-		this.getNavbarContent(this.props);
-	}
-
-	getNavbarContent = (props) => {
-		let content;
-		if (Auth.check_admin()) {
-			content = (
-				<div id='navbar'>
-				<i class={style.menuIcon} aria-hidden="true" onClick={this.toggleDrawer}>menu</i>
-
-				<div class={this.state.versionClass}>
-					<span>{Auth.version}</span>
-				</div>
-
-				<Drawer dismissible ref={this.drawerRef} class={style.navbar}>
-					<Drawer.DrawerContent class={style.navbarContent}>
-						<Drawer.DrawerItem selected={props.selectedRoute === '/measurements'} onClick={this.goToMeasurements}>
-							<List.ItemGraphic>equalizer</List.ItemGraphic>
-							<span>Messungen</span>
-						</Drawer.DrawerItem>
-						<Drawer.DrawerItem selected={props.selectedRoute === '/users'} onClick={this.goToUsers}>
-							<List.ItemGraphic>group</List.ItemGraphic>
-							<span>Benutzer</span>
-						</Drawer.DrawerItem>
-						<Drawer.DrawerItem selected={props.selectedRoute === '/profile'} onClick={this.goToMyProfile}>
-							<List.ItemGraphic>account_circle</List.ItemGraphic>
-							<span>Profil</span>
-						</Drawer.DrawerItem>
-						<Drawer.DrawerItem selected={props.selectedRoute === '/settings'} onClick={this.goToSettings}>
-							<List.ItemGraphic>build</List.ItemGraphic>
-							<span>Einstellungen</span>
-						</Drawer.DrawerItem>
-					</Drawer.DrawerContent>
-				</Drawer>
-				<Drawer dismissible ref={this.railRef} class={style.navrail}>
-					<Drawer.DrawerContent class={style.navrailContent}>
-						<Drawer.DrawerItem selected={props.selectedRoute === '/measurements'} onClick={this.goToMeasurements}>
-							<List.ItemGraphic>equalizer</List.ItemGraphic>
-						</Drawer.DrawerItem>
-						<Drawer.DrawerItem selected={props.selectedRoute === '/users'} onClick={this.goToUsers}>
-							<List.ItemGraphic>group</List.ItemGraphic>
-						</Drawer.DrawerItem>
-						<Drawer.DrawerItem selected={props.selectedRoute === '/profile'} onClick={this.goToMyProfile}>
-							<List.ItemGraphic>account_circle</List.ItemGraphic>
-						</Drawer.DrawerItem>
-						<Drawer.DrawerItem selected={props.selectedRoute === '/settings'} onClick={this.goToSettings}>
-							<List.ItemGraphic>build</List.ItemGraphic>
-						</Drawer.DrawerItem>
-					</Drawer.DrawerContent>
-				</Drawer>
-			</div>
-			)
-		}
-		else {
-			content = (
-				<div id='navbar'>
-				<i class={style.menuIcon} aria-hidden="true" onClick={this.toggleDrawer}>menu</i>
-
-				<Drawer dismissible ref={this.drawerRef} class={style.navbar}>
-					<Drawer.DrawerContent class={style.navbarContent}>
-						<Drawer.DrawerItem selected={props.selectedRoute === '/measurements'} onClick={this.goToMeasurements}>
-							<List.ItemGraphic>equalizer</List.ItemGraphic>
-							<span>Messungen</span>
-						</Drawer.DrawerItem>
-						<Drawer.DrawerItem selected={props.selectedRoute === '/profile'} onClick={this.goToMyProfile}>
-							<List.ItemGraphic>account_circle</List.ItemGraphic>
-							<span>Profil</span>
-						</Drawer.DrawerItem>
-					</Drawer.DrawerContent>
-				</Drawer>
-				<Drawer dismissible ref={this.railRef} class={style.navrail}>
-					<Drawer.DrawerContent class={style.navrailContent}>
-						<Drawer.DrawerItem selected={props.selectedRoute === '/measurements'} onClick={this.goToMeasurements}>
-							<List.ItemGraphic>equalizer</List.ItemGraphic>
-						</Drawer.DrawerItem>
-						<Drawer.DrawerItem selected={props.selectedRoute === '/profile'} onClick={this.goToMyProfile}>
-							<List.ItemGraphic>account_circle</List.ItemGraphic>
-						</Drawer.DrawerItem>
-					</Drawer.DrawerContent>
-				</Drawer>
-			</div>
-			)
-		}
-
-		this.setState({ content });
-	}
-
-	render (props) {
-		return (
-			this.state.content
-		)
-	}
+  render() {
+    return this.state.content;
+  }
 }

@@ -458,8 +458,7 @@ export default class Measurements extends Component {
 
   render() {
     return (
-      <div class={this.state.pageClass}>
-        <Navbar selectedRoute="/measurements" fitPageSize={this.fitPageSize} />
+      <div class={style.page}>
         <span class={style.pageHeader}>Messungen</span>
         <Card class={style.card}>{this.state.content}</Card>
         <div class={style.mySnackbar}>

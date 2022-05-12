@@ -13,6 +13,7 @@ import Forgot from "../routes/forgot";
 import Reset from "../routes/reset";
 import Settings from "../routes/settings";
 import Confirm from "../routes/confirm";
+import Navbar from "./navbar/navbar";
 // import Home from 'async!../routes/home';
 // import Profile from 'async!../routes/profile';
 
@@ -27,6 +28,8 @@ export default class App extends Component {
 
   componentWillMount = () => {
     this.setState({ showInstruction: false });
+    this.setState({ drawerOpen: false });
+    this.setState({ railOpen: false });
   };
 
   handleRoute = async (e) => {
@@ -49,12 +52,71 @@ export default class App extends Component {
     }
   };
 
+  toggleDrawer = () => {
+    console.log("TOGGLE");
+    if (this.drawer.MDComponent.open === false) {
+      console.log("OPEN DRAWER");
+      this.drawer.MDComponent.open = true;
+      this.rail.MDComponent.open = false;
+      this.setState({ drawerOpen: true });
+      this.setState({ railOpen: false });
+      //   this.setState({ versionClass: style.versionContainer });
+    } else {
+      console.log("OPEN RAIL");
+      this.drawer.MDComponent.open = false;
+      this.rail.MDComponent.open = true;
+      this.setState({ drawerOpen: false });
+      this.setState({ railOpen: true });
+      //   this.setState({ versionClass: style.versionContainerRail });
+    }
+    // this.getNavbarContent(this.props);
+  };
+
   renderTopAppBar = (userLoggedIn) => {
     if (userLoggedIn === undefined || userLoggedIn === false) {
       return undefined;
     }
 
-    return <Header setReload={this.setReload} />;
+    return (
+      <Header setReload={this.setReload} toggleNavbar={this.toggleDrawer} />
+    );
+  };
+
+  getDrawerOpen = () => {
+    if (
+      this.state.drawerOpen === undefined ||
+      this.state.drawerOpen === false
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
+  getRailOpen = () => {
+    if (this.state.railOpen === undefined || this.state.railOpen === false) {
+      return false;
+    }
+
+    return true;
+  };
+
+  drawerRef = (drawer) => (this.drawer = drawer);
+  railRef = (rail) => (this.rail = rail);
+
+  renderNavbar = (userLoggedIn, drawerOpen, railOpen) => {
+    if (userLoggedIn === undefined || userLoggedIn === false) {
+      return undefined;
+    }
+
+    return (
+      <Navbar
+        drawerRef={this.drawerRef}
+        railRef={this.railRef}
+        drawer={drawerOpen}
+        rail={railOpen}
+      />
+    );
   };
 
   setInstructions = (val) => {
@@ -87,27 +149,34 @@ export default class App extends Component {
           src="https://vp-systeme.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/-onpk8x/b/7/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=de-DE&collectorId=cc9af09f"
         />
         {this.renderTopAppBar(this.state.userLoggedIn)}
-        <Router onChange={this.handleChange}>
-          <Login
-            path="/login"
-            showInstruction={this.state.showInstruction}
-            setInstructions={this.setInstructions}
-          />
-          <Signup path="/signup" setInstructions={this.setInstructions} />
-          <Profile path="/profile/" user="me" />
-          <Profile path="/profile/:user" />
-          <Measurements
-            path="/measurements"
-            reload={this.state.reload}
-            unsetReload={this.unsetReload}
-          />
-          <Users path="/users" />
-          <Forgot path="/forgot" />
-          <Reset path="/reset" />
-          <Settings path="/settings" />
-          <Confirm path="/confirm" />
-          <NotFound default />
-        </Router>
+        <div id="page">
+          {this.renderNavbar(
+            this.state.userLoggedIn,
+            this.state.drawerOpen,
+            this.state.railOpen
+          )}
+          <Router onChange={this.handleChange}>
+            <Login
+              path="/login"
+              showInstruction={this.state.showInstruction}
+              setInstructions={this.setInstructions}
+            />
+            <Signup path="/signup" setInstructions={this.setInstructions} />
+            <Profile path="/profile/" user="me" />
+            <Profile path="/profile/:user" />
+            <Measurements
+              path="/measurements"
+              reload={this.state.reload}
+              unsetReload={this.unsetReload}
+            />
+            <Users path="/users" />
+            <Forgot path="/forgot" />
+            <Reset path="/reset" />
+            <Settings path="/settings" />
+            <Confirm path="/confirm" />
+            <NotFound default />
+          </Router>
+        </div>
       </div>
     );
   }
