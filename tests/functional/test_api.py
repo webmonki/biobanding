@@ -35,7 +35,7 @@ def test_user_signup(client):
 
     # Trigger initial request to create db
     try:
-        _ = client.post("/api")
+        _ = client.post("/api/users/register")
     except Exception:
         pass
 
