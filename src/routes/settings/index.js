@@ -27,7 +27,7 @@ export default class Settings extends Component {
   };
 
   handleKey = (event) => {
-    if (event.code == "Enter") {
+    if (event.code === "Enter") {
       this.setConfiguration();
       document.removeEventListener("keyup", this.handleKey);
     }
@@ -151,7 +151,6 @@ export default class Settings extends Component {
         if (this.status === 200) {
           try {
             let response = JSON.parse(this.responseText);
-            console.log(response);
             // that.setState({ responseFB: response.msg });
           } catch (err) {}
 
@@ -163,7 +162,6 @@ export default class Settings extends Component {
         } else {
           try {
             let response = JSON.parse(this.responseText);
-            console.log(response);
             that.setState({ responseFB: response.msg });
           } catch (err) {}
 
@@ -176,8 +174,51 @@ export default class Settings extends Component {
 		"test_email_address": "${Auth.getUser().email}"
         }`;
 
-    console.log(data);
     xhttp.send(data);
+  };
+
+  generateCode = () => {
+    let that = this;
+    let url = Auth.url + "/api/configurations/code";
+    let xhttp = new XMLHttpRequest();
+
+    xhttp.open("POST", url);
+    xhttp.setRequestHeader("Accept", "application/json");
+    xhttp.setRequestHeader("authorization", Auth.getUser().token);
+
+    xhttp.onreadystatechange = function () {
+      if (this.readyState === 4) {
+        if (this.status === 200) {
+          try {
+            let response = JSON.parse(this.responseText);
+            that.setState({ regisCode: response.registration_code });
+          } catch (err) {}
+
+          that.bar.MDComponent.show({
+            message: `Code erfolgreich generiert`,
+          });
+
+          // that.setState({ responseFBClass: style.feedbackSucc });
+        } else {
+          try {
+            let response = JSON.parse(this.responseText);
+            that.setState({ responseFB: response.msg });
+          } catch (err) {}
+
+          that.setState({ responseFBClass: style.feedbackErr });
+        }
+      }
+    };
+
+    xhttp.send();
+  };
+
+  getCodeVisibility = () => {
+    if (this.state.regisCode === undefined || this.state.regisCode === "") {
+      return "hidden";
+    }
+
+    return "visible";
   };
 
   render() {
@@ -214,8 +255,8 @@ export default class Settings extends Component {
           <div class={style.headerContainer}>
             <span class={style.header}>E-Mail-Server</span>
             <span class={style.subHeader}>
-              Es ist wichtig diesen Server zu konfigurieren, dass E-Mail
-              versandt werden können, z.B. für den Passwort-Reset und
+              Es ist wichtig, diesen Server zu konfigurieren, so dass E-Mail
+              versendet werden können, z.B. für den Passwort-Reset und
               Benachrichtigungen
             </span>
           </div>
@@ -296,7 +337,21 @@ export default class Settings extends Component {
               Speichern
             </Button>
           </div>
-          {/* <span class={this.state.responseFBClass}>{this.state.responseFB}</span> */}
+          <div class={style.headerContainer}>
+            <span class={style.header}>Registrierungscode</span>
+            <span class={style.subHeader}>
+              Damit sich ein Benutzer registrieren kann, ist ein
+              Registrierungscode notwending.
+            </span>
+          </div>
+          <div class={`${style.row} ${style.codeContainer}`}>
+            <Button onClick={this.generateCode} class={style.codeBtn}>
+              Code generieren
+            </Button>
+            <span style={{ visibility: this.getCodeVisibility() }}>
+              Registrierungscode: {this.state.regisCode}
+            </span>
+          </div>
           <div class={style.mySnackbar}>
             <Snackbar
               ref={(bar) => {

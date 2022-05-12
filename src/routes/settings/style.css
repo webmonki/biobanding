@@ -136,3 +136,12 @@
 	color: var(--global-snackbar-font-color) !important;
 }
 
+.codeContainer {
+	display: flex;
+	align-items: center;
+}
+
+.codeBtn {
+	width: 125px;
+}
+
