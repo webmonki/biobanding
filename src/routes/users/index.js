@@ -23,19 +23,11 @@ import "preact-material-components/Snackbar/style.css";
 
 export default class Users extends Component {
   componentWillMount = () => {
-    this.setState({ pageClass: style.pageSmall });
-
     this.getData();
   };
 
   componentWillUnmount = () => {
     document.removeEventListener("keyup", this.handleKey);
-  };
-
-  fitPageSize = (large) => {
-    large
-      ? this.setState({ pageClass: style.pageLarge })
-      : this.setState({ pageClass: style.pageSmall });
   };
 
   getData = () => {

@@ -14,7 +14,6 @@ import "preact-material-components/Snackbar/style.css";
 
 export default class Profile extends Component {
   componentWillMount = () => {
-    this.setState({ pageClass: style.pageSmall });
     this.setState({ username: Auth.getUser().name });
     this.setState({ email: Auth.getUser().email });
     this.getDetails();
@@ -33,12 +32,6 @@ export default class Profile extends Component {
 
   componentWillUnmount = () => {
     document.removeEventListener("keyup", this.handleKey);
-  };
-
-  fitPageSize = (large) => {
-    large
-      ? this.setState({ pageClass: style.pageLarge })
-      : this.setState({ pageClass: style.pageSmall });
   };
 
   sendNewLogin = () => {

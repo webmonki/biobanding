@@ -23,8 +23,6 @@ import "preact-material-components/Snackbar/style.css";
 
 export default class Measurements extends Component {
   componentWillMount = () => {
-    this.setState({ pageClass: style.pageSmall });
-
     this.loadData();
 
     if (Auth.check_admin() == false) {
@@ -46,12 +44,6 @@ export default class Measurements extends Component {
     } else {
       this.getMeasurements();
     }
-  };
-
-  fitPageSize = (large) => {
-    large
-      ? this.setState({ pageClass: style.pageLarge })
-      : this.setState({ pageClass: style.pageSmall });
   };
 
   openDialog = () => {
