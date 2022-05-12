@@ -103,9 +103,6 @@ export default class Profile extends Component {
       if (this.readyState == 4 && this.status == 200) {
         let response = JSON.parse(this.responseText);
 
-        // that.setState({ responseFBClass : style.feedbackSucc });
-        // that.setState({ responseFB : 'Spieler Details erfolgreich geladen' });
-
         that.setState({ firstname: response["player_details:"].first_name });
         that.setState({ lastname: response["player_details:"].last_name });
         that.setState({

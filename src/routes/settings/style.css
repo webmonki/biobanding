@@ -136,6 +136,43 @@
 }
 
 .codeBtn {
-	width: 125px;
+	width: 160px;
+}
+
+.displayCode {
+	display: flex;
+	align-items: center;
+
+}
+
+.copyIcon {
+	color: var(--mdc-theme-primary);
+	font-family: 'Material Icons';
+    font-style: normal;
+	font-size: 25px;
+	z-index: 8;
+	cursor: pointer;
+}
+
+.copyBtn {
+	margin-left: 25px;
+	border: none;
+	background: none;
+	border-radius: 100px;
+	cursor: pointer;
+	height: 40px;
+	width: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+
+.copyBtn:hover {
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+.copyBtn:active {
+	background-color: rgba(0, 0, 0, 0.3);
 }
 

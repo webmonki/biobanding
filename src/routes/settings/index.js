@@ -54,6 +54,7 @@ export default class Settings extends Component {
             that.setState({ mailPort: response.config.mail_port });
             that.setState({ ssl: response.config.mail_use_ssl });
             that.setState({ mailUsername: response.config.mail_username });
+            that.setState({ regisCode: response.config.registration_code });
             that.setState({
               responseFB: "Konfigurationen erfolgreich geladen",
             });
@@ -205,12 +206,21 @@ export default class Settings extends Component {
     xhttp.send();
   };
 
-  getCodeVisibility = () => {
-    if (this.state.regisCode === undefined || this.state.regisCode === "") {
-      return "hidden";
-    }
+  copyCode = () => {
+    let dummy = document.createElement("textarea");
+    // to avoid breaking orgain page when copying more words
+    // cant copy when adding below this code
+    // dummy.style.display = 'none'
+    document.body.appendChild(dummy);
+    //Be careful if you use texarea. setAttribute('value', value), which works with "input" does not work with "textarea". – Eduard
+    dummy.value = this.state.regisCode;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
 
-    return "visible";
+    this.bar.MDComponent.show({
+      message: `Code ${this.state.regisCode} kopiert`,
+    });
   };
 
   render() {
@@ -314,15 +324,7 @@ export default class Settings extends Component {
             </div>
             <Button onClick={this.checkConfig}>Testmail senden</Button>
           </div>
-          <div class={style.btnContainer}>
-            <Button
-              class={style.mrgnBttm}
-              raised
-              onClick={this.setConfiguration}
-            >
-              Speichern
-            </Button>
-          </div>
+
           <div class={style.headerContainer}>
             <span class={style.header}>Registrierungscode</span>
             <span class={style.subHeader}>
@@ -331,12 +333,31 @@ export default class Settings extends Component {
             </span>
           </div>
           <div class={`${style.row} ${style.codeContainer}`}>
+            <div class={style.displayCode}>
+              <span>Code: {this.state.regisCode}</span>
+              <button class={style.copyBtn}>
+                <i
+                  class={style.copyIcon}
+                  aria-hidden="true"
+                  onClick={this.copyCode}
+                >
+                  content_copy
+                </i>
+              </button>
+            </div>
+
             <Button onClick={this.generateCode} class={style.codeBtn}>
               Code generieren
             </Button>
-            <span style={{ visibility: this.getCodeVisibility() }}>
-              Registrierungscode: {this.state.regisCode}
-            </span>
+          </div>
+          <div class={style.btnContainer}>
+            <Button
+              class={style.mrgnBttm}
+              raised
+              onClick={this.setConfiguration}
+            >
+              Speichern
+            </Button>
           </div>
           <div class={style.mySnackbar}>
             <Snackbar
