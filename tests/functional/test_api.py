@@ -34,7 +34,7 @@ def test_user_signup(client):
     """
 
     # Trigger initial request to create db
-    _ = client.post("/")
+    _ = client.post("/api")
 
     # Access db within app context to get default registration code
     with app.app_context():
