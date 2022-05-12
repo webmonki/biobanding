@@ -14,6 +14,10 @@ aside {
 	/* padding-top: 5px; */
 }
 
+.navbarItem {
+	cursor: pointer;
+}
+
 .versionContainerRail {
 	display: none;
 }

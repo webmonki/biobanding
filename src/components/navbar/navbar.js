@@ -53,6 +53,7 @@ export default class Navbar extends Component {
           >
             <Drawer.DrawerContent class={style.navbarContent}>
               <Drawer.DrawerItem
+                class={style.navbarItem}
                 selected={props.selectedRoute === "/measurements"}
                 onClick={this.goToMeasurements}
               >
@@ -60,6 +61,7 @@ export default class Navbar extends Component {
                 <span style={this.getDisplayBar()}>Messungen</span>
               </Drawer.DrawerItem>
               <Drawer.DrawerItem
+                class={style.navbarItem}
                 selected={props.selectedRoute === "/users"}
                 onClick={this.goToUsers}
               >
@@ -67,6 +69,7 @@ export default class Navbar extends Component {
                 <span style={this.getDisplayBar()}>Benutzer</span>
               </Drawer.DrawerItem>
               <Drawer.DrawerItem
+                class={style.navbarItem}
                 selected={props.selectedRoute === "/profile"}
                 onClick={this.goToMyProfile}
               >
@@ -74,6 +77,7 @@ export default class Navbar extends Component {
                 <span style={this.getDisplayBar()}>Profil</span>
               </Drawer.DrawerItem>
               <Drawer.DrawerItem
+                class={style.navbarItem}
                 selected={props.selectedRoute === "/settings"}
                 onClick={this.goToSettings}
               >
@@ -95,6 +99,7 @@ export default class Navbar extends Component {
           >
             <Drawer.DrawerContent class={style.navbarContent}>
               <Drawer.DrawerItem
+                class={style.navbarItem}
                 selected={props.selectedRoute === "/measurements"}
                 onClick={this.goToMeasurements}
               >
@@ -102,6 +107,7 @@ export default class Navbar extends Component {
                 <span style={this.getDisplayBar()}>Messungen</span>
               </Drawer.DrawerItem>
               <Drawer.DrawerItem
+                class={style.navbarItem}
                 selected={props.selectedRoute === "/profile"}
                 onClick={this.goToMyProfile}
               >

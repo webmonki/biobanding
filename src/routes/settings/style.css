@@ -136,6 +136,22 @@
 }
 
 .codeBtn {
-	width: 125px;
+	width: 160px;
+}
+
+.displayCode {
+	display: flex;
+	align-items: center;
+
+}
+
+.copyIcon {
+	color: var(--mdc-theme-primary);
+	font-family: 'Material Icons';
+    font-style: normal;
+	font-size: 25px;
+	z-index: 8;
+	cursor: pointer;
+	margin-left: 20px;
 }
 
