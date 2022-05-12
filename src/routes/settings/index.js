@@ -335,13 +335,15 @@ export default class Settings extends Component {
           <div class={`${style.row} ${style.codeContainer}`}>
             <div class={style.displayCode}>
               <span>Code: {this.state.regisCode}</span>
-              <i
-                class={style.copyIcon}
-                aria-hidden="true"
-                onClick={this.copyCode}
-              >
-                content_copy
-              </i>
+              <button class={style.copyBtn}>
+                <i
+                  class={style.copyIcon}
+                  aria-hidden="true"
+                  onClick={this.copyCode}
+                >
+                  content_copy
+                </i>
+              </button>
             </div>
 
             <Button onClick={this.generateCode} class={style.codeBtn}>
