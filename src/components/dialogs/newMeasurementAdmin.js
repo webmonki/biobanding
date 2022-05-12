@@ -15,7 +15,7 @@ export default class NewMeasurementAdmin extends Component {
   };
 
   handleKey = (event) => {
-    if (event.code == "Enter") {
+    if (event.code === "Enter") {
       this.props.sendData(
         this.state.height,
         this.state.sittingHeight,

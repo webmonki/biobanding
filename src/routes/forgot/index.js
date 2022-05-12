@@ -23,8 +23,9 @@ export default class Forgot extends Component {
     document.removeEventListener("keyup", this.handleKey);
   };
 
+  // Sende Email zum Passwort zurück setzten wenn Enter gedrückt wird und der Button nicht disabled ist
   handleKey = (event) => {
-    if (this.state.btnDisabled == false && event.code == "Enter") {
+    if (this.state.btnDisabled === false && event.code === "Enter") {
       this.sendEmail();
       document.removeEventListener("keyup", this.handleKey);
     }
@@ -45,6 +46,7 @@ export default class Forgot extends Component {
     }
   };
 
+  // API Request Email zum Passwort zurück setzten
   sendEmail = () => {
     let that = this;
     let url = Auth.url + "/api/user/forget";
@@ -77,6 +79,7 @@ export default class Forgot extends Component {
     xhttp.send(data);
   };
 
+  // render Seite mit Validation
   render() {
     return (
       <Card class={style.card}>

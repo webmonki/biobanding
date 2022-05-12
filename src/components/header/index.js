@@ -1,10 +1,5 @@
 import { h, Component } from "preact";
-import { route } from "preact-router";
-import TopAppBar from "preact-material-components/TopAppBar";
-import Drawer from "preact-material-components/Drawer";
-import List from "preact-material-components/List";
-import Dialog from "preact-material-components/Dialog";
-import Switch from "preact-material-components/Switch";
+
 import "preact-material-components/Switch/style.css";
 import "preact-material-components/Dialog/style.css";
 import "preact-material-components/Drawer/style.css";
@@ -15,9 +10,7 @@ import Button from "preact-material-components/Button";
 import "preact-material-components/Button/style.css";
 import style from "./style";
 import Auth from "../state";
-import TextField from "preact-material-components/TextField";
 import "preact-material-components/TextField/style.css";
-import Select from "preact-material-components/Select";
 import "preact-material-components/Select/style.css";
 import NewMeasurementAdmin from "../dialogs/newMeasurementAdmin";
 import NewMeasurementUser from "../dialogs/newMeasurementUser";
@@ -25,14 +18,6 @@ import Snackbar from "preact-material-components/Snackbar";
 import "preact-material-components/Snackbar/style.css";
 
 export default class Header extends Component {
-  componentWillMount = () => {
-    this.setState({ userIds: [] });
-  };
-
-  componentWillUnmount = () => {
-    document.removeEventListener("keyup", this.handleKey);
-  };
-
   // Request to Log out user
   logOut = () => {
     let that = this;
@@ -56,6 +41,7 @@ export default class Header extends Component {
     xhttp.send();
   };
 
+  // Playerdetails werden geladen damit im Dialog die Dropdown List gefüllt werden kann
   getPlayerDetails = () => {
     let that = this;
     let url = Auth.url + "/api/users/details";
@@ -66,25 +52,26 @@ export default class Header extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
+      if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
 
         let idList = [];
         let usernameList = [];
 
-        response["userdetails"].forEach((user) => {
+        response.userdetails.forEach((user) => {
           usernameList.push(user.username);
           idList.push(user.userID);
         });
         that.setState({ usernames: usernameList });
         that.setState({ userIds: idList });
+
+        // Generiert den Dialog zum Erstellen einer neuen Messung
         that.getDialog(idList);
       } else {
         try {
           let response = JSON.parse(this.responseText);
           if (response.msg == "Token is invalid") {
             Auth.logout();
-            location.reload();
           }
         } catch (err) {}
       }
@@ -92,6 +79,7 @@ export default class Header extends Component {
     xhttp.send();
   };
 
+  // Wird Dialog übergeben damit man die Daten zurück erhält
   getDataFromDialog = (height, sittingHeight, span, weight, chosenIndex) => {
     this.setState({ height });
     this.setState({ sittingHeight });
@@ -104,8 +92,11 @@ export default class Header extends Component {
     this.sendMeasurement();
   };
 
+  // Neue Messung erstellen
   sendMeasurement = () => {
     let id;
+
+    // UserID: Admin kann auswählen, User kriegt seine
     Auth.check_admin()
       ? (id = this.state.userIds[this.state.chosenIndex])
       : (id = Auth.getUser().id);
@@ -121,16 +112,20 @@ export default class Header extends Component {
 
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
+        // Snackbar
         that.sbar.MDComponent.show({
           message: "Messung erfolgreich gesendet",
         });
+
+        // Um Measurements zu sagen, die Daten zu updaten
         that.props.setReload();
       } else {
         try {
           let response = JSON.parse(this.responseText);
+
+          // Wenn Token abgelaufen log out
           if (response.msg === "Token is invalid") {
             Auth.logout();
-            location.reload();
           }
         } catch (err) {}
       }
@@ -157,6 +152,7 @@ export default class Header extends Component {
     xhttp.send(data);
   };
 
+  // Zwei Dialoge können erzeigt werden. Für admin oder user
   getDialog = (idList = []) => {
     let dialog;
     if (Auth.check_admin()) {
@@ -189,11 +185,14 @@ export default class Header extends Component {
   };
 
   render() {
+    // Initiales Laden der Spielerdetails um Dialoge zu erzeugen
     if (this.state.dialog === undefined) {
       this.getPlayerDetails();
     }
+
     return (
       <div class={`${"mdc-theme--primary-bg"} ${style.topAppBar}`}>
+        {/* MenuIcon */}
         <i
           class={style.menuIcon}
           aria-hidden="true"
@@ -202,9 +201,12 @@ export default class Header extends Component {
           menu
         </i>
         <div class={style.btnContainer}>
+          {/* AbmeldeButton */}
           <Button class={style.secondaryBtn} onClick={this.logOut}>
             Abmelden
           </Button>
+
+          {/* Neue Messung erzeugen Button */}
           <Button
             raised
             class={`${"mdc-button mdc-theme--secondary-bg"} ${style.roundBtn}`}
@@ -223,6 +225,8 @@ export default class Header extends Component {
             </span>
           </Button>
         </div>
+
+        {/* Snackbar */}
         <div class={style.mySnackbar}>
           <Snackbar
             ref={(sbar) => {
@@ -230,6 +234,7 @@ export default class Header extends Component {
             }}
           />
         </div>
+        {/* Dialog */}
         {this.state.dialog}
       </div>
     );

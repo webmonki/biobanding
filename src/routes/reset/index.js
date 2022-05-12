@@ -7,14 +7,13 @@ import Button from "preact-material-components/Button";
 import style from "./style";
 import { route } from "preact-router";
 import Auth from "../../components/state";
-import { Link } from "preact-router/match";
 import TextField from "preact-material-components/TextField";
-import "preact-material-components/TextField/style.css";
 
 export default class Reset extends Component {
   componentWillMount = () => {
     this.setState({ btnDisabled: true });
 
+    // Hole Token aus URL
     let queryString = window.location.search;
 
     let urlParams = new URLSearchParams(queryString);
@@ -92,6 +91,7 @@ export default class Reset extends Component {
     xhttp.send(data);
   };
 
+  // Render Reset View mit Validation
   render() {
     return (
       <Card class={style.card}>

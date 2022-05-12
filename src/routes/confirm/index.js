@@ -16,6 +16,7 @@ import { route } from "preact-router";
 
 export default class Confirm extends Component {
   componentWillMount = () => {
+    // Holt den Token aus der URL
     let queryString = window.location.search;
 
     let urlParams = new URLSearchParams(queryString);
@@ -25,21 +26,25 @@ export default class Confirm extends Component {
     this.setState({ token });
   };
 
+  // Wenn Seite geladen wird, erstelle Eventlistener für Enter
   componentDidMount = () => {
     document.addEventListener("keyup", this.handleKey);
   };
 
+  // Wenn Enter gedrückt wird sende Persönliche Daten
   handleKey = (event) => {
-    if (event.code == "Enter") {
+    if (event.code === "Enter") {
       this.sendConfirm();
       document.removeEventListener("keyup", this.handleKey);
     }
   };
 
+  // Wenn Seite verlassen wird, entferne Eventlistener für Enter
   componentWillUnmount = () => {
     document.removeEventListener("keyup", this.handleKey);
   };
 
+  // API Request um User zu bestätigen
   sendConfirm = () => {
     let that = this;
     let url = Auth.url + "/api/users/confirm";
@@ -83,6 +88,7 @@ export default class Confirm extends Component {
 
     let data;
 
+    // Wenn ein Feld leer bleibt sende es nicht mit
     if (
       this.state.motherHeight !== undefined &&
       this.state.fatherHeight !== undefined
@@ -128,6 +134,7 @@ export default class Confirm extends Component {
     xhttp.send(data);
   };
 
+  // Setzt Geschlecht abhängig von Radio Buttons
   handleRadioChange = () => {
     let male = document.getElementById("radioMale").checked;
     let female = document.getElementById("radioFemale").checked;
@@ -141,6 +148,7 @@ export default class Confirm extends Component {
     }
   };
 
+  // Render Seite mit Input Validation
   render() {
     return (
       <Card class={style.card}>

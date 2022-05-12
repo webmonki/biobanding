@@ -14,10 +14,11 @@ import Reset from "../routes/reset";
 import Settings from "../routes/settings";
 import Confirm from "../routes/confirm";
 import Navbar from "./navbar/navbar";
-// import Home from 'async!../routes/home';
-// import Profile from 'async!../routes/profile';
 
+// Routen die ohne Registrierung oder Anmeldung aufgerufen werden können
 const publicRoutes = ["/signup", "/forgot", "/reset", "/login", "/confirm"];
+
+// Routen die nur vom Admin aufgerufen werden dürfen
 const adminOnlyRoutes = ["/settings", "/users"];
 
 export default class App extends Component {
@@ -27,11 +28,15 @@ export default class App extends Component {
    */
 
   componentWillMount = () => {
+    // showInstruction wird login übergeben und bestimmt
+    //ob der normale Login oder Anweisungen um die Email zu bestätigen angezeigt werden sollen
     this.setState({ showInstruction: false });
+
+    // drawer Open wird der Navbar übergeben und bestimmt ob der Text angezeigt werden soll oder nicht
     this.setState({ drawerOpen: false });
-    this.setState({ railOpen: false });
   };
 
+  // Um zu verhindern, dass Benutzer auf nicht zu gelassene Seiten zugreifen können
   handleRoute = async (e) => {
     let auth = Auth.getAuth();
     const isPublicRoute = publicRoutes.some((route) => e.url.match(route));
@@ -48,6 +53,7 @@ export default class App extends Component {
     this.setState({ selectedRoute: e.url });
   };
 
+  // Wird dem Header übergeben und Collapset die Navbar
   toggleDrawer = () => {
     if (this.state.drawerOpen === false) {
       this.setState({ drawerOpen: true });
@@ -58,12 +64,13 @@ export default class App extends Component {
     let coll = document.getElementById("navbar");
 
     if (coll.style.maxWidth === "250px") {
-      coll.style.maxWidth = "60px";
+      coll.style.maxWidth = "57px";
     } else {
       coll.style.maxWidth = "250px";
     }
   };
 
+  // Um Header nur anzuzeigen wenn Benutzer eingeloggt ist
   renderTopAppBar = (userLoggedIn) => {
     if (userLoggedIn === undefined || userLoggedIn === false) {
       return undefined;
@@ -74,20 +81,10 @@ export default class App extends Component {
     );
   };
 
-  getDrawerOpen = () => {
-    if (
-      this.state.drawerOpen === undefined ||
-      this.state.drawerOpen === false
-    ) {
-      return false;
-    }
-
-    return true;
-  };
-
+  // Referenz um Navbar zu öffnen
   drawerRef = (drawer) => (this.drawer = drawer);
-  railRef = (rail) => (this.rail = rail);
 
+  // Um Navbar nur anzuzeigen wenn Benutzer eingeloggt ist
   renderNavbar = (userLoggedIn, drawerOpen) => {
     if (userLoggedIn === undefined || userLoggedIn === false) {
       return undefined;
@@ -103,6 +100,7 @@ export default class App extends Component {
     );
   };
 
+  // Initial Navbar öffnen und maxwidth setzten, damit collapse funktioniert
   openDrawer = () => {
     let drawer = document.getElementById("navbar");
 
@@ -110,18 +108,24 @@ export default class App extends Component {
     this.drawer.MDComponent.open = true;
   };
 
+  // Wird login übergeben um damit nach login mit nicht bestätigter Email Anweisungen angezeigt werden können
   setInstructions = (val) => {
     this.setState({ showInstruction: val });
   };
 
+  // Wird measurments übergeben und nach dem Laden der Daten ausgeführt. Somit kann Header neue Messung erstellen und wieder measurement sagen
+  // dass er die Daten neu laden soll
   unsetReload = () => {
     this.setState({ reload: false });
   };
 
+  // Wird Header(TopAppBar) übergeben, wenn true werden daten neu geladen. Dafür da damit man im Header neue Messung erstellen kann
+  // und diese direkt in measurements angezeigt werden
   setReload = () => {
     this.setState({ reload: true });
   };
 
+  // Wenn sich der Url ändert. HandleRoute siehe oben. Checkt ob Benutzer angemeldet ist, damit Header und Navbar angezeigt werden
   handleChange = (e) => {
     this.handleRoute(e);
 
@@ -135,13 +139,21 @@ export default class App extends Component {
   render() {
     return (
       <div id="app">
+        {/* Skript für Bug Tracker */}
         <script
           type="text/javascript"
           src="https://vp-systeme.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/-onpk8x/b/7/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=de-DE&collectorId=cc9af09f"
         />
+
+        {/* Header (TopAppBar) */}
         {this.renderTopAppBar(this.state.userLoggedIn)}
+
+        {/* Seiteninhalt */}
         <div id="page">
+          {/* NavBar */}
           {this.renderNavbar(this.state.userLoggedIn, this.state.drawerOpen)}
+
+          {/* Routing  mit allen Views */}
           <Router onChange={this.handleChange}>
             <Login
               path="/login"

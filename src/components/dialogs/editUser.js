@@ -1,16 +1,14 @@
 import { h, Component } from "preact";
 import style from "./style";
 import "preact-material-components/TextField/style.css";
-import Select from "preact-material-components/Select";
 import "preact-material-components/Select/style.css";
 import Dialog from "preact-material-components/Dialog";
 import "preact-material-components/Dialog/style.css";
 import TextField from "preact-material-components/TextField";
-import "preact-material-components/TextField/style.css";
 
 export default class EditUser extends Component {
   handleKey = (event) => {
-    if (event.code == "Enter") {
+    if (event.code === "Enter") {
       this.props.sendData(this.props.username, this.props.email);
       document.removeEventListener("keyup", this.handleKey);
     }
@@ -90,12 +88,12 @@ export default class EditUser extends Component {
           </div>
         </Dialog.Body>
         <Dialog.Footer class={style.footer}>
-          <Dialog.FooterButton cancel={true}>Abbrechen</Dialog.FooterButton>
+          <Dialog.FooterButton cancel>Abbrechen</Dialog.FooterButton>
           <Dialog.FooterButton
             style={{ color: "white" }}
             class="mdc-button mdc-theme--primary-bg"
             raised
-            accept={true}
+            accept
           >
             Speichern
           </Dialog.FooterButton>

@@ -61,7 +61,7 @@ export default class Signup extends Component {
     }
   };
 
-  // Send Request
+  // API Request zum Registrieren
   signup = () => {
     let that = this;
     let url = Auth.url + "/api/users/register";
@@ -72,10 +72,12 @@ export default class Signup extends Component {
     xhttp.setRequestHeader("Content-Type", "application/json");
 
     xhttp.onreadystatechange = function () {
-      if ([1, 2, 3, 4].includes(this.readyState)) {
+      if (this.readyState === 4) {
         if (this.status === 200) {
-          // If Request is Ok go to Login
+          // Sagt Login View das er Anweisungen anzeigen soll
           that.props.setInstructions(true);
+          // If Request is Ok go to Login
+
           route("/login", true);
         } else {
           try {
@@ -98,6 +100,7 @@ export default class Signup extends Component {
     xhttp.send(data);
   };
 
+  // API Request welcher den eingegebenen Code überprüft
   checkCode = () => {
     let that = this;
     let url = Auth.url + "/api/configurations/check_code";
@@ -110,19 +113,28 @@ export default class Signup extends Component {
     xhttp.onreadystatechange = function () {
       if ([1, 2, 3, 4].includes(this.readyState)) {
         if (this.status === 200) {
+          // Wenn codeSet True wird normale Registrierungsansicht angezeigt
           that.setState({ codeSet: true });
+
+          // Feedback leeren
           that.setState({ responseFB: "" });
         } else {
+          // Wenn Code nicht richtig ist
           try {
+            // Setze Text für Feedback
             let response = JSON.parse(this.responseText);
 
             that.setState({ responseFBClass: style.feedbackErr });
             that.setState({ responseFB: response.msg });
+
+            // Leere code input felder
             that.setState({ code: "" });
             that.setState({ code1: "" });
             that.setState({ code2: "" });
             that.setState({ code3: "" });
             that.setState({ code4: "" });
+
+            // Focus erstes Feld
             document.getElementById("code1").focus();
           } catch (err) {}
         }
@@ -136,7 +148,9 @@ export default class Signup extends Component {
     xhttp.send(data);
   };
 
+  // Render Registrierungsansicht mit Validaierung
   renderContent = () => {
+    // Normale Registrierungsansicht
     if (this.state.codeSet) {
       return (
         <Card class={style.card}>
@@ -259,7 +273,7 @@ export default class Signup extends Component {
                     this.setState({ password2FBClass: style.feedbackSucc });
                     this.setState({ password2FB: "" });
                   }
-                  if (this.state.password == this.state.password2) {
+                  if (this.state.password === this.state.password2) {
                     this.setState({ passwordSameFBClass: style.feedbackSucc });
                     this.setState({ passwordSameFB: "" });
                   } else {
@@ -304,7 +318,7 @@ export default class Signup extends Component {
         </Card>
       );
     }
-
+    // Ansicht um Registrierungscode einzugeben
     return (
       <Card class={style.card}>
         <div class={style.logoContainer}>

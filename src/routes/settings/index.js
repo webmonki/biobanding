@@ -35,6 +35,7 @@ export default class Settings extends Component {
     document.removeEventListener("keyup", this.handleKey);
   };
 
+  // API Request um Einstellungen zu laden
   getConfiguration = () => {
     let that = this;
     let url = Auth.url + "/api/configurations";
@@ -48,6 +49,7 @@ export default class Settings extends Component {
       if ([1, 2, 3, 4].includes(this.readyState)) {
         if (this.status === 200) {
           try {
+            // Setze Werte in State damit sie in Textfields angezeigt werden
             let response = JSON.parse(this.responseText);
             that.setState({ reminder: response.config.days_reminder });
             that.setState({ mailService: response.config.mail_server });
@@ -55,25 +57,25 @@ export default class Settings extends Component {
             that.setState({ ssl: response.config.mail_use_ssl });
             that.setState({ mailUsername: response.config.mail_username });
             that.setState({ regisCode: response.config.registration_code });
-            that.setState({
-              responseFB: "Konfigurationen erfolgreich geladen",
-            });
-            that.setState({ responseFBClass: style.feedbackSucc });
-          } catch (err) {}
-        } else {
-          try {
-            let response = JSON.parse(this.responseText);
-            that.setState({ responseFB: response.msg });
-          } catch (err) {}
 
-          that.setState({ responseFBClass: style.feedbackErr });
+            // Snackbar MSG
+            that.bar.MDComponent.show({
+              message: `Einstellungen erfolgreich geladen`,
+            });
+          } catch (err) {}
         }
+      } else {
+        // Snackbar MSG
+        that.bar.MDComponent.show({
+          message: `Fehler beim Laden`,
+        });
       }
     };
 
     xhttp.send();
   };
 
+  // API Request um Einstellungen zu updaten
   setConfiguration = () => {
     let that = this;
     let url = Auth.url + "/api/configurations";
@@ -85,25 +87,17 @@ export default class Settings extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if ([1, 2, 3, 4].includes(this.readyState)) {
+      if (this.readyState === 4) {
         if (this.status === 200) {
-          try {
-            let response = JSON.parse(this.responseText);
-            // that.setState({ responseFB: response.msg });
-          } catch (err) {}
-
+          // Snackbar MSG
           that.bar.MDComponent.show({
             message: `Einstellungen erfolgreich geändert`,
           });
-
-          // that.setState({ responseFBClass: style.feedbackSucc });
         } else {
-          try {
-            let response = JSON.parse(this.responseText);
-            that.setState({ responseFB: response.msg });
-          } catch (err) {}
-
-          that.setState({ responseFBClass: style.feedbackErr });
+          // Snackbar MSG
+          that.bar.MDComponent.show({
+            message: `Fehler beim Ändern`,
+          });
         }
       }
     };
@@ -120,15 +114,13 @@ export default class Settings extends Component {
     xhttp.send(data);
   };
 
-  setServer = () => {
-    this.checkServer();
-  };
-
+  // Setzt state  auf true wenn ssl checked
   checkServer = () => {
     let checkbox = document.getElementsByName("serverCheck");
     this.setState({ ssl: checkbox[0].checked });
   };
 
+  // API Request um Testmail zu senden
   checkConfig = () => {
     let that = this;
     let url = Auth.url + "/api/configurations/testmail";
@@ -142,23 +134,15 @@ export default class Settings extends Component {
     xhttp.onreadystatechange = function () {
       if ([1, 2, 3, 4].includes(this.readyState)) {
         if (this.status === 200) {
-          try {
-            let response = JSON.parse(this.responseText);
-            // that.setState({ responseFB: response.msg });
-          } catch (err) {}
-
+          // Snackbar MSG
           that.bar.MDComponent.show({
             message: `E-Mail erfolgreich gesendet`,
           });
-
-          // that.setState({ responseFBClass: style.feedbackSucc });
         } else {
-          try {
-            let response = JSON.parse(this.responseText);
-            that.setState({ responseFB: response.msg });
-          } catch (err) {}
-
-          that.setState({ responseFBClass: style.feedbackErr });
+          // Snackbar MSG
+          that.bar.MDComponent.show({
+            message: `Fehler beim Senden`,
+          });
         }
       }
     };
@@ -170,6 +154,7 @@ export default class Settings extends Component {
     xhttp.send(data);
   };
 
+  // API Request um Registrierungscode zu generieren
   generateCode = () => {
     let that = this;
     let url = Auth.url + "/api/configurations/code";
@@ -187,18 +172,15 @@ export default class Settings extends Component {
             that.setState({ regisCode: response.registration_code });
           } catch (err) {}
 
+          // Snackbar MSG
           that.bar.MDComponent.show({
             message: `Code erfolgreich generiert`,
           });
-
-          // that.setState({ responseFBClass: style.feedbackSucc });
         } else {
-          try {
-            let response = JSON.parse(this.responseText);
-            that.setState({ responseFB: response.msg });
-          } catch (err) {}
-
-          that.setState({ responseFBClass: style.feedbackErr });
+          // Snackbar MSG
+          that.bar.MDComponent.show({
+            message: `Code konnte nicht generiert werden`,
+          });
         }
       }
     };
@@ -206,6 +188,7 @@ export default class Settings extends Component {
     xhttp.send();
   };
 
+  // Zum Kopieren mittels zwischenablage
   copyCode = () => {
     let dummy = document.createElement("textarea");
     // to avoid breaking orgain page when copying more words
@@ -223,6 +206,7 @@ export default class Settings extends Component {
     });
   };
 
+  // Render Settings View
   render() {
     return (
       <div class={style.page}>

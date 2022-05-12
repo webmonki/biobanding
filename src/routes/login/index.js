@@ -14,18 +14,24 @@ import "preact-material-components/Snackbar/style.css";
 
 export default class Login extends Component {
   componentWillMount = () => {
+    // initial State des Anmelde-Buttons
     this.setState({ btnDisabled: true });
+
+    // Wird auf False gesetzt nach Login Versuch wenn Email noch nicht bestätigt ist
     this.setState({ loginStatus: true });
   };
 
+  // Wenn Seite geladen EventListener für Enter
   componentDidMount = () => {
     document.addEventListener("keyup", this.handleKey);
   };
 
+  // Wenn Seite verlassen wird entferne EventListener
   componentWillUnmount = () => {
     document.removeEventListener("keyup", this.handleKey);
   };
 
+  // Sende Login Daten wenn Enter gedrückt wird und Anmelde-Button enabled
   handleKey = (event) => {
     if (this.state.btnDisabled === false && event.code === "Enter") {
       this.login();
@@ -89,14 +95,17 @@ export default class Login extends Component {
     xhttp.send(data);
   };
 
+  // TO BE DONE: Neue Bestätigungs Email senden
   sendMail = () => {
     console.log("SEND MAIL");
   };
 
+  // Login Content
   renderContent = () => {
     let status = this.state.loginStatus;
     let showInstruction = this.props.showInstruction;
 
+    // Anweisung nach Registrierung
     if (showInstruction) {
       return (
         <div class={style.inputContainer}>
@@ -120,6 +129,7 @@ export default class Login extends Component {
       );
     }
 
+    // Login Screen mit Validation
     if (status) {
       return (
         <div class={style.inputContainer}>
@@ -190,6 +200,7 @@ export default class Login extends Component {
       );
     }
     return (
+      // Anweisung nach Anmeldeversuch wenn Email noch nicht bestätigt ist
       <div class={style.inputContainer}>
         <div class={style.loginLabel}>Registrierung abschließen</div>
         <span class={style.msg}>
@@ -214,6 +225,7 @@ export default class Login extends Component {
     );
   };
 
+  // Logo, Content, Snackbar
   render() {
     return (
       <Card class={style.card}>

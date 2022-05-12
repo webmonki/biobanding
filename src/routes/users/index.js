@@ -3,17 +3,10 @@ import Card from "preact-material-components/Card";
 import "preact-material-components/Card/style.css";
 import "preact-material-components/Button/style.css";
 import style from "./style";
-import Navbar from "../../components/navbar/navbar";
 import Auth from "../../components/state";
-import Button from "preact-material-components/Button";
-import "preact-material-components/Button/style.css";
-import Dialog from "preact-material-components/Dialog";
 import "preact-material-components/Dialog/style.css";
-import TextField from "preact-material-components/TextField";
 import "preact-material-components/TextField/style.css";
 import "preact-material-components/List/style.css";
-import List from "preact-material-components/List";
-import Drawer from "preact-material-components/Drawer";
 import "preact-material-components/Drawer/style.css";
 import Table from "../../components/table";
 import EditUser from "../../components/dialogs/editUser";
@@ -30,6 +23,7 @@ export default class Users extends Component {
     document.removeEventListener("keyup", this.handleKey);
   };
 
+  // API Request um User Daten zu laden
   getData = () => {
     let that = this;
     let url = Auth.url + "/api/users";
@@ -40,15 +34,14 @@ export default class Users extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
+      if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
-        // that.setState({ responseFBClass : style.feedbackSucc });
-        // that.setState({ responseFB : 'Benutzer erfolgreich geladen' });
+
         that.setState({ users: response["users:"] });
       } else {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg == "Token is invalid") {
+          if (response.msg === "Token is invalid") {
             Auth.logout();
           }
         } catch (err) {}
@@ -57,6 +50,7 @@ export default class Users extends Component {
     xhttp.send();
   };
 
+  // API Request um Benutzer Daten zu löschen
   delete = (id) => {
     let that = this;
     let url = Auth.url + "/api/user/" + id;
@@ -67,17 +61,17 @@ export default class Users extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-        // that.setState({ responseFBClass : style.feedbackSucc });
-        // that.setState({ responseFB : 'Benutzer erflogreich gelöscht' });
+      if (this.readyState === 4 && this.status === 200) {
+        //  Snackbar MSG
         that.bar.MDComponent.show({
           message: `Benutzer erfolgreich gelöscht`,
         });
+
         that.getData();
       } else {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg == "Token is invalid") {
+          if (response.msg === "Token is invalid") {
             Auth.logout();
           }
         } catch (err) {}
@@ -87,23 +81,14 @@ export default class Users extends Component {
     xhttp.send();
   };
 
-  checkDelete = () => {
-    let checkboxes = document.getElementsByName("deleteCheck");
-
-    checkboxes.forEach((cb) => {
-      if (cb.checked) {
-        this.delete(cb.value);
-      }
-    });
-  };
-
+  // Öffne Edit Dialog und setze Werte
   showDialog = (id) => {
     document.addEventListener("keyup", this.handleKeyEdit);
 
     this.setState({ editId: id });
 
     this.state.users.forEach((user) => {
-      if (user.userID == id) {
+      if (user.userID === id) {
         this.setState({ editUsername: user.username });
         this.setState({ editEmail: user.email });
       }
@@ -111,12 +96,7 @@ export default class Users extends Component {
     this.editUserDialog.MDComponent.show();
   };
 
-  showSnackbar = (text) => {
-    this.bar.MDComponent.show({
-      message: text,
-    });
-  };
-
+  // API Request um Benutzer Daten zu bearbeiten
   editData = () => {
     let that = this;
 
@@ -129,14 +109,13 @@ export default class Users extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-        // that.setState({ responseFBClass : style.feedbackSucc });
-        // that.setState({ responseFB : 'Benutzer erfolgreich geändert' });
-
+      if (this.readyState === 4 && this.status === 200) {
         let newUserList = [];
         let editId = that.state.editId;
+
+        // Update die lokale Benutzer Liste um Reload zu vermeiden
         that.state.users.forEach((user) => {
-          if (user.userID != editId) {
+          if (user.userID !== editId) {
             newUserList.push(user);
           } else {
             user.username = that.state.editUsername;
@@ -145,14 +124,18 @@ export default class Users extends Component {
           }
         });
         that.setState({ users: newUserList });
+
+        // Schließe Dialog
         that.editUserDialog.MDComponent.close();
+
+        // Snackbar MSG
         that.bar.MDComponent.show({
           message: "Benutzer erfolgreich geändert",
         });
       } else {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg == "Token is invalid") {
+          if (response.msg === "Token is invalid") {
             Auth.logout();
           }
         } catch (err) {}
@@ -167,6 +150,7 @@ export default class Users extends Component {
     xhttp.send(data);
   };
 
+  // API Request um neuen Benutzer zu registrieren
   sendData = () => {
     let that = this;
     let url = Auth.url + "/api/users/register";
@@ -178,12 +162,15 @@ export default class Users extends Component {
 
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
-        // that.setState({ responseFBClass : style.feedbackSucc });
-        // that.setState({ responseFB : 'Benutzer erfolgreich angelegt' });
+        // Snackbar MSG
         that.bar.MDComponent.show({
           message: "Benutzer erfolgreich angelegt",
         });
+
+        // Neu Laden um aktuelle Daten zu haben
         that.getData();
+
+        // Schließe Dialog
         that.newUserDialog.MDComponent.close();
       } else {
         try {
@@ -205,6 +192,7 @@ export default class Users extends Component {
     xhttp.send(data);
   };
 
+  // Wird Dialog übergeben um Daten zurück zu erhalten
   getDataFromDialogForEdit = (username, email) => {
     this.setState({ editUsername: username });
     this.setState({ editEmail: email });
@@ -212,6 +200,7 @@ export default class Users extends Component {
     this.editData();
   };
 
+  // Wird Dialog übergeben um Daten zurück zu erhalten
   getDataFromDialogForNew = (username, email, password, admin) => {
     this.setState({ username });
     this.setState({ email });
@@ -221,6 +210,7 @@ export default class Users extends Component {
     this.sendData();
   };
 
+  // Rendert die Dialoge zum Erstellen und Bearbeiten
   renderDialog = () => {
     let dialog = (
       <div>
@@ -247,6 +237,7 @@ export default class Users extends Component {
     this.newUserDialog.MDComponent.show();
   };
 
+  // rendert die Tabelle
   showTable = (editable) => {
     let content = (
       <div>

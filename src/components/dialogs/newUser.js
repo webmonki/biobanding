@@ -1,12 +1,10 @@
 import { h, Component } from "preact";
 import style from "./style";
 import "preact-material-components/TextField/style.css";
-import Select from "preact-material-components/Select";
 import "preact-material-components/Select/style.css";
 import Dialog from "preact-material-components/Dialog";
 import "preact-material-components/Dialog/style.css";
 import TextField from "preact-material-components/TextField";
-import "preact-material-components/TextField/style.css";
 import Switch from "preact-material-components/Switch";
 import "preact-material-components/Switch/style.css";
 
@@ -16,7 +14,7 @@ export default class NewUser extends Component {
   };
 
   handleKey = (event) => {
-    if (event.code == "Enter") {
+    if (event.code === "Enter") {
       this.props.sendData(
         this.state.username,
         this.state.email,
@@ -129,7 +127,7 @@ export default class NewUser extends Component {
                       this.setState({ passwordFBClass: style.feedbackSucc });
                       this.setState({ passwordFB: "" });
                     }
-                    if (this.state.password == this.state.password2) {
+                    if (this.state.password === this.state.password2) {
                       this.setState({
                         passwordSameFBClass: style.feedbackSucc,
                       });
@@ -169,7 +167,7 @@ export default class NewUser extends Component {
                       this.setState({ password2FBClass: style.feedbackSucc });
                       this.setState({ password2FB: "" });
                     }
-                    if (this.state.password == this.state.password2) {
+                    if (this.state.password === this.state.password2) {
                       this.setState({
                         passwordSameFBClass: style.feedbackSucc,
                       });
@@ -206,12 +204,12 @@ export default class NewUser extends Component {
           </div>
         </Dialog.Body>
         <Dialog.Footer class={style.footer}>
-          <Dialog.FooterButton cancel={true}>Abbrechen</Dialog.FooterButton>
+          <Dialog.FooterButton cancel>Abbrechen</Dialog.FooterButton>
           <Dialog.FooterButton
             style={{ color: "white" }}
             class="mdc-button mdc-theme--primary-bg"
             raised
-            accept={true}
+            accept
           >
             Speichern
           </Dialog.FooterButton>

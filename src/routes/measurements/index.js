@@ -3,7 +3,6 @@ import Card from "preact-material-components/Card";
 import "preact-material-components/Card/style.css";
 import "preact-material-components/Button/style.css";
 import style from "./style";
-import Navbar from "../../components/navbar/navbar";
 import Auth from "../../components/state";
 import "preact-material-components/Dialog/style.css";
 import "preact-material-components/TextField/style.css";
@@ -17,20 +16,28 @@ import "preact-material-components/Snackbar/style.css";
 
 export default class Measurements extends Component {
   componentWillMount = () => {
+    // Load Users and Overview to Fill Table and Create Dialog
     this.loadData();
 
+    // User Dialog kann ohne zusätzliche Daten erstellt werden
     if (Auth.check_admin() === false) {
       this.getDialog();
     }
   };
 
+  // Wenn die TopAppbar eine Messung erstellt wird props.reload auf true gesetzt
+  // und sagt so dem measurements View, dass er updaten soll
   componentDidUpdate = () => {
     if (this.props.reload) {
       this.loadData();
+
+      // this.props.reload wird wieder auf false gesetzt
       this.props.unsetReload();
     }
   };
 
+  // Admin lädt Overview und Users
+  // User lädt Measurements
   loadData = () => {
     if (Auth.check_admin()) {
       this.getOverview();
@@ -44,6 +51,8 @@ export default class Measurements extends Component {
     this.newMeasurementsDialog.MDComponent.show();
   };
 
+  // Erstellt Tabelle abhängig davon ob der User admin ist
+  // ToDO: User darf keine Messungen löschen
   showTable = (editable) => {
     let data = this.state.measurements;
     let content;
@@ -80,6 +89,7 @@ export default class Measurements extends Component {
     this.setState({ content });
   };
 
+  // Api request für User Daten. Wird geladen damit der Admin auswählen kann für welchen user er eine neue Messung erstellen will
   getUsers = () => {
     let that = this;
     let url = Auth.url + "/api/users";
@@ -90,23 +100,28 @@ export default class Measurements extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
+      if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
-        // that.setState({ responseFBClass : style.feedbackSucc });
-        // that.setState({ responseFB : 'Benutzer erfolgreich geladen' });
+
         let idList = [];
         let usernameList = [];
+
         response["users:"].forEach((user) => {
           usernameList.push(user.Benutzername);
           idList.push(user.userID);
         });
+
+        // Wird in DropDown angezeigt
         that.setState({ usernames: usernameList });
+
+        // Um in sendMeasurements übergeben zu werden
         that.setState({ userIds: idList });
         that.getDialog();
       } else {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg == "Token is invalid") {
+
+          if (response.msg === "Token is invalid") {
             Auth.logout();
           }
         } catch (err) {}
@@ -115,6 +130,7 @@ export default class Measurements extends Component {
     xhttp.send();
   };
 
+  // API Request um Messungen zu bearbeiten
   editData = () => {
     let that = this;
     let url = Auth.url + "/api/measurement/" + this.state.editId;
@@ -145,20 +161,24 @@ export default class Measurements extends Component {
     let date = today.getFullYear() + "-" + month + "-" + day;
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-        let response = JSON.parse(this.responseText);
-        // that.setState({ responseFBClass : style.feedbackSucc });
-        // that.setState({ responseFB : 'Messung erfolgreich geändert' });
+      if (this.readyState === 4 && this.status === 200) {
+        // Snackbar MSG
         that.bar.MDComponent.show({
           message: `Messung ${that.state.editId} erfolgreich geändert`,
         });
+
+        // Daten neu Laden um Änderungen zu bekommen
         that.loadData();
+
+        // Dialog schlließen
         that.measurementsEditDialog.MDComponent.close();
+
+        // Tabelle neu erzeugen
         that.showTable(true);
       } else {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg == "Token is invalid") {
+          if (response.msg === "Token is invalid") {
             Auth.logout();
           }
         } catch (err) {}
@@ -176,6 +196,7 @@ export default class Measurements extends Component {
     xhttp.send(data);
   };
 
+  // String aus den geladenen Daten in Date object umwandeln
   convertDate = (measurements) => {
     measurements.forEach((measurement) => {
       measurement.Datum = measurement.Datum.replace('"', "");
@@ -185,13 +206,12 @@ export default class Measurements extends Component {
 
       let newDate = new Date(parts[0], parts[1] - 1, parts[2]);
 
-      //   newDate = newDate.toDateString();
-
       measurement.Datum = newDate;
     });
     return measurements;
   };
 
+  // API Request Messungsübersicht alle User
   getOverview = () => {
     let that = this;
     let url = Auth.url + "/api/measurements";
@@ -221,6 +241,7 @@ export default class Measurements extends Component {
     xhttp.send();
   };
 
+  // API Request Messungen eines Users
   getMeasurements = () => {
     let that = this;
     let url = Auth.url + "/api/user/" + Auth.getUser().id + "/anthropometric";
@@ -231,10 +252,9 @@ export default class Measurements extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
+      if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
-        // that.setState({ responseFBClass : style.feedbackSucc });
-        // that.setState({ responseFB : 'Messungen erfolgreich geladen' });
+
         that.setState({
           measurements: that.convertDate(response["measurements:"]),
         });
@@ -242,7 +262,7 @@ export default class Measurements extends Component {
       } else {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg == "Token is invalid") {
+          if (response.msg === "Token is invalid") {
             Auth.logout();
           }
         } catch (err) {}
@@ -251,6 +271,7 @@ export default class Measurements extends Component {
     xhttp.send();
   };
 
+  // API Request um Messung zu löschen. Wird in Tabelle aufgerufen
   delete = (id) => {
     let that = this;
     let url = Auth.url + "/api/measurement/" + id;
@@ -261,20 +282,21 @@ export default class Measurements extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-        let response = JSON.parse(this.responseText);
-        // that.setState({ responseFBClass : style.feedbackSucc });
-        // that.setState({ responseFB : 'Messung erfolgreich gelöscht' });
+      if (this.readyState === 4 && this.status === 200) {
+        // Snackbar MSG
         that.bar.MDComponent.show({
           message: `Messung ${id} erfolgreich gelöscht`,
         });
 
+        // Daten neu Laden um Änderungen zu erhalten
         that.loadData();
+
+        // Tabelle neu rendern
         that.showTable(true);
       } else {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg == "Token is invalid") {
+          if (response.msg === "Token is invalid") {
             Auth.logout();
           }
         } catch (err) {}
@@ -284,8 +306,12 @@ export default class Measurements extends Component {
     xhttp.send();
   };
 
+  // Api Request um neue Messung anzulegen
   sendMeasurement = () => {
     let id;
+
+    // Wenn Admin nimm id aus userIDs an der Stelle choosenIndex, welche aus dropdown kommt
+    // Wenn User nimm seine UserID
     Auth.check_admin()
       ? (id = this.state.userIds[this.state.chosenIndex])
       : (id = Auth.getUser().id);
@@ -300,15 +326,24 @@ export default class Measurements extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-        let response = JSON.parse(this.responseText);
+      if (this.readyState === 4 && this.status === 200) {
+        // Daten neu Laden um Änderung zu erhalten
         that.loadData();
+
+        // Dialog schließen
         that.newMeasurementsDialog.MDComponent.close();
+
+        // Snackbar MSG
         that.bar.MDComponent.show({
           message: `Messung erfolgreich angelegt`,
         });
       } else {
-        let response = JSON.parse(this.responseText);
+        try {
+          let response = JSON.parse(this.responseText);
+          if (response.msg === "Token is invalid") {
+            Auth.logout();
+          }
+        } catch (err) {}
       }
     };
 
@@ -333,16 +368,7 @@ export default class Measurements extends Component {
     xhttp.send(data);
   };
 
-  checkDelete = () => {
-    let checkboxes = document.getElementsByName("deleteCheck");
-
-    checkboxes.forEach((cb) => {
-      if (cb.checked) {
-        this.delete(cb.value);
-      }
-    });
-  };
-
+  // Öffnet den Dialog zum Bearbeiten einer Messung mit den Aktuellen Werten
   showDialog = (id) => {
     this.setState({ editId: id });
 
@@ -360,6 +386,7 @@ export default class Measurements extends Component {
     this.measurementsEditDialog.MDComponent.show();
   };
 
+  // Wird Dialog für Neue Messungen übergeben um Werte zurück zu erhalten
   getDataFromDialogforNew = (
     height,
     sittingHeight,
@@ -376,6 +403,7 @@ export default class Measurements extends Component {
     this.sendMeasurement();
   };
 
+  // Wird Dialog für Bearbeitung einer Messung übergeben um Werte zurück zu erhalten
   getDataFromDialogForEdit = (
     height,
     sittingHeight,
@@ -392,8 +420,9 @@ export default class Measurements extends Component {
     this.editData();
   };
 
+  // Erzeugt die Dialoge zum Neue Messungen erstellen abhängig davon on User admin ist oder nicht
+  // und den Dialog zum Bearbeiten von Messungen
   getDialog = () => {
-    console.log("GET DIALOG");
     let dialog;
 
     if (Auth.check_admin()) {

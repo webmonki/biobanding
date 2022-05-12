@@ -24,9 +24,8 @@ export default class Profile extends Component {
   };
 
   handleKey = (event) => {
-    if (event.code == "Enter") {
+    if (event.code === "Enter") {
       this.sendData();
-      //   document.removeEventListener("keyup", this.handleKey);
     }
   };
 
@@ -34,6 +33,7 @@ export default class Profile extends Component {
     document.removeEventListener("keyup", this.handleKey);
   };
 
+  // API Request um Benutzername und Email Adresse zu Updaten
   sendNewLogin = () => {
     let that = this;
     let url = Auth.url + "/api/users/edit";
@@ -45,26 +45,21 @@ export default class Profile extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-        let response = JSON.parse(this.responseText);
-
-        // that.setState({ responseFBClass : style.feedbackSucc });
-        // that.setState({ responseFB : 'Login erfolgreich geändert' });
-
+      if (this.readyState === 4 && this.status === 200) {
+        // Snackbar MSG
         that.bar.MDComponent.show({
           message: `Login-Daten erfolgreich geändert`,
         });
 
+        // Email und Username in Auth setzen
         Auth.setEmail(that.state.email);
         Auth.setUsername(that.state.username);
       } else {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg == "Token is invalid") {
+          if (response.msg === "Token is invalid") {
             Auth.logout();
           }
-          that.setState({ responseFBClass: style.feedbackErr });
-          that.setState({ responseFB: response.msg });
         } catch (err) {}
       }
     };
@@ -78,17 +73,20 @@ export default class Profile extends Component {
     xhttp.send(data);
   };
 
+  // Sende Email und Username wenn sich eins davon geändet hat
   sendData = () => {
     if (
-      this.state.username != Auth.getUser().name ||
-      this.state.email != Auth.getUser().email
+      this.state.username !== Auth.getUser().name ||
+      this.state.email !== Auth.getUser().email
     ) {
       this.sendNewLogin();
     }
 
+    // Wird immer mitgesendet
     this.sendPlayerDetails();
   };
 
+  // API Request um Spielerdetails zu erhalten
   getDetails = () => {
     let that = this;
     let url = Auth.url + "/api/user/" + Auth.getUser().id + "/details";
@@ -100,9 +98,10 @@ export default class Profile extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
+      if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
 
+        // Werte in States setzten damit diese in den Textfelder angezeigt werden
         that.setState({ firstname: response["player_details:"].first_name });
         that.setState({ lastname: response["player_details:"].last_name });
         that.setState({
@@ -133,11 +132,9 @@ export default class Profile extends Component {
       } else {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg == "Token is invalid") {
+          if (response.msg === "Token is invalid") {
             Auth.logout();
           }
-          that.setState({ responseFBClass: style.feedbackErr });
-          that.setState({ responseFB: response.msg });
         } catch (err) {}
       }
     };
@@ -145,6 +142,7 @@ export default class Profile extends Component {
     xhttp.send();
   };
 
+  // API Request um Spielerdetails zu updaten
   sendPlayerDetails = () => {
     let that = this;
     let url = Auth.url + "/api/user/" + Auth.getUser().id + "/details";
@@ -156,18 +154,17 @@ export default class Profile extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
+      if (this.readyState === 4 && this.status === 200) {
+        // Snackbar MSG
         that.bar.MDComponent.show({
           message: `Spielerdetails erfolgreich angelegt`,
         });
       } else {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg == "Token is invalid") {
+          if (response.msg === "Token is invalid") {
             Auth.logout();
           }
-          that.setState({ responseFBClass: style.feedbackErr });
-          that.setState({ responseFB: response.msg });
         } catch (err) {}
       }
     };
@@ -209,6 +206,7 @@ export default class Profile extends Component {
     }
   };
 
+  // Render Profil View mit Validation
   render() {
     return (
       <div class={style.page}>

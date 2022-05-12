@@ -8,13 +8,12 @@ import { route } from "preact-router";
 import Auth from "../state";
 
 export default class Navbar extends Component {
-  dialogRef = (dialog) => (this.dialog = dialog);
-
   componentWillMount = () => {
     this.setState({ versionClass: style.versionContainer });
   };
 
   componentDidMount = () => {
+    // Öffnet initial einmal die Navbar
     this.props.openDrawer();
   };
 
@@ -22,12 +21,14 @@ export default class Navbar extends Component {
     route(path);
   };
 
+  // Page Routing für navbar Items
   goHome = this.linkTo("/");
   goToMyProfile = this.linkTo("/profile");
   goToMeasurements = this.linkTo("/measurements");
   goToUsers = this.linkTo("/users");
   goToSettings = this.linkTo("/settings");
 
+  // Ob der Text angezeigt werden soll oder nicht
   getDisplayBar = () => {
     if (this.props.drawerOpen === false) {
       return { display: "block" };
@@ -35,6 +36,7 @@ export default class Navbar extends Component {
     return { display: "none" };
   };
 
+  // Render navbar für admin oder user
   renderNavbarContent = (props) => {
     let content;
     if (Auth.check_admin()) {
@@ -45,7 +47,6 @@ export default class Navbar extends Component {
           </div>
 
           <Drawer
-            // open
             id={"navbar"}
             dismissible
             ref={this.props.drawerRef}
