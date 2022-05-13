@@ -42,6 +42,20 @@
 	padding: var(--global-dialog-padding);
 }
 
+.confirmDialog {
+	background-color: var(--global-dialog-background);
+	z-index: 7;
+}
+
+dialog.confirmDialog > div:first-child {
+	width: 200px;
+}
+
+.confirm {
+	margin-left: auto;
+	margin-right: auto;
+}
+
 .footer {
 	position: relative;
 	top: calc(var(--global-line-space) * -1);

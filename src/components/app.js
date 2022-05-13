@@ -13,6 +13,8 @@ import Reset from "../routes/reset";
 import Settings from "../routes/settings";
 import Confirm from "../routes/confirm";
 import Navbar from "./navbar/navbar";
+import ConfirmDialog from "./dialogs/confirmDialog";
+import { deleteAccount } from "./reguests/requests";
 
 // Routes that can be visited without login or registration
 const publicRoutes = ["/signup", "/forgot", "/reset", "/login", "/confirm"];
@@ -82,6 +84,9 @@ export default class App extends Component {
   // Referenz for navbar to open it
   drawerRef = (drawer) => (this.drawer = drawer);
 
+  // Referenz for Confirm Dialog to open it
+  confirmDialogRef = (confirmDialog) => (this.confirmDialog = confirmDialog);
+
   // to show navbar only when user is logged in
   renderNavbar = (userLoggedIn, drawerOpen) => {
     if (userLoggedIn === undefined || userLoggedIn === false) {
@@ -133,6 +138,10 @@ export default class App extends Component {
     }
   };
 
+  openConfirmDialog = () => {
+    this.confirmDialog.MDComponent.show();
+  };
+
   render() {
     return (
       <div id="app">
@@ -140,6 +149,11 @@ export default class App extends Component {
         <script
           type="text/javascript"
           src="https://vp-systeme.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/-onpk8x/b/7/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=de-DE&collectorId=cc9af09f"
+        />
+        <ConfirmDialog
+          reference={this.confirmDialogRef}
+          dialogHeader={"Accout wirklich löschen?"}
+          deleteAccount={deleteAccount}
         />
 
         {/* Header (TopAppBar) */}
@@ -158,8 +172,10 @@ export default class App extends Component {
               setInstructions={this.setInstructions}
             />
             <Signup path="/signup" setInstructions={this.setInstructions} />
-            <Profile path="/profile/" user="me" />
-            <Profile path="/profile/:user" />
+            <Profile
+              path="/profile"
+              openConfirmDialog={this.openConfirmDialog}
+            />
             <Measurements
               path="/measurements"
               reload={this.state.reload}
