@@ -17,7 +17,8 @@
       "react/sort-comp": "off",
       "lines-around-comment": "off",
       "react/prefer-stateless-function": "off",
-	  "react/jsx-no-bind": "off"
+	  "react/jsx-no-bind": "off",
+	  "react/jsx-no-target-blank": "off"
     }
   },
   "eslintIgnore": [
