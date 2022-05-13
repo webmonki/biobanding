@@ -89,6 +89,10 @@ dialog.confirmDialog > div:first-child {
 	color: white !important;
 }
 
+.deleteBtn:hover {
+	opacity: 0.8;
+}
+
 .deleteBtn::before {
 	background-color: var(--global-error-color) !important;
 }

@@ -148,6 +148,7 @@ export default class App extends Component {
     this.confirmDialog.MDComponent.show();
   };
 
+  // Opens snackbar with given text, if error true text will be red else green
   showSnackbar = (text, error) => {
     let sbText = document.getElementsByClassName("mdc-snackbar__text");
     let errorColor = "#B1262D";
