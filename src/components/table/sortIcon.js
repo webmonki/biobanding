@@ -6,12 +6,12 @@ import List from "preact-material-components/List";
 
 export default class SortIcon extends Component {
   componentWillMount = () => {
-    // Initial State Pfeil Runter aber nicht angezeigt
+    // Initial State arrow_downward and hidden
     this.setState({ arrow: "arrow_downward" });
     this.setState({ visibility: "hidden" });
   };
 
-  // Toggles Icon Pfeil
+  // Toggles Icon Arrow
   handleIconClick = () => {
     this.setState({ visibility: "visible" });
     if (this.state.arrow === "arrow_downward") {
@@ -23,7 +23,7 @@ export default class SortIcon extends Component {
     }
   };
 
-  // Wenn auserhalb des Elements geklickt wird, wird der Pfeil versteckt und der Eventlistener entfernt
+  // If clicked outside of element the arrow will be hidden and Eventlistener removed
   handleOutsideClick = (event) => {
     if (document.getElementById(this.props.id).contains(event.target)) {
       // DO NOTHING
@@ -33,7 +33,7 @@ export default class SortIcon extends Component {
     }
   };
 
-  // Linie zwischen den Spalten im Kopf
+  // Line between headercells
   getDivider = () => {
     if (this.props.divider) {
       return <div class={style.divider} />;
@@ -41,7 +41,7 @@ export default class SortIcon extends Component {
     return undefined;
   };
 
-  // erzeugt Spalten Name mit Pfeil und alignment
+  // creates header row with column name, arrow and alignment
   getHeaderContent = () => {
     if (this.props.alignment === style.alignLeft) {
       return (

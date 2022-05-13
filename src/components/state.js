@@ -26,6 +26,7 @@ export default class Auth {
     } catch (err) {}
   };
 
+  // Update Token in Storage
   static setToken = (token) => {
     try {
       let user = JSON.parse(sessionStorage.user);
@@ -34,6 +35,7 @@ export default class Auth {
     } catch (err) {}
   };
 
+  // Update Username in Storage
   static setUsername = (userName) => {
     try {
       let user = JSON.parse(sessionStorage.user);
@@ -42,6 +44,7 @@ export default class Auth {
     } catch (err) {}
   };
 
+  // Update Email in Storage
   static setEmail = (email) => {
     try {
       let user = JSON.parse(sessionStorage.user);
@@ -50,12 +53,13 @@ export default class Auth {
     } catch (err) {}
   };
 
-  // Delete Session Storage
+  // Delete Session Storage and go to Login
   static logout = () => {
     sessionStorage.clear();
     route("/login", true);
   };
 
+  // Check if current User is admin
   static check_admin = () => {
     try {
       let user = JSON.parse(sessionStorage.user);

@@ -23,7 +23,7 @@ export default class Users extends Component {
     document.removeEventListener("keyup", this.handleKey);
   };
 
-  // API Request um User Daten zu laden
+  // API Request to load user data
   getData = () => {
     let that = this;
     let url = Auth.url + "/api/users";
@@ -50,7 +50,7 @@ export default class Users extends Component {
     xhttp.send();
   };
 
-  // API Request um Benutzer Daten zu löschen
+  // API Request to delete user data
   delete = (id) => {
     let that = this;
     let url = Auth.url + "/api/user/" + id;
@@ -81,7 +81,7 @@ export default class Users extends Component {
     xhttp.send();
   };
 
-  // Öffne Edit Dialog und setze Werte
+  // open edit dialog and set values for textfields
   showDialog = (id) => {
     document.addEventListener("keyup", this.handleKeyEdit);
 
@@ -96,7 +96,7 @@ export default class Users extends Component {
     this.editUserDialog.MDComponent.show();
   };
 
-  // API Request um Benutzer Daten zu bearbeiten
+  // API Request to edit user data
   editData = () => {
     let that = this;
 
@@ -113,7 +113,7 @@ export default class Users extends Component {
         let newUserList = [];
         let editId = that.state.editId;
 
-        // Update die lokale Benutzer Liste um Reload zu vermeiden
+        // update local user list to prevent reload
         that.state.users.forEach((user) => {
           if (user.userID !== editId) {
             newUserList.push(user);
@@ -125,7 +125,7 @@ export default class Users extends Component {
         });
         that.setState({ users: newUserList });
 
-        // Schließe Dialog
+        // close dialog
         that.editUserDialog.MDComponent.close();
 
         // Snackbar MSG
@@ -150,7 +150,7 @@ export default class Users extends Component {
     xhttp.send(data);
   };
 
-  // API Request um neuen Benutzer zu registrieren
+  // API Request to create new user
   sendData = () => {
     let that = this;
     let url = Auth.url + "/api/users/register";
@@ -167,10 +167,10 @@ export default class Users extends Component {
           message: "Benutzer erfolgreich angelegt",
         });
 
-        // Neu Laden um aktuelle Daten zu haben
+        // reload to get updated data
         that.getData();
 
-        // Schließe Dialog
+        // close dialog
         that.newUserDialog.MDComponent.close();
       } else {
         try {
@@ -192,7 +192,7 @@ export default class Users extends Component {
     xhttp.send(data);
   };
 
-  // Wird Dialog übergeben um Daten zurück zu erhalten
+  // will be given to dialog to return its values from the textfields
   getDataFromDialogForEdit = (username, email) => {
     this.setState({ editUsername: username });
     this.setState({ editEmail: email });
@@ -200,7 +200,7 @@ export default class Users extends Component {
     this.editData();
   };
 
-  // Wird Dialog übergeben um Daten zurück zu erhalten
+  // will be given to dialog to return its values from the textfields
   getDataFromDialogForNew = (username, email, password, admin) => {
     this.setState({ username });
     this.setState({ email });
@@ -210,7 +210,7 @@ export default class Users extends Component {
     this.sendData();
   };
 
-  // Rendert die Dialoge zum Erstellen und Bearbeiten
+  // create the dialogs for creating and editing
   renderDialog = () => {
     let dialog = (
       <div>
@@ -237,7 +237,7 @@ export default class Users extends Component {
     this.newUserDialog.MDComponent.show();
   };
 
-  // rendert die Tabelle
+  // rendert table
   showTable = (editable) => {
     let content = (
       <div>

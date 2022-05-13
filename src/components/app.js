@@ -1,6 +1,5 @@
 import { h, Component } from "preact";
 import { Router } from "preact-router";
-import { route } from "preact-router";
 import Header from "./header";
 import Profile from "../routes/profile";
 import NotFound from "../routes/404";
@@ -15,10 +14,10 @@ import Settings from "../routes/settings";
 import Confirm from "../routes/confirm";
 import Navbar from "./navbar/navbar";
 
-// Routen die ohne Registrierung oder Anmeldung aufgerufen werden können
+// Routes that can be visited without login or registration
 const publicRoutes = ["/signup", "/forgot", "/reset", "/login", "/confirm"];
 
-// Routen die nur vom Admin aufgerufen werden dürfen
+// Routes that can only be visited by admin
 const adminOnlyRoutes = ["/settings", "/users"];
 
 export default class App extends Component {
@@ -28,15 +27,14 @@ export default class App extends Component {
    */
 
   componentWillMount = () => {
-    // showInstruction wird login übergeben und bestimmt
-    //ob der normale Login oder Anweisungen um die Email zu bestätigen angezeigt werden sollen
+    // showInstruction will be used by login view and determines if instruction will be shown or the normal login form
     this.setState({ showInstruction: false });
 
-    // drawer Open wird der Navbar übergeben und bestimmt ob der Text angezeigt werden soll oder nicht
+    // drawerOpen will be given to the navbar and determines if the text is shown
     this.setState({ drawerOpen: false });
   };
 
-  // Um zu verhindern, dass Benutzer auf nicht zu gelassene Seiten zugreifen können
+  // To prevent the User from visiting routes he has no authorization for
   handleRoute = async (e) => {
     let auth = Auth.getAuth();
     const isPublicRoute = publicRoutes.some((route) => e.url.match(route));
@@ -53,7 +51,7 @@ export default class App extends Component {
     this.setState({ selectedRoute: e.url });
   };
 
-  // Wird dem Header übergeben und Collapset die Navbar
+  // Given to TopAppbar(pageheader) to collapse navbar
   toggleDrawer = () => {
     if (this.state.drawerOpen === false) {
       this.setState({ drawerOpen: true });
@@ -70,7 +68,7 @@ export default class App extends Component {
     }
   };
 
-  // Um Header nur anzuzeigen wenn Benutzer eingeloggt ist
+  // to show header only when user is logged in
   renderTopAppBar = (userLoggedIn) => {
     if (userLoggedIn === undefined || userLoggedIn === false) {
       return undefined;
@@ -81,10 +79,10 @@ export default class App extends Component {
     );
   };
 
-  // Referenz um Navbar zu öffnen
+  // Referenz for navbar to open it
   drawerRef = (drawer) => (this.drawer = drawer);
 
-  // Um Navbar nur anzuzeigen wenn Benutzer eingeloggt ist
+  // to show navbar only when user is logged in
   renderNavbar = (userLoggedIn, drawerOpen) => {
     if (userLoggedIn === undefined || userLoggedIn === false) {
       return undefined;
@@ -100,7 +98,7 @@ export default class App extends Component {
     );
   };
 
-  // Initial Navbar öffnen und maxwidth setzten, damit collapse funktioniert
+  // Initial open navbar and set maxWidth, so that callapse is working
   openDrawer = () => {
     let drawer = document.getElementById("navbar");
 
@@ -108,24 +106,25 @@ export default class App extends Component {
     this.drawer.MDComponent.open = true;
   };
 
-  // Wird login übergeben um damit nach login mit nicht bestätigter Email Anweisungen angezeigt werden können
+  // Is given to login view, so than instruction will be show if ths user tries to login with non confirmed email
   setInstructions = (val) => {
     this.setState({ showInstruction: val });
   };
 
-  // Wird measurments übergeben und nach dem Laden der Daten ausgeführt. Somit kann Header neue Messung erstellen und wieder measurement sagen
-  // dass er die Daten neu laden soll
+
+  // Will be given to measurements view and will be triggered after it loads measurement data. If measurements view updates with reload = true
+  // it will reload the data. Header sets it to true if it creates a new measurement
   unsetReload = () => {
     this.setState({ reload: false });
   };
 
-  // Wird Header(TopAppBar) übergeben, wenn true werden daten neu geladen. Dafür da damit man im Header neue Messung erstellen kann
-  // und diese direkt in measurements angezeigt werden
+
+  // Given to topappbar(header). If set to true it tells measurement view to reload the data
   setReload = () => {
     this.setState({ reload: true });
   };
 
-  // Wenn sich der Url ändert. HandleRoute siehe oben. Checkt ob Benutzer angemeldet ist, damit Header und Navbar angezeigt werden
+  // If Url changes, checks if user is logged in, so that header and navbar can be displayed
   handleChange = (e) => {
     this.handleRoute(e);
 
@@ -139,7 +138,7 @@ export default class App extends Component {
   render() {
     return (
       <div id="app">
-        {/* Skript für Bug Tracker */}
+        {/* Skript for Bug Tracker */}
         <script
           type="text/javascript"
           src="https://vp-systeme.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/-onpk8x/b/7/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=de-DE&collectorId=cc9af09f"

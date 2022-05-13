@@ -16,7 +16,7 @@ import { route } from "preact-router";
 
 export default class Confirm extends Component {
   componentWillMount = () => {
-    // Holt den Token aus der URL
+    // gets token from URL
     let queryString = window.location.search;
 
     let urlParams = new URLSearchParams(queryString);
@@ -26,12 +26,12 @@ export default class Confirm extends Component {
     this.setState({ token });
   };
 
-  // Wenn Seite geladen wird, erstelle Eventlistener für Enter
+  // If view did mount create eventlistener for Enter
   componentDidMount = () => {
     document.addEventListener("keyup", this.handleKey);
   };
 
-  // Wenn Enter gedrückt wird sende Persönliche Daten
+  // If Enter is hit, send Data
   handleKey = (event) => {
     if (event.code === "Enter") {
       this.sendConfirm();
@@ -39,12 +39,12 @@ export default class Confirm extends Component {
     }
   };
 
-  // Wenn Seite verlassen wird, entferne Eventlistener für Enter
+  // If View unmounts remove eventlistener
   componentWillUnmount = () => {
     document.removeEventListener("keyup", this.handleKey);
   };
 
-  // API Request um User zu bestätigen
+  // API Request to confirm user
   sendConfirm = () => {
     let that = this;
     let url = Auth.url + "/api/users/confirm";
@@ -88,7 +88,7 @@ export default class Confirm extends Component {
 
     let data;
 
-    // Wenn ein Feld leer bleibt sende es nicht mit
+    // Only send filled Values
     if (
       this.state.motherHeight !== undefined &&
       this.state.fatherHeight !== undefined
@@ -134,7 +134,7 @@ export default class Confirm extends Component {
     xhttp.send(data);
   };
 
-  // Setzt Geschlecht abhängig von Radio Buttons
+  // Sets sex determined by radio btns
   handleRadioChange = () => {
     let male = document.getElementById("radioMale").checked;
     let female = document.getElementById("radioFemale").checked;
@@ -148,7 +148,7 @@ export default class Confirm extends Component {
     }
   };
 
-  // Render Seite mit Input Validation
+  // Render view with validation in Textfields
   render() {
     return (
       <Card class={style.card}>

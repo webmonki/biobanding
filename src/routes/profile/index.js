@@ -2,7 +2,6 @@ import { h, Component } from "preact";
 import Button from "preact-material-components/Button";
 import "preact-material-components/Button/style.css";
 import style from "./style";
-import Navbar from "../../components/navbar/navbar";
 import TextField from "preact-material-components/TextField";
 import "preact-material-components/TextField/style.css";
 import Radio from "preact-material-components/Radio";
@@ -33,7 +32,7 @@ export default class Profile extends Component {
     document.removeEventListener("keyup", this.handleKey);
   };
 
-  // API Request um Benutzername und Email Adresse zu Updaten
+  // API Request to update username and email
   sendNewLogin = () => {
     let that = this;
     let url = Auth.url + "/api/users/edit";
@@ -73,7 +72,7 @@ export default class Profile extends Component {
     xhttp.send(data);
   };
 
-  // Sende Email und Username wenn sich eins davon geändet hat
+  // send email and username if one has changed
   sendData = () => {
     if (
       this.state.username !== Auth.getUser().name ||
@@ -82,11 +81,11 @@ export default class Profile extends Component {
       this.sendNewLogin();
     }
 
-    // Wird immer mitgesendet
+    // Will always be send
     this.sendPlayerDetails();
   };
 
-  // API Request um Spielerdetails zu erhalten
+  // API Request to get playerdetails
   getDetails = () => {
     let that = this;
     let url = Auth.url + "/api/user/" + Auth.getUser().id + "/details";
@@ -101,7 +100,7 @@ export default class Profile extends Component {
       if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
 
-        // Werte in States setzten damit diese in den Textfelder angezeigt werden
+        // Set vaues in states to display them in textfields
         that.setState({ firstname: response["player_details:"].first_name });
         that.setState({ lastname: response["player_details:"].last_name });
         that.setState({
@@ -142,7 +141,7 @@ export default class Profile extends Component {
     xhttp.send();
   };
 
-  // API Request um Spielerdetails zu updaten
+  // API Request to update playerdetails
   sendPlayerDetails = () => {
     let that = this;
     let url = Auth.url + "/api/user/" + Auth.getUser().id + "/details";
@@ -206,7 +205,7 @@ export default class Profile extends Component {
     }
   };
 
-  // Render Profil View mit Validation
+  // Render Profil View with validation in textfields
   render() {
     return (
       <div class={style.page}>

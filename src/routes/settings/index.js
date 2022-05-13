@@ -35,7 +35,7 @@ export default class Settings extends Component {
     document.removeEventListener("keyup", this.handleKey);
   };
 
-  // API Request um Einstellungen zu laden
+  // API Request to load settings
   getConfiguration = () => {
     let that = this;
     let url = Auth.url + "/api/configurations";
@@ -49,7 +49,7 @@ export default class Settings extends Component {
       if ([1, 2, 3, 4].includes(this.readyState)) {
         if (this.status === 200) {
           try {
-            // Setze Werte in State damit sie in Textfields angezeigt werden
+            // Set Values in state to display them in textfields
             let response = JSON.parse(this.responseText);
             that.setState({ reminder: response.config.days_reminder });
             that.setState({ mailService: response.config.mail_server });
@@ -75,7 +75,7 @@ export default class Settings extends Component {
     xhttp.send();
   };
 
-  // API Request um Einstellungen zu updaten
+  // API Request to update settings
   setConfiguration = () => {
     let that = this;
     let url = Auth.url + "/api/configurations";
@@ -114,13 +114,13 @@ export default class Settings extends Component {
     xhttp.send(data);
   };
 
-  // Setzt state  auf true wenn ssl checked
+  // Set state to true if ssl checked
   checkServer = () => {
     let checkbox = document.getElementsByName("serverCheck");
     this.setState({ ssl: checkbox[0].checked });
   };
 
-  // API Request um Testmail zu senden
+  // API Request to send testmail
   checkConfig = () => {
     let that = this;
     let url = Auth.url + "/api/configurations/testmail";
@@ -154,7 +154,7 @@ export default class Settings extends Component {
     xhttp.send(data);
   };
 
-  // API Request um Registrierungscode zu generieren
+  // API Request to generate registration code
   generateCode = () => {
     let that = this;
     let url = Auth.url + "/api/configurations/code";
@@ -188,7 +188,7 @@ export default class Settings extends Component {
     xhttp.send();
   };
 
-  // Zum Kopieren mittels zwischenablage
+  // copy via clipboard
   copyCode = () => {
     let dummy = document.createElement("textarea");
     // to avoid breaking orgain page when copying more words

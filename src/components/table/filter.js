@@ -9,7 +9,7 @@ import Select from "preact-material-components/Select";
 import "preact-material-components/Select/style.css";
 
 export default class Filter extends Component {
-  // Erzeugt den Operator für die Filter abhängig vom Tabelleninhalt
+  // Creates operator for filter determined by typeof cellcontent
   // Operator 0 : = , 1 = < , 2 = >
   getOperators = () => {
     let col = this.props.cols[this.props.chosenIndex];
@@ -43,7 +43,7 @@ export default class Filter extends Component {
               this.setState({ operator: 0 });
             }
 
-            // Zur Liste hinzufügen nach welcher gefilter wird
+            // add to filterList which is applied to data
             this.props.updateFilter(
               this.props.id,
               undefined,
@@ -70,7 +70,7 @@ export default class Filter extends Component {
     }
   };
 
-  // Gibt Input Feld abhängig vom Datentyp
+  // get InputField determined by type of columncells
   getInputField = () => {
     let col = this.props.cols[this.props.chosenIndex];
     let data;
@@ -164,7 +164,7 @@ export default class Filter extends Component {
     }
   };
 
-  // Um die Spalte auszuwählen nach welcher gefiltert werden soll
+  // To Celect the column on which the filter will be applied
   renderDrowpdown = () => (
     <select
       class={style.filterSelect}

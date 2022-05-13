@@ -14,24 +14,21 @@ import "preact-material-components/Snackbar/style.css";
 
 export default class Login extends Component {
   componentWillMount = () => {
-    // initial State des Anmelde-Buttons
+    // initial State of login-Buttons
     this.setState({ btnDisabled: true });
 
-    // Wird auf False gesetzt nach Login Versuch wenn Email noch nicht bestätigt ist
+    // Will be set to false after user tried to login and the email is not confirmed
     this.setState({ loginStatus: true });
   };
 
-  // Wenn Seite geladen EventListener für Enter
   componentDidMount = () => {
     document.addEventListener("keyup", this.handleKey);
   };
 
-  // Wenn Seite verlassen wird entferne EventListener
   componentWillUnmount = () => {
     document.removeEventListener("keyup", this.handleKey);
   };
 
-  // Sende Login Daten wenn Enter gedrückt wird und Anmelde-Button enabled
   handleKey = (event) => {
     if (this.state.btnDisabled === false && event.code === "Enter") {
       this.login();
@@ -129,7 +126,7 @@ export default class Login extends Component {
       );
     }
 
-    // Login Screen mit Validation
+    // Login Screen with validation in textfields
     if (status) {
       return (
         <div class={style.inputContainer}>
@@ -200,7 +197,7 @@ export default class Login extends Component {
       );
     }
     return (
-      // Anweisung nach Anmeldeversuch wenn Email noch nicht bestätigt ist
+      // Instruction after user tried to login and the email is not confirmed
       <div class={style.inputContainer}>
         <div class={style.loginLabel}>Registrierung abschließen</div>
         <span class={style.msg}>

@@ -20,7 +20,6 @@ import "preact-material-components/Snackbar/style.css";
 export default class Header extends Component {
   // Request to Log out user
   logOut = () => {
-    let that = this;
     let url = Auth.url + "/api/users/logout";
     let xhttp = new XMLHttpRequest();
 
@@ -41,7 +40,7 @@ export default class Header extends Component {
     xhttp.send();
   };
 
-  // Playerdetails werden geladen damit im Dialog die Dropdown List gefüllt werden kann
+  // Playerdetails are loaded to display the  names in dropdown of dialog
   getPlayerDetails = () => {
     let that = this;
     let url = Auth.url + "/api/users/details";
@@ -65,7 +64,7 @@ export default class Header extends Component {
         that.setState({ usernames: usernameList });
         that.setState({ userIds: idList });
 
-        // Generiert den Dialog zum Erstellen einer neuen Messung
+        // creates the dialog to create a measurement
         that.getDialog(idList);
       } else {
         try {
@@ -79,7 +78,7 @@ export default class Header extends Component {
     xhttp.send();
   };
 
-  // Wird Dialog übergeben damit man die Daten zurück erhält
+  // Is given to dialog to return the values
   getDataFromDialog = (height, sittingHeight, span, weight, chosenIndex) => {
     this.setState({ height });
     this.setState({ sittingHeight });
@@ -92,11 +91,11 @@ export default class Header extends Component {
     this.sendMeasurement();
   };
 
-  // Neue Messung erstellen
+  // API Request to send a new measurement
   sendMeasurement = () => {
     let id;
 
-    // UserID: Admin kann auswählen, User kriegt seine
+    // UserID: Admin can select, normal user takes his id
     Auth.check_admin()
       ? (id = this.state.userIds[this.state.chosenIndex])
       : (id = Auth.getUser().id);
@@ -112,18 +111,18 @@ export default class Header extends Component {
 
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
-        // Snackbar
+        // Snackbar MSG
         that.sbar.MDComponent.show({
           message: "Messung erfolgreich gesendet",
         });
 
-        // Um Measurements zu sagen, die Daten zu updaten
+        // Tells measurement view to reload its data
         that.props.setReload();
       } else {
         try {
           let response = JSON.parse(this.responseText);
 
-          // Wenn Token abgelaufen log out
+          // if token expired log out
           if (response.msg === "Token is invalid") {
             Auth.logout();
           }
@@ -152,7 +151,7 @@ export default class Header extends Component {
     xhttp.send(data);
   };
 
-  // Zwei Dialoge können erzeigt werden. Für admin oder user
+  // tow Dialogs can be created for admin user or normal user
   getDialog = (idList = []) => {
     let dialog;
     if (Auth.check_admin()) {
@@ -185,7 +184,7 @@ export default class Header extends Component {
   };
 
   render() {
-    // Initiales Laden der Spielerdetails um Dialoge zu erzeugen
+    // Initiales Load of playerdetails to create dialogs
     if (this.state.dialog === undefined) {
       this.getPlayerDetails();
     }
@@ -201,12 +200,12 @@ export default class Header extends Component {
           menu
         </i>
         <div class={style.btnContainer}>
-          {/* AbmeldeButton */}
+          {/* loginbutton */}
           <Button class={style.secondaryBtn} onClick={this.logOut}>
             Abmelden
           </Button>
 
-          {/* Neue Messung erzeugen Button */}
+          {/* button to create new measurement */}
           <Button
             raised
             class={`${"mdc-button mdc-theme--secondary-bg"} ${style.roundBtn}`}

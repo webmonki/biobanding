@@ -19,25 +19,25 @@ export default class Measurements extends Component {
     // Load Users and Overview to Fill Table and Create Dialog
     this.loadData();
 
-    // User Dialog kann ohne zusätzliche Daten erstellt werden
+    // User Dialog can be created without additional data
     if (Auth.check_admin() === false) {
       this.getDialog();
     }
   };
 
-  // Wenn die TopAppbar eine Messung erstellt wird props.reload auf true gesetzt
-  // und sagt so dem measurements View, dass er updaten soll
+  // If topappbar creates a new measurment, props.reload will be set to true
+  // and this tells measurement view to reload its data
   componentDidUpdate = () => {
     if (this.props.reload) {
       this.loadData();
 
-      // this.props.reload wird wieder auf false gesetzt
+      // this.props.reload will be set to false
       this.props.unsetReload();
     }
   };
 
-  // Admin lädt Overview und Users
-  // User lädt Measurements
+  // Admin loads Overview und Users
+  // User loads Measurements
   loadData = () => {
     if (Auth.check_admin()) {
       this.getOverview();
@@ -51,7 +51,7 @@ export default class Measurements extends Component {
     this.newMeasurementsDialog.MDComponent.show();
   };
 
-  // Erstellt Tabelle abhängig davon ob der User admin ist
+  // Creates table determined if user is admin or not
   // ToDO: User darf keine Messungen löschen
   showTable = (editable) => {
     let data = this.state.measurements;
@@ -89,7 +89,7 @@ export default class Measurements extends Component {
     this.setState({ content });
   };
 
-  // Api request für User Daten. Wird geladen damit der Admin auswählen kann für welchen user er eine neue Messung erstellen will
+  // Api request for User Data. Will be loaded so that admin user can choose for which user he wants to create a new measurement
   getUsers = () => {
     let that = this;
     let url = Auth.url + "/api/users";
@@ -111,10 +111,10 @@ export default class Measurements extends Component {
           idList.push(user.userID);
         });
 
-        // Wird in DropDown angezeigt
+        // Will be displayed in dropdown
         that.setState({ usernames: usernameList });
 
-        // Um in sendMeasurements übergeben zu werden
+        // Will be used in sendMeasurement
         that.setState({ userIds: idList });
         that.getDialog();
       } else {
@@ -130,7 +130,7 @@ export default class Measurements extends Component {
     xhttp.send();
   };
 
-  // API Request um Messungen zu bearbeiten
+  // API Request to edit measurements
   editData = () => {
     let that = this;
     let url = Auth.url + "/api/measurement/" + this.state.editId;
@@ -167,13 +167,13 @@ export default class Measurements extends Component {
           message: `Messung ${that.state.editId} erfolgreich geändert`,
         });
 
-        // Daten neu Laden um Änderungen zu bekommen
+        // reload data to get changes
         that.loadData();
 
-        // Dialog schlließen
+        // close dialog
         that.measurementsEditDialog.MDComponent.close();
 
-        // Tabelle neu erzeugen
+        // rerender table
         that.showTable(true);
       } else {
         try {
@@ -196,7 +196,7 @@ export default class Measurements extends Component {
     xhttp.send(data);
   };
 
-  // String aus den geladenen Daten in Date object umwandeln
+  // converts date string to date object
   convertDate = (measurements) => {
     measurements.forEach((measurement) => {
       measurement.Datum = measurement.Datum.replace('"', "");
@@ -211,7 +211,7 @@ export default class Measurements extends Component {
     return measurements;
   };
 
-  // API Request Messungsübersicht alle User
+  // API Request measurements overview of all users
   getOverview = () => {
     let that = this;
     let url = Auth.url + "/api/measurements";
@@ -241,7 +241,7 @@ export default class Measurements extends Component {
     xhttp.send();
   };
 
-  // API Request Messungen eines Users
+  // API Request all measurements of a user
   getMeasurements = () => {
     let that = this;
     let url = Auth.url + "/api/user/" + Auth.getUser().id + "/anthropometric";
@@ -271,7 +271,7 @@ export default class Measurements extends Component {
     xhttp.send();
   };
 
-  // API Request um Messung zu löschen. Wird in Tabelle aufgerufen
+  // API Request to delete a measurement. will be triggered in table
   delete = (id) => {
     let that = this;
     let url = Auth.url + "/api/measurement/" + id;
@@ -288,10 +288,10 @@ export default class Measurements extends Component {
           message: `Messung ${id} erfolgreich gelöscht`,
         });
 
-        // Daten neu Laden um Änderungen zu erhalten
+        // reload data to get changes
         that.loadData();
 
-        // Tabelle neu rendern
+        // rerender table
         that.showTable(true);
       } else {
         try {
@@ -306,12 +306,12 @@ export default class Measurements extends Component {
     xhttp.send();
   };
 
-  // Api Request um neue Messung anzulegen
+  // Api Request to create new measurement
   sendMeasurement = () => {
     let id;
 
-    // Wenn Admin nimm id aus userIDs an der Stelle choosenIndex, welche aus dropdown kommt
-    // Wenn User nimm seine UserID
+    // If user is admin, take the id from the user-id-list which was choosen via dropdown in dialog
+    // If user is not admin, take his user id
     Auth.check_admin()
       ? (id = this.state.userIds[this.state.chosenIndex])
       : (id = Auth.getUser().id);
@@ -327,10 +327,10 @@ export default class Measurements extends Component {
 
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
-        // Daten neu Laden um Änderung zu erhalten
+        // reload data to get changes
         that.loadData();
 
-        // Dialog schließen
+        // close dialog
         that.newMeasurementsDialog.MDComponent.close();
 
         // Snackbar MSG
@@ -368,7 +368,7 @@ export default class Measurements extends Component {
     xhttp.send(data);
   };
 
-  // Öffnet den Dialog zum Bearbeiten einer Messung mit den Aktuellen Werten
+  // open dialog for editing of a measurement, and give the dialog its current values
   showDialog = (id) => {
     this.setState({ editId: id });
 
@@ -386,7 +386,7 @@ export default class Measurements extends Component {
     this.measurementsEditDialog.MDComponent.show();
   };
 
-  // Wird Dialog für Neue Messungen übergeben um Werte zurück zu erhalten
+  // Given to dialog to return its values
   getDataFromDialogforNew = (
     height,
     sittingHeight,
@@ -403,7 +403,7 @@ export default class Measurements extends Component {
     this.sendMeasurement();
   };
 
-  // Wird Dialog für Bearbeitung einer Messung übergeben um Werte zurück zu erhalten
+  // Given to dialog to return its values
   getDataFromDialogForEdit = (
     height,
     sittingHeight,
@@ -420,8 +420,8 @@ export default class Measurements extends Component {
     this.editData();
   };
 
-  // Erzeugt die Dialoge zum Neue Messungen erstellen abhängig davon on User admin ist oder nicht
   // und den Dialog zum Bearbeiten von Messungen
+  // Creates edit dialog and new measurements dialog with dropdown or without, determined by if user is admin
   getDialog = () => {
     let dialog;
 

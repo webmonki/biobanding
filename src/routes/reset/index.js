@@ -13,7 +13,7 @@ export default class Reset extends Component {
   componentWillMount = () => {
     this.setState({ btnDisabled: true });
 
-    // Hole Token aus URL
+    // get token from URL
     let queryString = window.location.search;
 
     let urlParams = new URLSearchParams(queryString);
@@ -57,7 +57,7 @@ export default class Reset extends Component {
     }
   };
 
-  // Send Request
+  // API Request to send new password
   sendNewPassword = () => {
     let that = this;
     let url = Auth.url + "/api/user/reset";
@@ -70,7 +70,6 @@ export default class Reset extends Component {
     xhttp.onreadystatechange = function () {
       if ([1, 2, 3, 4].includes(this.readyState)) {
         if (this.status === 200) {
-          let response = JSON.parse(this.responseText);
           route("login", true);
         } else {
           try {
@@ -91,7 +90,7 @@ export default class Reset extends Component {
     xhttp.send(data);
   };
 
-  // Render Reset View mit Validation
+  // Render Reset View with validation in textfields
   render() {
     return (
       <Card class={style.card}>

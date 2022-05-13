@@ -61,7 +61,7 @@ export default class Signup extends Component {
     }
   };
 
-  // API Request zum Registrieren
+  // API Request to sign up
   signup = () => {
     let that = this;
     let url = Auth.url + "/api/users/register";
@@ -74,10 +74,10 @@ export default class Signup extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4) {
         if (this.status === 200) {
-          // Sagt Login View das er Anweisungen anzeigen soll
+          // Tells login view to show instructions
           that.props.setInstructions(true);
-          // If Request is Ok go to Login
 
+          // If Request is Ok go to Login
           route("/login", true);
         } else {
           try {
@@ -100,7 +100,7 @@ export default class Signup extends Component {
     xhttp.send(data);
   };
 
-  // API Request welcher den eingegebenen Code überprüft
+  // API Request to check registration code
   checkCode = () => {
     let that = this;
     let url = Auth.url + "/api/configurations/check_code";
@@ -113,28 +113,28 @@ export default class Signup extends Component {
     xhttp.onreadystatechange = function () {
       if ([1, 2, 3, 4].includes(this.readyState)) {
         if (this.status === 200) {
-          // Wenn codeSet True wird normale Registrierungsansicht angezeigt
+          // if codeSet true show normal registration view
           that.setState({ codeSet: true });
 
-          // Feedback leeren
+          // empty Feedback
           that.setState({ responseFB: "" });
         } else {
-          // Wenn Code nicht richtig ist
+          // if code is not correct
           try {
-            // Setze Text für Feedback
+            // Set text for feedback
             let response = JSON.parse(this.responseText);
 
             that.setState({ responseFBClass: style.feedbackErr });
             that.setState({ responseFB: response.msg });
 
-            // Leere code input felder
+            // empty code input fields
             that.setState({ code: "" });
             that.setState({ code1: "" });
             that.setState({ code2: "" });
             that.setState({ code3: "" });
             that.setState({ code4: "" });
 
-            // Focus erstes Feld
+            // Focus first Feld
             document.getElementById("code1").focus();
           } catch (err) {}
         }
@@ -148,9 +148,9 @@ export default class Signup extends Component {
     xhttp.send(data);
   };
 
-  // Render Registrierungsansicht mit Validaierung
+  // Render registration view with validation in textfields
   renderContent = () => {
-    // Normale Registrierungsansicht
+    // Normal registration form
     if (this.state.codeSet) {
       return (
         <Card class={style.card}>
@@ -318,7 +318,7 @@ export default class Signup extends Component {
         </Card>
       );
     }
-    // Ansicht um Registrierungscode einzugeben
+    // form to get registration code
     return (
       <Card class={style.card}>
         <div class={style.logoContainer}>

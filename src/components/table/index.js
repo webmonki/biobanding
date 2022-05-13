@@ -11,39 +11,39 @@ import Menu from "./menu";
 
 export default class Table extends Component {
   componentWillMount = () => {
-    // Anfangsseite für pagination
+    // set initial page of pagination
     this.setPage(1);
 
-    // Daten als State weil props nicht verändert werden können
+    // Data set as state because props cant be changed
     this.setState({ data: this.props.data });
 
     this.setState({ containerAddSearch: style.searchContainer });
 
-    // Wenn wahr wird Delete Container angezeigt
+    // If true, delete container will be shown
     this.setState({ showDelete: false });
 
-    // Wenn wahr ist die Checkbox im TabellenKopf gechecked und alle anderen Checkboxes auch
+    // If true, check all checkboxes
     this.setState({ checked: false });
 
-    // Liste für die gecheckten checkboxes
+    // List of checked checkboxes
     this.setState({ checkList: [] });
 
-    // Ab welche spalte die Untertabelle beginnen soll
+    // at which column begins the subtable
     this.setState({ subTableIndex: 7 });
 
-    // Spalten die nicht angezeigt werden sollen
+    // columns  that shall not be displayed
     this.setState({ colsHidden: ["id", "Id", "userID"] });
 
-    // Speichert welche Reihen Collapsed sind
+    // List if rows that are open (uncollapsed)
     this.setState({ collapseList: {} });
 
-    // Liste nach welcher die Daten gefilter werden
+    // List to filter the data
     this.setState({ filterParams: [] });
 
-    // Gibt die Anzahl der Spalten pro Seite  wieder
+    // Count of rows per page
     this.getPageSize();
 
-    // Füllt die collapseList mit allen Spalten und setzt false
+    // Fills collapseList with all calumns and set them to false
     this.getCollapseList();
   };
 
@@ -54,21 +54,21 @@ export default class Table extends Component {
     }
   };
 
-  // Wenn sich die Daten ändern (tabelle geupdated)
+  // When new data comes in (tabelle geupdated)
   componentDidUpdate = () => {
     if (this.state.data !== this.props.data) {
       this.setState({ data: this.props.data });
     }
 
-    // Zeigt den DeleteContainer
+    // show the deleteContainer if showDelete is true
     this.toggleShowDelete();
 
-    // Collapsed die SubTableRows
+    // open or collapse the row that are true in collapseList
     this.collapseAll();
   };
 
-  // Erzeugt die Liste für die Spalten welche collapsen
-  // wahr = offen
+  // Create a list if objects with row id and bool
+  // true = open(uncollapsed)
   getCollapseList = () => {
     let collapseList = this.state.collapseList;
 
@@ -80,8 +80,7 @@ export default class Table extends Component {
     }
   };
 
-  // Wenn etwas in der Checklist steht, also eine Spalte gecheckt ist
-  // zeige Delete Container
+  // if something is in checklist show delete container
   toggleShowDelete = () => {
     let showDelete;
 
@@ -96,14 +95,14 @@ export default class Table extends Component {
     }
   };
 
-  // Setzt die Seite für die Pagination
+  // Sets page of pagination
   setPage = (page) => {
     if (this.state.page !== page) {
       this.setState({ page });
     }
   };
 
-  // Gibt die Daten wieder und filtert diese wenn etwas in FilterParams steht
+  // returs the data, filtered data if FilterParams isnt empty
   getData = () => {
     let sortParams = this.state.sortParams;
     let filterParams = this.state.filterParams;
@@ -118,7 +117,7 @@ export default class Table extends Component {
       }
     }
 
-    // Jeden Filter auf die Daten anwenden
+    // apply every filter to data
     filterParams.forEach((filter) => {
       if (filter.operator === 0) {
         data = this.search(filter.val, data, filter.chosenIndex);
@@ -159,7 +158,7 @@ export default class Table extends Component {
     return data;
   };
 
-  // Alle Daten einer Reihe die größer sind als val
+  // return a list with every row, where the cellvalue is greater than val
   searchGreaterThan = (val, data, chosenIndex) => {
     let cols = this.getCols();
     let type = typeof data[0][cols[chosenIndex]];
@@ -200,7 +199,7 @@ export default class Table extends Component {
     }
   };
 
-  // Alle Daten einer Reihe die kleiner sind als val
+  // return a list with every row, where the cellvalue is smaller than val
   searchLesserThan = (val, data, chosenIndex) => {
     let cols = this.getCols();
     let type = typeof data[0][cols[chosenIndex]];
@@ -241,7 +240,7 @@ export default class Table extends Component {
     }
   };
 
-  // Sucht gleiche Zahlenwerte oder Daten die Zeichenkette enthalten
+  // returns list of rows, where cellvalue matches val
   search = (val, data, chosenIndex) => {
     let cols = this.getCols();
 
@@ -298,13 +297,13 @@ export default class Table extends Component {
     }
   };
 
-  // Setzt die Parameter für die Sortierung
+  // Params for sorting, descending, ascending and the column
   setSortParams = (dir, key) => {
     this.setState({ sortParams: {} });
     this.setState({ sortParams: { ...this.sortParams, dir, key } });
   };
 
-  // Für Text alignment in Tabelle
+  // text alignment in table header
   getTableHeadStyle = (name) => {
     if (typeof this.props.data[0][name] === "string") {
       return style.alignLeft;
@@ -315,13 +314,13 @@ export default class Table extends Component {
     }
   };
 
-  // Tabellenkopf in Untertabelle
+  // create the table header of the suntable
   createSubTableHeader = (id) => {
     let cols = this.getRangeList(this.state.subTableIndex, this.getColCount());
     let divider;
 
     let tableHeader = (
-      // divider = kleine Linie in TabellenKopf zwischen den Spalten
+      // divider = small line between header cells
       <tr>
         {cols.map((name) => {
           if (name === cols[0]) {
@@ -335,7 +334,6 @@ export default class Table extends Component {
 
           return (
             <th>
-              {/* Spalten Name mit Icon Pfeil hoch oder Runter um Sortierrichtung anzuzeigen */}
               <SortIcon
                 colname={name}
                 onClickSort={this.setSortParams}
@@ -352,7 +350,7 @@ export default class Table extends Component {
     return tableHeader;
   };
 
-  // Erzeugt den Kopf der Tabelle
+  // creates header row of main table
   createTableHeader = () => {
     let divider = true;
     if (this.props.data !== undefined && this.props.data.length !== 0) {
@@ -379,7 +377,6 @@ export default class Table extends Component {
               }
               return (
                 <th>
-                  {/* Spalten Name mit Icon Pfeil hoch oder Runter um Sortierrichtung anzuzeigen */}
                   <SortIcon
                     colname={name}
                     onClickSort={this.setSortParams}
@@ -398,7 +395,7 @@ export default class Table extends Component {
       return tableHeader;
     }
 
-    // Tabelle wenn keine  Daten vorhanden sind
+    // Table if no data are available
     let tableHeader = (
       <tr>
         <th>Keine {this.props.title} vorhanden</th>
@@ -407,7 +404,7 @@ export default class Table extends Component {
     return tableHeader;
   };
 
-  // Setzt jedes Häcken in allen Checkboxen jeder Reihe
+  // check every checkbox
   checkAll = (checkAll) => {
     let checkList = this.state.checkList;
 
@@ -424,7 +421,8 @@ export default class Table extends Component {
     this.setState({ checkList });
   };
 
-  // Jedes Element in checkList wird gelöscht
+  // delete every element in checkList from the data and empty List
+  // delete comes from view and is the API Request to delete data
   checkDelete = () => {
     let checkList = this.state.checkList;
 
@@ -435,14 +433,14 @@ export default class Table extends Component {
     this.setState({ checkList: [] });
   };
 
-  // Gibt zurück ob sich Element in der Checkliste befindet
+  // Checks if an element is in checklist
   getCheckState = (id) => {
     let checkList = this.state.checkList;
 
     return checkList.includes(id);
   };
 
-  // Addiert oder entfernt Element aus Checklist
+  // adds or removes element from CheckList
   addToCheckList = (id) => {
     let checkList = this.state.checkList;
 
@@ -457,7 +455,7 @@ export default class Table extends Component {
     this.setState({ checkList });
   };
 
-  // Text Alignment der Zellen
+  // textalignment of cells
   getTableDataStyle = (data, key) => {
     if (typeof data[key] === "number") {
       return style.alignRight;
@@ -465,14 +463,14 @@ export default class Table extends Component {
     return style.alignLeft;
   };
 
-  // Gibt Anzahl der Spalten
+  // returns count of columns
   getColCount = () => {
     let cols = Object.keys(this.props.data[0]);
 
     return cols.length;
   };
 
-  // Gibt die Namen der Spalten
+  // returns the columnnames
   getCols = () => {
     if (this.props.data !== undefined && this.props.data.length !== 0) {
       let cols = Object.keys(this.props.data[0]);
@@ -490,8 +488,7 @@ export default class Table extends Component {
     return [];
   };
 
-  // Gibt die Spalten die in angegebener Range liegen
-  // Zum Aufteilen in Tabelle und Untertabelle
+  // Returns the columnnames in a range to divide them into main- and subtable
   getRangeList = (start, end) => {
     if (end === undefined) {
       end = this.getColCount();
@@ -505,7 +502,7 @@ export default class Table extends Component {
     return newCols;
   };
 
-  // Erzeugt Untertabelle
+  // create subtable
   renderSubTable = (id, row) => {
     let cols = this.getRangeList(this.state.subTableIndex, undefined);
     let colLength = this.getRangeList(0, this.state.subTableIndex).length + 1;
@@ -533,7 +530,7 @@ export default class Table extends Component {
     );
   };
 
-  // Collapse Reihen abhängig von collapseList
+  // Opens(uncollapse) or closes(collape) the rows determined by bools in collapseList
   collapseAll = () => {
     let collList = this.state.collapseList;
     let keys = Object.keys(collList);
@@ -547,7 +544,7 @@ export default class Table extends Component {
     });
   };
 
-  // Schließt Reihe (Collapse)
+  // close row (Collapse)
   collapse = (id) => {
     let coll = document.getElementById(id + "row");
     let collIcon = document.getElementById(id + "icon");
@@ -558,7 +555,7 @@ export default class Table extends Component {
     }
   };
 
-  // Öffnet Reihe (Uncollapse)
+  // open row (Uncollapse)
   unCollapse = (id) => {
     let coll = document.getElementById(id + "row");
     let collIcon = document.getElementById(id + "icon");
@@ -569,7 +566,7 @@ export default class Table extends Component {
     }
   };
 
-  // Element zur Collapselist hinzufügen oder entfernen
+  // adds or removes element from collapseList
   addToCollapseList = (id) => {
     let collList = this.state.collapseList;
     let keys = Object.keys(collList);
@@ -589,7 +586,7 @@ export default class Table extends Component {
     this.setState({ collapseList: collList });
   };
 
-  // Button mit Icon Pfeil hoch oder runter jenachdem ob Reihe Collapsed ist
+  // Button that triggers collapse. With arrow that shows if collapsed or not
   getCollapseBtn = (key) => {
     if (this.getColCount() > this.state.subTableIndex) {
       return (
@@ -611,7 +608,7 @@ export default class Table extends Component {
     return undefined;
   };
 
-  // Tabellen Spalten
+  // Table columns
   renderTableContent = (key, row) => {
     let cols = this.getRangeList(0, this.state.subTableIndex);
     return (
@@ -648,7 +645,7 @@ export default class Table extends Component {
           </div>
         </td>
 
-        {/* Zellen Erzeugen */}
+        {/* create cells */}
         {Object.keys(row).map((key) => {
           if (!cols.includes(key)) {
             return undefined;
@@ -657,7 +654,7 @@ export default class Table extends Component {
             return <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>;
           }
 
-          // Datum formatieren
+          // format date
           let date = row[key];
           let day = date.getDate();
           if (day < 10) {
@@ -676,7 +673,7 @@ export default class Table extends Component {
     );
   };
 
-  // Tabellen Gerüst um die Spalten
+  // tablebody without rows
   createTableBody = () => {
     let page = this.state.page;
     let data = this.getData();
@@ -693,7 +690,10 @@ export default class Table extends Component {
           let key = row[this.props.idKey];
           return (
             <tbody>
+              {/* create tablerows */}
               {this.renderTableContent(key, row)}
+
+              {/* create subtable */}
               {this.renderSubTable(key, row)}
             </tbody>
           );
@@ -723,7 +723,7 @@ export default class Table extends Component {
     this.setState({ page: this.state.page + 1 });
   };
 
-  // Anzeige Welche Seite in Pagination
+  // Displayes an which page the user is at. For Example: 1/4
   createPageCounter = () => {
     if (this.state.data !== undefined) {
       let pageCount = `${this.state.page}/${this.getPageCount()}`;
@@ -732,14 +732,14 @@ export default class Table extends Component {
     }
   };
 
-  // Wieviele Spalten pro Seite
+  // rows per page
   getPageSize = () => {
     let pageSize = this.props.pageSize;
 
     return pageSize;
   };
 
-  // Wieviele Seiten insgesamt
+  // count of pages
   getPageCount = () => {
     if (this.state.data !== undefined) {
       let pageCount;
@@ -762,7 +762,7 @@ export default class Table extends Component {
     }
   };
 
-  // Pagination Button mit Seiten Nummer
+  // Button to switch to another page with page number
   createBtn = (pageNumber) => {
     if (pageNumber === this.state.page) {
       return (
@@ -778,14 +778,14 @@ export default class Table extends Component {
     );
   };
 
-  // Pagination zurück Button enable oder disable
+  // Pagination backbutton disableing
   disableBackBtn = () => {
     let currentPage = this.state.page;
 
     return currentPage === 1;
   };
 
-  // Pagination vorwärts Button enable oder disable
+  // Pagination forwardbutonn disableing
   disableForwardBtn = () => {
     let totalPage = this.getPageCount();
     let currentPage = this.state.page;
@@ -793,7 +793,7 @@ export default class Table extends Component {
     return currentPage === totalPage;
   };
 
-  // Erstellt die Pagination
+  // create pagination
   createTablePagination = () => {
     if (this.state.data !== undefined && this.state.data.length !== 0) {
       let pageNumbers = [];
@@ -842,7 +842,7 @@ export default class Table extends Component {
     }
   };
 
-  // Exportiert die Daten in CSV Datei mit angewendeten Filtern
+  // export data to csv with filters applied
   exportFile = () => {
     let data = this.getData();
     let cols = Object.keys(this.props.data[0]);
@@ -866,10 +866,10 @@ export default class Table extends Component {
     link.click();
   };
 
-  // Wieviele Reihen ausgewählt sind
+  // How many checkboxes are checked
   getSelectedCount = () => this.state.checkList.length;
 
-  // Fügt Filter Hinzu
+  // add Filter to filterParams
   addFilter = () => {
     let filterList = this.state.filterParams;
     let id;
@@ -906,7 +906,7 @@ export default class Table extends Component {
     this.setState({ filterParams: [...this.state.filterParams, filter] });
   };
 
-  // Bearbeiten einen bestehenden Filter
+  // update existing filter
   updateFilter = (id, chosenIndex, operator, val) => {
     let filterParams = this.state.filterParams;
     let filterObj = { id, chosenIndex, operator, val };
@@ -939,7 +939,7 @@ export default class Table extends Component {
     this.setState({ filterParams });
   };
 
-  // Löscht einen Filter
+  // delete filter from filterParams
   deleteFilter = (id) => {
     let filterParams = this.state.filterParams;
 
@@ -955,11 +955,11 @@ export default class Table extends Component {
     this.setState({ filterParams });
   };
 
-  // Render Tabelle
+  // render table
   render() {
     return (
       <div class={style.tableContentContainer}>
-        {/* Menu ist die Spalte über dem Tabellen Kopf mit export, hinzufügen und Filter */}
+        {/* Menu is the row above the tableheader, with add- and exportbutton and filter-options */}
         <Menu
           showDialog={this.props.showDialog}
           showDelete={this.state.showDelete}

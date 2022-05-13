@@ -13,7 +13,7 @@ export default class Navbar extends Component {
   };
 
   componentDidMount = () => {
-    // Öffnet initial einmal die Navbar
+    // initial opening of the navbar. navbar will never be closed again
     this.props.openDrawer();
   };
 
@@ -21,14 +21,14 @@ export default class Navbar extends Component {
     route(path);
   };
 
-  // Page Routing für navbar Items
+  // Page Routing for navbar Items
   goHome = this.linkTo("/");
   goToMyProfile = this.linkTo("/profile");
   goToMeasurements = this.linkTo("/measurements");
   goToUsers = this.linkTo("/users");
   goToSettings = this.linkTo("/settings");
 
-  // Ob der Text angezeigt werden soll oder nicht
+  // display text
   getDisplayBar = () => {
     if (this.props.drawerOpen === false) {
       return { display: "block" };
@@ -36,7 +36,7 @@ export default class Navbar extends Component {
     return { display: "none" };
   };
 
-  // Render navbar für admin oder user
+  // Render navbar für admin or user
   renderNavbarContent = (props) => {
     let content;
     if (Auth.check_admin()) {
