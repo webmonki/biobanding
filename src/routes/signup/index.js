@@ -17,7 +17,7 @@ import "preact-material-components/Checkbox/style.css";
 export default class Signup extends Component {
   componentWillMount = () => {
     this.setState({ btnDisabled: true });
-    this.setState({ codeSet: true });
+    this.setState({ codeSet: false });
     this.setState({ code: "" });
   };
 
