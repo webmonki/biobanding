@@ -54,7 +54,8 @@ export default class Signup extends Component {
       this.state.username.length < 33 &&
       this.state.password.length > 3 &&
       this.state.password.length < 17 &&
-      this.state.password === this.state.password2
+      this.state.password === this.state.password2 &&
+      this.state.dsgvo
     ) {
       this.setState({ btnDisabled: false });
     } else {
@@ -303,9 +304,9 @@ export default class Signup extends Component {
               <Formfield>
                 <Checkbox
                   name="DSGVOCheck"
-                  checked={this.state.ssl}
                   onChange={() => {
-                    this.checkServer();
+                    this.checkDSGVO();
+                    this.handleChange();
                   }}
                 />
               </Formfield>
@@ -411,8 +412,7 @@ export default class Signup extends Component {
                 let code = this.state.code;
                 code = code + e.target.value;
                 this.setState({ code });
-
-                this.checkDSGVO();
+                this.checkCode();
               }}
             />
           </div>
