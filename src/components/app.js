@@ -79,7 +79,11 @@ export default class App extends Component {
     }
 
     return (
-      <Header setReload={this.setReload} toggleNavbar={this.toggleDrawer} />
+      <Header
+        setReload={this.setReload}
+        toggleNavbar={this.toggleDrawer}
+        showSnackbar={this.showSnackbar}
+      />
     );
   };
 
@@ -144,7 +148,17 @@ export default class App extends Component {
     this.confirmDialog.MDComponent.show();
   };
 
-  showSnackbar = (text) => {
+  showSnackbar = (text, error) => {
+    let sbText = document.getElementsByClassName("mdc-snackbar__text");
+    let errorColor = "#B1262D";
+    let successColor = "#3C9052";
+
+    if (error) {
+      sbText[0].style.color = errorColor;
+    } else {
+      sbText[0].style.color = successColor;
+    }
+
     this.bar.MDComponent.show({
       message: text,
     });

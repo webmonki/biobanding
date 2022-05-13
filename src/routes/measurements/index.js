@@ -11,8 +11,6 @@ import "preact-material-components/Drawer/style.css";
 import Table from "../../components/table";
 import NewMeasurementAdmin from "../../components/dialogs/newMeasurementAdmin";
 import NewMeasurementUser from "../../components/dialogs/newMeasurementUser";
-import Snackbar from "preact-material-components/Snackbar";
-import "preact-material-components/Snackbar/style.css";
 
 export default class Measurements extends Component {
   componentWillMount = () => {
@@ -471,13 +469,6 @@ export default class Measurements extends Component {
       <div class={style.page}>
         <span class={style.pageHeader}>Messungen</span>
         <Card class={style.card}>{this.state.content}</Card>
-        <div class={style.mySnackbar}>
-          <Snackbar
-            ref={(bar) => {
-              this.bar = bar;
-            }}
-          />
-        </div>
         {this.state.dialog}
         {this.state.editDialog}
       </div>

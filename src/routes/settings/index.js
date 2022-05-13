@@ -12,8 +12,6 @@ import "preact-material-components/Radio/style.css";
 import Checkbox from "preact-material-components/Checkbox";
 import Formfield from "preact-material-components/FormField";
 import "preact-material-components/Checkbox/style.css";
-import Snackbar from "preact-material-components/Snackbar";
-import "preact-material-components/Snackbar/style.css";
 
 export default class Settings extends Component {
   componentWillMount = () => {
@@ -64,7 +62,7 @@ export default class Settings extends Component {
         }
       } else {
         // Snackbar MSG
-        that.showSnackbar("Fehler beim Laden der Einstellungen");
+        that.showSnackbar("Fehler beim Laden der Einstellungen", true);
       }
     };
 
@@ -89,7 +87,7 @@ export default class Settings extends Component {
           that.props.showSnackbar("Einstellungen erfolgreich geändert");
         } else {
           // Snackbar MSG
-          that.props.showSnackbar("Fehler beim Ändern");
+          that.props.showSnackbar("Fehler beim Ändern", true);
         }
       }
     };
@@ -130,7 +128,7 @@ export default class Settings extends Component {
           that.props.showSnackbar("E-Mail erfolgreich gesendet");
         } else {
           // Snackbar MSG
-          that.showSnackbar("Fehler beim Senden");
+          that.showSnackbar("Fehler beim Senden", true);
         }
       }
     };
@@ -164,7 +162,7 @@ export default class Settings extends Component {
           that.props.showSnackbar("Code erfolgreich generiert");
         } else {
           // Snackbar MSG
-          that.props.showSnackbar("Code konnte nicht generiert werden");
+          that.props.showSnackbar("Code konnte nicht generiert werden", true);
         }
       }
     };
@@ -326,13 +324,6 @@ export default class Settings extends Component {
             >
               Speichern
             </Button>
-          </div>
-          <div class={style.mySnackbar}>
-            <Snackbar
-              ref={(bar) => {
-                this.bar = bar;
-              }}
-            />
           </div>
         </div>
       </div>

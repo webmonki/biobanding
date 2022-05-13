@@ -11,8 +11,6 @@ import "preact-material-components/Drawer/style.css";
 import Table from "../../components/table";
 import EditUser from "../../components/dialogs/editUser";
 import NewUser from "../../components/dialogs/newUser";
-import Snackbar from "preact-material-components/Snackbar";
-import "preact-material-components/Snackbar/style.css";
 
 export default class Users extends Component {
   componentWillMount = () => {
@@ -260,13 +258,6 @@ export default class Users extends Component {
             {this.state.responseFB}
           </span>
         </div>
-        {/* <div class={style.mySnackbar}>
-          <Snackbar
-            ref={(bar) => {
-              this.bar = bar;
-            }}
-          />
-        </div> */}
         {this.renderDialog()}
       </div>
     );

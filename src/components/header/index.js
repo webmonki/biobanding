@@ -14,8 +14,6 @@ import "preact-material-components/TextField/style.css";
 import "preact-material-components/Select/style.css";
 import NewMeasurementAdmin from "../dialogs/newMeasurementAdmin";
 import NewMeasurementUser from "../dialogs/newMeasurementUser";
-import Snackbar from "preact-material-components/Snackbar";
-import "preact-material-components/Snackbar/style.css";
 
 export default class Header extends Component {
   // Request to Log out user
@@ -112,9 +110,7 @@ export default class Header extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         // Snackbar MSG
-        that.sbar.MDComponent.show({
-          message: "Messung erfolgreich gesendet",
-        });
+        that.props.showSnackbar("Messung erfolgreich gesendet");
 
         // Tells measurement view to reload its data
         that.props.setReload();
@@ -223,15 +219,6 @@ export default class Header extends Component {
               Messung
             </span>
           </Button>
-        </div>
-
-        {/* Snackbar */}
-        <div class={style.mySnackbar}>
-          <Snackbar
-            ref={(sbar) => {
-              this.sbar = sbar;
-            }}
-          />
         </div>
         {/* Dialog */}
         {this.state.dialog}

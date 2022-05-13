@@ -8,8 +8,6 @@ import Radio from "preact-material-components/Radio";
 import Auth from "../../components/state";
 import "preact-material-components/List/style.css";
 import "preact-material-components/Radio/style.css";
-import Snackbar from "preact-material-components/Snackbar";
-import "preact-material-components/Snackbar/style.css";
 
 export default class Profile extends Component {
   componentWillMount = () => {
@@ -427,14 +425,6 @@ export default class Profile extends Component {
             >
               Accout löschen
             </Button>
-          </div>
-
-          <div class={style.mySnackbar}>
-            <Snackbar
-              ref={(bar) => {
-                this.bar = bar;
-              }}
-            />
           </div>
         </div>
       </div>

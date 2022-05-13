@@ -102,14 +102,3 @@
 	padding: 0 24px 0 24px;
 }
 
-.mySnackbar :global(.mdc-snackbar) {
-	width: var(--global-snackbar-width);
-	margin: var(--global-snackbar-margin);
-	background-color: var(--global-snackbar-color);
-	color: var(--global-snackbar-font-color) !important;
-	box-shadow: var(--global-shadow);
-}
-
-:global(.mdc-snackbar__text) {
-	color: var(--global-snackbar-font-color) !important;
-}
