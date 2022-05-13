@@ -1,5 +1,5 @@
 import { h, Component } from "preact";
-import { Router } from "preact-router";
+import { Router, route } from "preact-router";
 import Header from "./header";
 import Profile from "../routes/profile";
 import NotFound from "../routes/404";
@@ -111,13 +111,11 @@ export default class App extends Component {
     this.setState({ showInstruction: val });
   };
 
-
   // Will be given to measurements view and will be triggered after it loads measurement data. If measurements view updates with reload = true
   // it will reload the data. Header sets it to true if it creates a new measurement
   unsetReload = () => {
     this.setState({ reload: false });
   };
-
 
   // Given to topappbar(header). If set to true it tells measurement view to reload the data
   setReload = () => {
