@@ -87,8 +87,8 @@ export default class Users extends Component {
 
     this.state.users.forEach((user) => {
       if (user.userID === id) {
-        this.setState({ editUsername: user.username });
-        this.setState({ editEmail: user.email });
+        this.setState({ editUsername: user.Benutzername });
+        this.setState({ editEmail: user["E-Mail"] });
       }
     });
     this.editUserDialog.MDComponent.show();
@@ -116,8 +116,8 @@ export default class Users extends Component {
           if (user.userID !== editId) {
             newUserList.push(user);
           } else {
-            user.username = that.state.editUsername;
-            user.email = that.state.editEmail;
+            user.Benutzername = that.state.editUsername;
+            user["E-Mail"] = that.state.editEmail;
             newUserList.push(user);
           }
         });
