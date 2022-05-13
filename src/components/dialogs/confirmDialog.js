@@ -15,11 +15,12 @@ export default class ConfirmDialog extends Component {
           this.props.deleteAccount();
         }}
       >
-        <Dialog.Header class={style.confirm}>
-          {this.props.dialogHeader}
-        </Dialog.Header>
-        <Dialog.Body />
-        <Dialog.Footer class={style.confirm}>
+        <Dialog.Header>{this.props.dialogHeader}</Dialog.Header>
+        <Dialog.Body>
+          Willst du deinen Accout wirklich löschen? Deine persönlichen Daten
+          werden damit unwiderruflich gelöscht
+        </Dialog.Body>
+        <Dialog.Footer class={style.footer}>
           <Dialog.FooterButton cancel>Abbrechen</Dialog.FooterButton>
           <Dialog.FooterButton
             style={{ color: "white" }}

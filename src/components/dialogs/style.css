@@ -38,22 +38,17 @@
 
 .dialog {
 	background-color: var(--global-dialog-background);
-	z-index: 7;
+	z-index: 8;
 	padding: var(--global-dialog-padding);
 }
 
 .confirmDialog {
 	background-color: var(--global-dialog-background);
-	z-index: 7;
+	z-index: 8;
 }
 
 dialog.confirmDialog > div:first-child {
 	width: 200px;
-}
-
-.confirm {
-	margin-left: auto;
-	margin-right: auto;
 }
 
 .footer {
