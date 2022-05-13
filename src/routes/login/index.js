@@ -225,21 +225,34 @@ export default class Login extends Component {
   // Logo, Content, Snackbar
   render() {
     return (
-      <Card class={style.card}>
-        <div class={style.logoContainer}>
-          <img class={style.logo} src="../../assets/breaking_bounds_logo.png" />
+      <div class={style.loginContent}>
+        <Card class={style.card}>
+          <div class={style.logoContainer}>
+            <img
+              class={style.logo}
+              src="../../assets/breaking_bounds_logo.png"
+            />
+          </div>
+          {this.renderContent()}
+          <div class={style.mySnackbar}>
+            <Snackbar
+              dismissesOnAction={false}
+              class={"mdc-snackbar__dismiss"}
+              ref={(bar) => {
+                this.bar = bar;
+              }}
+            />
+          </div>
+        </Card>
+        <div class={style.impressumContainer}>
+          <Link class={style.impressum} href={Auth.impressumLink} data-native>
+            Impressum
+          </Link>
+          <Link class={style.impressum} href={Auth.DSGVOLink} data-native>
+            Datenschutz
+          </Link>
         </div>
-        {this.renderContent()}
-        <div class={style.mySnackbar}>
-          <Snackbar
-            dismissesOnAction={false}
-            class={"mdc-snackbar__dismiss"}
-            ref={(bar) => {
-              this.bar = bar;
-            }}
-          />
-        </div>
-      </Card>
+      </div>
     );
   }
 }
