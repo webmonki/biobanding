@@ -245,12 +245,12 @@ export default class Login extends Component {
           </div>
         </Card>
         <div class={style.impressumContainer}>
-          <Link class={style.impressum} href={Auth.impressumLink} data-native>
+          <a class={style.impressum} href={Auth.impressumLink} target="_blank">
             Impressum
-          </Link>
-          <Link class={style.impressum} href={Auth.DSGVOLink} data-native>
+          </a>
+          <a class={style.impressum} href={Auth.DSGVOLink} target="_blank">
             Datenschutz
-          </Link>
+          </a>
         </div>
       </div>
     );
