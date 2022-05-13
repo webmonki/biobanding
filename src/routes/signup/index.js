@@ -17,12 +17,8 @@ export default class Signup extends Component {
   };
 
   componentDidMount = () => {
-    if (this.state.codeSet) {
-      this.handleChange();
-      document.addEventListener("keyup", this.handleKey);
-    }
-
     document.getElementById("code1").focus();
+    document.addEventListener("keyup", this.handleKey);
   };
 
   componentWillUnmount = () => {
@@ -30,7 +26,7 @@ export default class Signup extends Component {
   };
 
   handleKey = (event) => {
-    if (this.state.btnDisabled == false && event.code == "Enter") {
+    if (this.state.btnDisabled === false && event.code === "Enter") {
       this.signup();
       document.removeEventListener("keyup", this.handleKey);
     }
