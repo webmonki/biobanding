@@ -15,9 +15,17 @@ import Confirm from "../routes/confirm";
 import Navbar from "./navbar/navbar";
 import ConfirmDialog from "./dialogs/confirmDialog";
 import { deleteAccount } from "./reguests/requests";
+import RemindedMeasurement from "../routes/remindedMeasure/remindedMeasure";
 
 // Routes that can be visited without login or registration
-const publicRoutes = ["/signup", "/forgot", "/reset", "/login", "/confirm"];
+const publicRoutes = [
+  "/signup",
+  "/forgot",
+  "/reset",
+  "/login",
+  "/confirm",
+  "/remindedMeasurement",
+];
 
 // Routes that can only be visited by admin
 const adminOnlyRoutes = ["/settings", "/users"];
@@ -187,6 +195,7 @@ export default class App extends Component {
             <Settings path="/settings" />
             <Confirm path="/confirm" />
             <NotFound default />
+            <RemindedMeasurement path="/remindedMeasurement" />
           </Router>
         </div>
       </div>
