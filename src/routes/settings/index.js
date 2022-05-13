@@ -59,16 +59,12 @@ export default class Settings extends Component {
             that.setState({ regisCode: response.config.registration_code });
 
             // Snackbar MSG
-            that.bar.MDComponent.show({
-              message: `Einstellungen erfolgreich geladen`,
-            });
+            that.props.showSnackbar("Einstellungen erfolgreich geladen");
           } catch (err) {}
         }
       } else {
         // Snackbar MSG
-        that.bar.MDComponent.show({
-          message: `Fehler beim Laden`,
-        });
+        that.showSnackbar("Fehler beim Laden der Einstellungen");
       }
     };
 
@@ -90,14 +86,10 @@ export default class Settings extends Component {
       if (this.readyState === 4) {
         if (this.status === 200) {
           // Snackbar MSG
-          that.bar.MDComponent.show({
-            message: `Einstellungen erfolgreich geändert`,
-          });
+          that.props.showSnackbar("Einstellungen erfolgreich geändert");
         } else {
           // Snackbar MSG
-          that.bar.MDComponent.show({
-            message: `Fehler beim Ändern`,
-          });
+          that.props.showSnackbar("Fehler beim Ändern");
         }
       }
     };
@@ -135,14 +127,10 @@ export default class Settings extends Component {
       if ([1, 2, 3, 4].includes(this.readyState)) {
         if (this.status === 200) {
           // Snackbar MSG
-          that.bar.MDComponent.show({
-            message: `E-Mail erfolgreich gesendet`,
-          });
+          that.props.showSnackbar("E-Mail erfolgreich gesendet");
         } else {
           // Snackbar MSG
-          that.bar.MDComponent.show({
-            message: `Fehler beim Senden`,
-          });
+          that.showSnackbar("Fehler beim Senden");
         }
       }
     };
@@ -173,14 +161,10 @@ export default class Settings extends Component {
           } catch (err) {}
 
           // Snackbar MSG
-          that.bar.MDComponent.show({
-            message: `Code erfolgreich generiert`,
-          });
+          that.props.showSnackbar("Code erfolgreich generiert");
         } else {
           // Snackbar MSG
-          that.bar.MDComponent.show({
-            message: `Code konnte nicht generiert werden`,
-          });
+          that.props.showSnackbar("Code konnte nicht generiert werden");
         }
       }
     };

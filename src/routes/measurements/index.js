@@ -163,9 +163,7 @@ export default class Measurements extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         // Snackbar MSG
-        that.bar.MDComponent.show({
-          message: `Messung ${that.state.editId} erfolgreich geändert`,
-        });
+        that.props.showSnackbar("Messung erfolgreich geändert");
 
         // reload data to get changes
         that.loadData();
@@ -284,9 +282,7 @@ export default class Measurements extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         // Snackbar MSG
-        that.bar.MDComponent.show({
-          message: `Messung ${id} erfolgreich gelöscht`,
-        });
+        that.props.showSnackbar("Messung erfolgreich gelöscht");
 
         // reload data to get changes
         that.loadData();
@@ -334,9 +330,7 @@ export default class Measurements extends Component {
         that.newMeasurementsDialog.MDComponent.close();
 
         // Snackbar MSG
-        that.bar.MDComponent.show({
-          message: `Messung erfolgreich angelegt`,
-        });
+        that.props.showSnackbar("Messung erfolgreich angelegt");
       } else {
         try {
           let response = JSON.parse(this.responseText);

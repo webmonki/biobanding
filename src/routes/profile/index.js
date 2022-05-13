@@ -46,9 +46,7 @@ export default class Profile extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         // Snackbar MSG
-        that.bar.MDComponent.show({
-          message: `Login-Daten erfolgreich geändert`,
-        });
+        that.props.showSnackbar("Login-Daten erfolgreich geändert");
 
         // Email und Username in Auth setzen
         Auth.setEmail(that.state.email);
@@ -155,9 +153,7 @@ export default class Profile extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         // Snackbar MSG
-        that.bar.MDComponent.show({
-          message: `Spielerdetails erfolgreich angelegt`,
-        });
+        that.props.showSnackbar("Spielerdetails erfolgreich angelegt");
       } else {
         try {
           let response = JSON.parse(this.responseText);

@@ -63,9 +63,7 @@ export default class Users extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         //  Snackbar MSG
-        that.bar.MDComponent.show({
-          message: `Benutzer erfolgreich gelöscht`,
-        });
+        that.props.showSnackbar("Benutzer erfolgreich gelöscht");
 
         that.getData();
       } else {
@@ -129,9 +127,7 @@ export default class Users extends Component {
         that.editUserDialog.MDComponent.close();
 
         // Snackbar MSG
-        that.bar.MDComponent.show({
-          message: "Benutzer erfolgreich geändert",
-        });
+        that.props.showSnackbar("Benutzer erfolgreich geändert");
       } else {
         try {
           let response = JSON.parse(this.responseText);
@@ -163,9 +159,7 @@ export default class Users extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         // Snackbar MSG
-        that.bar.MDComponent.show({
-          message: "Benutzer erfolgreich angelegt",
-        });
+        that.props.showSnackbar("Benutzer erfolgreich angelegt", true);
 
         // reload to get updated data
         that.getData();
@@ -266,13 +260,13 @@ export default class Users extends Component {
             {this.state.responseFB}
           </span>
         </div>
-        <div class={style.mySnackbar}>
+        {/* <div class={style.mySnackbar}>
           <Snackbar
             ref={(bar) => {
               this.bar = bar;
             }}
           />
-        </div>
+        </div> */}
         {this.renderDialog()}
       </div>
     );
