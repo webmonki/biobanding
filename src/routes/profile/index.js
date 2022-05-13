@@ -419,12 +419,20 @@ export default class Profile extends Component {
               </span>
             </div>
           </div>
-          <div class={style.btnContainer}>
+          <div class={style.row}>
             <Button raised onClick={this.sendData}>
               Speichern
             </Button>
-            {/* <span class={this.state.responseFBClass}>{this.state.responseFB}</span> */}
+            <Button
+              onClick={() => {
+                this.props.openConfirmDialog();
+              }}
+              class={style.codeBtn}
+            >
+              Accout löschen
+            </Button>
           </div>
+
           <div class={style.mySnackbar}>
             <Snackbar
               ref={(bar) => {
