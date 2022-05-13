@@ -22,12 +22,7 @@ export default class ConfirmDialog extends Component {
         </Dialog.Body>
         <Dialog.Footer class={style.footer}>
           <Dialog.FooterButton cancel>Abbrechen</Dialog.FooterButton>
-          <Dialog.FooterButton
-            style={{ color: "white" }}
-            class="mdc-button mdc-theme--primary-bg"
-            raised
-            accept
-          >
+          <Dialog.FooterButton class={`${style.deleteBtn}`} raised accept>
             Löschen
           </Dialog.FooterButton>
         </Dialog.Footer>

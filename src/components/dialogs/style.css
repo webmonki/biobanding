@@ -83,3 +83,16 @@ dialog.confirmDialog > div:first-child {
 	background-color: var(--mdc-theme-primary) !important;
 	color: white !important;
 }
+
+.deleteBtn {
+	background-color: var(--global-error-color) !important;
+	color: white !important;
+}
+
+.deleteBtn::before {
+	background-color: var(--global-error-color) !important;
+}
+
+.deleteBtn::after {
+	background-color: var(--global-error-color) !important;
+}
