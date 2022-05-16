@@ -8,6 +8,11 @@ import style from "./style";
 import { route } from "preact-router";
 import Auth from "../../components/state";
 import TextField from "preact-material-components/TextField";
+import "preact-material-components/List/style.css";
+import "preact-material-components/Radio/style.css";
+import Checkbox from "preact-material-components/Checkbox";
+import Formfield from "preact-material-components/FormField";
+import "preact-material-components/Checkbox/style.css";
 
 export default class Signup extends Component {
   componentWillMount = () => {
@@ -49,7 +54,8 @@ export default class Signup extends Component {
       this.state.username.length < 33 &&
       this.state.password.length > 3 &&
       this.state.password.length < 17 &&
-      this.state.password === this.state.password2
+      this.state.password === this.state.password2 &&
+      this.state.dsgvo
     ) {
       this.setState({ btnDisabled: false });
     } else {
@@ -142,6 +148,11 @@ export default class Signup extends Component {
         }`;
 
     xhttp.send(data);
+  };
+
+  checkDSGVO = () => {
+    let checkbox = document.getElementsByName("DSGVOCheck");
+    this.setState({ dsgvo: checkbox[0].checked });
   };
 
   // Render registration view with validation in textfields
@@ -289,6 +300,24 @@ export default class Signup extends Component {
                 {this.state.passwordSameFB}
               </span>
             </div>
+            <div class={style.checkContainer}>
+              <Formfield>
+                <Checkbox
+                  name="DSGVOCheck"
+                  onChange={() => {
+                    this.checkDSGVO();
+                    this.handleChange();
+                  }}
+                />
+              </Formfield>
+              <span class={style.label}>
+                Hiermit stimme ich der{" "}
+                <a href={Auth.DSGVOLink} target="_blank">
+                  Einverständniserklärung
+                </a>{" "}
+                gemäß DSGVO zu und bestätige, dass diese unterzeichnet vorliegt.
+              </span>
+            </div>
             <span class={this.state.responseFBClass}>
               {this.state.responseFB}
             </span>
@@ -383,7 +412,6 @@ export default class Signup extends Component {
                 let code = this.state.code;
                 code = code + e.target.value;
                 this.setState({ code });
-
                 this.checkCode();
               }}
             />

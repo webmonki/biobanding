@@ -4,6 +4,8 @@ export default class Auth {
   // URL of API
   static url = process.env.PREACT_APP_HOST_URI;
   static version = process.env.PREACT_APP_VERSION;
+  static impressumLink = process.env.PREACT_APP_IMPRESSUM;
+  static DSGVOLink = process.env.PREACT_APP_DSGVO;
 
   // Save User Data in Session Storage
   static createUser = (response) => {
