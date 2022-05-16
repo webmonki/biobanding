@@ -11,8 +11,6 @@ import "preact-material-components/Drawer/style.css";
 import Table from "../../components/table";
 import NewMeasurementAdmin from "../../components/dialogs/newMeasurementAdmin";
 import NewMeasurementUser from "../../components/dialogs/newMeasurementUser";
-import Snackbar from "preact-material-components/Snackbar";
-import "preact-material-components/Snackbar/style.css";
 
 export default class Measurements extends Component {
   componentWillMount = () => {
@@ -163,9 +161,7 @@ export default class Measurements extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         // Snackbar MSG
-        that.bar.MDComponent.show({
-          message: `Messung ${that.state.editId} erfolgreich geändert`,
-        });
+        that.props.showSnackbar("Messung erfolgreich geändert");
 
         // reload data to get changes
         that.loadData();
@@ -284,9 +280,7 @@ export default class Measurements extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         // Snackbar MSG
-        that.bar.MDComponent.show({
-          message: `Messung ${id} erfolgreich gelöscht`,
-        });
+        that.props.showSnackbar("Messung erfolgreich gelöscht");
 
         // reload data to get changes
         that.loadData();
@@ -334,9 +328,7 @@ export default class Measurements extends Component {
         that.newMeasurementsDialog.MDComponent.close();
 
         // Snackbar MSG
-        that.bar.MDComponent.show({
-          message: `Messung erfolgreich angelegt`,
-        });
+        that.props.showSnackbar("Messung erfolgreich angelegt");
       } else {
         try {
           let response = JSON.parse(this.responseText);
@@ -477,13 +469,6 @@ export default class Measurements extends Component {
       <div class={style.page}>
         <span class={style.pageHeader}>Messungen</span>
         <Card class={style.card}>{this.state.content}</Card>
-        <div class={style.mySnackbar}>
-          <Snackbar
-            ref={(bar) => {
-              this.bar = bar;
-            }}
-          />
-        </div>
         {this.state.dialog}
         {this.state.editDialog}
       </div>

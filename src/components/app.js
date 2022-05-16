@@ -16,6 +16,8 @@ import Navbar from "./navbar/navbar";
 import ConfirmDialog from "./dialogs/confirmDialog";
 import { deleteAccount } from "./reguests/requests";
 import RemindedMeasurement from "../routes/remindedMeasure/remindedMeasure";
+import Snackbar from "preact-material-components/Snackbar";
+import "preact-material-components/Snackbar/style.css";
 
 // Routes that can be visited without login or registration
 const publicRoutes = [
@@ -85,7 +87,11 @@ export default class App extends Component {
     }
 
     return (
-      <Header setReload={this.setReload} toggleNavbar={this.toggleDrawer} />
+      <Header
+        setReload={this.setReload}
+        toggleNavbar={this.toggleDrawer}
+        showSnackbar={this.showSnackbar}
+      />
     );
   };
 
@@ -150,6 +156,23 @@ export default class App extends Component {
     this.confirmDialog.MDComponent.show();
   };
 
+  // Opens snackbar with given text, if error true text will be red else green
+  showSnackbar = (text, error) => {
+    let sbText = document.getElementsByClassName("mdc-snackbar__text");
+    let errorColor = "#B1262D";
+    let successColor = "#3C9052";
+
+    if (error) {
+      sbText[0].style.color = errorColor;
+    } else {
+      sbText[0].style.color = successColor;
+    }
+
+    this.bar.MDComponent.show({
+      message: text,
+    });
+  };
+
   render() {
     return (
       <div id="app">
@@ -183,20 +206,29 @@ export default class App extends Component {
             <Profile
               path="/profile"
               openConfirmDialog={this.openConfirmDialog}
+              showSnackbar={this.showSnackbar}
             />
             <Measurements
               path="/measurements"
               reload={this.state.reload}
               unsetReload={this.unsetReload}
+              showSnackbar={this.showSnackbar}
             />
-            <Users path="/users" />
+            <Users path="/users" showSnackbar={this.showSnackbar} />
             <Forgot path="/forgot" />
             <Reset path="/reset" />
-            <Settings path="/settings" />
+            <Settings path="/settings" showSnackbar={this.showSnackbar} />
             <Confirm path="/confirm" />
             <NotFound default />
             <RemindedMeasurement path="/remindedMeasurement" />
           </Router>
+        </div>
+        <div id="mySnackbar">
+          <Snackbar
+            ref={(bar) => {
+              this.bar = bar;
+            }}
+          />
         </div>
       </div>
     );

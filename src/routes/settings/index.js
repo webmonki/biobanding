@@ -2,18 +2,14 @@ import { h, Component } from "preact";
 import Button from "preact-material-components/Button";
 import "preact-material-components/Button/style.css";
 import style from "./style";
-import Navbar from "../../components/navbar/navbar";
 import TextField from "preact-material-components/TextField";
 import "preact-material-components/TextField/style.css";
-import Radio from "preact-material-components/Radio";
 import Auth from "../../components/state";
 import "preact-material-components/List/style.css";
 import "preact-material-components/Radio/style.css";
 import Checkbox from "preact-material-components/Checkbox";
 import Formfield from "preact-material-components/FormField";
 import "preact-material-components/Checkbox/style.css";
-import Snackbar from "preact-material-components/Snackbar";
-import "preact-material-components/Snackbar/style.css";
 
 export default class Settings extends Component {
   componentWillMount = () => {
@@ -59,16 +55,12 @@ export default class Settings extends Component {
             that.setState({ regisCode: response.config.registration_code });
 
             // Snackbar MSG
-            that.bar.MDComponent.show({
-              message: `Einstellungen erfolgreich geladen`,
-            });
+            that.props.showSnackbar("Einstellungen erfolgreich geladen");
           } catch (err) {}
         }
       } else {
         // Snackbar MSG
-        that.bar.MDComponent.show({
-          message: `Fehler beim Laden`,
-        });
+        that.showSnackbar("Fehler beim Laden der Einstellungen", true);
       }
     };
 
@@ -90,14 +82,10 @@ export default class Settings extends Component {
       if (this.readyState === 4) {
         if (this.status === 200) {
           // Snackbar MSG
-          that.bar.MDComponent.show({
-            message: `Einstellungen erfolgreich geändert`,
-          });
+          that.props.showSnackbar("Einstellungen erfolgreich geändert");
         } else {
           // Snackbar MSG
-          that.bar.MDComponent.show({
-            message: `Fehler beim Ändern`,
-          });
+          that.props.showSnackbar("Fehler beim Ändern", true);
         }
       }
     };
@@ -135,14 +123,10 @@ export default class Settings extends Component {
       if ([1, 2, 3, 4].includes(this.readyState)) {
         if (this.status === 200) {
           // Snackbar MSG
-          that.bar.MDComponent.show({
-            message: `E-Mail erfolgreich gesendet`,
-          });
+          that.props.showSnackbar("E-Mail erfolgreich gesendet");
         } else {
           // Snackbar MSG
-          that.bar.MDComponent.show({
-            message: `Fehler beim Senden`,
-          });
+          that.showSnackbar("Fehler beim Senden", true);
         }
       }
     };
@@ -173,14 +157,10 @@ export default class Settings extends Component {
           } catch (err) {}
 
           // Snackbar MSG
-          that.bar.MDComponent.show({
-            message: `Code erfolgreich generiert`,
-          });
+          that.props.showSnackbar("Code erfolgreich generiert");
         } else {
           // Snackbar MSG
-          that.bar.MDComponent.show({
-            message: `Code konnte nicht generiert werden`,
-          });
+          that.props.showSnackbar("Code konnte nicht generiert werden", true);
         }
       }
     };
@@ -342,13 +322,6 @@ export default class Settings extends Component {
             >
               Speichern
             </Button>
-          </div>
-          <div class={style.mySnackbar}>
-            <Snackbar
-              ref={(bar) => {
-                this.bar = bar;
-              }}
-            />
           </div>
         </div>
       </div>

@@ -11,8 +11,6 @@ import "preact-material-components/Drawer/style.css";
 import Table from "../../components/table";
 import EditUser from "../../components/dialogs/editUser";
 import NewUser from "../../components/dialogs/newUser";
-import Snackbar from "preact-material-components/Snackbar";
-import "preact-material-components/Snackbar/style.css";
 
 export default class Users extends Component {
   componentWillMount = () => {
@@ -63,9 +61,7 @@ export default class Users extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         //  Snackbar MSG
-        that.bar.MDComponent.show({
-          message: `Benutzer erfolgreich gelöscht`,
-        });
+        that.props.showSnackbar("Benutzer erfolgreich gelöscht");
 
         that.getData();
       } else {
@@ -89,8 +85,8 @@ export default class Users extends Component {
 
     this.state.users.forEach((user) => {
       if (user.userID === id) {
-        this.setState({ editUsername: user.username });
-        this.setState({ editEmail: user.email });
+        this.setState({ editUsername: user.Benutzername });
+        this.setState({ editEmail: user["E-Mail"] });
       }
     });
     this.editUserDialog.MDComponent.show();
@@ -118,8 +114,8 @@ export default class Users extends Component {
           if (user.userID !== editId) {
             newUserList.push(user);
           } else {
-            user.username = that.state.editUsername;
-            user.email = that.state.editEmail;
+            user.Benutzername = that.state.editUsername;
+            user["E-Mail"] = that.state.editEmail;
             newUserList.push(user);
           }
         });
@@ -129,9 +125,7 @@ export default class Users extends Component {
         that.editUserDialog.MDComponent.close();
 
         // Snackbar MSG
-        that.bar.MDComponent.show({
-          message: "Benutzer erfolgreich geändert",
-        });
+        that.props.showSnackbar("Benutzer erfolgreich geändert");
       } else {
         try {
           let response = JSON.parse(this.responseText);
@@ -163,9 +157,7 @@ export default class Users extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         // Snackbar MSG
-        that.bar.MDComponent.show({
-          message: "Benutzer erfolgreich angelegt",
-        });
+        that.props.showSnackbar("Benutzer erfolgreich angelegt", true);
 
         // reload to get updated data
         that.getData();
@@ -265,13 +257,6 @@ export default class Users extends Component {
           <span class={this.state.responseFBClass}>
             {this.state.responseFB}
           </span>
-        </div>
-        <div class={style.mySnackbar}>
-          <Snackbar
-            ref={(bar) => {
-              this.bar = bar;
-            }}
-          />
         </div>
         {this.renderDialog()}
       </div>
