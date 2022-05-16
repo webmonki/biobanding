@@ -102,3 +102,18 @@
 	padding: 0 24px 0 24px;
 }
 
+/* 768+ */
+@media only screen and (min-width: 768px) {}
+
+
+/* 768- */
+@media only screen and (max-width: 768px) {
+	.page {
+		padding-top: 0;
+	}
+}
+
+
+
+/* 480- */
+@media only screen and (max-width: 480px) {}

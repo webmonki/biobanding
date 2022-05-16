@@ -29,7 +29,7 @@ export default class Table extends Component {
     this.setState({ checkList: [] });
 
     // at which column begins the subtable
-    this.setState({ subTableIndex: 7 });
+    this.getSubtableIndex();
 
     // columns  that shall not be displayed
     this.setState({ colsHidden: ["id", "Id", "userID"] });
@@ -45,6 +45,20 @@ export default class Table extends Component {
 
     // Fills collapseList with all calumns and set them to false
     this.getCollapseList();
+  };
+
+  // at which column begins the subtable
+  getSubtableIndex = () => {
+    const vw = Math.max(
+      document.documentElement.clientWidth || 0,
+      window.innerWidth || 0
+    );
+
+    if (vw < 768) {
+      this.setState({ subTableIndex: 3 });
+    } else {
+      this.setState({ subTableIndex: 7 });
+    }
   };
 
   // Weiss nicht warum... sollte auch geändert werden
@@ -321,7 +335,7 @@ export default class Table extends Component {
 
     let tableHeader = (
       // divider = small line between header cells
-      <tr>
+      <tr class={style.subTableContentRow}>
         {cols.map((name) => {
           if (name === cols[0]) {
             divider = false;
@@ -333,7 +347,7 @@ export default class Table extends Component {
           }
 
           return (
-            <th>
+            <th class={style.subTableHeaderCell}>
               <SortIcon
                 colname={name}
                 onClickSort={this.setSortParams}
@@ -358,7 +372,7 @@ export default class Table extends Component {
       if (this.props.editable) {
         let tableHeader = (
           <tr>
-            <th class={style.headerCellContainer}>
+            <th class={`${style.headerCellContainer} ${style.tableFixHead}`}>
               <Formfield class={style.checkAll}>
                 <Checkbox
                   name="deleteCheckAll"
@@ -376,7 +390,7 @@ export default class Table extends Component {
                 return undefined;
               }
               return (
-                <th>
+                <th class={style.subTableRow}>
                   <SortIcon
                     colname={name}
                     onClickSort={this.setSortParams}
@@ -518,9 +532,15 @@ export default class Table extends Component {
             </div>
             <table class={style.subTable}>
               {this.createSubTableHeader(id)}
-              <tr>
+              <tr class={style.subTableContentRow}>
                 {cols.map((key) => (
-                  <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>
+                  <td
+                    class={`${this.getTableDataStyle(row, key)} ${
+                      style.subTableCell
+                    }`}
+                  >
+                    {row[key]}
+                  </td>
                 ))}
               </tr>
             </table>
@@ -975,7 +995,7 @@ export default class Table extends Component {
           addFilter={this.addFilter}
         />
         <div class={style.tableContainer}>
-          <table>
+          <table class={style.table}>
             {this.createTableHeader()}
             {this.createTableBody()}
           </table>

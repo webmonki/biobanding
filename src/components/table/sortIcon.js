@@ -43,13 +43,24 @@ export default class SortIcon extends Component {
 
   // creates header row with column name, arrow and alignment
   getHeaderContent = () => {
-    if (this.props.alignment === style.alignLeft) {
+    const vw = Math.max(
+      document.documentElement.clientWidth || 0,
+      window.innerWidth || 0
+    );
+
+    let alignment = this.props.alignment;
+
+    if (vw < 768) {
+      alignment = style.alignLeft;
+    }
+
+    if (this.props.alignment === style.alignLeft || vw < 768) {
       return (
         <div class={style.headerCellContainer}>
           {this.getDivider()}
           <div
             id={this.props.id}
-            class={`${this.props.alignment} ${style.headerCell}`}
+            class={`${alignment} ${style.headerCell}`}
             onCLick={() => {
               window.addEventListener("click", this.handleOutsideClick);
               this.handleIconClick();
@@ -69,13 +80,13 @@ export default class SortIcon extends Component {
       );
     }
 
-    if (this.props.alignment === style.alignRight) {
+    if (this.props.alignment === style.alignRight && vw > 768) {
       return (
         <div class={style.headerCellContainer}>
           {this.getDivider()}
           <div
             id={this.props.id}
-            class={`${this.props.alignment} ${style.headerCell}`}
+            class={`${alignment} ${style.headerCell}`}
             onCLick={() => {
               window.addEventListener("click", this.handleOutsideClick);
               this.handleIconClick();

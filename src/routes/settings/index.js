@@ -205,6 +205,7 @@ export default class Settings extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
+                class={style.fullWidth}
                 label="Erinnerung in Tagen"
                 value={this.state.reminder}
                 onInput={(e) => {
@@ -230,6 +231,7 @@ export default class Settings extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
+                class={style.fullWidth}
                 label="E-Mail-Server"
                 value={this.state.mailService}
                 onInput={(e) => {
@@ -243,6 +245,7 @@ export default class Settings extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
+                class={style.fullWidth}
                 label="Port"
                 value={this.state.mailPort}
                 onInput={(e) => {
@@ -256,6 +259,7 @@ export default class Settings extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
+                class={style.fullWidth}
                 label="Benutzername"
                 value={this.state.mailUsername}
                 onInput={(e) => {
@@ -266,6 +270,7 @@ export default class Settings extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
+                class={style.fullWidth}
                 label="Passwort"
                 type="password"
                 value={this.state.password}
@@ -281,6 +286,7 @@ export default class Settings extends Component {
               <Formfield>
                 <Checkbox
                   name="serverCheck"
+                  class={style.fullWidth}
                   checked={this.state.ssl}
                   onChange={() => {
                     this.checkServer();

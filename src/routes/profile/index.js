@@ -215,6 +215,7 @@ export default class Profile extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
+                class={style.fullWidth}
                 label="Benutzername"
                 value={this.state.username}
                 onInput={(e) => {
@@ -241,6 +242,7 @@ export default class Profile extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
+                class={style.fullWidth}
                 label="E-Mail"
                 value={this.state.email}
                 onInput={(e) => {
@@ -273,6 +275,7 @@ export default class Profile extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
+                class={style.fullWidth}
                 label="Vorname"
                 value={this.state.firstname}
                 onInput={(e) => {
@@ -299,6 +302,7 @@ export default class Profile extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
+                class={style.fullWidth}
                 label="Nachname"
                 value={this.state.lastname}
                 onInput={(e) => {
@@ -326,6 +330,7 @@ export default class Profile extends Component {
           <div class={style.row}>
             <div class={style.dateContainer}>
               <TextField
+                class={style.fullWidth}
                 type="date"
                 value={this.state.birthday}
                 onInput={(e) => this.setState({ birthday: e.target.value })}

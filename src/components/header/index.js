@@ -215,7 +215,11 @@ export default class Header extends Component {
             >
               add
             </i>
-            <span class="mdc-button__label mdc-theme--text-secondary-on-light">
+            <span
+              class={`${"mdc-button__label mdc-theme--text-secondary-on-light"} ${
+                style.newLabel
+              }`}
+            >
               Messung
             </span>
           </Button>

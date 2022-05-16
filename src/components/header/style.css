@@ -109,24 +109,37 @@
 	cursor: pointer;
 }
 
-/* 0 - 480 */
-@media only screen and (max-width: 480px) {
-	.topAppBar {
-		background-color: red !important;
-	}
-}
-
-/* 480+ */
-@media only screen and (min-width: 480px) {
-	.topAppBar {
-		background-color: green !important;
-	}
-
-}
-
 /* 768+ */
-@media only screen and (min-width: 768px)  {
-	.topAppBar {
-		background-color: yellow !important;
+@media only screen and (min-width: 768px) {
+	.menuIcon {
+		display: block;
 	}
 }
+
+
+/* 768- */
+@media only screen and (max-width: 768px) {
+	.menuIcon {
+		display: none;
+	}
+}
+
+
+
+/* 480- */
+@media only screen and (max-width: 480px) {
+	.btnContainer {
+		width: 170px;
+	}
+
+	.roundBtn {
+		width: 37px !important;
+		min-width: 37px;
+		padding-right: 5px;
+	}
+
+	.newLabel {
+		display: none;
+	}
+}
+

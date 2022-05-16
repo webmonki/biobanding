@@ -117,7 +117,7 @@ button {
 	margin-left: 15px;
 }
 
-.tableFixHead, thead, th {
+.tableFixHead {
 	position: sticky;
 	top: 0;
 }
@@ -478,3 +478,64 @@ tr:hover {
 .invertBtn:hover {
 	background-color: rgba(0, 0, 0, 0.1);
 }
+
+.table {
+	table-layout: fixed;
+}
+
+/* 768+ */
+@media only screen and (min-width: 768px) {
+
+	.subTableContainer {
+		overflow: auto;
+	}
+
+	.subTable {
+		table-layout: unset;
+	}
+}
+
+
+/* 768- */
+@media only screen and (max-width: 768px) {
+
+	.divider {
+		display: none;
+	}
+
+	.subTableContainer {
+		overflow: auto;
+	}
+
+	.subTable {
+		table-layout: unset;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+
+	.subTableContentRow {
+		display: flex;
+		flex-direction: column;
+	}
+	
+	.subTableCell {
+		height: 50px;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.subTableHeaderCell {
+		display: block;
+		height: 50px;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+	}
+
+}
+
+
+
+/* 480- */
+@media only screen and (max-width: 480px) {}
