@@ -38,6 +38,7 @@ ACONF_MAIL_PORT = 465
 ACONF_MAIL_USE_SSL = 1
 ACONF_MAIL_USERNAME = "mark"
 ACONF_MAIL_PASS = "simple-pass"
+ACONF_REGISTRATION_CODE = 1234
 
 EDITED_ACONF_DAYS_REMINDER = 10
 EDITED_ACONF_MAIL_SERVER = "smtp.unreal.org"
@@ -45,28 +46,28 @@ EDITED_ACONF_MAIL_PORT = 467
 EDITED_ACONF_MAIL_USE_SSL = 0
 EDITED_ACONF_MAIL_USERNAME = "adam"
 EDITED_ACONF_MAIL_PASS = "complex-pass"
+EDITED_ACONF_REGISTRATION_CODE = 4321
 
 ANTH_DATA_DATE_MEASURED = "2022-01-01"
 ANTH_DATA_HEIGHT = 182
 ANTH_DATA_SITTING_HEIGHT = 99
 ANTH_DATA_BODY_SPAN = 64
 ANTH_DATA_WEIGHT = 89.9
-ANTH_DATA_PHV = 15.15
-ANTH_DATA_OFFSET = 1.81
-ANTH_DATA_AK_BIO = "PHV 1.5 bis 2.5"
+ANTH_DATA_PHV = 15.13
+ANTH_DATA_OFFSET = 1.8
+ANTH_DATA_AK_BIO = "1.5 bis 2.5"
 ANTH_DATA_BMI = 27.1
 ANTH_DATA_PAH = 198.73
 ANTH_DATA_PMH = 0.92
 ANTH_DATA_REMAINING_GROWTH = 16.73
-ANTH_DATA_AGE_AT_MEASURMENT = 13.34
+ANTH_DATA_AGE_AT_MEASURMENT = 13.33
 
 ANTH_EDITED_DATA_DATE_MEASURED = "2022-03-03"
 ANTH_EDITED_DATA_HEIGHT = 188
 ANTH_EDITED_DATA_SITTING_HEIGHT = 101
 ANTH_EDITED_DATA_BODY_SPAN = 71
 ANTH_EDITED_DATA_WEIGHT = 92.3
-
-ANTH_EDITED_DATA_PHV = 15.15
+ANTH_EDITED_DATA_PHV = 15.13
 ANTH_EDITED_DATA_OFFSET = 1.81
 ANTH_EDITED_DATA_AK_BIO = "PHV 1.5 bis 2.5"
 ANTH_EDITED_DATA_BMI = 27.1
@@ -240,7 +241,12 @@ def test_new_admin_config(app_generator):
     """
     with app_generator.app_context():
         # Create new AdminConfig
-        adminConf = AdminConfig(days_reminder=ACONF_DAYS_REMINDER, mail_server=ACONF_MAIL_SERVER, mail_port=ACONF_MAIL_PORT, mail_use_ssl=ACONF_MAIL_USE_SSL, mail_username=ACONF_MAIL_USERNAME)
+        adminConf = AdminConfig(days_reminder=ACONF_DAYS_REMINDER,
+                                mail_server=ACONF_MAIL_SERVER,
+                                mail_port=ACONF_MAIL_PORT,
+                                mail_use_ssl=ACONF_MAIL_USE_SSL,
+                                mail_username=ACONF_MAIL_USERNAME,
+                                registration_code=ACONF_REGISTRATION_CODE)
         adminConf.update_mail_passwort(ACONF_MAIL_PASS)
         adminConf.save()
         # Check results
@@ -266,8 +272,13 @@ def test_edit_admin_config(app_generator):
     """
     with app_generator.app_context():
         # Create AdminConfig to edit
-        adminConf = AdminConfig(days_reminder=ACONF_DAYS_REMINDER, mail_server=ACONF_MAIL_SERVER, mail_port=ACONF_MAIL_PORT, mail_use_ssl=ACONF_MAIL_USE_SSL, mail_username=ACONF_MAIL_USERNAME,
-        mail_password=ACONF_MAIL_PASS)
+        adminConf = AdminConfig(days_reminder=ACONF_DAYS_REMINDER,
+                                mail_server=ACONF_MAIL_SERVER,
+                                mail_port=ACONF_MAIL_PORT,
+                                mail_use_ssl=ACONF_MAIL_USE_SSL,
+                                mail_username=ACONF_MAIL_USERNAME,
+                                mail_password=ACONF_MAIL_PASS,
+                                registration_code=ACONF_REGISTRATION_CODE)
         adminConf.save()
         # Edit AdminConfig
         adminConf.update_days_reminder(EDITED_ACONF_DAYS_REMINDER)
@@ -276,6 +287,7 @@ def test_edit_admin_config(app_generator):
         adminConf.update_mail_use_ssl(EDITED_ACONF_MAIL_USE_SSL)
         adminConf.update_mail_username(EDITED_ACONF_MAIL_USERNAME)
         adminConf.update_mail_passwort(EDITED_ACONF_MAIL_PASS)
+        adminConf.registration_code = EDITED_ACONF_REGISTRATION_CODE # as there is no function to update reg code, it gets changed in database
         # Check results
         assert adminConf.days_reminder is not ACONF_DAYS_REMINDER
         assert adminConf.days_reminder == EDITED_ACONF_DAYS_REMINDER
@@ -289,6 +301,8 @@ def test_edit_admin_config(app_generator):
         assert adminConf.mail_username == EDITED_ACONF_MAIL_USERNAME
         assert adminConf.mail_password is not ACONF_MAIL_PASS
         assert adminConf.mail_password == EDITED_ACONF_MAIL_PASS
+        assert adminConf.registration_code is not ACONF_REGISTRATION_CODE
+        assert adminConf.registration_code == EDITED_ACONF_REGISTRATION_CODE
 
 ### AnthropometricData
 
