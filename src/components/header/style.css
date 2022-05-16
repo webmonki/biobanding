@@ -108,3 +108,25 @@
 	z-index: 8;
 	cursor: pointer;
 }
+
+/* 0 - 480 */
+@media only screen and (max-width: 480px) {
+	.topAppBar {
+		background-color: red !important;
+	}
+}
+
+/* 480+ */
+@media only screen and (min-width: 480px) {
+	.topAppBar {
+		background-color: green !important;
+	}
+
+}
+
+/* 768+ */
+@media only screen and (min-width: 768px)  {
+	.topAppBar {
+		background-color: yellow !important;
+	}
+}
