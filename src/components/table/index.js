@@ -62,12 +62,12 @@ export default class Table extends Component {
       window.innerWidth || 0
     );
 
-    let index = Math.floor(vw / 192);
+    let index = Math.ceil(vw / 192);
 
-    if (index < 2) {
-      this.setState({ subTableIndex: 2 });
+    if (index <= 4) {
+      this.setState({ subTableIndex: 4 });
     } else {
-      this.setState({ subTableIndex: index });
+      this.setState({ subTableIndex: index - 1 });
     }
   };
 
