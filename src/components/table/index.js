@@ -32,7 +32,7 @@ export default class Table extends Component {
     this.setState({ subTableIndex: 7 });
 
     // columns  that shall not be displayed
-    this.setState({ colsHidden: ["id", "Id", "userID"] });
+    this.setState({ colsHidden: ["id", "Id", "userID", "UserId"] });
 
     // List if rows that are open (uncollapsed)
     this.setState({ collapseList: {} });

@@ -26,7 +26,7 @@ const publicRoutes = [
   "/reset",
   "/login",
   "/confirm",
-  "/remindedMeasurement",
+  /(measurement[?])/,
 ];
 
 // Routes that can only be visited by admin
@@ -50,6 +50,7 @@ export default class App extends Component {
   handleRoute = async (e) => {
     let auth = Auth.getAuth();
     const isPublicRoute = publicRoutes.some((route) => e.url.match(route));
+    console.log("PUBLIC: ", isPublicRoute, ", ROUTE: ", e.url);
     const isAdminOnlyRoute = adminOnlyRoutes.some((route) =>
       e.url.match(route)
     );
@@ -220,7 +221,7 @@ export default class App extends Component {
             <Settings path="/settings" showSnackbar={this.showSnackbar} />
             <Confirm path="/confirm" />
             <NotFound default />
-            <RemindedMeasurement path="/remindedMeasurement" />
+            <RemindedMeasurement path="/measurement" />
           </Router>
         </div>
         <div id="mySnackbar">
