@@ -32,7 +32,7 @@ export default class Table extends Component {
     this.getSubtableIndex();
 
     // columns  that shall not be displayed
-    this.setState({ colsHidden: ["id", "Id", "userID"] });
+    this.setState({ colsHidden: ["id", "Id", "userID", "UserId"] });
 
     // List if rows that are open (uncollapsed)
     this.setState({ collapseList: {} });
@@ -45,6 +45,14 @@ export default class Table extends Component {
 
     // Fills collapseList with all calumns and set them to false
     this.getCollapseList();
+
+    // Eventlistener for resizing
+    window.addEventListener("resize", this.handleWindowResize);
+  };
+
+  // To handle viewport resizes
+  handleWindowResize = (event) => {
+    this.getSubtableIndex();
   };
 
   // at which column begins the subtable
@@ -54,10 +62,12 @@ export default class Table extends Component {
       window.innerWidth || 0
     );
 
-    if (vw < 768) {
-      this.setState({ subTableIndex: 3 });
+    let index = Math.floor(vw / 192);
+
+    if (index < 2) {
+      this.setState({ subTableIndex: 2 });
     } else {
-      this.setState({ subTableIndex: 7 });
+      this.setState({ subTableIndex: index });
     }
   };
 
@@ -612,7 +622,7 @@ export default class Table extends Component {
       return (
         <button
           onCLick={() => this.addToCollapseList(key)}
-          class={style.menuBtn}
+          class={style.editBtnColl}
         >
           <i
             class={`${"material-icons"} ${style.menuBtnIcon}`}
