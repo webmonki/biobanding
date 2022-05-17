@@ -358,8 +358,7 @@ class EditUser(Resource):
         try:
             user = Users.get_by_id(id)
             user.delete()
-        except Exception as e:
-            print(e)
+        except:
             return {
                        "success": False,
                        "msg": "Could not delete User {}".format(e)}, 400
@@ -821,13 +820,18 @@ class Anthropometric(Resource):
             body_span=_body_span,
             weight=_weight
         )
-        _new_anthropometric_data.save()
 
-        return {"success": False,
+        try:
+            _new_anthropometric_data.save()
+
+
+        except Exception as e:
+            return {"success": False,
                 "msg": "Anthropometric data could not be created"}, 400
 
+
         return {"success": True,
-                "anthropometric_data": anthropometric_data_model.toDICT(),
+                "anthropometric_data": _new_anthropometric_data.toDICT(),
                 "msg": "Anthropometric data was successfully created"}, 200
 
     @token_required
@@ -885,8 +889,6 @@ class Measurement(Resource):
 
         req_data = request.get_json()
 
-        print("Request", req_data)
-
         _new_date_measured = req_data.get("date_measured")
         _new_height = req_data.get("height")
         _new_sitting_height = req_data.get("sitting_height")
@@ -894,7 +896,6 @@ class Measurement(Resource):
         _new_weight = req_data.get("weight")
 
         measurement_data = AnthropometricData.get_by_id(id)
-        print("Measurement_Data: ", measurement_data)
 
         if _new_date_measured:
             measurement_data.update_date_measured(_new_date_measured)
@@ -936,6 +937,5 @@ class Measurements(Resource):
             return {"success": True,
                     'measurements': result}, 200
         except Exception as e:
-            print(e)
             return {"success": False,
                     'msg': 'Could not read measurements.'}, 400
