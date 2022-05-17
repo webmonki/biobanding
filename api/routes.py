@@ -358,7 +358,7 @@ class EditUser(Resource):
         try:
             user = Users.get_by_id(id)
             user.delete()
-        except:
+        except Exception as e:
             return {
                        "success": False,
                        "msg": "Could not delete User {}".format(e)}, 400
