@@ -521,7 +521,8 @@ export default class Table extends Component {
     let newCols = [];
 
     for (let i = start; i < end; i++) {
-      if (!this.state.colsHidden.includes(cols[i])) newCols.push(cols[i]);
+      if (!this.state.colsHidden.includes(cols[i]) && cols[i] !== undefined)
+        newCols.push(cols[i]);
     }
     return newCols;
   };
