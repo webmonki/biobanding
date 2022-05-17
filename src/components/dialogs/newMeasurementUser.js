@@ -25,10 +25,10 @@ export default class NewMeasurementUser extends Component {
 
   onAccept = () => {
     this.props.sendData(
-      this.state.formValues.height,
-      this.state.formValues.sittingHeight,
-      this.state.formValues.span,
-      this.state.formValues.weight
+      this.getFormValue("height"),
+      this.getFormValue("sittingHeight"),
+      this.getFormValue("span"),
+      this.getFormValue("weight")
     );
 
     this.resetFormValues();
@@ -60,31 +60,31 @@ export default class NewMeasurementUser extends Component {
     let span = this.getFormValue("span");
     let weight = this.getFormValue("weight");
 
-    this.setState({ disabled: false });
-
     if (sittingHeight > height * 0.5) {
-      this.setState({ disabled: true });
+      return true;
     }
 
     if (span > height * 1.15) {
-      this.setState({ disabled: true });
+      return true;
     }
 
     if (height === "" || height === undefined) {
-      this.setState({ disabled: true });
+      return true;
     }
 
     if (sittingHeight === "" || sittingHeight === undefined) {
-      this.setState({ disabled: true });
+      return true;
     }
 
     if (span === "" || span === undefined) {
-      this.setState({ disabled: true });
+      return true;
     }
 
     if (weight === "" || weight === undefined) {
-      this.setState({ disabled: true });
+      return true;
     }
+
+    return false;
   };
 
   getBtnStyle = () => {
@@ -141,7 +141,6 @@ export default class NewMeasurementUser extends Component {
                       this.setState({ heightFB: "" });
                       this.setState({ disabled: false });
                     }
-                    this.validateInput();
                   }}
                 />
                 <span class={this.state.heightFBClass}>
@@ -187,8 +186,6 @@ export default class NewMeasurementUser extends Component {
                       this.setState({ sittingFB: "" });
                       this.setState({ disabled: false });
                     }
-
-                    this.validateInput();
                   }}
                 />
                 <span class={this.state.sittingFBClass}>
@@ -235,8 +232,6 @@ export default class NewMeasurementUser extends Component {
                       this.setState({ spanFB: "" });
                       this.setState({ disabled: false });
                     }
-
-                    this.validateInput();
                   }}
                 />
                 <span class={this.state.spanFBClass}>{this.state.spanFB}</span>
@@ -269,8 +264,6 @@ export default class NewMeasurementUser extends Component {
                       this.setState({ weightFB: "" });
                       this.setState({ disabled: false });
                     }
-
-                    this.validateInput();
                   }}
                 />
                 <span class={this.state.weightFBClass}>
@@ -291,7 +284,7 @@ export default class NewMeasurementUser extends Component {
             raised
             accept
             class={this.getBtnStyle()}
-            disabled={this.state.disabled}
+            disabled={this.validateInput()}
           >
             Speichern
           </Dialog.FooterButton>

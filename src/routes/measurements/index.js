@@ -77,7 +77,7 @@ export default class Measurements extends Component {
           clickEdit={this.showDialog}
           delete={this.delete}
           showDialog={this.openDialog}
-          idKey="id"
+          idKey="Id"
           title="Messungen"
           subTableTitle="Ergebnisse"
         />

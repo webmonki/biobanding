@@ -57,21 +57,21 @@ def mirwald(sitting_height: float,
 
     # Calculate puberty category
     if offset < -2.5:
-        ak_bio = "PHV -2.5"
+        ak_bio = "-2.5"
     elif -2.5 <= offset < -1.5:
-        ak_bio = "PHV -2.5 bis -1.5"
+        ak_bio = "-2.5 bis -1.5"
     elif -1.5 <= offset < -0.5:
-        ak_bio = "PHV -1.5 bis -0.5"
+        ak_bio = "-1.5 bis -0.5"
     elif -0.5 <= offset < 0.5:
-        ak_bio = "PHV -0.5 bis 0.5"
+        ak_bio = "-0.5 bis 0.5"
     elif 0.5 <= offset < 1.5:
-        ak_bio = "PHV 0.5 bis 1.5"
+        ak_bio = "0.5 bis 1.5"
     elif 1.5 <= offset < 2.5:
-        ak_bio = "PHV 1.5 bis 2.5"
+        ak_bio = "1.5 bis 2.5"
     else:
-        ak_bio = "PHV 2.5"
+        ak_bio = "2.5"
 
-    return {"offset": offset, "phv": phv, "ak_bio": ak_bio}
+    return {"offset": offset, "phv": round(phv, 2), "ak_bio": ak_bio}
 
 
 # [END mirwald]
