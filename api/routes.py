@@ -939,3 +939,38 @@ class Measurements(Resource):
         except Exception as e:
             return {"success": False,
                     'msg': 'Could not read measurements.'}, 400
+
+
+@rest_api.route('/api/measurements/last')
+class Measurements(Resource):
+
+    @token_required
+    def get(self):
+        """Return all anthropometric measurements for all users"""
+
+        try:
+
+            subq = db.session.query(
+                AnthropometricData.user_id,
+                db.func.max(AnthropometricData.date_measured).label('maxdate')
+            ).group_by(AnthropometricData.user_id).subquery('t2')
+
+            query = db.session.query(AnthropometricData, Users.username).join(
+                subq,
+                db.and_(
+                    AnthropometricData.user_id == subq.c.user_id,
+                    AnthropometricData.date_measured == subq.c.maxdate
+                )
+            )
+
+            result = []
+            for a, u in query:
+
+                measurement = {**{'Benutzer': u}, **a.toDICT()}
+                result.append(measurement)
+
+            return {"success": True,
+                    'measurements': result}, 200
+        except Exception as e:
+            return {"success": False,
+                    'msg': 'Could not read measurements.'}, 400
