@@ -9,8 +9,6 @@ import Radio from "preact-material-components/Radio";
 import Auth from "../../components/state";
 import "preact-material-components/List/style.css";
 import "preact-material-components/Radio/style.css";
-import Snackbar from "preact-material-components/Snackbar";
-import "preact-material-components/Snackbar/style.css";
 import Card from "preact-material-components/Card";
 import { route } from "preact-router";
 
@@ -62,9 +60,7 @@ export default class Confirm extends Component {
         Auth.createUser(response);
         route("/measurements", true);
       } else if (this.readyState === 4 && this.status === 200) {
-        that.bar.MDComponent.show({
-          message: `Email Adresse ist bereits bestätigt`,
-        });
+        that.props.showSnackbar("E-Mail Adresse ist bereits bestätigt");
       } else {
         try {
           let response = JSON.parse(this.responseText);
@@ -337,13 +333,6 @@ export default class Confirm extends Component {
             <Button raised onClick={this.sendConfirm}>
               Registrierung abschließen
             </Button>
-          </div>
-          <div class={style.mySnackbar}>
-            <Snackbar
-              ref={(bar) => {
-                this.bar = bar;
-              }}
-            />
           </div>
         </div>
       </Card>

@@ -101,11 +101,9 @@
 }
 
 .bDayLabel {
-	background-color: white;
-	/* padding-left: 10px; */
 	width: 75px;
 	position: relative;
-	top: -64px;
+	top: -50px;
 	left: 10px;
 	font-size: small;
 	color: rgba(0, 0, 0, 0.6);;
@@ -151,15 +149,41 @@
 
 
 /* 768- */
-@media only screen and (max-width: 768px) {}
+@media only screen and (max-width: 768px) {
+	.dateContainer {
+		width: 100%;
+	}
+
+	.radioContainer {
+		width: 100%;
+	}
+
+	.page {
+		padding-top: 0;
+	}
+}
 
 
 
 /* 480- */
 @media only screen and (max-width: 480px) {
-	.card {
-		margin-top: 10%;
-		box-shadow: none;
+
+	.inputContainer {
+		width: 100%;
+		height: fit-content;
+	}
+
+	.page {
+		padding-top: 0;
+		height: 100%;
+	}
+
+	.row {
+		flex-direction: column;
+	}
+
+	.input {
+		margin-bottom: 20px;
 		width: 100%;
 	}
 }

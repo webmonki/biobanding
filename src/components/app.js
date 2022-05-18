@@ -177,6 +177,22 @@ export default class App extends Component {
     });
   };
 
+  getSnackbar(userLoggedIn) {
+    if (userLoggedIn === undefined || userLoggedIn === false) {
+      return undefined;
+    }
+
+    return (
+      <div id="mySnackbar">
+        <Snackbar
+          ref={(bar) => {
+            this.bar = bar;
+          }}
+        />
+      </div>
+    );
+  }
+
   getBugTrackerScript = (userLoggedIn) => {
     if (userLoggedIn === undefined || userLoggedIn === false) {
       return undefined;
@@ -232,17 +248,11 @@ export default class App extends Component {
             <Forgot path="/forgot" />
             <Reset path="/reset" />
             <Settings path="/settings" showSnackbar={this.showSnackbar} />
-            <Confirm path="/confirm" />
+            <Confirm path="/confirm" showSnackbar={this.showSnackbar} />
             <NotFound default />
           </Router>
         </div>
-        <div id="mySnackbar">
-          <Snackbar
-            ref={(bar) => {
-              this.bar = bar;
-            }}
-          />
-        </div>
+        {this.getSnackbar(this.state.userLoggedIn)}
       </div>
     );
   }
