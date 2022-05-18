@@ -333,9 +333,46 @@ export default class Profile extends Component {
                 class={style.fullWidth}
                 type="date"
                 value={this.state.birthday}
-                onInput={(e) => this.setState({ birthday: e.target.value })}
+                onInput={(e) => {
+                  let birthday = e.target.value;
+                  let today = new Date();
+                  let dd = String(today.getDate()).padStart(2, "0");
+                  let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+                  let yyyy = today.getFullYear();
+
+                  today = mm + "-" + dd + "-" + yyyy;
+
+                  this.setState({ birthday });
+
+                  today = new Date(today);
+                  birthday = new Date(birthday);
+
+                  let diff = Math.floor(
+                    Math.abs(today - birthday) / (1000 * 3600 * 24) / 365
+                  );
+
+                  this.setState({ diff });
+
+                  if (diff < 4) {
+                    this.setState({ birthdayFBClass: style.feedbackErr });
+                    this.setState({ birthdayFB: "Mindestalter 4 Jahre" });
+                  }
+
+                  if (diff > 18) {
+                    this.setState({ birthdayFBClass: style.feedbackErr });
+                    this.setState({ birthdayFB: "Maximalalter 18 Jahre" });
+                  }
+
+                  if (diff > 4 && diff < 18) {
+                    this.setState({ birthdayFBClass: style.feedbackSucc });
+                    this.setState({ birthdayFB: "" });
+                  }
+                }}
               />
               <span class={style.bDayLabel}>Geburtstag</span>
+              <span class={this.state.birthdayFBClass}>
+                {this.state.birthdayFB}
+              </span>
             </div>
             <div class={style.radioContainer}>
               <div class={style.radioBtn}>
