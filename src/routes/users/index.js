@@ -232,12 +232,21 @@ export default class Users extends Component {
 
   // rendert table
   showTable = (editable) => {
+    let users = this.state.users;
+
+    if (users !== undefined) {
+      users.forEach((user) => {
+        user.is_admin = true;
+      });
+    }
+
+    console.log(users);
     let content = (
       <div>
         <Table
           deletable
           editable={editable}
-          data={this.state.users}
+          data={users}
           pageSize={9}
           clickEdit={this.showDialog}
           delete={this.delete}

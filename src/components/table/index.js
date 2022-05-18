@@ -336,6 +336,8 @@ export default class Table extends Component {
       return style.alignRight;
     } else if (typeof this.props.data[0][name] === "object") {
       return style.alignLeft;
+    } else if (typeof this.props.data[0][name] === "boolean") {
+      return style.alignRight;
     }
   };
 
@@ -490,7 +492,7 @@ export default class Table extends Component {
 
   // textalignment of cells
   getTableDataStyle = (data, key) => {
-    if (typeof data[key] === "number") {
+    if (typeof data[key] === "number" || typeof data[key] === "boolean") {
       return style.alignRight;
     }
     return style.alignLeft;
@@ -774,24 +776,38 @@ export default class Table extends Component {
           if (!cols.includes(key)) {
             return undefined;
           }
-          if (key !== "Datum") {
-            return <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>;
-          }
+          if (key === "Datum") {
+            // format date
+            let date = row[key];
+            let day = date.getDate();
+            if (day < 10) {
+              day = "0" + day;
+            }
+            let month = date.getMonth() + 1;
+            if (month < 10) {
+              month = "0" + month;
+            }
+            let year = date.getFullYear();
 
-          // format date
-          let date = row[key];
-          let day = date.getDate();
-          if (day < 10) {
-            day = "0" + day;
+            let output = month + "-" + day + "-" + year;
+            return <td class={this.getTableDataStyle(row, key)}>{output}</td>;
           }
-          let month = date.getMonth() + 1;
-          if (month < 10) {
-            month = "0" + month;
-          }
-          let year = date.getFullYear();
+          if (key === "is_admin") {
+            if (row[key]) {
+              return (
+                <td class={this.getTableDataStyle(row, key)}>
+                  <i class={`${"material-icons"}`}>check</i>
+                </td>
+              );
+            }
 
-          let output = month + "-" + day + "-" + year;
-          return <td class={this.getTableDataStyle(row, key)}>{output}</td>;
+            return (
+              <td class={this.getTableDataStyle(row, key)}>
+                <i class={`${"material-icons"}`}>clear</i>
+              </td>
+            );
+          }
+          return <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>;
         })}
       </tr>
     );
