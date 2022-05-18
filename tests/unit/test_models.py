@@ -32,7 +32,7 @@ def test_new_user(app_generator):
         assert DUMMY_USER_MAIL == user.email
         assert user.check_password(DUMMY_USER_PASS)
         assert user.check_is_admin()
-        assert user.is_activ
+        assert user.is_active
         assert not user.confirmed
 
 
