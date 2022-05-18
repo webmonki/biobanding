@@ -142,9 +142,11 @@
 	}
 
 	.logoutIcon {
-		margin-left: 5px !important;
+		margin-right: 13px !important;
+		margin-bottom: 10px !important;
 		color: var(--mdc-theme-primary) !important;
 		display: block !important;
+		font-size: 30px !important;
 	}
 
 	.btnContainer {
