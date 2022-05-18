@@ -945,7 +945,7 @@ class Measurements(Resource):
 class Measurements(Resource):
 
     @token_required
-    def get(self):
+    def get(self, current_user):
         """Return all anthropometric measurements for all users"""
 
         try:

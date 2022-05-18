@@ -42,7 +42,7 @@ export default class Settings extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if ([1, 2, 3, 4].includes(this.readyState)) {
+      if (this.readyState === 4) {
         if (this.status === 200) {
           try {
             // Set Values in state to display them in textfields
@@ -85,6 +85,7 @@ export default class Settings extends Component {
           // Snackbar MSG
           that.props.showSnackbar("Einstellungen erfolgreich geändert");
         } else {
+          let response = JSON.parse(this.responseText);
           // Snackbar MSG
           that.props.showSnackbar("Fehler beim Ändern", true);
         }

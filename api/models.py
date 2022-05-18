@@ -28,7 +28,7 @@ class Users(db.Model):
     date_last_measurement_reminder = db.Column(db.Date)
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
     confirmed_on = db.Column(db.DateTime, nullable=True)
-    is_activ = db.Column(db.Boolean(), nullable=False, default=True)
+    is_active = db.Column(db.Boolean(), nullable=False, default=True)
     date_last_password_reset = db.Column(db.DateTime())
 
     playermaster = db.relationship("PlayerMaster", back_populates="users", uselist=False)
@@ -74,7 +74,7 @@ class Users(db.Model):
 
         self.email = "DELETED"
         self.username = "DELETED"
-        self.is_activ = False
+        self.is_active = False
         self.save()
 
         # Anonymize user data
@@ -95,7 +95,7 @@ class Users(db.Model):
 
     @classmethod
     def get_all_users(cls):
-        users = cls.query.filter_by(is_activ=True).all()
+        users = cls.query.filter_by(is_active=True).all()
         return users
 
     @classmethod

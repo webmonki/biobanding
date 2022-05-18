@@ -101,7 +101,7 @@ def test_new_user(app_generator):
         assert (user.date_joined).date() == date.today()
         assert user.check_jwt_auth_active() == None
         assert user.check_is_admin()
-        assert user.is_activ == 1
+        assert user.is_active
         assert not user.confirmed
         assert user.confirmed_on == None
         assert user.date_last_password_reset == None

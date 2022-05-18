@@ -15,11 +15,19 @@ import Confirm from "../routes/confirm";
 import Navbar from "./navbar/navbar";
 import ConfirmDialog from "./dialogs/confirmDialog";
 import { deleteAccount } from "./reguests/requests";
+import RemindedMeasurement from "../routes/remindedMeasure/remindedMeasure";
 import Snackbar from "preact-material-components/Snackbar";
 import "preact-material-components/Snackbar/style.css";
 
 // Routes that can be visited without login or registration
-const publicRoutes = ["/signup", "/forgot", "/reset", "/login", "/confirm"];
+const publicRoutes = [
+  "/signup",
+  "/forgot",
+  "/reset",
+  "/login",
+  "/confirm",
+  /(measurement[?])/,
+];
 
 // Routes that can only be visited by admin
 const adminOnlyRoutes = ["/settings", "/users"];
@@ -42,6 +50,7 @@ export default class App extends Component {
   handleRoute = async (e) => {
     let auth = Auth.getAuth();
     const isPublicRoute = publicRoutes.some((route) => e.url.match(route));
+    console.log("PUBLIC: ", isPublicRoute, ", ROUTE: ", e.url);
     const isAdminOnlyRoute = adminOnlyRoutes.some((route) =>
       e.url.match(route)
     );
@@ -250,6 +259,7 @@ export default class App extends Component {
             <Settings path="/settings" showSnackbar={this.showSnackbar} />
             <Confirm path="/confirm" showSnackbar={this.showSnackbar} />
             <NotFound default />
+            <RemindedMeasurement path="/measurement" />
           </Router>
         </div>
         {this.getSnackbar(this.state.userLoggedIn)}

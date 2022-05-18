@@ -1,0 +1,64 @@
+.page {
+	position: static;
+	height: calc(100% - var(--global-header-height));
+	padding: var(--global-page-margin);
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+.card {
+	padding: var(--global-page-margin);
+	height: fit-content;
+	width: fit-content;
+
+}
+
+.inputContainer {
+	padding-top: var(--global-line-space);
+	width: var(--global-dialog-width);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.input {
+	width: var(--global-input-width);
+}
+
+.row {
+	width: 800px;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: var(--global-line-space);
+}
+
+.fullWidth{
+	width: 100%;
+}
+
+.headerContainer {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: var(--global-profile-line-space);
+	width: 600px;
+}
+
+.header {
+	font-size: 20px;
+}
+
+.subHeader {
+	font-size: 15px;
+}
+
+.feedbackErr {
+	color: var(--global-error-color);
+	font-size: var(--global-feedback-size);
+	height: 10px;
+}
+
+.feedbackSucc {
+	color: var(--global-success-color);
+	font-size: var(--global-feedback-size);
+}
