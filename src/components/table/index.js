@@ -375,7 +375,7 @@ export default class Table extends Component {
   };
 
   getDeleteCheckboxForHeader = () => {
-    if (this.props.deleteable) {
+    if (this.props.deletable) {
       return (
         <Formfield class={style.checkAll}>
           <Checkbox

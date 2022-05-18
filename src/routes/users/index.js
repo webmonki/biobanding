@@ -234,6 +234,7 @@ export default class Users extends Component {
     let content = (
       <div>
         <Table
+          deletable
           editable={editable}
           data={this.state.users}
           pageSize={9}
