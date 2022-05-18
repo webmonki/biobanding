@@ -256,8 +256,6 @@ export default class Measurements extends Component {
       if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
 
-        console.log(response);
-
         that.setState({
           measurements: that.convertDate(response.measurements),
         });
