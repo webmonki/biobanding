@@ -56,13 +56,14 @@ export default class Table extends Component {
   };
 
   // at which column begins the subtable
+  // subTableIndex : 4 === 2 columns
   getSubtableIndex = () => {
     const vw = Math.max(
       document.documentElement.clientWidth || 0,
       window.innerWidth || 0
     );
 
-    let index = Math.ceil(vw / 192);
+    let index = Math.ceil(vw / 170);
 
     if (index <= 4) {
       this.setState({ subTableIndex: 4 });
