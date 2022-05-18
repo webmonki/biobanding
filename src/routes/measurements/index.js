@@ -57,6 +57,7 @@ export default class Measurements extends Component {
     if (Auth.check_admin()) {
       content = (
         <Table
+          deletable={Auth.check_admin()}
           editable={editable}
           data={data}
           pageSize={9}
@@ -71,6 +72,7 @@ export default class Measurements extends Component {
     } else {
       content = (
         <Table
+          deletable={Auth.check_admin()}
           editable={editable}
           data={data}
           pageSize={9}

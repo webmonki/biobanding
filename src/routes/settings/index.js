@@ -53,6 +53,7 @@ export default class Settings extends Component {
             that.setState({ ssl: response.config.mail_use_ssl });
             that.setState({ mailUsername: response.config.mail_username });
             that.setState({ regisCode: response.config.registration_code });
+            Auth.setRegisCode(response.config.registration_code);
 
             // Snackbar MSG
             that.props.showSnackbar("Einstellungen erfolgreich geladen");
@@ -154,6 +155,7 @@ export default class Settings extends Component {
           try {
             let response = JSON.parse(this.responseText);
             that.setState({ regisCode: response.registration_code });
+            Auth.setRegisCode(response.registration_code);
           } catch (err) {}
 
           // Snackbar MSG
@@ -203,6 +205,7 @@ export default class Settings extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
+                class={style.fullWidth}
                 label="Erinnerung in Tagen"
                 value={this.state.reminder}
                 onInput={(e) => {
@@ -228,6 +231,7 @@ export default class Settings extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
+                class={style.fullWidth}
                 label="E-Mail-Server"
                 value={this.state.mailService}
                 onInput={(e) => {
@@ -241,6 +245,7 @@ export default class Settings extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
+                class={style.fullWidth}
                 label="Port"
                 value={this.state.mailPort}
                 onInput={(e) => {
@@ -254,6 +259,7 @@ export default class Settings extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
+                class={style.fullWidth}
                 label="Benutzername"
                 value={this.state.mailUsername}
                 onInput={(e) => {
@@ -264,6 +270,7 @@ export default class Settings extends Component {
             <div class={style.input}>
               <TextField
                 autocomplete="off"
+                class={style.fullWidth}
                 label="Passwort"
                 type="password"
                 value={this.state.password}
@@ -279,6 +286,7 @@ export default class Settings extends Component {
               <Formfield>
                 <Checkbox
                   name="serverCheck"
+                  class={style.fullWidth}
                   checked={this.state.ssl}
                   onChange={() => {
                     this.checkServer();

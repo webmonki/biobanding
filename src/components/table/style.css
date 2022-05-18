@@ -17,6 +17,27 @@
 	height: fit-content;
 }
 
+.editBtnColl {
+	border: none;
+	padding: 5px 5px 5px 5px;
+	background: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 100px;
+	cursor: pointer;
+	height: fit-content;
+	width: 40px;
+}
+
+.editBtnColl:hover {
+	background-color: rgba(0, 0, 0, 0.10);
+}
+
+.editBtnColl:active {
+	background-color: rgba(0, 0, 0, 0.3);
+}
+
 .sortIcon {
 	color: rgba(0, 0, 0, 0.3);
 }
@@ -42,7 +63,6 @@ button {
 	align-items: center;
 }
 
-
 .editBtn {
 	width: 40px;
 	height: 40px;
@@ -53,14 +73,12 @@ button {
 	align-items: center;
 	border-radius: 100px;
 	cursor: pointer;
-	padding-right: 10px;
 }
 
 .editBtnSelected {
 	width: 40px;
 	height: 40px;
 	border: none;
-	padding: 5px 5px 5px 5px;
 	background: none;
 	display: flex;
 	flex-direction: column;
@@ -95,7 +113,6 @@ button {
 .editIcon {
 	color: var(--mdc-theme-primary) !important;
 	cursor: pointer;
-	margin-left: 5px;
 }
 
 .editIconSelected {
@@ -117,7 +134,7 @@ button {
 	margin-left: 15px;
 }
 
-.tableFixHead, thead, th {
+.tableFixHead {
 	position: sticky;
 	top: 0;
 }
@@ -131,7 +148,6 @@ button {
 
 .tdBtnsContainer {
 	display: flex;
-	width: fit-content
 }
 
 .btnsData {
@@ -478,3 +494,94 @@ tr:hover {
 .invertBtn:hover {
 	background-color: rgba(0, 0, 0, 0.1);
 }
+
+.table {
+	table-layout: fixed;
+}
+
+/* 768+ */
+@media only screen and (min-width: 768px) {
+
+	.subTableContainer {
+		overflow: auto;
+	}
+
+	.subTable {
+		table-layout: unset;
+	}
+}
+
+
+/* 768- */
+@media only screen and (max-width: 768px) {
+
+	.filterContainer {
+		width: 100%;
+		left: 0;
+		top: 200px;
+	}
+
+	.divider {
+		display: none;
+	}
+
+	.subTableContainer {
+		padding: 0;
+		overflow: auto;
+	}
+
+	.subTable {
+		table-layout: unset;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+
+	.subTableContentRow {
+		display: flex;
+		flex-direction: column;
+	}
+	
+	.subTableCell {
+		height: 50px;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.subTableHeaderCell {
+		display: block;
+		height: 50px;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+	}
+
+	.btnsData {
+		width: fit-content !important;
+	}
+
+
+	.tdBtnsContainer {
+		margin-top: 5px;
+		display: none;
+		width: fit-content;
+		flex-direction: column;
+		max-height: 0;
+		transition: max-height 0.2s ease-out;
+		z-index: 10;
+
+	}
+
+	.checkAll {
+		margin-left: 8px;
+	}
+
+	.menuContainer {
+		padding-left: 8px;
+	}
+}
+
+
+
+/* 480- */
+@media only screen and (max-width: 480px) {}

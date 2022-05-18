@@ -164,3 +164,56 @@
 	background-color: rgba(0, 0, 0, 0.3);
 }
 
+/* 768+ */
+@media only screen and (min-width: 768px) {}
+
+
+/* 768- */
+@media only screen and (max-width: 768px) {
+	.headerContainer {
+		width: 100%;
+	}
+
+
+	.page {
+		padding-top: 0;
+	}
+}
+
+
+
+/* 480- */
+@media only screen and (max-width: 480px) {
+
+	.settingsContainer {
+		width: 100%;
+	}
+
+	.page {
+		padding-top: 0;
+		margin-bottom: calc(43px + var(--global-header-height));
+		height: calc(100% - var(--global-header-height) - var(--global-page-mrgn));
+	}
+
+
+
+	.row {
+		flex-direction: column;
+	}
+
+	.input {
+		margin-bottom: 20px;
+		width: 100%;
+	}
+
+	.checkContainer {
+		display: flex;
+		justify-content: center;
+	}
+
+	.btnContainer {
+		display: flex;
+		justify-content: center;
+	}
+}
+

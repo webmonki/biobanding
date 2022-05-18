@@ -20,6 +20,17 @@ export default class Auth {
     sessionStorage.setItem("user", JSON.stringify(user));
   };
 
+  static setRegisCode = (code) => {
+    sessionStorage.setItem("regisCode", JSON.stringify(code));
+  };
+
+  static getRegisCode = () => {
+    try {
+      let code = JSON.parse(sessionStorage.regisCode);
+      return code;
+    } catch (err) {}
+  };
+
   // Get User from Session Storage
   static getUser = () => {
     try {
