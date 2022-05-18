@@ -49,15 +49,14 @@ html, body {
 
 #mySnackbar :global(.mdc-snackbar) {
 	width: var(--global-snackbar-width);
-	margin: var(--global-snackbar-margin);
 	background-color: var(--global-snackbar-color);
 	box-shadow: var(--global-shadow);
 
 }
 
 :global(.mdc-snackbar__text) {
-	/* color: var(--global-snackbar-font-color) !important; */
-	/* color: red !important */
+	margin-left: auto !important;
+	margin-right: auto !important;
 }
 
 
@@ -97,7 +96,6 @@ html, body {
 	--global-border-width: 1px;
 	/*SNACKBAR*/
 	--global-snackbar-width: 100%;
-	--global-snackbar-margin: 0 0 0 50%;
 	--global-snackbar-color: white;
 	--global-snackbar-font-color: var(--mdc-theme-primary);
 	/*Table*/
@@ -115,6 +113,7 @@ html, body {
 		height: 100%;
 	}
 
+
 }
 
 /* 768- */
@@ -125,6 +124,12 @@ html, body {
 		display: flex;
 		height: 100%;
 		padding-top: 10%;
+		overflow-y: auto;
+	}
+
+
+	#mySnackbar :global(.mdc-snackbar) {
+		margin-bottom: 43px !important;
 	}
 }
 

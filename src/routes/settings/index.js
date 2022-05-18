@@ -53,6 +53,7 @@ export default class Settings extends Component {
             that.setState({ ssl: response.config.mail_use_ssl });
             that.setState({ mailUsername: response.config.mail_username });
             that.setState({ regisCode: response.config.registration_code });
+            Auth.setRegisCode(response.config.registration_code);
 
             // Snackbar MSG
             that.props.showSnackbar("Einstellungen erfolgreich geladen");
@@ -154,6 +155,7 @@ export default class Settings extends Component {
           try {
             let response = JSON.parse(this.responseText);
             that.setState({ regisCode: response.registration_code });
+            Auth.setRegisCode(response.registration_code);
           } catch (err) {}
 
           // Snackbar MSG

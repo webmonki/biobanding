@@ -192,7 +192,7 @@
 	.page {
 		padding-top: 0;
 		margin-bottom: calc(43px + var(--global-header-height));
-		height: calc(100% - 43px - var(--global-header-height) - var(--global-page-mrgn));
+		height: calc(100% - var(--global-header-height) - var(--global-page-mrgn));
 	}
 
 

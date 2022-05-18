@@ -157,7 +157,7 @@ export default class Users extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         // Snackbar MSG
-        that.props.showSnackbar("Benutzer erfolgreich angelegt", true);
+        that.props.showSnackbar("Benutzer erfolgreich angelegt");
 
         // reload to get updated data
         that.getData();
@@ -178,6 +178,7 @@ export default class Users extends Component {
             "username": "${this.state.username}",
             "email": "${this.state.email}",
             "password": "${this.state.password}",
+			"registration_code": ${Auth.getRegisCode()},
 			"is_admin": ${this.state.admin}
         }`;
 
