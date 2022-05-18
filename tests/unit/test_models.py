@@ -53,28 +53,28 @@ ANTH_DATA_HEIGHT = 182
 ANTH_DATA_SITTING_HEIGHT = 99
 ANTH_DATA_BODY_SPAN = 64
 ANTH_DATA_WEIGHT = 89.9
-ANTH_DATA_PHV = 15.13
+ANTH_DATA_PHV = 15.12
 ANTH_DATA_OFFSET = 1.8
 ANTH_DATA_AK_BIO = "1.5 bis 2.5"
 ANTH_DATA_BMI = 27.1
 ANTH_DATA_PAH = 198.73
 ANTH_DATA_PMH = 0.92
 ANTH_DATA_REMAINING_GROWTH = 16.73
-ANTH_DATA_AGE_AT_MEASURMENT = 13.33
+ANTH_DATA_AGE_AT_MEASURMENT = 13.32
 
-ANTH_EDITED_DATA_DATE_MEASURED = "2022-03-03"
-ANTH_EDITED_DATA_HEIGHT = 188
-ANTH_EDITED_DATA_SITTING_HEIGHT = 101
+ANTH_EDITED_DATA_DATE_MEASURED = "2024-06-06"
+ANTH_EDITED_DATA_HEIGHT = 300
+ANTH_EDITED_DATA_SITTING_HEIGHT = 200
 ANTH_EDITED_DATA_BODY_SPAN = 71
-ANTH_EDITED_DATA_WEIGHT = 92.3
-ANTH_EDITED_DATA_PHV = 15.13
-ANTH_EDITED_DATA_OFFSET = 1.81
-ANTH_EDITED_DATA_AK_BIO = "PHV 1.5 bis 2.5"
-ANTH_EDITED_DATA_BMI = 27.1
-ANTH_EDITED_DATA_PAH = 198.73
-ANTH_EDITED_DATA_PMH = 0.92
-ANTH_EDITED_DATA_REMAINING_GROWTH = 16.73
-ANTH_EDITED_DATA_AGE_AT_MEASURMENT = 13.34
+ANTH_EDITED_DATA_WEIGHT = 150
+ANTH_EDITED_DATA_PHV = 33.19
+ANTH_EDITED_DATA_OFFSET = 17.44
+ANTH_EDITED_DATA_AK_BIO = "2.5"
+ANTH_EDITED_DATA_BMI = 16.7
+ANTH_EDITED_DATA_PAH = 276.14
+ANTH_EDITED_DATA_PMH = 1.09
+ANTH_EDITED_DATA_REMAINING_GROWTH = -23.86
+ANTH_EDITED_DATA_AGE_AT_MEASURMENT = 15.75
 
 PLMAS_FIRST_NAME = "Kevin"
 PLMAS_LAST_NAME = "Brügger"
@@ -447,21 +447,22 @@ def test_edit_anthropometric_data(app_generator):
         anthData.update_sitting_height(ANTH_EDITED_DATA_SITTING_HEIGHT)
         anthData.update_body_span(ANTH_EDITED_DATA_BODY_SPAN)
         anthData.update_weight(ANTH_EDITED_DATA_WEIGHT)
+        anthData.save()
         # Check results
         assert anthData.user_id == DETAILS_FOR_USER_WITH_ID
-        assert anthData.date_measured == datetime.strptime(ANTH_EDITED_DATA_DATE_MEASURED, "%Y-%m-%d")
+        assert anthData.date_measured == datetime.strptime(ANTH_EDITED_DATA_DATE_MEASURED, "%Y-%m-%d").date()
         assert anthData.height == ANTH_EDITED_DATA_HEIGHT
         assert anthData.sitting_height == ANTH_EDITED_DATA_SITTING_HEIGHT
         assert anthData.body_span == ANTH_EDITED_DATA_BODY_SPAN
         assert anthData.weight == ANTH_EDITED_DATA_WEIGHT
         assert anthData.phv == ANTH_EDITED_DATA_PHV
-        assert anthData.offset == ANTH_DATA_OFFSET
-        assert anthData.ak_bio == ANTH_DATA_AK_BIO
-        assert anthData.bmi == ANTH_DATA_BMI
-        assert anthData.pah == ANTH_DATA_PAH
-        assert anthData.pmh == ANTH_DATA_PMH
-        assert anthData.remaining_growth == ANTH_DATA_REMAINING_GROWTH
-        assert anthData.age_at_measurement == ANTH_DATA_AGE_AT_MEASURMENT
+        assert anthData.offset == ANTH_EDITED_DATA_OFFSET
+        assert anthData.ak_bio == ANTH_EDITED_DATA_AK_BIO
+        assert anthData.bmi == ANTH_EDITED_DATA_BMI
+        assert anthData.pah == ANTH_EDITED_DATA_PAH
+        assert anthData.pmh == ANTH_EDITED_DATA_PMH
+        assert anthData.remaining_growth == ANTH_EDITED_DATA_REMAINING_GROWTH
+        assert anthData.age_at_measurement == ANTH_EDITED_DATA_AGE_AT_MEASURMENT
 
 
 def test_delete_anthropometric_data(app_generator):
