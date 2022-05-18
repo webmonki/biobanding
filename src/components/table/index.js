@@ -374,6 +374,24 @@ export default class Table extends Component {
     return tableHeader;
   };
 
+  getDeleteCheckboxForHeader = () => {
+    if (this.props.deleteable) {
+      return (
+        <Formfield class={style.checkAll}>
+          <Checkbox
+            name="deleteCheckAll"
+            checked={this.state.checked}
+            value={"c"}
+            onClick={(e) => {
+              this.setState({ checked: e.target.checked });
+              this.checkAll(e.target.checked);
+            }}
+          />
+        </Formfield>
+      );
+    }
+  };
+
   // creates header row of main table
   createTableHeader = () => {
     let divider = true;
@@ -383,17 +401,7 @@ export default class Table extends Component {
         let tableHeader = (
           <tr>
             <th class={`${style.headerCellContainer} ${style.tableFixHead}`}>
-              <Formfield class={style.checkAll}>
-                <Checkbox
-                  name="deleteCheckAll"
-                  checked={this.state.checked}
-                  value={"c"}
-                  onClick={(e) => {
-                    this.setState({ checked: e.target.checked });
-                    this.checkAll(e.target.checked);
-                  }}
-                />
-              </Formfield>
+              {this.getDeleteCheckboxForHeader()}
             </th>
             {cols.map((name) => {
               if (this.state.colsHidden.includes(name)) {
@@ -639,13 +647,60 @@ export default class Table extends Component {
     return undefined;
   };
 
-  // Table columns
-  renderTableContent = (key, row) => {
-    let cols = this.getRangeList(0, this.state.subTableIndex);
-    return (
-      <tr id={key + "mainRow"}>
-        <td id={"tableData"} class={style.btnsData}>
-          <div class={style.tdBtnsContainer}>
+  collapseTdBtnsContainer = (key) => {
+    let coll = document.getElementById(key + "tdBtnsContainer");
+
+    if (coll.style.maxHeight === "0px" || coll.style.maxHeight === "") {
+      coll.style.maxHeight = "120px";
+      coll.style.display = "flex";
+    } else {
+      coll.style.maxHeight = "0px";
+      coll.style.display = "none";
+    }
+  };
+
+  getDeleteCheckboxForRow = (key) => {
+    if (this.props.deletable) {
+      return (
+        <Formfield>
+          <Checkbox
+            name="deleteCheck"
+            value={key}
+            checked={this.getCheckState(key)}
+            onChange={(e) => {
+              this.addToCheckList(key);
+            }}
+          />
+        </Formfield>
+      );
+    }
+  };
+
+  getTdBtnsContainer = (key) => {
+    const vw = Math.max(
+      document.documentElement.clientWidth || 0,
+      window.innerWidth || 0
+    );
+
+    let content;
+
+    if (vw < 768) {
+      content = (
+        <div>
+          <button
+            onClick={() => {
+              this.collapseTdBtnsContainer(key);
+            }}
+            class={style.editBtn}
+          >
+            <i
+              class={`${"material-icons"} ${style.editIcon}`}
+              aria-hidden="true"
+            >
+              more_vert
+            </i>
+          </button>
+          <div class={style.tdBtnsContainer} id={key + "tdBtnsContainer"}>
             {/* Edit Button */}
             <button
               onClick={() => {
@@ -662,18 +717,55 @@ export default class Table extends Component {
             </button>
 
             {/* CheckBox */}
-            <Formfield>
-              <Checkbox
-                name="deleteCheck"
-                value={key}
-                checked={this.getCheckState(key)}
-                onChange={(e) => {
-                  this.addToCheckList(key);
-                }}
-              />
-            </Formfield>
+            {this.getDeleteCheckboxForRow(key)}
             {this.getCollapseBtn(key)}
           </div>
+        </div>
+      );
+    } else {
+      content = (
+        <div class={style.tdBtnsContainer}>
+          {/* Edit Button */}
+          <button
+            onClick={() => {
+              this.props.clickEdit(key);
+            }}
+            class={style.editBtn}
+          >
+            <i
+              class={`${"material-icons"} ${style.editIcon}`}
+              aria-hidden="true"
+            >
+              edit
+            </i>
+          </button>
+
+          {/* CheckBox */}
+          <Formfield>
+            <Checkbox
+              name="deleteCheck"
+              value={key}
+              checked={this.getCheckState(key)}
+              onChange={(e) => {
+                this.addToCheckList(key);
+              }}
+            />
+          </Formfield>
+          {this.getCollapseBtn(key)}
+        </div>
+      );
+    }
+
+    return content;
+  };
+
+  // Table columns
+  renderTableContent = (key, row) => {
+    let cols = this.getRangeList(0, this.state.subTableIndex);
+    return (
+      <tr id={key + "mainRow"}>
+        <td id={"tableData"} class={style.btnsData}>
+          {this.getTdBtnsContainer(key)}
         </td>
 
         {/* create cells */}

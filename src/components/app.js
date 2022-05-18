@@ -177,14 +177,24 @@ export default class App extends Component {
     });
   };
 
+  getBugTrackerScript = (userLoggedIn) => {
+    if (userLoggedIn === undefined || userLoggedIn === false) {
+      return undefined;
+    }
+
+    return (
+      <script
+        type="text/javascript"
+        src="https://vp-systeme.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/-onpk8x/b/7/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=de-DE&collectorId=cc9af09f"
+      />
+    );
+  };
+
   render() {
     return (
       <div id="app">
         {/* Skript for Bug Tracker */}
-        <script
-          type="text/javascript"
-          src="https://vp-systeme.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/-onpk8x/b/7/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=de-DE&collectorId=cc9af09f"
-        />
+        {this.getBugTrackerScript(this.state.userLoggedIn)}
         <ConfirmDialog
           reference={this.confirmDialogRef}
           dialogHeader={"Accout wirklich löschen?"}

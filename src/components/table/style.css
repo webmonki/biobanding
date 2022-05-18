@@ -113,7 +113,6 @@ button {
 .editIcon {
 	color: var(--mdc-theme-primary) !important;
 	cursor: pointer;
-	margin-left: 5px;
 }
 
 .editIconSelected {
@@ -516,6 +515,12 @@ tr:hover {
 /* 768- */
 @media only screen and (max-width: 768px) {
 
+	.filterContainer {
+		width: 100%;
+		left: 0;
+		top: 200px;
+	}
+
 	.divider {
 		display: none;
 	}
@@ -555,11 +560,16 @@ tr:hover {
 		width: fit-content !important;
 	}
 
+
 	.tdBtnsContainer {
-		flex-direction: column;
+		margin-top: 5px;
+		display: none;
 		width: fit-content;
-		justify-content: center;
-		align-items: center;
+		flex-direction: column;
+		max-height: 0;
+		transition: max-height 0.2s ease-out;
+		z-index: 10;
+
 	}
 
 	.checkAll {

@@ -106,12 +106,7 @@ dialog.confirmDialog > div:first-child {
 
 
 /* 768- */
-@media only screen and (max-width: 768px) {}
-
-
-
-/* 480- */
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 768px) {
 	dialog.dialog > div:first-child {
 		width: 100%;
 	}
@@ -132,4 +127,11 @@ dialog.confirmDialog > div:first-child {
 	.input {
 		width: 100%;
 	}
+}
+
+
+
+/* 480- */
+@media only screen and (max-width: 480px) {
+	
 }

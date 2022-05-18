@@ -109,6 +109,10 @@
 	cursor: pointer;
 }
 
+.logoutIcon {
+	display: none !important;
+}
+
 /* 768+ */
 @media only screen and (min-width: 768px) {
 	.menuIcon {
@@ -128,8 +132,23 @@
 
 /* 480- */
 @media only screen and (max-width: 480px) {
+
+	.secondaryBtn {
+		background-color: var(--mdc-theme-primary) !important;
+	}
+
+	.logoutLabel {
+		display: none;
+	}
+
+	.logoutIcon {
+		margin-left: 5px !important;
+		color: white !important;
+		display: block !important;
+	}
+
 	.btnContainer {
-		width: 170px;
+		width: 100px;
 	}
 
 	.roundBtn {
