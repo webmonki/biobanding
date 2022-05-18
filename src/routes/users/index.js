@@ -11,10 +11,11 @@ import "preact-material-components/Drawer/style.css";
 import Table from "../../components/table";
 import EditUser from "../../components/dialogs/editUser";
 import NewUser from "../../components/dialogs/newUser";
-
+import { getRegistrationCode } from "../../components/reguests/requests";
 export default class Users extends Component {
   componentWillMount = () => {
     this.getData();
+    Auth.setRegisCode(getRegistrationCode());
   };
 
   componentWillUnmount = () => {

@@ -21,6 +21,7 @@ export default class Auth {
   };
 
   static setRegisCode = (code) => {
+    console.log("CODE: ", code);
     sessionStorage.setItem("regisCode", JSON.stringify(code));
   };
 

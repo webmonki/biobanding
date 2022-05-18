@@ -1,5 +1,7 @@
 import Auth from "../state";
 
+let code;
+
 // API Request to delete an Account
 export function deleteAccount() {
   let url = Auth.url + "/api/user/" + Auth.getUser().id;
@@ -20,6 +22,28 @@ export function deleteAccount() {
           Auth.logout();
         }
       } catch (err) {}
+    }
+  };
+
+  xhttp.send();
+}
+
+export function getRegistrationCode() {
+  let url = Auth.url + "/api/configurations";
+  let xhttp = new XMLHttpRequest();
+
+  xhttp.open("GET", url);
+  xhttp.setRequestHeader("Accept", 'application/json"');
+  xhttp.setRequestHeader("authorization", Auth.getUser().token);
+
+  xhttp.onreadystatechange = function () {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        try {
+          let response = JSON.parse(this.responseText);
+          Auth.setRegisCode(response.config.registration_code);
+        } catch (err) {}
+      }
     }
   };
 
