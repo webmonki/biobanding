@@ -9,8 +9,6 @@ import Radio from "preact-material-components/Radio";
 import Auth from "../../components/state";
 import "preact-material-components/List/style.css";
 import "preact-material-components/Radio/style.css";
-import Snackbar from "preact-material-components/Snackbar";
-import "preact-material-components/Snackbar/style.css";
 import Card from "preact-material-components/Card";
 import { route } from "preact-router";
 
@@ -62,9 +60,7 @@ export default class Confirm extends Component {
         Auth.createUser(response);
         route("/measurements", true);
       } else if (this.readyState === 4 && this.status === 200) {
-        that.bar.MDComponent.show({
-          message: `Email Adresse ist bereits bestätigt`,
-        });
+        that.props.showSnackbar("E-Mail Adresse ist bereits bestätigt");
       } else {
         try {
           let response = JSON.parse(this.responseText);
@@ -214,9 +210,46 @@ export default class Confirm extends Component {
                 class={style.dateInput}
                 type="date"
                 value={this.state.birthday}
-                onInput={(e) => this.setState({ birthday: e.target.value })}
+                onInput={(e) => {
+                  let birthday = e.target.value;
+                  let today = new Date();
+                  let dd = String(today.getDate()).padStart(2, "0");
+                  let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+                  let yyyy = today.getFullYear();
+
+                  today = mm + "-" + dd + "-" + yyyy;
+
+                  this.setState({ birthday });
+
+                  today = new Date(today);
+                  birthday = new Date(birthday);
+
+                  let diff = Math.floor(
+                    Math.abs(today - birthday) / (1000 * 3600 * 24) / 365
+                  );
+
+                  this.setState({ diff });
+
+                  if (diff < 4) {
+                    this.setState({ birthdayFBClass: style.feedbackErr });
+                    this.setState({ birthdayFB: "Mindestalter 4 Jahre" });
+                  }
+
+                  if (diff > 18) {
+                    this.setState({ birthdayFBClass: style.feedbackErr });
+                    this.setState({ birthdayFB: "Maximalalter 18 Jahre" });
+                  }
+
+                  if (diff > 4 && diff < 18) {
+                    this.setState({ birthdayFBClass: style.feedbackSucc });
+                    this.setState({ birthdayFB: "" });
+                  }
+                }}
               />
               <span class={style.bDayLabel}>Geburtstag</span>
+              <span class={this.state.birthdayFBClass}>
+                {this.state.birthdayFB}
+              </span>
             </div>
             <div class={style.radioContainer}>
               <div class={style.radioBtn}>
@@ -300,13 +333,6 @@ export default class Confirm extends Component {
             <Button raised onClick={this.sendConfirm}>
               Registrierung abschließen
             </Button>
-          </div>
-          <div class={style.mySnackbar}>
-            <Snackbar
-              ref={(bar) => {
-                this.bar = bar;
-              }}
-            />
           </div>
         </div>
       </Card>

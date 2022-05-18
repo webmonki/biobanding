@@ -359,7 +359,6 @@ class EditUser(Resource):
             user = Users.get_by_id(id)
             user.delete()
         except Exception as e:
-            print(e)
             return {
                        "success": False,
                        "msg": "Could not delete User {}".format(e)}, 400
@@ -821,13 +820,18 @@ class Anthropometric(Resource):
             body_span=_body_span,
             weight=_weight
         )
-        _new_anthropometric_data.save()
 
-        return {"success": False,
+        try:
+            _new_anthropometric_data.save()
+
+
+        except Exception as e:
+            return {"success": False,
                 "msg": "Anthropometric data could not be created"}, 400
 
+
         return {"success": True,
-                "anthropometric_data": anthropometric_data_model.toDICT(),
+                "anthropometric_data": _new_anthropometric_data.toDICT(),
                 "msg": "Anthropometric data was successfully created"}, 200
 
     @token_required
@@ -885,8 +889,6 @@ class Measurement(Resource):
 
         req_data = request.get_json()
 
-        print("Request", req_data)
-
         _new_date_measured = req_data.get("date_measured")
         _new_height = req_data.get("height")
         _new_sitting_height = req_data.get("sitting_height")
@@ -894,7 +896,6 @@ class Measurement(Resource):
         _new_weight = req_data.get("weight")
 
         measurement_data = AnthropometricData.get_by_id(id)
-        print("Measurement_Data: ", measurement_data)
 
         if _new_date_measured:
             measurement_data.update_date_measured(_new_date_measured)
@@ -936,6 +937,40 @@ class Measurements(Resource):
             return {"success": True,
                     'measurements': result}, 200
         except Exception as e:
-            print(e)
+            return {"success": False,
+                    'msg': 'Could not read measurements.'}, 400
+
+
+@rest_api.route('/api/measurements/last')
+class Measurements(Resource):
+
+    @token_required
+    def get(self, current_user):
+        """Return all anthropometric measurements for all users"""
+
+        try:
+
+            subq = db.session.query(
+                AnthropometricData.user_id,
+                db.func.max(AnthropometricData.date_measured).label('maxdate')
+            ).group_by(AnthropometricData.user_id).subquery('t2')
+
+            query = db.session.query(AnthropometricData, Users.username).join(
+                subq,
+                db.and_(
+                    AnthropometricData.user_id == subq.c.user_id,
+                    AnthropometricData.date_measured == subq.c.maxdate
+                )
+            )
+
+            result = []
+            for a, u in query:
+
+                measurement = {**{'Benutzer': u}, **a.toDICT()}
+                result.append(measurement)
+
+            return {"success": True,
+                    'measurements': result}, 200
+        except Exception as e:
             return {"success": False,
                     'msg': 'Could not read measurements.'}, 400

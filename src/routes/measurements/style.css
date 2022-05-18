@@ -102,3 +102,46 @@
 	padding: 0 24px 0 24px;
 }
 
+.chip {
+	position: relative;
+	left: 80px;
+	top: 49px;
+}
+
+.chipContainer {
+	display: flex;
+	align-items: center;
+}
+
+.chipIcon {
+	display: none;
+	font-size: 20px;
+	color: rgba(0, 0, 0, 0.5)
+}
+
+.chipText {
+	margin-left: 10px;
+	color: rgba(0, 0, 0, 0.5)
+}
+
+/* 768+ */
+@media only screen and (min-width: 768px) {}
+
+
+/* 768- */
+@media only screen and (max-width: 768px) {
+	.page {
+		padding: 0;
+		margin-bottom: calc(43px + var(--global-header-height));
+		height: calc(100% - var(--global-header-height) - var(--global-page-mrgn));
+	}
+
+	.pageHeader {
+		text-align: center;
+	}
+}
+
+
+
+/* 480- */
+@media only screen and (max-width: 480px) {}

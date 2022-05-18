@@ -108,3 +108,59 @@
 	z-index: 8;
 	cursor: pointer;
 }
+
+.logoutIcon {
+	display: none !important;
+}
+
+/* 768+ */
+@media only screen and (min-width: 768px) {
+	.menuIcon {
+		display: block;
+	}
+}
+
+
+/* 768- */
+@media only screen and (max-width: 768px) {
+	.menuIcon {
+		display: none;
+	}
+}
+
+
+
+/* 480- */
+@media only screen and (max-width: 480px) {
+
+	.secondaryBtn {
+		background-color: white !important;
+	}
+
+	.logoutLabel {
+		display: none;
+	}
+
+	.logoutIcon {
+		margin-right: 13px !important;
+		margin-bottom: 10px !important;
+		color: var(--mdc-theme-primary) !important;
+		display: block !important;
+		font-size: 30px !important;
+	}
+
+	.btnContainer {
+		width: 100px;
+	}
+
+	.roundBtn {
+		width: 37px !important;
+		min-width: 37px;
+		padding-right: 5px;
+	}
+
+	.newLabel {
+		display: none;
+	}
+}
+

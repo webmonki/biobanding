@@ -11,6 +11,9 @@ import "preact-material-components/Drawer/style.css";
 import Table from "../../components/table";
 import NewMeasurementAdmin from "../../components/dialogs/newMeasurementAdmin";
 import NewMeasurementUser from "../../components/dialogs/newMeasurementUser";
+import Chips from "preact-material-components/Chips";
+import "preact-material-components/Chips/style.css";
+import "preact-material-components/Theme/style.css";
 
 export default class Measurements extends Component {
   componentWillMount = () => {
@@ -57,6 +60,7 @@ export default class Measurements extends Component {
     if (Auth.check_admin()) {
       content = (
         <Table
+          deletable={Auth.check_admin()}
           editable={editable}
           data={data}
           pageSize={9}
@@ -71,13 +75,14 @@ export default class Measurements extends Component {
     } else {
       content = (
         <Table
+          deletable={Auth.check_admin()}
           editable={editable}
           data={data}
           pageSize={9}
           clickEdit={this.showDialog}
           delete={this.delete}
           showDialog={this.openDialog}
-          idKey="id"
+          idKey="Id"
           title="Messungen"
           subTableTitle="Ergebnisse"
         />
@@ -211,6 +216,36 @@ export default class Measurements extends Component {
   getOverview = () => {
     let that = this;
     let url = Auth.url + "/api/measurements";
+    let xhttp = new XMLHttpRequest();
+
+    xhttp.open("GET", url);
+    xhttp.setRequestHeader("Accept", "application/json");
+    xhttp.setRequestHeader("authorization", Auth.getUser().token);
+
+    xhttp.onreadystatechange = function () {
+      if (this.readyState === 4 && this.status === 200) {
+        let response = JSON.parse(this.responseText);
+
+        that.setState({
+          measurements: that.convertDate(response.measurements),
+        });
+        that.showTable(true);
+      } else {
+        try {
+          let response = JSON.parse(this.responseText);
+          if (response.msg === "Token is invalid") {
+            Auth.logout();
+          }
+        } catch (err) {}
+      }
+    };
+    xhttp.send();
+  };
+
+  // API Request to get last measurement of every user
+  getMeasurementsLast = () => {
+    let that = this;
+    let url = Auth.url + "/api/measurements/last";
     let xhttp = new XMLHttpRequest();
 
     xhttp.open("GET", url);
@@ -464,10 +499,47 @@ export default class Measurements extends Component {
     this.setState({ editDialog });
   };
 
+  handleChipClick = () => {
+    let chipIcon = document.getElementById("chipIcon");
+    let chip = document.getElementById("chip");
+
+    if (chipIcon.style.display === "none" || chipIcon.style.display === "") {
+      this.getMeasurementsLast();
+      chipIcon.style.display = "block";
+      chip.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+    } else if (chipIcon.style.display === "block") {
+      this.getOverview();
+      chipIcon.style.display = "none";
+      chip.style.backgroundColor = "rgba(0, 0, 0, 0.1)";
+    }
+  };
+
+  getChip = () => {
+    if (!Auth.check_admin()) {
+      return undefined;
+    }
+
+    return (
+      <Chips class={style.chip}>
+        <Chips.Chip onClick={this.handleChipClick} id="chip">
+          <Chips.Text>
+            <div class={style.chipContainer}>
+              <i id="chipIcon" class={`${"material-icons"} ${style.chipIcon}`}>
+                check
+              </i>
+              <span class={style.chipText}>Letzte Messungen</span>
+            </div>
+          </Chips.Text>
+        </Chips.Chip>
+      </Chips>
+    );
+  };
+
   render() {
     return (
       <div class={style.page}>
         <span class={style.pageHeader}>Messungen</span>
+        {this.getChip()}
         <Card class={style.card}>{this.state.content}</Card>
         {this.state.dialog}
         {this.state.editDialog}

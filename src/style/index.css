@@ -7,7 +7,6 @@ html, body {
 	width: 100%;
 	padding: 0;
 	margin: 0;
-	background: #FAFAFA;
 	font-family: 'Helvetica Neue', arial, sans-serif;
 	font-weight: 400;
 	color: #444;
@@ -47,22 +46,17 @@ html, body {
 	height: 100%;
 }
 
-#page {
-	height: 100%;
-	display: flex;
-}
 
 #mySnackbar :global(.mdc-snackbar) {
 	width: var(--global-snackbar-width);
-	margin: var(--global-snackbar-margin);
 	background-color: var(--global-snackbar-color);
 	box-shadow: var(--global-shadow);
 
 }
 
 :global(.mdc-snackbar__text) {
-	/* color: var(--global-snackbar-font-color) !important; */
-	/* color: red !important */
+	margin-left: auto !important;
+	margin-right: auto !important;
 }
 
 
@@ -102,7 +96,6 @@ html, body {
 	--global-border-width: 1px;
 	/*SNACKBAR*/
 	--global-snackbar-width: 100%;
-	--global-snackbar-margin: 0 0 0 50%;
 	--global-snackbar-color: white;
 	--global-snackbar-font-color: var(--mdc-theme-primary);
 	/*Table*/
@@ -111,5 +104,38 @@ html, body {
 	--global-table-cell-width: 170px;
 }
 
+/* 768+ */
+@media only screen and (min-width: 768px) {
+
+	#page {
+		display: flex;
+		flex-direction: row;
+		height: 100%;
+	}
+
+
+}
+
+/* 768- */
+@media only screen and (max-width: 768px) {
+
+
+	#page {
+		display: flex;
+		height: 100%;
+		padding-top: 10%;
+		overflow-y: auto;
+	}
+
+
+	#mySnackbar :global(.mdc-snackbar) {
+		margin-bottom: 43px !important;
+	}
+}
+
+/* 480- */
+@media only screen and (max-width: 480px) {
+
+}
 
 

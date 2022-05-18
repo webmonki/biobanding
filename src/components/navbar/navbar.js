@@ -58,32 +58,48 @@ export default class Navbar extends Component {
                 selected={props.selectedRoute === "/measurements"}
                 onClick={this.goToMeasurements}
               >
-                <List.ItemGraphic>equalizer</List.ItemGraphic>
-                <span style={this.getDisplayBar()}>Messungen</span>
+                <List.ItemGraphic class={style.navItemIcon}>
+                  equalizer
+                </List.ItemGraphic>
+                <span style={this.getDisplayBar()} class={style.navItemLabel}>
+                  Messungen
+                </span>
               </Drawer.DrawerItem>
               <Drawer.DrawerItem
                 class={style.navbarItem}
                 selected={props.selectedRoute === "/users"}
                 onClick={this.goToUsers}
               >
-                <List.ItemGraphic>group</List.ItemGraphic>
-                <span style={this.getDisplayBar()}>Benutzer</span>
+                <List.ItemGraphic class={style.navItemIcon}>
+                  group
+                </List.ItemGraphic>
+                <span style={this.getDisplayBar()} class={style.navItemLabel}>
+                  Benutzer
+                </span>
               </Drawer.DrawerItem>
               <Drawer.DrawerItem
                 class={style.navbarItem}
                 selected={props.selectedRoute === "/profile"}
                 onClick={this.goToMyProfile}
               >
-                <List.ItemGraphic>account_circle</List.ItemGraphic>
-                <span style={this.getDisplayBar()}>Profil</span>
+                <List.ItemGraphic class={style.navItemIcon}>
+                  account_circle
+                </List.ItemGraphic>
+                <span style={this.getDisplayBar()} class={style.navItemLabel}>
+                  Profil
+                </span>
               </Drawer.DrawerItem>
               <Drawer.DrawerItem
                 class={style.navbarItem}
                 selected={props.selectedRoute === "/settings"}
                 onClick={this.goToSettings}
               >
-                <List.ItemGraphic>build</List.ItemGraphic>
-                <span style={this.getDisplayBar()}>Einstellungen</span>
+                <List.ItemGraphic class={style.navItemIcon}>
+                  build
+                </List.ItemGraphic>
+                <span style={this.getDisplayBar()} class={style.navItemLabel}>
+                  Einstellungen
+                </span>
               </Drawer.DrawerItem>
             </Drawer.DrawerContent>
           </Drawer>
@@ -104,16 +120,24 @@ export default class Navbar extends Component {
                 selected={props.selectedRoute === "/measurements"}
                 onClick={this.goToMeasurements}
               >
-                <List.ItemGraphic>equalizer</List.ItemGraphic>
-                <span style={this.getDisplayBar()}>Messungen</span>
+                <List.ItemGraphic class={style.navItemIcon}>
+                  equalizer
+                </List.ItemGraphic>
+                <span style={this.getDisplayBar()} class={style.navItemLabel}>
+                  Messungen
+                </span>
               </Drawer.DrawerItem>
               <Drawer.DrawerItem
                 class={style.navbarItem}
                 selected={props.selectedRoute === "/profile"}
                 onClick={this.goToMyProfile}
               >
-                <List.ItemGraphic>account_circle</List.ItemGraphic>
-                <span style={this.getDisplayBar()}>Profil</span>
+                <List.ItemGraphic class={style.navItemIcon}>
+                  account_circle
+                </List.ItemGraphic>
+                <span style={this.getDisplayBar()} class={style.navItemLabel}>
+                  Profil
+                </span>
               </Drawer.DrawerItem>
             </Drawer.DrawerContent>
           </Drawer>

@@ -197,8 +197,26 @@ export default class Header extends Component {
         </i>
         <div class={style.btnContainer}>
           {/* loginbutton */}
-          <Button class={style.secondaryBtn} onClick={this.logOut}>
-            Abmelden
+          <Button
+            class={`${style.secondaryBtn} ${style.roundBtn}`}
+            onClick={this.logOut}
+          >
+            <i
+              class={`${"material-icons mdc-button__icon mdc-theme--primary"} ${
+                style.logoutIcon
+              }`}
+            >
+              {/* power_settings_new */}
+              exit_to_app
+              {/* close */}
+            </i>
+            <span
+              class={`${"mdc-button__label mdc-theme--primary"} ${
+                style.logoutLabel
+              }`}
+            >
+              Abmelden
+            </span>
           </Button>
 
           {/* button to create new measurement */}
@@ -215,7 +233,11 @@ export default class Header extends Component {
             >
               add
             </i>
-            <span class="mdc-button__label mdc-theme--text-secondary-on-light">
+            <span
+              class={`${"mdc-button__label mdc-theme--text-secondary-on-light"} ${
+                style.newLabel
+              }`}
+            >
               Messung
             </span>
           </Button>
