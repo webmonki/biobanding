@@ -1,7 +1,5 @@
 import Auth from "../state";
 
-let code;
-
 // API Request to delete an Account
 export function deleteAccount() {
   let url = Auth.url + "/api/user/" + Auth.getUser().id;
