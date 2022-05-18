@@ -85,11 +85,10 @@
 }
 
 .bDayLabel {
-	background-color: white;
 	/* padding-left: 10px; */
 	width: 75px;
 	position: relative;
-	top: -64px;
+	top: -50px;
 	left: 10px;
 	font-size: small;
 	color: rgba(0, 0, 0, 0.6);;
