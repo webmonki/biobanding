@@ -59,6 +59,10 @@
 	color: var(--mdc-theme-primary) !important;
 }
 
+.resetContent {
+	margin: auto auto auto auto;
+}
+
 
 /* 768+ */
 @media only screen and (min-width: 768px) {}
@@ -71,6 +75,12 @@
 
 /* 480- */
 @media only screen and (max-width: 480px) {
+
+	.resetContent {
+		width: 100%;
+		height: 100%;
+	}
+
 	.card {
 		margin-top: 10%;
 		box-shadow: none;

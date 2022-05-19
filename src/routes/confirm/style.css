@@ -140,8 +140,8 @@
 	box-shadow: var(--global-shadow);
 }
 
-:global(.mdc-snackbar__text) {
-	color: var(--global-snackbar-font-color) !important;
+.confirmContent {
+	margin: auto auto auto auto;
 }
 
 /* 768+ */
@@ -167,10 +167,20 @@
 
 /* 480- */
 @media only screen and (max-width: 480px) {
+	.card {
+		width: 100%;
+		box-shadow: none;
+		overflow-y: auto;
+	}
 
 	.inputContainer {
 		width: 100%;
 		height: fit-content;
+	}
+	
+	.confirmContent {
+		width: 100%;
+		height: 100%;
 	}
 
 	.page {

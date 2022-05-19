@@ -214,6 +214,19 @@ export default class App extends Component {
     );
   };
 
+  getLogo = (userLoggedIn) => {
+    if (userLoggedIn === undefined || userLoggedIn === false) {
+      return undefined;
+    }
+
+    return (
+      <div id="logoContainer">
+        <span id="logoLabel">powered by</span>
+        <img id="vpsLogo" src="../../assets/Frame 1.svg" />
+      </div>
+    );
+  };
+
   render() {
     return (
       <div id="app">
@@ -260,6 +273,7 @@ export default class App extends Component {
             <NotFound default />
             <RemindedMeasurement path="/measurement" />
           </Router>
+          {this.getLogo(this.state.userLoggedIn)}
         </div>
         {this.getSnackbar(this.state.userLoggedIn)}
       </div>

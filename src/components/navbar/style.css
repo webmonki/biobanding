@@ -23,8 +23,9 @@ aside {
 
 .versionContainer {
 	position: absolute;
+	font-size: small;
 	left: 10px;
-	bottom: 15px;
+	bottom: 5px;
 	color: rgba(0, 0, 0, 0.4);
 	z-index: 7;
 }
