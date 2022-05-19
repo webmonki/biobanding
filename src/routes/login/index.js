@@ -9,6 +9,7 @@ import Auth from "../../components/state.js";
 import { Link } from "preact-router/match";
 import TextField from "preact-material-components/TextField";
 import "preact-material-components/TextField/style.css";
+import Footer from "../../components/footer";
 
 export default class Login extends Component {
   componentWillMount = () => {
@@ -233,14 +234,7 @@ export default class Login extends Component {
           </div>
           {this.renderContent()}
         </Card>
-        <div class={style.impressumContainer}>
-          <a class={style.impressum} href={Auth.impressumLink} target="_blank">
-            Impressum
-          </a>
-          <a class={style.impressum} href={Auth.DSGVOLink} target="_blank">
-            Datenschutz
-          </a>
-        </div>
+        <Footer />
       </div>
     );
   }

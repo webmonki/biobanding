@@ -9,6 +9,7 @@ import Auth from "../../components/state.js";
 import { Link } from "preact-router/match";
 import TextField from "preact-material-components/TextField";
 import "preact-material-components/TextField/style.css";
+import Footer from "../../components/footer";
 
 export default class Forgot extends Component {
   componentWillMount = () => {
@@ -78,60 +79,66 @@ export default class Forgot extends Component {
   // render view with validation in textfields
   render() {
     return (
-      <Card class={style.card}>
-        <div class={style.logoContainer}>
-          <img class={style.logo} src="../../assets/breaking_bounds_logo.png" />
-        </div>
-        <div class={style.inputContainer}>
-          <div class={style.loginLabel}>Passwort vergessen</div>
-          <div class={style.input}>
-            <TextField
-              autocomplete="off"
-              id="emailInput"
-              label="E-Mail"
-              value={this.state.email}
-              onKeyUp={(e) => {
-                this.handleChange();
-                this.setState({ email: e.target.value });
-                let val = e.target.value;
-                if (
-                  val.match(
-                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                  )
-                ) {
-                  this.setState({ emailFBClass: style.feedbackSucc });
-                  this.setState({ emailFB: "" });
-                } else {
-                  this.setState({ emailFBClass: style.feedbackErr });
-                  this.setState({ emailFB: "keine E-Mail" });
-                }
-              }}
+      <div class={style.forgotContent}>
+        <Card class={style.card}>
+          <div class={style.logoContainer}>
+            <img
+              class={style.logo}
+              src="../../assets/breaking_bounds_logo.png"
             />
-            <span class={this.state.emailFBClass}>{this.state.emailFB}</span>
           </div>
-          <span class={this.state.responseFBClass}>
-            {this.state.responseFB}
-          </span>
-          <div class={style.btnContainer}>
-            <Button
-              class={style.secondaryBtn}
-              onClick={() => {
-                route("/login", true);
-              }}
-            >
-              Anmelden
-            </Button>
-            <Button
-              class={style.input}
-              raised
-              onClick={this.sendEmail}
-              disabled={this.state.btnDisabled}
-            >
-              senden
-            </Button>
+          <div class={style.inputContainer}>
+            <div class={style.loginLabel}>Passwort vergessen</div>
+            <div class={style.input}>
+              <TextField
+                autocomplete="off"
+                id="emailInput"
+                label="E-Mail"
+                value={this.state.email}
+                onKeyUp={(e) => {
+                  this.handleChange();
+                  this.setState({ email: e.target.value });
+                  let val = e.target.value;
+                  if (
+                    val.match(
+                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                    )
+                  ) {
+                    this.setState({ emailFBClass: style.feedbackSucc });
+                    this.setState({ emailFB: "" });
+                  } else {
+                    this.setState({ emailFBClass: style.feedbackErr });
+                    this.setState({ emailFB: "keine E-Mail" });
+                  }
+                }}
+              />
+              <span class={this.state.emailFBClass}>{this.state.emailFB}</span>
+            </div>
+            <span class={this.state.responseFBClass}>
+              {this.state.responseFB}
+            </span>
+            <div class={style.btnContainer}>
+              <Button
+                class={style.secondaryBtn}
+                onClick={() => {
+                  route("/login", true);
+                }}
+              >
+                Anmelden
+              </Button>
+              <Button
+                class={style.input}
+                raised
+                onClick={this.sendEmail}
+                disabled={this.state.btnDisabled}
+              >
+                senden
+              </Button>
+            </div>
           </div>
-        </div>
-      </Card>
+        </Card>
+        <Footer />
+      </div>
     );
   }
 }

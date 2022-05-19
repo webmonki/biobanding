@@ -11,6 +11,7 @@ import "preact-material-components/List/style.css";
 import "preact-material-components/Radio/style.css";
 import Card from "preact-material-components/Card";
 import { route } from "preact-router";
+import Footer from "../../components/footer";
 
 export default class Confirm extends Component {
   componentWillMount = () => {
@@ -147,195 +148,198 @@ export default class Confirm extends Component {
   // Render view with validation in Textfields
   render() {
     return (
-      <Card class={style.card}>
-        <div class={style.headerContainer}>
-          <span class={style.header}>Persönliche Daten</span>
-          <span class={style.subHeader}>
-            Um deine Registrierung abzuschließen, gib jetzt deine persönlichen
-            Daten ein. Diese werden für die Berechnung benötigt.
-          </span>
-        </div>
-        <div class={style.inputContainer}>
-          <div class={style.input}>
-            <TextField
-              autocomplete="off"
-              class={style.fullWidth}
-              label="Vorname"
-              value={this.state.firstname}
-              onInput={(e) => {
-                this.setState({ firstname: e.target.value });
-                let val = e.target.value;
-                if (val.length < 2) {
-                  this.setState({ firstnameFBClass: style.feedbackErr });
-                  this.setState({ firstnameFB: "Mindestens 2 Zeichen" });
-                }
-                if (val.length > 32) {
-                  this.setState({ firstnameFBClass: style.feedbackErr });
-                  this.setState({ firstnameFB: "Maximal 32 Zeichen" });
-                }
-                if (val.length > 1 && val.length < 33) {
-                  this.setState({ firstnameFBClass: style.feedbackSucc });
-                  this.setState({ firstnameFB: "" });
-                }
-              }}
-            />
+      <div class={style.confirmContent}>
+        <Card class={style.card}>
+          <div class={style.headerContainer}>
+            <span class={style.header}>Persönliche Daten</span>
+            <span class={style.subHeader}>
+              Um deine Registrierung abzuschließen, gib jetzt deine persönlichen
+              Daten ein. Diese werden für die Berechnung benötigt.
+            </span>
           </div>
-          <div class={style.input}>
-            <TextField
-              autocomplete="off"
-              class={style.fullWidth}
-              label="Nachname"
-              value={this.state.lastname}
-              onInput={(e) => {
-                this.setState({ lastname: e.target.value });
-                let val = e.target.value;
-                if (val.length < 4) {
-                  this.setState({ lastnameFBClass: style.feedbackErr });
-                  this.setState({ lastnameFB: "Mindestens 4 Zeichen" });
-                }
-                if (val.length > 64) {
-                  this.setState({ lastnameFBClass: style.feedbackErr });
-                  this.setState({ lastnameFB: "Maximal 64 Zeichen" });
-                }
-                if (val.length > 3 && val.length < 65) {
-                  this.setState({ lastnameFBClass: style.feedbackSucc });
-                  this.setState({ lastnameFB: "" });
-                }
-              }}
-            />
-          </div>
-          <div class={style.row}>
-            <div class={style.dateContainer}>
+          <div class={style.inputContainer}>
+            <div class={style.input}>
               <TextField
-                class={style.dateInput}
-                type="date"
-                value={this.state.birthday}
+                autocomplete="off"
+                class={style.fullWidth}
+                label="Vorname"
+                value={this.state.firstname}
                 onInput={(e) => {
-                  let birthday = e.target.value;
-                  let today = new Date();
-                  let dd = String(today.getDate()).padStart(2, "0");
-                  let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-                  let yyyy = today.getFullYear();
-
-                  today = mm + "-" + dd + "-" + yyyy;
-
-                  this.setState({ birthday });
-
-                  today = new Date(today);
-                  birthday = new Date(birthday);
-
-                  let diff = Math.floor(
-                    Math.abs(today - birthday) / (1000 * 3600 * 24) / 365
-                  );
-
-                  this.setState({ diff });
-
-                  if (diff < 4) {
-                    this.setState({ birthdayFBClass: style.feedbackErr });
-                    this.setState({ birthdayFB: "Mindestalter 4 Jahre" });
+                  this.setState({ firstname: e.target.value });
+                  let val = e.target.value;
+                  if (val.length < 2) {
+                    this.setState({ firstnameFBClass: style.feedbackErr });
+                    this.setState({ firstnameFB: "Mindestens 2 Zeichen" });
                   }
-
-                  if (diff > 18) {
-                    this.setState({ birthdayFBClass: style.feedbackErr });
-                    this.setState({ birthdayFB: "Maximalalter 18 Jahre" });
+                  if (val.length > 32) {
+                    this.setState({ firstnameFBClass: style.feedbackErr });
+                    this.setState({ firstnameFB: "Maximal 32 Zeichen" });
                   }
-
-                  if (diff > 4 && diff < 18) {
-                    this.setState({ birthdayFBClass: style.feedbackSucc });
-                    this.setState({ birthdayFB: "" });
+                  if (val.length > 1 && val.length < 33) {
+                    this.setState({ firstnameFBClass: style.feedbackSucc });
+                    this.setState({ firstnameFB: "" });
                   }
                 }}
               />
-              <span class={style.bDayLabel}>Geburtstag</span>
-              <span class={this.state.birthdayFBClass}>
-                {this.state.birthdayFB}
-              </span>
             </div>
-            <div class={style.radioContainer}>
-              <div class={style.radioBtn}>
-                <label for="radioMale">männlich</label>
-                <Radio
-                  id="radioMale"
-                  name="genderOptions"
-                  onChange={this.handleRadioChange}
-                />
-              </div>
-              <div class={style.radioBtn}>
-                <label for="radioFemale">weiblich</label>
-                <Radio
-                  id="radioFemale"
-                  name="genderOptions"
-                  onChange={this.handleRadioChange}
-                />
-              </div>
+            <div class={style.input}>
+              <TextField
+                autocomplete="off"
+                class={style.fullWidth}
+                label="Nachname"
+                value={this.state.lastname}
+                onInput={(e) => {
+                  this.setState({ lastname: e.target.value });
+                  let val = e.target.value;
+                  if (val.length < 4) {
+                    this.setState({ lastnameFBClass: style.feedbackErr });
+                    this.setState({ lastnameFB: "Mindestens 4 Zeichen" });
+                  }
+                  if (val.length > 64) {
+                    this.setState({ lastnameFBClass: style.feedbackErr });
+                    this.setState({ lastnameFB: "Maximal 64 Zeichen" });
+                  }
+                  if (val.length > 3 && val.length < 65) {
+                    this.setState({ lastnameFBClass: style.feedbackSucc });
+                    this.setState({ lastnameFB: "" });
+                  }
+                }}
+              />
             </div>
-          </div>
+            <div class={style.row}>
+              <div class={style.dateContainer}>
+                <TextField
+                  class={style.dateInput}
+                  type="date"
+                  value={this.state.birthday}
+                  onInput={(e) => {
+                    let birthday = e.target.value;
+                    let today = new Date();
+                    let dd = String(today.getDate()).padStart(2, "0");
+                    let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+                    let yyyy = today.getFullYear();
 
-          <div class={style.input}>
-            <TextField
-              autocomplete="off"
-              class={style.fullWidth}
-              type="number"
-              min={0}
-              max={300}
-              label="Größe der Mutter"
-              helperText="optional"
-              helperTextPersistent
-              value={this.state.motherHeight}
-              onInput={(e) => {
-                this.setState({ motherHeight: e.target.value });
-                let val = e.target.value;
-                if (val < 0) {
-                  this.setState({ motherFBClass: style.feedbackErr });
-                  this.setState({ motherFB: "Mindestens 0" });
-                }
-                if (val > 300) {
-                  this.setState({ motherFBClass: style.feedbackErr });
-                  this.setState({ motherFB: "Maximal 300" });
-                }
-                if (val >= 0 && val <= 300) {
-                  this.setState({ motherFBClass: style.feedbackSucc });
-                  this.setState({ motherFB: "" });
-                }
-              }}
-            />
+                    today = mm + "-" + dd + "-" + yyyy;
+
+                    this.setState({ birthday });
+
+                    today = new Date(today);
+                    birthday = new Date(birthday);
+
+                    let diff = Math.floor(
+                      Math.abs(today - birthday) / (1000 * 3600 * 24) / 365
+                    );
+
+                    this.setState({ diff });
+
+                    if (diff < 4) {
+                      this.setState({ birthdayFBClass: style.feedbackErr });
+                      this.setState({ birthdayFB: "Mindestalter 4 Jahre" });
+                    }
+
+                    if (diff > 18) {
+                      this.setState({ birthdayFBClass: style.feedbackErr });
+                      this.setState({ birthdayFB: "Maximalalter 18 Jahre" });
+                    }
+
+                    if (diff > 4 && diff < 18) {
+                      this.setState({ birthdayFBClass: style.feedbackSucc });
+                      this.setState({ birthdayFB: "" });
+                    }
+                  }}
+                />
+                <span class={style.bDayLabel}>Geburtstag</span>
+                <span class={this.state.birthdayFBClass}>
+                  {this.state.birthdayFB}
+                </span>
+              </div>
+              <div class={style.radioContainer}>
+                <div class={style.radioBtn}>
+                  <label for="radioMale">männlich</label>
+                  <Radio
+                    id="radioMale"
+                    name="genderOptions"
+                    onChange={this.handleRadioChange}
+                  />
+                </div>
+                <div class={style.radioBtn}>
+                  <label for="radioFemale">weiblich</label>
+                  <Radio
+                    id="radioFemale"
+                    name="genderOptions"
+                    onChange={this.handleRadioChange}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class={style.input}>
+              <TextField
+                autocomplete="off"
+                class={style.fullWidth}
+                type="number"
+                min={0}
+                max={300}
+                label="Größe der Mutter"
+                helperText="optional"
+                helperTextPersistent
+                value={this.state.motherHeight}
+                onInput={(e) => {
+                  this.setState({ motherHeight: e.target.value });
+                  let val = e.target.value;
+                  if (val < 0) {
+                    this.setState({ motherFBClass: style.feedbackErr });
+                    this.setState({ motherFB: "Mindestens 0" });
+                  }
+                  if (val > 300) {
+                    this.setState({ motherFBClass: style.feedbackErr });
+                    this.setState({ motherFB: "Maximal 300" });
+                  }
+                  if (val >= 0 && val <= 300) {
+                    this.setState({ motherFBClass: style.feedbackSucc });
+                    this.setState({ motherFB: "" });
+                  }
+                }}
+              />
+            </div>
+            <div class={style.input}>
+              <TextField
+                autocomplete="off"
+                class={style.fullWidth}
+                type="number"
+                min={0}
+                max={300}
+                label="Größe des Vaters"
+                helperText="optional"
+                helperTextPersistent
+                value={this.state.fatherHeight}
+                onInput={(e) => {
+                  this.setState({ fatherHeight: e.target.value });
+                  let val = e.target.value;
+                  if (val < 0) {
+                    this.setState({ fatherFBClass: style.feedbackErr });
+                    this.setState({ fatherFB: "Mindestens 0" });
+                  }
+                  if (val > 300) {
+                    this.setState({ fatherFBClass: style.feedbackErr });
+                    this.setState({ fatherFB: "Maximal 300" });
+                  }
+                  if (val >= 0 && val <= 300) {
+                    this.setState({ fatherFBClass: style.feedbackSucc });
+                    this.setState({ fatherFB: "" });
+                  }
+                }}
+              />
+            </div>
+            <div class={style.btnContainer}>
+              <Button raised onClick={this.sendConfirm}>
+                Registrierung abschließen
+              </Button>
+            </div>
           </div>
-          <div class={style.input}>
-            <TextField
-              autocomplete="off"
-              class={style.fullWidth}
-              type="number"
-              min={0}
-              max={300}
-              label="Größe des Vaters"
-              helperText="optional"
-              helperTextPersistent
-              value={this.state.fatherHeight}
-              onInput={(e) => {
-                this.setState({ fatherHeight: e.target.value });
-                let val = e.target.value;
-                if (val < 0) {
-                  this.setState({ fatherFBClass: style.feedbackErr });
-                  this.setState({ fatherFB: "Mindestens 0" });
-                }
-                if (val > 300) {
-                  this.setState({ fatherFBClass: style.feedbackErr });
-                  this.setState({ fatherFB: "Maximal 300" });
-                }
-                if (val >= 0 && val <= 300) {
-                  this.setState({ fatherFBClass: style.feedbackSucc });
-                  this.setState({ fatherFB: "" });
-                }
-              }}
-            />
-          </div>
-          <div class={style.btnContainer}>
-            <Button raised onClick={this.sendConfirm}>
-              Registrierung abschließen
-            </Button>
-          </div>
-        </div>
-      </Card>
+        </Card>
+        <Footer />
+      </div>
     );
   }
 }

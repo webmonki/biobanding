@@ -8,6 +8,7 @@ import style from "./style";
 import { route } from "preact-router";
 import Auth from "../../components/state";
 import TextField from "preact-material-components/TextField";
+import Footer from "../../components/footer";
 
 export default class Reset extends Component {
   componentWillMount = () => {
@@ -93,116 +94,122 @@ export default class Reset extends Component {
   // Render Reset View with validation in textfields
   render() {
     return (
-      <Card class={style.card}>
-        <div class={style.logoContainer}>
-          <img class={style.logo} src="../../assets/breaking_bounds_logo.png" />
-        </div>
-        <div class={style.inputContainer}>
-          <div class={style.loginLabel}>Neues Passwort</div>
-          <div class={style.input}>
-            <TextField
-              autocomplete="off"
-              id="passwordInput"
-              type="password"
-              label="Passwort"
-              value={this.state.password}
-              onKeyUp={(e) => {
-                this.handleChange();
-                this.setState({ password: e.target.value });
-                let val = e.target.value;
-                if (val.length < 4) {
-                  this.setState({ passwordFBClass: style.feedbackErr });
-                  this.setState({ passwordFB: "Mindetsens 4 Zeichen" });
-                }
-                if (val.length > 16) {
-                  this.setState({ passwordFBClass: style.feedbackErr });
-                  this.setState({ passwordFB: "Maximal 16 Zeichen" });
-                }
-                if (val.length > 3 && val.length < 17) {
-                  this.setState({ passwordFBClass: style.feedbackSucc });
-                  this.setState({ passwordFB: "" });
-                }
-                if (this.state.password == this.state.password2) {
-                  this.setState({ passwordSameFBClass: style.feedbackSucc });
-                  this.setState({ passwordSameFB: "" });
-                } else {
-                  this.setState({ passwordSameFBClass: style.feedbackErr });
-                  this.setState({
-                    passwordSameFB: "Passwörter stimmen nicht überein",
-                  });
-                }
-              }}
+      <div class={style.resetContent}>
+        <Card class={style.card}>
+          <div class={style.logoContainer}>
+            <img
+              class={style.logo}
+              src="../../assets/breaking_bounds_logo.png"
             />
-            <span class={this.state.passwordFBClass}>
-              {this.state.passwordFB}
+          </div>
+          <div class={style.inputContainer}>
+            <div class={style.loginLabel}>Neues Passwort</div>
+            <div class={style.input}>
+              <TextField
+                autocomplete="off"
+                id="passwordInput"
+                type="password"
+                label="Passwort"
+                value={this.state.password}
+                onKeyUp={(e) => {
+                  this.handleChange();
+                  this.setState({ password: e.target.value });
+                  let val = e.target.value;
+                  if (val.length < 4) {
+                    this.setState({ passwordFBClass: style.feedbackErr });
+                    this.setState({ passwordFB: "Mindetsens 4 Zeichen" });
+                  }
+                  if (val.length > 16) {
+                    this.setState({ passwordFBClass: style.feedbackErr });
+                    this.setState({ passwordFB: "Maximal 16 Zeichen" });
+                  }
+                  if (val.length > 3 && val.length < 17) {
+                    this.setState({ passwordFBClass: style.feedbackSucc });
+                    this.setState({ passwordFB: "" });
+                  }
+                  if (this.state.password == this.state.password2) {
+                    this.setState({ passwordSameFBClass: style.feedbackSucc });
+                    this.setState({ passwordSameFB: "" });
+                  } else {
+                    this.setState({ passwordSameFBClass: style.feedbackErr });
+                    this.setState({
+                      passwordSameFB: "Passwörter stimmen nicht überein",
+                    });
+                  }
+                }}
+              />
+              <span class={this.state.passwordFBClass}>
+                {this.state.passwordFB}
+              </span>
+            </div>
+            <div class={style.input}>
+              <TextField
+                autocomplete="off"
+                id="password2Input"
+                type="password"
+                label="Passwort wiederholen"
+                value={this.state.password2}
+                onKeyUp={(e) => {
+                  this.handleChange();
+                  this.setState({ password2: e.target.value });
+                  let val = e.target.value;
+                  if (val.length < 4) {
+                    this.setState({ password2FBClass: style.feedbackErr });
+                    this.setState({ password2FB: "Mindetsens 4 Zeichen" });
+                  }
+                  if (val.length > 16) {
+                    this.setState({ password2FBClass: style.feedbackErr });
+                    this.setState({ password2FB: "Maximal 16 Zeichen" });
+                  }
+                  if (val.length > 3 && val.length < 17) {
+                    this.setState({ password2FBClass: style.feedbackSucc });
+                    this.setState({ password2FB: "" });
+                  }
+                  if (this.state.password == this.state.password2) {
+                    this.setState({ passwordSameFBClass: style.feedbackSucc });
+                    this.setState({ passwordSameFB: "" });
+                  } else {
+                    this.setState({ passwordSameFBClass: style.feedbackErr });
+                    this.setState({
+                      passwordSameFB: "Passwörter stimmen nicht überein",
+                    });
+                  }
+                }}
+              />
+              <span class={this.state.password2FBClass}>
+                {this.state.password2FB}
+              </span>
+            </div>
+            <div class={style.pwVal}>
+              <span class={this.state.passwordSameFBClass}>
+                {this.state.passwordSameFB}
+              </span>
+            </div>
+            <span class={this.state.responseFBClass}>
+              {this.state.responseFB}
             </span>
+            <div class={style.btnContainer}>
+              <Button
+                class={style.secondaryBtn}
+                onClick={() => {
+                  route("/login", true);
+                }}
+              >
+                Anmelden
+              </Button>
+              <Button
+                class={style.input}
+                raised
+                onClick={this.sendNewPassword}
+                disabled={this.state.btnDisabled}
+              >
+                senden
+              </Button>
+            </div>
           </div>
-          <div class={style.input}>
-            <TextField
-              autocomplete="off"
-              id="password2Input"
-              type="password"
-              label="Passwort wiederholen"
-              value={this.state.password2}
-              onKeyUp={(e) => {
-                this.handleChange();
-                this.setState({ password2: e.target.value });
-                let val = e.target.value;
-                if (val.length < 4) {
-                  this.setState({ password2FBClass: style.feedbackErr });
-                  this.setState({ password2FB: "Mindetsens 4 Zeichen" });
-                }
-                if (val.length > 16) {
-                  this.setState({ password2FBClass: style.feedbackErr });
-                  this.setState({ password2FB: "Maximal 16 Zeichen" });
-                }
-                if (val.length > 3 && val.length < 17) {
-                  this.setState({ password2FBClass: style.feedbackSucc });
-                  this.setState({ password2FB: "" });
-                }
-                if (this.state.password == this.state.password2) {
-                  this.setState({ passwordSameFBClass: style.feedbackSucc });
-                  this.setState({ passwordSameFB: "" });
-                } else {
-                  this.setState({ passwordSameFBClass: style.feedbackErr });
-                  this.setState({
-                    passwordSameFB: "Passwörter stimmen nicht überein",
-                  });
-                }
-              }}
-            />
-            <span class={this.state.password2FBClass}>
-              {this.state.password2FB}
-            </span>
-          </div>
-          <div class={style.pwVal}>
-            <span class={this.state.passwordSameFBClass}>
-              {this.state.passwordSameFB}
-            </span>
-          </div>
-          <span class={this.state.responseFBClass}>
-            {this.state.responseFB}
-          </span>
-          <div class={style.btnContainer}>
-            <Button
-              class={style.secondaryBtn}
-              onClick={() => {
-                route("/login", true);
-              }}
-            >
-              Anmelden
-            </Button>
-            <Button
-              class={style.input}
-              raised
-              onClick={this.sendNewPassword}
-              disabled={this.state.btnDisabled}
-            >
-              senden
-            </Button>
-          </div>
-        </div>
-      </Card>
+        </Card>
+        <Footer />
+      </div>
     );
   }
 }
