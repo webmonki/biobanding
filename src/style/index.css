@@ -46,6 +46,29 @@ html, body {
 	height: 100%;
 }
 
+#logoContainer {
+	position: absolute;
+	bottom: 10px;
+	right: var(--global-page-mrgn);
+	height: fit-content;
+	width: 130px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#vpsLogo {
+	height: auto;
+	width: 50px;
+	bottom: 10px;
+	right: var(--global-page-mrgn);
+}
+
+#logoLabel {
+	color: rgba(0, 0, 0, 0.3);
+	font-size: small;
+}
+
 
 #mySnackbar :global(.mdc-snackbar) {
 	width: var(--global-snackbar-width);
@@ -130,6 +153,10 @@ html, body {
 
 	#mySnackbar :global(.mdc-snackbar) {
 		margin-bottom: 43px !important;
+	}
+
+	#logoContainer {
+		display: none;
 	}
 }
 
