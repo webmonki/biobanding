@@ -11,10 +11,11 @@ import "preact-material-components/Drawer/style.css";
 import Table from "../../components/table";
 import EditUser from "../../components/dialogs/editUser";
 import NewUser from "../../components/dialogs/newUser";
-
+import { getRegistrationCode } from "../../components/reguests/requests";
 export default class Users extends Component {
   componentWillMount = () => {
     this.getData();
+    Auth.setRegisCode(getRegistrationCode());
   };
 
   componentWillUnmount = () => {
@@ -34,7 +35,6 @@ export default class Users extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
-
         that.setState({ users: response["users:"] });
       } else {
         try {
@@ -157,7 +157,7 @@ export default class Users extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         // Snackbar MSG
-        that.props.showSnackbar("Benutzer erfolgreich angelegt", true);
+        that.props.showSnackbar("Benutzer erfolgreich angelegt");
 
         // reload to get updated data
         that.getData();
@@ -178,6 +178,7 @@ export default class Users extends Component {
             "username": "${this.state.username}",
             "email": "${this.state.email}",
             "password": "${this.state.password}",
+			"registration_code": ${Auth.getRegisCode()},
 			"is_admin": ${this.state.admin}
         }`;
 
@@ -231,21 +232,26 @@ export default class Users extends Component {
 
   // rendert table
   showTable = (editable) => {
-    let content = (
-      <div>
-        <Table
-          editable={editable}
-          data={this.state.users}
-          pageSize={9}
-          clickEdit={this.showDialog}
-          delete={this.delete}
-          showDialog={this.showNewUserDialog}
-          idKey="userID"
-          title="Benutzer"
-        />
-      </div>
-    );
-    return content;
+    let users = this.state.users;
+
+    if (users !== undefined) {
+      let content = (
+        <div>
+          <Table
+            deletable
+            editable={editable}
+            data={users}
+            pageSize={9}
+            clickEdit={this.showDialog}
+            delete={this.delete}
+            showDialog={this.showNewUserDialog}
+            idKey="userID"
+            title="Benutzer"
+          />
+        </div>
+      );
+      return content;
+    }
   };
 
   render() {

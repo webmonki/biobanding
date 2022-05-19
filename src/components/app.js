@@ -15,11 +15,19 @@ import Confirm from "../routes/confirm";
 import Navbar from "./navbar/navbar";
 import ConfirmDialog from "./dialogs/confirmDialog";
 import { deleteAccount } from "./reguests/requests";
+import RemindedMeasurement from "../routes/remindedMeasure/remindedMeasure";
 import Snackbar from "preact-material-components/Snackbar";
 import "preact-material-components/Snackbar/style.css";
 
 // Routes that can be visited without login or registration
-const publicRoutes = ["/signup", "/forgot", "/reset", "/login", "/confirm"];
+const publicRoutes = [
+  "/signup",
+  "/forgot",
+  "/reset",
+  "/login",
+  "/confirm",
+  /(measurement[?])/,
+];
 
 // Routes that can only be visited by admin
 const adminOnlyRoutes = ["/settings", "/users"];
@@ -57,18 +65,25 @@ export default class App extends Component {
 
   // Given to TopAppbar(pageheader) to collapse navbar
   toggleDrawer = () => {
-    if (this.state.drawerOpen === false) {
-      this.setState({ drawerOpen: true });
-    } else {
-      this.setState({ drawerOpen: false });
-    }
+    const vw = Math.max(
+      document.documentElement.clientWidth || 0,
+      window.innerWidth || 0
+    );
 
     let coll = document.getElementById("navbar");
 
-    if (coll.style.maxWidth === "250px") {
-      coll.style.maxWidth = "57px";
-    } else {
-      coll.style.maxWidth = "250px";
+    if (vw > 768) {
+      if (this.state.drawerOpen === false) {
+        this.setState({ drawerOpen: true });
+      } else {
+        this.setState({ drawerOpen: false });
+      }
+
+      if (coll.style.maxWidth === "256px" || coll.style.maxWidth === "") {
+        coll.style.maxWidth = "57px";
+      } else {
+        coll.style.maxWidth = "256px";
+      }
     }
   };
 
@@ -111,9 +126,14 @@ export default class App extends Component {
 
   // Initial open navbar and set maxWidth, so that callapse is working
   openDrawer = () => {
-    let drawer = document.getElementById("navbar");
+    // let drawer = document.getElementById("navbar");
 
-    drawer.style.maxWidth = "250px";
+    // drawer.style.maxWidth = "250px";
+    const vw = Math.max(
+      document.documentElement.clientWidth || 0,
+      window.innerWidth || 0
+    );
+
     this.drawer.MDComponent.open = true;
   };
 
@@ -165,14 +185,40 @@ export default class App extends Component {
     });
   };
 
+  getSnackbar(userLoggedIn) {
+    if (userLoggedIn === undefined || userLoggedIn === false) {
+      return undefined;
+    }
+
+    return (
+      <div id="mySnackbar">
+        <Snackbar
+          ref={(bar) => {
+            this.bar = bar;
+          }}
+        />
+      </div>
+    );
+  }
+
+  getBugTrackerScript = (userLoggedIn) => {
+    if (userLoggedIn === undefined || userLoggedIn === false) {
+      return undefined;
+    }
+
+    return (
+      <script
+        type="text/javascript"
+        src="https://vp-systeme.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/-onpk8x/b/7/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=de-DE&collectorId=cc9af09f"
+      />
+    );
+  };
+
   render() {
     return (
       <div id="app">
         {/* Skript for Bug Tracker */}
-        <script
-          type="text/javascript"
-          src="https://vp-systeme.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/-onpk8x/b/7/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=de-DE&collectorId=cc9af09f"
-        />
+        {this.getBugTrackerScript(this.state.userLoggedIn)}
         <ConfirmDialog
           reference={this.confirmDialogRef}
           dialogHeader={"Accout wirklich löschen?"}
@@ -210,17 +256,12 @@ export default class App extends Component {
             <Forgot path="/forgot" />
             <Reset path="/reset" />
             <Settings path="/settings" showSnackbar={this.showSnackbar} />
-            <Confirm path="/confirm" />
+            <Confirm path="/confirm" showSnackbar={this.showSnackbar} />
             <NotFound default />
+            <RemindedMeasurement path="/measurement" />
           </Router>
         </div>
-        <div id="mySnackbar">
-          <Snackbar
-            ref={(bar) => {
-              this.bar = bar;
-            }}
-          />
-        </div>
+        {this.getSnackbar(this.state.userLoggedIn)}
       </div>
     );
   }

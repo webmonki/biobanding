@@ -1,8 +1,5 @@
 import { h, Component } from "preact";
 import style from "./style";
-import Button from "preact-material-components/Button";
-import "preact-material-components/Button/style.css";
-import List from "preact-material-components/List";
 import Checkbox from "preact-material-components/Checkbox";
 import Formfield from "preact-material-components/FormField";
 import "preact-material-components/Checkbox/style.css";
@@ -29,10 +26,10 @@ export default class Table extends Component {
     this.setState({ checkList: [] });
 
     // at which column begins the subtable
-    this.setState({ subTableIndex: 7 });
+    this.getSubtableIndex();
 
     // columns  that shall not be displayed
-    this.setState({ colsHidden: ["id", "Id", "userID"] });
+    this.setState({ colsHidden: ["id", "Id", "userID", "UserId"] });
 
     // List if rows that are open (uncollapsed)
     this.setState({ collapseList: {} });
@@ -45,6 +42,35 @@ export default class Table extends Component {
 
     // Fills collapseList with all calumns and set them to false
     this.getCollapseList();
+
+    // Eventlistener for resizing
+    window.addEventListener("resize", this.handleWindowResize);
+  };
+
+  componentWillUnmount = () => {
+    window.removeEventListener("resize", this.handleWindowResize);
+  };
+
+  // To handle viewport resizes
+  handleWindowResize = (event) => {
+    this.getSubtableIndex();
+  };
+
+  // at which column begins the subtable
+  // subTableIndex : 4 === 2 columns
+  getSubtableIndex = () => {
+    const vw = Math.max(
+      document.documentElement.clientWidth || 0,
+      window.innerWidth || 0
+    );
+
+    let index = Math.ceil(vw / 170);
+
+    if (index <= 4) {
+      this.setState({ subTableIndex: 4 });
+    } else {
+      this.setState({ subTableIndex: index - 1 });
+    }
   };
 
   // Weiss nicht warum... sollte auch geändert werden
@@ -135,7 +161,7 @@ export default class Table extends Component {
     let type = typeof data[0][key];
     if (type === "string") {
       data.sort((a, b) => a[key].localeCompare(b[key]));
-    } else if (type === "number") {
+    } else if (type === "number" || type === "boolean") {
       data.sort((a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0));
     } else if (type === "object") {
       data.sort((a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0));
@@ -149,7 +175,7 @@ export default class Table extends Component {
 
     if (type === "string") {
       data.sort((a, b) => b[key].localeCompare(a[key]));
-    } else if (type === "number") {
+    } else if (type === "number" || type === "boolean") {
       data.sort((a, b) => (a[key] < b[key] ? 1 : b[key] < a[key] ? -1 : 0));
     } else if (type === "object") {
       data.sort((a, b) => (a[key] < b[key] ? 1 : b[key] < a[key] ? -1 : 0));
@@ -294,6 +320,19 @@ export default class Table extends Component {
       });
 
       return newData;
+    } else if (type === "boolean") {
+      data.forEach((obj) => {
+        let match = false;
+        if (obj[cols[chosenIndex]] === val) {
+          match = true;
+        }
+
+        if (match) {
+          newData.push(obj);
+        }
+      });
+
+      return newData;
     }
   };
 
@@ -311,6 +350,8 @@ export default class Table extends Component {
       return style.alignRight;
     } else if (typeof this.props.data[0][name] === "object") {
       return style.alignLeft;
+    } else if (typeof this.props.data[0][name] === "boolean") {
+      return style.alignRight;
     }
   };
 
@@ -321,7 +362,7 @@ export default class Table extends Component {
 
     let tableHeader = (
       // divider = small line between header cells
-      <tr>
+      <tr class={style.subTableContentRow}>
         {cols.map((name) => {
           if (name === cols[0]) {
             divider = false;
@@ -333,7 +374,7 @@ export default class Table extends Component {
           }
 
           return (
-            <th>
+            <th class={style.subTableHeaderCell}>
               <SortIcon
                 colname={name}
                 onClickSort={this.setSortParams}
@@ -350,6 +391,24 @@ export default class Table extends Component {
     return tableHeader;
   };
 
+  getDeleteCheckboxForHeader = () => {
+    if (this.props.deletable) {
+      return (
+        <Formfield class={style.checkAll}>
+          <Checkbox
+            name="deleteCheckAll"
+            checked={this.state.checked}
+            value={"c"}
+            onClick={(e) => {
+              this.setState({ checked: e.target.checked });
+              this.checkAll(e.target.checked);
+            }}
+          />
+        </Formfield>
+      );
+    }
+  };
+
   // creates header row of main table
   createTableHeader = () => {
     let divider = true;
@@ -358,25 +417,15 @@ export default class Table extends Component {
       if (this.props.editable) {
         let tableHeader = (
           <tr>
-            <th class={style.headerCellContainer}>
-              <Formfield class={style.checkAll}>
-                <Checkbox
-                  name="deleteCheckAll"
-                  checked={this.state.checked}
-                  value={"c"}
-                  onClick={(e) => {
-                    this.setState({ checked: e.target.checked });
-                    this.checkAll(e.target.checked);
-                  }}
-                />
-              </Formfield>
+            <th class={`${style.headerCellContainer} ${style.tableFixHead}`}>
+              {this.getDeleteCheckboxForHeader()}
             </th>
             {cols.map((name) => {
               if (this.state.colsHidden.includes(name)) {
                 return undefined;
               }
               return (
-                <th>
+                <th class={style.subTableRow}>
                   <SortIcon
                     colname={name}
                     onClickSort={this.setSortParams}
@@ -457,9 +506,17 @@ export default class Table extends Component {
 
   // textalignment of cells
   getTableDataStyle = (data, key) => {
-    if (typeof data[key] === "number") {
-      return style.alignRight;
+    const vw = Math.max(
+      document.documentElement.clientWidth || 0,
+      window.innerWidth || 0
+    );
+
+    if (vw > 768) {
+      if (typeof data[key] === "number" || typeof data[key] === "boolean") {
+        return style.alignRight;
+      }
     }
+
     return style.alignLeft;
   };
 
@@ -497,7 +554,8 @@ export default class Table extends Component {
     let newCols = [];
 
     for (let i = start; i < end; i++) {
-      if (!this.state.colsHidden.includes(cols[i])) newCols.push(cols[i]);
+      if (!this.state.colsHidden.includes(cols[i]) && cols[i] !== undefined)
+        newCols.push(cols[i]);
     }
     return newCols;
   };
@@ -518,10 +576,46 @@ export default class Table extends Component {
             </div>
             <table class={style.subTable}>
               {this.createSubTableHeader(id)}
-              <tr>
-                {cols.map((key) => (
-                  <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>
-                ))}
+              <tr class={style.subTableContentRow}>
+                {cols.map((key) => {
+                  if (row[key] === true) {
+                    return (
+                      <td
+                        class={`${this.getTableDataStyle(row, key)} ${
+                          style.subTableCell
+                        }`}
+                      >
+                        <i class={`${"material-icons"} ${style.trueIcon}`}>
+                          check
+                        </i>
+                      </td>
+                    );
+                  }
+
+                  if (row[key] === false) {
+                    return (
+                      <td
+                        class={`${this.getTableDataStyle(row, key)} ${
+                          style.subTableCell
+                        }`}
+                      >
+                        <i class={`${"material-icons"} ${style.falseIcon}`}>
+                          clear
+                        </i>
+                      </td>
+                    );
+                  }
+
+                  return (
+                    <td
+                      class={`${this.getTableDataStyle(row, key)} ${
+                        style.subTableCell
+                      }`}
+                    >
+                      {row[key]}
+                    </td>
+                  );
+                })}
               </tr>
             </table>
           </div>
@@ -549,7 +643,7 @@ export default class Table extends Component {
     let coll = document.getElementById(id + "row");
     let collIcon = document.getElementById(id + "icon");
 
-    if (coll) {
+    if (coll && collIcon) {
       coll.style.maxHeight = null;
       collIcon.innerHTML = "arrow_drop_down";
     }
@@ -592,7 +686,7 @@ export default class Table extends Component {
       return (
         <button
           onCLick={() => this.addToCollapseList(key)}
-          class={style.menuBtn}
+          class={style.editBtnColl}
         >
           <i
             class={`${"material-icons"} ${style.menuBtnIcon}`}
@@ -608,13 +702,60 @@ export default class Table extends Component {
     return undefined;
   };
 
-  // Table columns
-  renderTableContent = (key, row) => {
-    let cols = this.getRangeList(0, this.state.subTableIndex);
-    return (
-      <tr id={key + "mainRow"}>
-        <td id={"tableData"} class={style.btnsData}>
-          <div class={style.tdBtnsContainer}>
+  collapseTdBtnsContainer = (key) => {
+    let coll = document.getElementById(key + "tdBtnsContainer");
+
+    if (coll.style.maxHeight === "0px" || coll.style.maxHeight === "") {
+      coll.style.maxHeight = "120px";
+      coll.style.display = "flex";
+    } else {
+      coll.style.maxHeight = "0px";
+      coll.style.display = "none";
+    }
+  };
+
+  getDeleteCheckboxForRow = (key) => {
+    if (this.props.deletable) {
+      return (
+        <Formfield>
+          <Checkbox
+            name="deleteCheck"
+            value={key}
+            checked={this.getCheckState(key)}
+            onChange={(e) => {
+              this.addToCheckList(key);
+            }}
+          />
+        </Formfield>
+      );
+    }
+  };
+
+  getTdBtnsContainer = (key) => {
+    const vw = Math.max(
+      document.documentElement.clientWidth || 0,
+      window.innerWidth || 0
+    );
+
+    let content;
+
+    if (vw < 768) {
+      content = (
+        <div>
+          <button
+            onClick={() => {
+              this.collapseTdBtnsContainer(key);
+            }}
+            class={style.editBtn}
+          >
+            <i
+              class={`${"material-icons"} ${style.editIcon}`}
+              aria-hidden="true"
+            >
+              more_vert
+            </i>
+          </button>
+          <div class={style.tdBtnsContainer} id={key + "tdBtnsContainer"}>
             {/* Edit Button */}
             <button
               onClick={() => {
@@ -631,18 +772,55 @@ export default class Table extends Component {
             </button>
 
             {/* CheckBox */}
-            <Formfield>
-              <Checkbox
-                name="deleteCheck"
-                value={key}
-                checked={this.getCheckState(key)}
-                onChange={(e) => {
-                  this.addToCheckList(key);
-                }}
-              />
-            </Formfield>
+            {this.getDeleteCheckboxForRow(key)}
             {this.getCollapseBtn(key)}
           </div>
+        </div>
+      );
+    } else {
+      content = (
+        <div class={style.tdBtnsContainer}>
+          {/* Edit Button */}
+          <button
+            onClick={() => {
+              this.props.clickEdit(key);
+            }}
+            class={style.editBtn}
+          >
+            <i
+              class={`${"material-icons"} ${style.editIcon}`}
+              aria-hidden="true"
+            >
+              edit
+            </i>
+          </button>
+
+          {/* CheckBox */}
+          <Formfield>
+            <Checkbox
+              name="deleteCheck"
+              value={key}
+              checked={this.getCheckState(key)}
+              onChange={(e) => {
+                this.addToCheckList(key);
+              }}
+            />
+          </Formfield>
+          {this.getCollapseBtn(key)}
+        </div>
+      );
+    }
+
+    return content;
+  };
+
+  // Table columns
+  renderTableContent = (key, row) => {
+    let cols = this.getRangeList(0, this.state.subTableIndex);
+    return (
+      <tr id={key + "mainRow"}>
+        <td id={"tableData"} class={style.btnsData}>
+          {this.getTdBtnsContainer(key)}
         </td>
 
         {/* create cells */}
@@ -650,24 +828,39 @@ export default class Table extends Component {
           if (!cols.includes(key)) {
             return undefined;
           }
-          if (key !== "Datum") {
-            return <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>;
+          if (key === "Datum") {
+            // format date
+            let date = row[key];
+            let day = date.getDate();
+            if (day < 10) {
+              day = "0" + day;
+            }
+            let month = date.getMonth() + 1;
+            if (month < 10) {
+              month = "0" + month;
+            }
+            let year = date.getFullYear();
+
+            let output = month + "-" + day + "-" + year;
+            return <td class={this.getTableDataStyle(row, key)}>{output}</td>;
+          }
+          if (row[key] === true) {
+            return (
+              <td class={this.getTableDataStyle(row, key)}>
+                <i class={`${"material-icons"} ${style.trueIcon}`}>check</i>
+              </td>
+            );
           }
 
-          // format date
-          let date = row[key];
-          let day = date.getDate();
-          if (day < 10) {
-            day = "0" + day;
+          if (row[key] === false) {
+            return (
+              <td class={this.getTableDataStyle(row, key)}>
+                <i class={`${"material-icons"} ${style.falseIcon}`}>clear</i>
+              </td>
+            );
           }
-          let month = date.getMonth() + 1;
-          if (month < 10) {
-            month = "0" + month;
-          }
-          let year = date.getFullYear();
 
-          let output = month + "-" + day + "-" + year;
-          return <td class={this.getTableDataStyle(row, key)}>{output}</td>;
+          return <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>;
         })}
       </tr>
     );
@@ -975,7 +1168,7 @@ export default class Table extends Component {
           addFilter={this.addFilter}
         />
         <div class={style.tableContainer}>
-          <table>
+          <table class={style.table}>
             {this.createTableHeader()}
             {this.createTableBody()}
           </table>

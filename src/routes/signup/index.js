@@ -13,6 +13,7 @@ import "preact-material-components/Radio/style.css";
 import Checkbox from "preact-material-components/Checkbox";
 import Formfield from "preact-material-components/FormField";
 import "preact-material-components/Checkbox/style.css";
+import Footer from "../../components/footer";
 
 export default class Signup extends Component {
   componentWillMount = () => {
@@ -162,7 +163,10 @@ export default class Signup extends Component {
       return (
         <Card class={style.card}>
           <div class={style.logoContainer}>
-            <img class={style.logo} src="../../assets/StarsLogoTrans.png" />
+            <img
+              class={style.logo}
+              src="../../assets/breaking_bounds_logo.png"
+            />
           </div>
           <div class={style.inputContainer}>
             <div class={style.loginLabel}>Registrierung</div>
@@ -427,6 +431,11 @@ export default class Signup extends Component {
   };
 
   render() {
-    return this.renderContent();
+    return (
+      <div class={style.signupContent}>
+        {this.renderContent()}
+        <Footer />
+      </div>
+    );
   }
 }

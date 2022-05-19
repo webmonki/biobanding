@@ -9,8 +9,7 @@ import Auth from "../../components/state.js";
 import { Link } from "preact-router/match";
 import TextField from "preact-material-components/TextField";
 import "preact-material-components/TextField/style.css";
-import Snackbar from "preact-material-components/Snackbar";
-import "preact-material-components/Snackbar/style.css";
+import Footer from "../../components/footer";
 
 export default class Login extends Component {
   componentWillMount = () => {
@@ -222,7 +221,7 @@ export default class Login extends Component {
     );
   };
 
-  // Logo, Content, Snackbar
+  // Logo, Content
   render() {
     return (
       <div class={style.loginContent}>
@@ -234,24 +233,8 @@ export default class Login extends Component {
             />
           </div>
           {this.renderContent()}
-          <div class={style.mySnackbar}>
-            <Snackbar
-              dismissesOnAction={false}
-              class={"mdc-snackbar__dismiss"}
-              ref={(bar) => {
-                this.bar = bar;
-              }}
-            />
-          </div>
         </Card>
-        <div class={style.impressumContainer}>
-          <a class={style.impressum} href={Auth.impressumLink} target="_blank">
-            Impressum
-          </a>
-          <a class={style.impressum} href={Auth.DSGVOLink} target="_blank">
-            Datenschutz
-          </a>
-        </div>
+        <Footer />
       </div>
     );
   }

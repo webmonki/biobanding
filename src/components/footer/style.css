@@ -1,0 +1,39 @@
+.impressumContainer {
+	display: flex;
+	justify-content: space-between;
+	width: 150px;
+}
+
+.impressum {
+	text-decoration: none;
+	color: rgba(0, 0, 0, 0.3);
+	font-size: small;
+}
+
+.footer {
+	width: var(--global-login-width);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 5px;
+}
+
+.footerLogoContainer {
+	display: flex;
+	justify-content: space-between;
+	width: 130px
+}
+
+.vpsLogo {
+	height: auto;
+	width: 50px;
+}
+
+/* 480- */
+@media only screen and (max-width: 480px) {
+
+	.footer {
+		width: 100%;
+		padding: 0 10% 0 10%;
+	}
+}
