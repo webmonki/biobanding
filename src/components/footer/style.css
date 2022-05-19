@@ -16,12 +16,18 @@
 	align-items: center;
 	justify-content: space-between;
 	margin-top: 5px;
+	cursor: pointer;
 }
 
 .footerLogoContainer {
 	display: flex;
 	justify-content: space-between;
-	width: 130px
+	width: 130px;
+	text-decoration: none;
+}
+
+.footerLogoContainer:hover {
+	background-color: rgba(0, 0, 0, 0.1);
 }
 
 .vpsLogo {

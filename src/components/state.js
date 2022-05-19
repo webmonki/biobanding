@@ -6,6 +6,7 @@ export default class Auth {
   static version = process.env.PREACT_APP_VERSION;
   static impressumLink = process.env.PREACT_APP_IMPRESSUM;
   static DSGVOLink = process.env.PREACT_APP_DSGVO;
+  static VPSLink = "https://www.vp-systeme.de";
 
   // Save User Data in Session Storage
   static createUser = (response) => {

@@ -55,6 +55,11 @@ html, body {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	text-decoration: none;
+}
+
+#logoContainer:hover {
+	background-color: rgba(0, 0, 0, 0.1);
 }
 
 #vpsLogo {

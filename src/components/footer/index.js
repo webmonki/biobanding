@@ -6,10 +6,14 @@ export default class Footer extends Component {
   render() {
     return (
       <div class={style.footer}>
-        <div class={style.footerLogoContainer}>
+        <a
+          class={style.footerLogoContainer}
+          href={Auth.VPSLink}
+          target="_blank"
+        >
           <span class={style.impressum}>powered by</span>
           <img class={style.vpsLogo} src="../../assets/Frame 1.svg" />
-        </div>
+        </a>
         <div class={style.impressumContainer}>
           <a class={style.impressum} href={Auth.impressumLink} target="_blank">
             Impressum

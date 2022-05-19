@@ -220,10 +220,10 @@ export default class App extends Component {
     }
 
     return (
-      <div id="logoContainer">
+      <a id="logoContainer" href={Auth.VPSLink} target="_blank">
         <span id="logoLabel">powered by</span>
         <img id="vpsLogo" src="../../assets/Frame 1.svg" />
-      </div>
+      </a>
     );
   };
 
