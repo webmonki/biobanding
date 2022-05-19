@@ -2,7 +2,7 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
-RUN apt-get update && apt-get -y install cron && apt install nano
+RUN apt-get update && apt-get -y install cron libpq-dev python3-dev gcc
 
 COPY ./api ./api
 COPY requirements.txt ./
@@ -26,7 +26,8 @@ RUN crontab /etc/cron.d/my-cron
 # Create the log file to be able to run tail
 RUN touch /var/log/cron.log
 
-ENV PREACT_APP_HOST_URI https://biobanding.azurewebsites.net
+#ENV PREACT_APP_HOST_URI https://biobanding.azurewebsites.net
+ENV PREACT_APP_HOST_URI http://localhost
 
 RUN pip install -r requirements.txt
 
