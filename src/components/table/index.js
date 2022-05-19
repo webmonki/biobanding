@@ -47,6 +47,10 @@ export default class Table extends Component {
     window.addEventListener("resize", this.handleWindowResize);
   };
 
+  componentWillUnmount = () => {
+    window.removeEventListener("resize", this.handleWindowResize);
+  };
+
   // To handle viewport resizes
   handleWindowResize = (event) => {
     this.getSubtableIndex();
@@ -157,7 +161,7 @@ export default class Table extends Component {
     let type = typeof data[0][key];
     if (type === "string") {
       data.sort((a, b) => a[key].localeCompare(b[key]));
-    } else if (type === "number") {
+    } else if (type === "number" || type === "boolean") {
       data.sort((a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0));
     } else if (type === "object") {
       data.sort((a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0));
@@ -171,7 +175,7 @@ export default class Table extends Component {
 
     if (type === "string") {
       data.sort((a, b) => b[key].localeCompare(a[key]));
-    } else if (type === "number") {
+    } else if (type === "number" || type === "boolean") {
       data.sort((a, b) => (a[key] < b[key] ? 1 : b[key] < a[key] ? -1 : 0));
     } else if (type === "object") {
       data.sort((a, b) => (a[key] < b[key] ? 1 : b[key] < a[key] ? -1 : 0));
