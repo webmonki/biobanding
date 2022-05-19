@@ -133,7 +133,7 @@ def test_delete_user(app_generator):
         assert user.check_jwt_auth_active() is not 0
         assert user.check_jwt_auth_active() == 1
         assert user.check_is_admin()
-        assert user.is_activ == 0
+        assert user.is_active == 0
         assert not user.confirmed
         assert user.confirmed_on == None
         assert user.date_last_password_reset == None
