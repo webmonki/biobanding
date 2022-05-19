@@ -5,8 +5,6 @@ Copyright (c) 2022 - present | VP-Systeme GmbH, Lyrenstr. 13, 44866 Bochum
 from datetime import datetime, timedelta
 
 import json
-from urllib import response
-from wsgiref import headers
 import pytest
 import jwt
 import time
@@ -16,9 +14,9 @@ from api.config import BaseConfig
 from api.models import AdminConfig
 
 
-"""
-   Sample test data
-"""
+'''
+    Test data
+'''
 # Login data
 DUMMY_USERNAME = "admin2"
 DUMMY_EMAIL = "admin2@example.org"
@@ -38,6 +36,12 @@ PASSWORD_UPDATED_WITH_TOKEN = "token?password"
 # Edited user data
 EDITED_USERNAME = "Ed"
 EDITED_EMAIL = "ed@ed.ed"
+# 3rd user details
+WILLIE_USERNAME = "Willie"
+WILLIE_LAST_NAME = "Sparrow"
+WILLIE_EMAIL = "willie@willie.wil"
+WILLIE_BIRTHDAY = (datetime.today().date() - timedelta(days=4950)).strftime("%Y-%m-%d")
+WILLIE_PASS = "passTok"
 # Users details
 DETAILS_LAST_NAME = "Collins"
 DETAILS_BIRTHDAY = (datetime.today().date() - timedelta(days=5000)).strftime("%Y-%m-%d") # 13,68 years
@@ -63,7 +67,15 @@ ADMIN_EMAIL = "admin@example.org"
 ADMIN_PASSWORD = "admin"
 
 IMAGINARY_EMAIL = "imagine@mails.en"
-
+# Admin configuration data
+AC_UPDATED_DAYS_REMINDER = 55
+AC_UPDATED_MAIL_SERVER = "edited.smtp.com"
+AC_UPDATED_MAIL_PORT = 555
+AC_UPDATED_MAIL_USERNAME = "Europa"
+AC_UPDATED_MAIL_PASSWORD = "passWord123"
+'''
+    /api/user and /api/users tests
+'''
 def test_user_signup(client):
     '''
         Tests /users/register API: Sign up successfully 
@@ -531,7 +543,7 @@ def test_reset_password_with_registered_email(client):
     assert "Link to reset the password was sent via email to " + EDITED_EMAIL + "." in data["msg"]
 
 
-def test_reset_password_with_registered_email_within_less_than_1min(client):
+def test_reset_password_with_registered_email_59s_later(client):
     '''
         Tests /api/user/forget API: Send email to given address with option to reset the password.
         GIVEN An email address registered/saved in data base 
@@ -559,7 +571,7 @@ def test_reset_password_with_registered_email_2_more_sec_later(client):
     '''
         Tests /api/user/forget API: Send email to given address with option to reset the password.
         GIVEN An email address registered/saved in data base 
-        WHEN User wants to reset his password again 61s after his first attempt
+        WHEN User wants to reset his password 61s after his first attempt
         THEN Check for successful password reset
     '''
     time.sleep(2)
@@ -611,7 +623,7 @@ def test_delete_nonexistent_user_by_id(client):
     token = jwt.encode({'email': EDITED_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     # Execute HTTP DELETE method with notexistent id
     response = client.delete(
-        "/api/user/3",
+        "/api/user/4",
         headers = {"authorization": token},
         content_type = "application/json")
     data = json.loads(response.data.decode())
@@ -677,6 +689,496 @@ def test_user_logout(client):
     assert data["success"] == True
 
 # end of /api/users tests
+
+'''
+    /api/configurations tests
+'''
+def test_update_admin_configuration(client):
+    '''
+        Tests /api/configurations API: Successfully update admin configuration data
+        GIVEN 
+        WHEN
+        THEN
+    '''
+    # Log in
+    response = client.post(
+        "api/users/login",
+        data=json.dumps(
+            {
+                "email": ADMIN_EMAIL,
+                "password": ADMIN_PASSWORD
+            }
+        ),
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check for successful log in
+    assert response.status_code == 200
+    assert data["token"] != ""
+    # Update admin configuration without valid token
+    response = client.post(
+        "api/configurations",
+        data=json.dumps(
+            {
+                "days_reminder": AC_UPDATED_DAYS_REMINDER,
+                "mail_server": AC_UPDATED_MAIL_SERVER,
+                "mail_port": AC_UPDATED_MAIL_PORT,
+                "mail_use_ssl": True,
+                "mail_username": AC_UPDATED_MAIL_USERNAME,
+                "mail_password": AC_UPDATED_MAIL_PASSWORD
+            }
+        ),
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check results
+    assert response.status_code == 400
+    assert data["success"] == False
+    assert "Valid JWT token is missing" in data["msg"]
+    # Update admin configuration with valid token
+    token = jwt.encode({'email': ADMIN_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    response = client.post(
+        "api/configurations",
+        data=json.dumps(
+            {
+                "days_reminder": AC_UPDATED_DAYS_REMINDER,
+                "mail_server": AC_UPDATED_MAIL_SERVER,
+                "mail_port": AC_UPDATED_MAIL_PORT,
+                "mail_use_ssl": True,
+                "mail_username": AC_UPDATED_MAIL_USERNAME,
+                "mail_password": AC_UPDATED_MAIL_PASSWORD
+            }
+        ),
+        headers={"authorization": token},
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check results
+    assert response.status_code == 200
+    assert data["success"] == True
+    assert data["config"]["days_reminder"] == AC_UPDATED_DAYS_REMINDER
+    assert data["config"]["mail_server"] == AC_UPDATED_MAIL_SERVER
+    assert data["config"]["mail_port"] == AC_UPDATED_MAIL_PORT
+    assert data["config"]["mail_use_ssl"] == True
+    assert data["config"]["mail_username"] == AC_UPDATED_MAIL_USERNAME
+    assert data["config"]["registration_code"] is not None
+    assert "The config was successfully updated" in data["msg"]
+
+
+def test_return_admin_configuration(client):
+    '''
+        Tests /api/configurations API: Successfully return the admin configuration
+        GIVEN
+        WHEN
+        THEN
+    '''
+    # Get admin configuration without valid token
+    response = client.get(
+        "api/configurations",
+        #headers = {"authorization": data["token"]},
+        data=json.dumps(
+            {
+            }
+        ),
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check results
+    assert response.status_code == 400
+    assert data["success"] == False
+    assert data["success"] == False
+    assert "Valid JWT token is missing" in data["msg"]
+    # Get admin configuration with valid token
+    token = jwt.encode({'email': ADMIN_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    response = client.get(
+        "api/configurations",
+        headers = {"authorization": token},
+        data=json.dumps(
+            {
+            }
+        ),
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check results
+    assert response.status_code == 200
+    assert data["success"] == True
+    assert data["config"]["days_reminder"] == AC_UPDATED_DAYS_REMINDER
+    assert data["config"]["mail_server"] == AC_UPDATED_MAIL_SERVER
+    assert data["config"]["mail_port"] == AC_UPDATED_MAIL_PORT
+    assert data["config"]["mail_use_ssl"] == True
+    assert data["config"]["mail_username"] == AC_UPDATED_MAIL_USERNAME
+    assert data["config"]["registration_code"] is not None
+    assert data["config"]["registration_code"] is not ""
+
+
+def test_check_registration_code(client):
+    '''
+        Tests /api/configurations/check_code API: Check registration code
+        GIVEN
+        WHEN
+        THEN
+    '''
+    # Access db within app context to get default registration code
+    with app.app_context():
+        config = AdminConfig.get_config()
+        config = config.toDICT()
+    # Valid code:
+    code = config["registration_code"]
+    response = client.post(
+        "api/configurations/check_code",
+        data=json.dumps(
+            {
+                "registration_code": code
+            }
+        ),
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check results
+    assert response.status_code == 200
+    assert data["success"] == True
+    assert "Code is valid" in data["msg"]
+    # Invalid code:
+    response = client.post(
+        "api/configurations/check_code",
+        data=json.dumps(
+            {
+                "registration_code": code + 1
+            }
+        ),
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check results
+    assert response.status_code == 400
+    assert data["success"] == False
+    assert "Code is not valid" in data["msg"]
+
+
+def test_check_registration_code(client):
+    '''
+        Tests /api/configurations/testmail API: Successfully send email to given address
+        GIVEN An email address
+        WHEN Sending an email
+        THEN Check for successful post
+    '''
+    token = jwt.encode({'email': ADMIN_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    response = client.post(
+    '/api/configurations/testmail',
+    headers={"authorization": token},
+    data=json.dumps(
+        {
+            "test_email_address": WILLIE_EMAIL
+        }
+    ),
+    content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check results
+    assert data["success"] == True
+    assert "Test email has been sent" in data["msg"]
+
+# end of configurations tests
+
+'''
+    /api/measurement and /api/measurements tests
+    Create new user
+'''
+def test_signup_new_user_for_further_tests(client):
+    # Trigger initial request to create db
+    try:
+        _ = client.post("/api/users/register")
+    except Exception:
+        pass
+    # Access db within app context to get default registration code
+    with app.app_context():
+        config = AdminConfig.get_config()
+        config = config.toDICT()
+    code = config["registration_code"]
+    response = client.post(
+        "api/users/register",
+        data=json.dumps(
+            {
+                "username": WILLIE_USERNAME,
+                "email": WILLIE_EMAIL,
+                "password": WILLIE_PASS,
+                "registration_code": code
+            }
+        ),
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check results
+    assert response.status_code == 200
+    assert "The user was successfully registered and a confirmation link was send" in data["msg"]
+    # Confirm sign up
+    token = jwt.encode({'email': WILLIE_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    response = client.post(
+        '/api/users/confirm',
+        headers={"authorization": token},
+        data=json.dumps(
+            {
+                "last_name": WILLIE_LAST_NAME,
+                "first_name": WILLIE_USERNAME,
+                "birthday": WILLIE_BIRTHDAY,
+                "sex_m_0_f_1": 0,
+                "height_father": 175,
+                "height_mother": 164
+            }
+        ),
+        content_type="application/json")
+
+    data = json.loads(response.data.decode())
+    # Check results
+    assert response.status_code == 201
+    assert data["token"] != ""
+    assert data["user"] != ""
+    assert "Successful confirmed account. User is Logged in" in data['msg']
+
+
+def test_generate_new_registration_code(client):
+    '''
+        Tests /api/configurations/code API: Unsuccessful generation of registration codde.
+        GIVEN Successful log in as admin user
+        WHEN Generating registration code for other user (with token of different user)
+        THEN Check for unsuccesful registration code generation
+    '''
+    # Log in as admin
+    response = client.post(
+        "api/users/login",
+        data=json.dumps(
+            {
+                "email": ADMIN_EMAIL,
+                "password": ADMIN_PASSWORD
+            }
+        ),
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check for successful log in
+    assert response.status_code == 200
+    assert data["token"] != ""
+    # Token of another user
+    token2 = jwt.encode({'email': WILLIE_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    response = client.post(
+        "api/configurations/code",
+        headers = {"authorization": token2},
+        data=json.dumps(
+            {
+            }
+        ),
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check results
+    assert response.status_code == 403
+    assert data["success"] == False
+    assert "Authenticated, but no permissions" in data["msg"]
+
+
+def test_get_all_anthropometric_measurements(client):
+    '''
+        Test /api/measurements: Successfully get all measurements
+        GIVEN
+        WHEN Retrieving all measurements
+        THEN Check for successful measurements retrieval
+    '''
+    # Enter second measurement
+    token = jwt.encode({'email': WILLIE_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    response = client.post(
+        "/api/user/3/anthropometric",
+        headers={"authorization": token},
+        data=json.dumps(
+            {
+                "userID": 3,
+                "date_measured": "2021-12-12",
+                "height": 150,
+                "sitting_height": 110,
+                "body_span": 85,
+                "weight": 50
+            }
+        ),
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check if measurement has been added successfully
+    assert data["success"] == True
+    # Get all measurements
+    response = client.get(
+        '/api/measurements',
+        headers={"authorization": token},
+        content_type = "application/json"
+    )
+    data = json.loads(response.data.decode())
+    # Check results. First measurement:
+    assert response.status_code == 200
+    assert data["success"] == True
+    assert data["measurements"] is not []
+    assert data["measurements"][0] is not []
+    assert data["measurements"][0]["Benutzer"] == "DELETED"
+    assert data["measurements"][0]["Id"] == 1
+    assert data["measurements"][0]["UserId"] == ANTH_USER_ID
+    assert data["measurements"][0]["Datum"] == '"' + ANTH_DATE_MEASURED + '"'
+    assert data["measurements"][0]["Alter"] == 7.03
+    assert data["measurements"][0]["YAPHV"] == -2.49
+    assert data["measurements"][0]["PHV"] == 4.54
+    assert data["measurements"][0]["AK_BIO"] == "-2.5 bis -1.5"
+    assert data["measurements"][0]["BMI"] == 24.9
+    assert data["measurements"][0]["PMH"] == 0.75
+    assert data["measurements"][0]["PAH"] == 251.01
+    assert data["measurements"][0]["CM until PAH"] == 63.01
+    assert data["measurements"][0]["Größe"] == ANTH_HEIGHT
+    assert data["measurements"][0]["Sitzgröße"] == ANTH_SITTING_HEIGHT
+    assert data["measurements"][0]["Körperspanne"] == ANTH_BODY_SPAN
+    assert data["measurements"][0]["Gewicht"] == ANTH_WEIGHT
+    # Second measurement
+    assert data["measurements"][1] is not []
+    assert data["measurements"][1]["Benutzer"] == WILLIE_USERNAME
+    assert data["measurements"][1]["Id"] == 2
+    assert data["measurements"][1]["UserId"] == 3
+    assert data["measurements"][1]["Datum"] == '"2021-12-12"'
+    assert data["measurements"][1]["Alter"] == 13.13
+    assert data["measurements"][1]["YAPHV"] == 2.27
+    assert data["measurements"][1]["PHV"] == 15.4
+    assert data["measurements"][1]["AK_BIO"] == "1.5 bis 2.5"
+    assert data["measurements"][1]["BMI"] == 22.2
+    assert data["measurements"][1]["PMH"] == 0.85
+    assert data["measurements"][1]["PAH"] == 176.65
+    assert data["measurements"][1]["CM until PAH"] == 26.65
+    assert data["measurements"][1]["Größe"] == 150
+    assert data["measurements"][1]["Sitzgröße"] == 110
+    assert data["measurements"][1]["Körperspanne"] == 85
+    assert data["measurements"][1]["Gewicht"] == 50
+
+@pytest.mark.xfail(reason = "returns 'measurement:' instead of 'measurement'")
+def test_return_anthropometric_measurements(client):
+    '''
+        Test /api/measurement/<int:id>: Successfully returns anthropometric measurement
+        GIVEN Measurement id
+        WHEN Acquiring measurement by id
+        THEN Check for successfull obtainment of measurment
+    '''
+    token = jwt.encode({'email': WILLIE_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    response = client.get(
+        "/api/measurement/1",
+        headers={"authorization": token},
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check results
+    assert response.status_code == 200
+    assert data["success"] == True
+    assert data["measurement"] is not []
+    assert data["measurement"] is not []
+    assert data["measurement"]["Id"] == 1 # the id of measurement (not UserId)
+    assert data["measurement"]["UserId"] == ANTH_USER_ID
+    assert data["measurement"]["Datum"] == '"' + ANTH_DATE_MEASURED + '"'
+    assert data["measurement"]["Alter"] == 7.02
+    assert data["measurement"]["YAPHV"] == -2.49
+    assert data["measurement"]["PHV"] == 4.53
+    assert data["measurement"]["AK_BIO"] == "-2.5 bis -1.5"
+    assert data["measurement"]["BMI"] == 24.9
+    assert data["measurement"]["PMH"] == 0.75
+    assert data["measurement"]["PAH"] == 251.01
+    assert data["measurement"]["CM until PAH"] == 63.01
+    assert data["measurement"]["Größe"] == ANTH_HEIGHT
+    assert data["measurement"]["Sitzgröße"] == ANTH_SITTING_HEIGHT
+    assert data["measurement"]["Körperspanne"] == ANTH_BODY_SPAN
+    assert data["measurement"]["Gewicht"] == ANTH_WEIGHT
+
+
+def test_return_anthropometric_measurements_with_invalid_token(client):
+    '''
+        Test /api/measurement/<int:id>: Unsuccessfull anthropometric measurement acquisition
+        GIVEN Measurement id and invalid token
+        WHEN Acquiring measurement by id
+        THEN Check for unsuccessful obtainment of measurement
+    '''
+    token = jwt.encode({'email': IMAGINARY_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    response = client.get(
+        "/api/measurement/1",
+        headers={"authorization": token},
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check results
+    assert data["success"] == False
+    assert "Sorry. Wrong auth token. This user does not exist." in data["msg"]
+
+@pytest.mark.xfail(reason = "Measurement does not exist")
+def test_return_anthropometric_measurements_by_nonexistent_id(client):
+    '''
+        Test /api/measurement/<int:id>: Unsuccessfull anthropometric measurement acquisition
+        GIVEN Nonexistent measurement id
+        WHEN Acquiring measurement of nonexistent user
+        THEN Check for unsuccessful measurement retrieval
+    '''
+    token = jwt.encode({'email': ADMIN_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    response = client.get(
+        "/api/measurement/4",
+        headers={"authorization": token},
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check results
+    assert response.status_code == 500
+    assert data["success"] == False
+    assert "Token expired" in data["msg"]
+
+
+def test_update_own_anthropometric_measurements(client):
+    '''
+        Test /api/measurement/<int:id>: Successfully update own anthropometric measurement by its id
+        GIVEN Valid token and measurement id
+        WHEN Updating own measurements by its id
+        THEN Check for successfull update of a measurement
+    '''
+    token = jwt.encode({'email': WILLIE_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    response = client.put(
+        "/api/measurement/1",
+        data=json.dumps(
+            {
+                "date_measured": "2022-05-05",
+                "height": 222,
+                "sitting_height": 122,
+                "body_span": 122,
+                "weight": 122
+            }
+        ),
+        headers={"authorization": token},
+        content_type="application/json")
+
+    data = json.loads(response.data.decode())
+    # Check results
+    assert response.status_code == 200
+    assert data["success"] == True
+    assert "Successfully created new measurement." in data['msg']
+
+
+def test_delete_nonexistent_anthropometric_measurement_by_id(client):
+    '''
+        Test /api/measurement/<int:id>: Unuccessful deletion of anthropometric measurement
+        GIVEN A nonexistent measurement id
+        WHEN Deleting measurement
+        THEN Check for unsuccessful measurement removal
+    '''
+    token = jwt.encode({'email': ADMIN_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    response = client.delete(
+        "/api/measurement/4",
+        headers={"authorization": token},
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check results
+    assert response.status_code == 500
+    assert data["success"] == False
+    assert "Could not delete players anthropometric data" in data['msg']
+
+
+def test_delete_anthropometric_measurement_by_id(client):
+    '''
+        Test /api/measurement/<int:id>: Successfully delete anthropometric measurements
+        GIVEN Measurement id
+        WHEN Deleting measurement
+        THEN Check for successful measurement removal
+    '''
+    token = jwt.encode({'email': WILLIE_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    response = client.delete(
+        "/api/measurement/1",
+        headers={"authorization": token},
+        content_type="application/json")
+    data = json.loads(response.data.decode())
+    # Check results
+    assert response.status_code == 200
+    assert data["success"] == True
+    assert "Measurement successfully deleted" in data['msg']
+
+# end of /api/measurement and /api/measurements tests
 
 
 def test_set_configuration(client):
