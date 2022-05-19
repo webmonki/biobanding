@@ -292,6 +292,8 @@ tr:hover {
 	align-items: center;
 	justify-content: space-between;
 	cursor: pointer;
+	position: relative;
+	z-index: 13 !important;
 }
 
 .deleteContainer:hover {
