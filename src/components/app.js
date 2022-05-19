@@ -50,7 +50,6 @@ export default class App extends Component {
   handleRoute = async (e) => {
     let auth = Auth.getAuth();
     const isPublicRoute = publicRoutes.some((route) => e.url.match(route));
-    console.log("PUBLIC: ", isPublicRoute, ", ROUTE: ", e.url);
     const isAdminOnlyRoute = adminOnlyRoutes.some((route) =>
       e.url.match(route)
     );

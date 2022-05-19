@@ -515,24 +515,29 @@ export default class Measurements extends Component {
   };
 
   getChip = () => {
-    if (!Auth.check_admin()) {
-      return undefined;
-    }
+    if (this.state.measurements !== undefined) {
+      if (!Auth.check_admin() || this.state.measurements.length === 0) {
+        return undefined;
+      }
 
-    return (
-      <Chips class={style.chip}>
-        <Chips.Chip onClick={this.handleChipClick} id="chip">
-          <Chips.Text>
-            <div class={style.chipContainer}>
-              <i id="chipIcon" class={`${"material-icons"} ${style.chipIcon}`}>
-                check
-              </i>
-              <span class={style.chipText}>Letzte Messungen</span>
-            </div>
-          </Chips.Text>
-        </Chips.Chip>
-      </Chips>
-    );
+      return (
+        <Chips class={style.chip}>
+          <Chips.Chip onClick={this.handleChipClick} id="chip">
+            <Chips.Text>
+              <div class={style.chipContainer}>
+                <i
+                  id="chipIcon"
+                  class={`${"material-icons"} ${style.chipIcon}`}
+                >
+                  check
+                </i>
+                <span class={style.chipText}>Letzte Messungen</span>
+              </div>
+            </Chips.Text>
+          </Chips.Chip>
+        </Chips>
+      );
+    }
   };
 
   render() {

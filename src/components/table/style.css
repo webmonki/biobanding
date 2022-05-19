@@ -292,6 +292,8 @@ tr:hover {
 	align-items: center;
 	justify-content: space-between;
 	cursor: pointer;
+	position: relative;
+	z-index: 13 !important;
 }
 
 .deleteContainer:hover {
@@ -497,6 +499,20 @@ tr:hover {
 
 .table {
 	table-layout: fixed;
+}
+
+.trueIcon {
+	color: var(--global-success-color);
+}
+
+.falseIcon {
+	color: var(--global-error-color)
+}
+
+.boolBtnContainer {
+	display: flex;
+	justify-content: center;
+	width: 235px;
 }
 
 /* 768+ */

@@ -106,6 +106,7 @@
 	position: relative;
 	left: 80px;
 	top: 49px;
+	z-index: 3;
 }
 
 .chipContainer {

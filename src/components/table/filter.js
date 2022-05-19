@@ -9,6 +9,9 @@ import Select from "preact-material-components/Select";
 import "preact-material-components/Select/style.css";
 
 export default class Filter extends Component {
+  componentDidMount = () => {
+    this.setState({ boolBtnIcon: "check" });
+  };
   // Creates operator for filter determined by typeof cellcontent
   // Operator 0 : = , 1 = < , 2 = >
   getOperators = () => {
@@ -22,6 +25,16 @@ export default class Filter extends Component {
     }
 
     let type = typeof data[col];
+    // Operator for Boolean
+    if (type === "boolean") {
+      if (this.state.operator !== 0) {
+        this.setState({ operator: 0 });
+        this.props.updateFilter(this.props.id, undefined, undefined, false);
+      }
+
+      return <button class={style.operatorBtn}>=</button>;
+    }
+
     // Operator for Strings
     if (type === "string") {
       if (this.state.operator !== 0) {
@@ -161,7 +174,50 @@ export default class Filter extends Component {
           }}
         />
       );
+    } else if (type === "boolean") {
+      {
+        return this.getBoolBtn();
+      }
     }
+  };
+
+  handleBoolBtnClick = () => {
+    let icon = this.state.boolBtnIcon;
+
+    if (icon === "check") {
+      this.props.updateFilter(this.props.id, undefined, undefined, false);
+      icon = "clear";
+    } else if (icon === "clear") {
+      this.props.updateFilter(this.props.id, undefined, undefined, true);
+      icon = "check";
+    }
+
+    this.setState({ boolBtnIcon: icon });
+  };
+
+  getBoolBtnStyle = () => {
+    let icon = this.state.boolBtnIcon;
+
+    if (icon === "check") {
+      return style.trueIcon;
+    } else if (icon === "clear") {
+      return style.falseIcon;
+    }
+  };
+
+  getBoolBtn = () => {
+    return (
+      <div class={style.boolBtnContainer}>
+        <button class={style.operatorBtn}>
+          <i
+            class={`${"material-icons"} ${this.getBoolBtnStyle()}`}
+            onClick={this.handleBoolBtnClick}
+          >
+            {this.state.boolBtnIcon}
+          </i>
+        </button>
+      </div>
+    );
   };
 
   // To Celect the column on which the filter will be applied

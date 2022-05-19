@@ -232,22 +232,29 @@ export default class Users extends Component {
 
   // rendert table
   showTable = (editable) => {
-    let content = (
-      <div>
-        <Table
-          deletable
-          editable={editable}
-          data={this.state.users}
-          pageSize={9}
-          clickEdit={this.showDialog}
-          delete={this.delete}
-          showDialog={this.showNewUserDialog}
-          idKey="userID"
-          title="Benutzer"
-        />
-      </div>
-    );
-    return content;
+    let users = this.state.users;
+
+    if (users !== undefined) {
+      users[0].is_admin = true;
+      users[1].is_admin = false;
+
+      let content = (
+        <div>
+          <Table
+            deletable
+            editable={editable}
+            data={users}
+            pageSize={9}
+            clickEdit={this.showDialog}
+            delete={this.delete}
+            showDialog={this.showNewUserDialog}
+            idKey="userID"
+            title="Benutzer"
+          />
+        </div>
+      );
+      return content;
+    }
   };
 
   render() {
