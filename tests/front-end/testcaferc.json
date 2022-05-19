@@ -1,0 +1,6 @@
+{
+    "browsers": "chrome:headless --window-size=1920,1024",
+    "appCommand": "flask run & npm run dev", // starts flask server and a client
+    "appInitDelay": 15000, // 15sec to launch
+    "selectorTimeout": 3000
+}

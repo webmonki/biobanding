@@ -1,15 +1,19 @@
-image: python:3.9-slim
+image:
+  name: spvboib/22:custom
+  username: spvboib
+  password: iMhotep&2500
 
 pipelines:
   default:
     - step:
         runs-on: self.hosted # die wichtigste Zeile, notwendig bei jedem 'step'
-        name: API Tests
-        caches:
-          - pip
+        name: e2e Tests (testcafe)
         script:
-          - apt-get update
-          - pip install --upgrade pip
-          - apt-get -y install libpq-dev python3-dev gcc
+          - npm install
+          - testcafe --config-file tests/front-end/testcaferc.json --no-sandbox --disable-dev-shm-usage --disable-setuid-sandbox tests/front-end/e2e-login.ts
+    - step:
+        runs-on: self.hosted # die wichtigste Zeile, notwendig bei jedem 'step'
+        name: API Tests (pytest)
+        script:
           - pip install -r requirements.txt
           - pytest -v --junitxml=test-results/report.xml -s
