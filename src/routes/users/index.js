@@ -235,9 +235,6 @@ export default class Users extends Component {
     let users = this.state.users;
 
     if (users !== undefined) {
-      users[0].is_admin = true;
-      users[1].is_admin = false;
-
       let content = (
         <div>
           <Table

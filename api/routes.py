@@ -245,7 +245,8 @@ class AllUsers(Resource):
                 {
                     "userID": row.id,
                     "Benutzername": row.username,
-                    "E-Mail": row.email
+                    "E-Mail": row.email,
+                    "Admin": row.is_admin
                 }
             )
         return {"success": True,
