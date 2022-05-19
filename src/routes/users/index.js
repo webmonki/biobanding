@@ -235,28 +235,26 @@ export default class Users extends Component {
     let users = this.state.users;
 
     if (users !== undefined) {
-      users.forEach((user) => {
-        user.is_admin = true;
-      });
-    }
+      users[0].is_admin = true;
+      users[1].is_admin = false;
 
-    console.log(users);
-    let content = (
-      <div>
-        <Table
-          deletable
-          editable={editable}
-          data={users}
-          pageSize={9}
-          clickEdit={this.showDialog}
-          delete={this.delete}
-          showDialog={this.showNewUserDialog}
-          idKey="userID"
-          title="Benutzer"
-        />
-      </div>
-    );
-    return content;
+      let content = (
+        <div>
+          <Table
+            deletable
+            editable={editable}
+            data={users}
+            pageSize={9}
+            clickEdit={this.showDialog}
+            delete={this.delete}
+            showDialog={this.showNewUserDialog}
+            idKey="userID"
+            title="Benutzer"
+          />
+        </div>
+      );
+      return content;
+    }
   };
 
   render() {

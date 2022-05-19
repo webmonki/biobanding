@@ -1,8 +1,5 @@
 import { h, Component } from "preact";
 import style from "./style";
-import Button from "preact-material-components/Button";
-import "preact-material-components/Button/style.css";
-import List from "preact-material-components/List";
 import Checkbox from "preact-material-components/Checkbox";
 import Formfield from "preact-material-components/FormField";
 import "preact-material-components/Checkbox/style.css";
@@ -319,6 +316,19 @@ export default class Table extends Component {
       });
 
       return newData;
+    } else if (type === "boolean") {
+      data.forEach((obj) => {
+        let match = false;
+        if (obj[cols[chosenIndex]] === val) {
+          match = true;
+        }
+
+        if (match) {
+          newData.push(obj);
+        }
+      });
+
+      return newData;
     }
   };
 
@@ -492,9 +502,17 @@ export default class Table extends Component {
 
   // textalignment of cells
   getTableDataStyle = (data, key) => {
-    if (typeof data[key] === "number" || typeof data[key] === "boolean") {
-      return style.alignRight;
+    const vw = Math.max(
+      document.documentElement.clientWidth || 0,
+      window.innerWidth || 0
+    );
+
+    if (vw > 768) {
+      if (typeof data[key] === "number" || typeof data[key] === "boolean") {
+        return style.alignRight;
+      }
     }
+
     return style.alignLeft;
   };
 
@@ -555,15 +573,45 @@ export default class Table extends Component {
             <table class={style.subTable}>
               {this.createSubTableHeader(id)}
               <tr class={style.subTableContentRow}>
-                {cols.map((key) => (
-                  <td
-                    class={`${this.getTableDataStyle(row, key)} ${
-                      style.subTableCell
-                    }`}
-                  >
-                    {row[key]}
-                  </td>
-                ))}
+                {cols.map((key) => {
+                  if (row[key] === true) {
+                    return (
+                      <td
+                        class={`${this.getTableDataStyle(row, key)} ${
+                          style.subTableCell
+                        }`}
+                      >
+                        <i class={`${"material-icons"} ${style.trueIcon}`}>
+                          check
+                        </i>
+                      </td>
+                    );
+                  }
+
+                  if (row[key] === false) {
+                    return (
+                      <td
+                        class={`${this.getTableDataStyle(row, key)} ${
+                          style.subTableCell
+                        }`}
+                      >
+                        <i class={`${"material-icons"} ${style.falseIcon}`}>
+                          clear
+                        </i>
+                      </td>
+                    );
+                  }
+
+                  return (
+                    <td
+                      class={`${this.getTableDataStyle(row, key)} ${
+                        style.subTableCell
+                      }`}
+                    >
+                      {row[key]}
+                    </td>
+                  );
+                })}
               </tr>
             </table>
           </div>
@@ -591,7 +639,7 @@ export default class Table extends Component {
     let coll = document.getElementById(id + "row");
     let collIcon = document.getElementById(id + "icon");
 
-    if (coll) {
+    if (coll && collIcon) {
       coll.style.maxHeight = null;
       collIcon.innerHTML = "arrow_drop_down";
     }
@@ -792,21 +840,22 @@ export default class Table extends Component {
             let output = month + "-" + day + "-" + year;
             return <td class={this.getTableDataStyle(row, key)}>{output}</td>;
           }
-          if (key === "is_admin") {
-            if (row[key]) {
-              return (
-                <td class={this.getTableDataStyle(row, key)}>
-                  <i class={`${"material-icons"}`}>check</i>
-                </td>
-              );
-            }
-
+          if (row[key] === true) {
             return (
               <td class={this.getTableDataStyle(row, key)}>
-                <i class={`${"material-icons"}`}>clear</i>
+                <i class={`${"material-icons"} ${style.trueIcon}`}>check</i>
               </td>
             );
           }
+
+          if (row[key] === false) {
+            return (
+              <td class={this.getTableDataStyle(row, key)}>
+                <i class={`${"material-icons"} ${style.falseIcon}`}>clear</i>
+              </td>
+            );
+          }
+
           return <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>;
         })}
       </tr>
