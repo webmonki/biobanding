@@ -72,6 +72,8 @@ export default class Login extends Component {
             route("/measurements", true);
           } catch (err) {}
         } else if (this.status === 403) {
+          let response = JSON.parse(this.responseText);
+          that.setState({ email: response.email });
           that.setState({ loginStatus: false });
         } else {
           try {
@@ -91,9 +93,35 @@ export default class Login extends Component {
     xhttp.send(data);
   };
 
-  // TO BE DONE: Neue Bestätigungs Email senden
+  // Neue Bestätigungs Email senden
   sendMail = () => {
-    console.log("SEND MAIL");
+    let that = this;
+    let url = Auth.url + "/api/users/sendConfirm";
+    let xhttp = new XMLHttpRequest();
+
+    xhttp.open("POST", url);
+    xhttp.setRequestHeader("Accept", "application/json");
+    xhttp.setRequestHeader("Content-Type", "application/json");
+
+    xhttp.onreadystatechange = function () {
+      if (this.readyState === 4) {
+        if (this.status === 200) {
+          try {
+            let response = JSON.parse(this.responseText);
+            console.log("RES: ", response);
+          } catch (err) {}
+        } else {
+          let response = JSON.parse(this.responseText);
+          console.log("RESFAIL: ", response);
+        }
+      }
+    };
+
+    let data = `{
+            "email": "${this.state.email}"
+        }`;
+
+    xhttp.send(data);
   };
 
   // Login Content
