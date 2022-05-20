@@ -950,7 +950,7 @@ class Measurements(Resource):
         """Return all anthropometric measurements for all users"""
 
         try:
-
+            # Select auf die letzte Messung aller User
             subq = db.session.query(
                 AnthropometricData.user_id,
                 db.func.max(AnthropometricData.date_measured).label('maxdate')
@@ -962,16 +962,80 @@ class Measurements(Resource):
                     AnthropometricData.user_id == subq.c.user_id,
                     AnthropometricData.date_measured == subq.c.maxdate
                 )
-            )
+            ).join(Users).all()
 
-            result = []
+            res = []
+
             for a, u in query:
-
-                measurement = {**{'Benutzer': u}, **a.toDICT()}
-                result.append(measurement)
+                res.append({**{'Benutzer': u}, **a.toDICT()})
 
             return {"success": True,
-                    'measurements': result}, 200
+                    'measurements': res}, 200
         except Exception as e:
             return {"success": False,
                     'msg': 'Could not read measurements.'}, 400
+
+
+@rest_api.expect(anthropometric_data_edit_model)
+@rest_api.route('/api/measurements/reminder')
+class MeasurementReminder(Resource):
+    """
+      Create new measurement from email reminder
+    """
+
+    @rest_api.doc(security='jwt')
+    @rest_api.response(200, 'Email address already confirmed')
+    @rest_api.response(201, 'Account Confirmed and created player details')
+    @rest_api.response(401, 'No valid token')
+    def post(self):
+
+        req_data = request.get_json()
+        _date_measured = datetime.strptime(req_data.get("date_measured"), '%Y-%m-%d')
+        _height = req_data.get("height")
+        _sitting_height = req_data.get("sitting_height")
+        _body_span = req_data.get("body_span")
+        _weight = req_data.get("weight")
+
+        token = None
+
+        # Check if token is valid
+        if "authorization" in request.headers:
+            token = request.headers["authorization"]
+
+        if not token:
+            return {"success": False, "msg": "Valid JWT token is missing"}, 400
+
+        try:
+            user = Users.verify_reset_token(token)
+
+            if not user:
+                return {"success": False,
+                        "msg": "Sorry. Wrong auth token. This user does not exist."}, 400
+
+            token_expired = db.session.query(JWTTokenBlocklist.id).filter_by(jwt_token=token).scalar()
+
+            if token_expired is not None:
+                return {"success": False, "msg": "Token revoked."}, 400
+
+        except:
+            return {"success": False, "msg": "Token is invalid"}, 400
+
+        _new_anthropometric_data = AnthropometricData(
+            user_id=user.id,
+            date_measured=_date_measured,
+            height=_height,
+            sitting_height=_sitting_height,
+            body_span=_body_span,
+            weight=_weight
+        )
+        _new_anthropometric_data.save()
+
+
+        user.set_jwt_auth_active(True)
+        # Save confirmed user
+        user.save()
+
+        return {"success": True,
+                "token": token,
+                "user": user.toJSON(),
+                "msg": "Successful created new measurement"}, 200
