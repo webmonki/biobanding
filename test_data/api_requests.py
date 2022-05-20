@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 import requests
 from requests.structures import CaseInsensitiveDict
 import json
@@ -8,18 +10,110 @@ class Reguests:
 
 	url = 'http://127.0.0.1:5000'
 
-	def register_user(self, firstname, lastname):
+	def confirmUser(self, token, firstname, lastname, birthday, sex, heightFather, heightMother):
+		url_config = self.url + '/api/users/confirm'
+
+
+		headers = CaseInsensitiveDict()
+		headers['accept'] = 'application/json'
+		headers['Content-Type'] = 'application/json'
+		headers['authorization'] = token
+
+		data = '{' +\
+			'"first_name": ' + '"' + firstname + '",' +\
+			'"last_name": ' + '"' + lastname + '",' +\
+			'"birthday": ' + '"' + birthday + '",' +\
+			'"sex_m_0_f_1": ' + sex + ',' +\
+			'"height_father": ' + heightFather + ',' +\
+			'"height_mother": ' + heightMother + '}' 
+
+		
+		print(data)
+
+		data = data.encode()
+
+		resp = requests.post(url_config, headers=headers, data=data)
+		print("CONFIRM USER:")
+
+
+
+		try:
+			resdict = json.loads(resp.text)
+
+			if resp.status_code == 200:
+				print("SUCCESS: UserConfirmed")
+
+			else:
+				print("ERROR: ", resp.text)
+
+
+		except:
+			print("ERROR: JSON LAOD STANDARD ERROR")
+
+	def getRegistrationCode(self, token):
+		url_config = self.url + '/api/configurations'
+
+
+		headers = CaseInsensitiveDict()
+		headers['accept'] = 'application/json'
+		headers['Content-Type'] = 'application/json'
+		headers['authorization'] = token
+
+		resp = requests.get(url_config, headers=headers)
+
+		resdict = json.loads(resp.text)
+
+		if resp.status_code == 200:
+			print("SUCCESS: Registration Code loaded")
+			return resdict['config']['registration_code']
+		else:
+			print("ERROR: ", resdict)
+			return None
+
+	def login_admin(self):
+		url_login = self.url + '/api/users/login'
+
+		password = 'admin'
+		email = 'admin@example.org'
+
+		data = '{' +\
+			'"email": ' + '"' + email + '",' +\
+			'"password": ' + '"' + password + '"}' 
+
+		headers = CaseInsensitiveDict()
+		headers['accept'] = 'application/json'
+		headers['Content-Type'] = 'application/json'
+
+		resp = requests.post(url_login, headers=headers, data=data)
+
+		resdict = json.loads(resp.text)
+
+
+		if resp.status_code == 200:
+			print("SUCCESS: " + email + " logged in.")
+			return resdict['token'], resdict['user']['_id']
+		else:
+			print("ERROR: ", resdict)
+			return None
+
+
+	def register_user(self, firstname, lastname, registrationCode):
 
 		url_register = self.url + '/api/users/register'
 
 		username = firstname + '.' + lastname
 		email = firstname + '.' + lastname + '@test.de'
 		password = 'string'
+		registrationCode = str(registrationCode)
+
 
 		data = '{"username": ' + '"' + username + '",' +\
 			'"email": ' + '"' + email + '",' +\
 			'"password": ' + '"' + password + '",' +\
-			'"is_admin": ' +  'false}' 
+			'"registration_code": ' + registrationCode + ',' +\
+			'"is_admin": ' +  'false}'
+
+		data  = data.encode()
 
 		headers = CaseInsensitiveDict()
 		headers['accept'] = 'application/json'
@@ -27,12 +121,18 @@ class Reguests:
 
 		resp = requests.post(url_register, headers=headers, data=data)
 
-		resdict = json.loads(resp.text)
+		print("REGISTER USER:")
+		try:
+			resdict = json.loads(resp.text)
 
-		if resp.status_code == 200:
-			print("SUCCESS")
-		else:
-			print("ERROR: ", resdict)
+			if resp.status_code == 200:
+				print("SUCCESS", resdict['msg'])
+			else:
+				print("ERROR: ", resdict)
+		except:
+			print("JSON LOAD ERROR")
+
+
 
 
 
@@ -55,14 +155,18 @@ class Reguests:
 
 		resp = requests.post(url_login, headers=headers, data=data)
 
-		resdict = json.loads(resp.text)
+		print("LOGIN USER:")
+		try:
+			resdict = json.loads(resp.text)
 
-		if resp.status_code == 200:
-			print("SUCCESS: " + email + " logged in.")
-			return resdict['token'], resdict['user']['_id']
-		else:
-			print("ERROR: ", resdict)
-			return None
+			if resp.status_code == 200:
+				print("SUCCESS: " + email + " logged in.")
+				return resdict['token'], resdict['user']['_id']
+			else:
+				print("ERROR: ", resdict)
+				return None, None
+		except:
+			print("ERROR")
 
 	def create_player_details(self, token, user_id, firstname, lastname, birthday, sex, height_father, height_mother):
 
@@ -83,7 +187,10 @@ class Reguests:
 		headers['Content-Type'] = 'application/json'
 		headers['authorization'] = token
 
-		resp = requests.post(url_create_player_details, headers=headers, data=json.dumps(data))
+
+		data = data.encode()
+
+		resp = requests.post(url_create_player_details, headers=headers, data=data)
 
 		resdict = json.loads(resp.text)
 
@@ -102,23 +209,28 @@ class Reguests:
 		headers['Content-Type'] = 'application/json'
 		headers['authorization'] = token
 
-		data = {
-			"userID": user_id,
-			"date_measured": str(date_measured).split(' ')[0],
-			"height": height,
-			"sitting_height": sitting_height,
-			"body_span": body_span,
-			"weight": weight
-		}
+		data = '{' +\
+			'"userID": ' + str(user_id) + ',' +\
+			'"date_measured": ' + '"' + str(date_measured.split(' ')[0]) + '",' +\
+			'"height": ' + str(height) + ',' +\
+			'"sitting_height": ' + str(sitting_height) + ',' +\
+			'"body_span": ' + str(body_span) + ',' +\
+			'"weight": ' + str(weight) + '}' 
 
-		resp = requests.post(url_create_player_details, headers=headers, data=json.dumps(data))
+		data = data.encode()
 
-		resdict = json.loads(resp.text)
+		resp = requests.post(url_create_player_details, headers=headers, data=data)
 
-		if resp.status_code == 200:
-			print("SUCCESS: Measurement created")
-		else:
-			print("ERROR: ", resdict)
+		try:
+			resdict = json.loads(resp.text)
+
+			if resp.status_code == 200:
+				print("SUCCESS: Measurement created")
+			else:
+				print("ERROR: ", resdict)
+		except:
+			print("JSON ERROR")
+
 
 
 

@@ -19,7 +19,8 @@ from .models import db, Users, JWTTokenBlocklist, AnthropometricData, AdminConfi
 from .utils import json_serial, emailIsValid
 
 # Define authorization method for SWAGGER UI
-authorizations = {"jwt": {"type": "apiKey", "in": "header", "name": "authorization"}}
+authorizations = {"jwt": {"type": "apiKey",
+                          "in": "header", "name": "authorization"}}
 
 # Create Flask_RESTx Object
 rest_api = Api(version="1.0", title="Users API", authorizations=authorizations)
@@ -31,7 +32,7 @@ rest_api = Api(version="1.0", title="Users API", authorizations=authorizations)
 signup_model = rest_api.model('SignUpModel', {"username": fields.String(required=True, min_length=2, max_length=32),
                                               "email": fields.String(required=True, min_length=4, max_length=64),
                                               "password": fields.String(required=True, min_length=4, max_length=16),
-                                              "registration_code" : fields.Integer(required=True, min=1000, max=9999),
+                                              "registration_code": fields.Integer(required=True, min=1000, max=9999),
                                               "is_admin": fields.Boolean()
                                               })
 
@@ -74,7 +75,8 @@ config_model = rest_api.model('ConfigModel', {"days_reminder": fields.Integer(mi
                                               })
 
 
-config_check_code_model = rest_api.model('ConfigCheckCodeModel', {"registration_code": fields.Integer(required=True, max=9999)})
+config_check_code_model = rest_api.model('ConfigCheckCodeModel', {
+                                         "registration_code": fields.Integer(required=True, max=9999)})
 
 test_mail_config_model = rest_api.model('TestMailConfigModel', {
     "test_email_address": fields.String(required=True, min_length=5, max_length=64)})
@@ -96,7 +98,7 @@ anthropometric_data_model = rest_api.model('AnthropometricDataModel', {
     "body_span": fields.Integer(required=True, min=0, max=300),
     "weight": fields.Float(required=True, min=0, max=300)
 }
-                                           )
+)
 
 anthropometric_data_edit_model = rest_api.model('AnthropometricDataEditModel', {
     "date_measured": fields.Date(required=True),
@@ -125,14 +127,16 @@ def token_required(f):
             return {"success": False, "msg": "Valid JWT token is missing"}, 400
 
         try:
-            data = jwt.decode(token, BaseConfig.SECRET_KEY, algorithms=["HS256"])
+            data = jwt.decode(token, BaseConfig.SECRET_KEY,
+                              algorithms=["HS256"])
             current_user = Users.get_by_email(data["email"])
 
             if not current_user:
                 return {"success": False,
                         "msg": "Sorry. Wrong auth token. This user does not exist."}, 400
 
-            token_expired = db.session.query(JWTTokenBlocklist.id).filter_by(jwt_token=token).scalar()
+            token_expired = db.session.query(
+                JWTTokenBlocklist.id).filter_by(jwt_token=token).scalar()
 
             if token_expired is not None:
                 return {"success": False, "msg": "Token revoked."}, 400
@@ -269,21 +273,24 @@ class ResetPasswort(Resource):
         user = Users.get_by_email(_email)
 
         token = user.get_jwt_token()
-        url = "{}/reset?token={}".format(os.environ['PREACT_APP_HOST_URI'], token)
+        url = "{}/reset?token={}".format(
+            os.environ['PREACT_APP_HOST_URI'], token)
 
         if user:
             block_reset = False
             # Check id user has already requested a password reset
             if user.date_last_password_reset is not None:
                 # Get seconds since last reset
-                delta = (datetime.utcnow() - user.date_last_password_reset).total_seconds() / 60
+                delta = (datetime.utcnow() -
+                         user.date_last_password_reset).total_seconds() / 60
                 # Check if the last mail was sent more than one minute ago
                 if delta <= 1:
                     block_reset = True
             if not block_reset:
                 user.date_last_password_reset = datetime.utcnow()
                 user.save()
-                send_email_with_token(user, 'Passwort vergessen', 'reset_email.html', url)
+                send_email_with_token(
+                    user, 'Passwort vergessen', 'reset_email.html', url)
 
                 return {"success": True,
                         "msg": "Link to reset the password was sent via email to {}.".format(_email)}, 200
@@ -361,8 +368,8 @@ class EditUser(Resource):
             user.delete()
         except Exception as e:
             return {
-                       "success": False,
-                       "msg": "Could not delete User {}".format(e)}, 400
+                "success": False,
+                "msg": "Could not delete User {}".format(e)}, 400
 
         return {"success": True,
                 "msg": "Successfully deleted user"}, 200
@@ -413,9 +420,11 @@ class Register(Resource):
         new_user.save()
 
         token = new_user.get_jwt_token()
-        url = "{}/confirm?token={}".format(os.environ['PREACT_APP_HOST_URI'], token)
+        url = "{}/confirm?token={}".format(
+            os.environ['PREACT_APP_HOST_URI'], token)
 
-        send_email_with_token(new_user, 'Bitte bestätige deine E-Mail-Adresse', 'confirm_email_address.html', url)
+        send_email_with_token(
+            new_user, 'Bitte bestätige deine E-Mail-Adresse', 'confirm_email_address.html', url)
 
         return {"success": True,
                 "userID": new_user.id,
@@ -454,7 +463,8 @@ class Login(Resource):
                     "msg": "Email address is not confirmed"}, 403
 
         # create access token uwing JWT
-        token = jwt.encode({'email': _email, 'exp': datetime.utcnow() + timedelta(minutes=30)}, BaseConfig.SECRET_KEY)
+        token = jwt.encode({'email': _email, 'exp': datetime.utcnow(
+        ) + timedelta(minutes=30)}, BaseConfig.SECRET_KEY)
 
         user_exists.set_jwt_auth_active(True)
         user_exists.save()
@@ -506,7 +516,8 @@ class LogoutUser(Resource):
     def post(self, current_user):
         _jwt_token = request.headers["authorization"]
 
-        jwt_block = JWTTokenBlocklist(jwt_token=_jwt_token, created_at=datetime.now(timezone.utc))
+        jwt_block = JWTTokenBlocklist(
+            jwt_token=_jwt_token, created_at=datetime.now(timezone.utc))
         jwt_block.save()
 
         self.set_jwt_auth_active(False)
@@ -551,7 +562,8 @@ class Confirm(Resource):
                 return {"success": False,
                         "msg": "Sorry. Wrong auth token. This user does not exist."}, 400
 
-            token_expired = db.session.query(JWTTokenBlocklist.id).filter_by(jwt_token=token).scalar()
+            token_expired = db.session.query(
+                JWTTokenBlocklist.id).filter_by(jwt_token=token).scalar()
 
             if token_expired is not None:
                 return {"success": False, "msg": "Token revoked."}, 400
@@ -565,7 +577,8 @@ class Confirm(Resource):
                     "msg": "Email address already confirmed. Please login."}, 200
 
         # Save PlayerDetails to DB
-        playerdetails = PlayerDetail(user_id=user.id, birthday=_birthday, sex_m_0_f_1=_sex_m_0_f_1)
+        playerdetails = PlayerDetail(
+            user_id=user.id, birthday=_birthday, sex_m_0_f_1=_sex_m_0_f_1)
 
         if _height_father:
             playerdetails.height_father = _height_father
@@ -575,7 +588,8 @@ class Confirm(Resource):
         playerdetails.save()
 
         # Save last- and firstname to PlayerMaster table
-        playermaster = PlayerMaster(user_id=user.id, last_name=_last_name, first_name=_first_name)
+        playermaster = PlayerMaster(
+            user_id=user.id, last_name=_last_name, first_name=_first_name)
         playermaster.save()
 
         # Set user confirmed to true
@@ -690,7 +704,8 @@ class EditConfiguration(Resource):
 
         if self.is_admin:
             try:
-                send_email(self.email, 'Testmail: Mail-Server ist korrekt konfiguriert.', 'Testmail')
+                send_email(
+                    self.email, 'Testmail: Mail-Server ist korrekt konfiguriert.', 'Testmail')
             except Exception:
                 return {"success": False,
                         "msg": "Test email could not be sent"}, 400
@@ -743,9 +758,11 @@ class PlayerDetails(Resource):
 
         try:
             # Check if user has already PlayerMaster row
-            master_exists = db.session.query(PlayerMaster).filter_by(user_id=userID).first()
+            master_exists = db.session.query(
+                PlayerMaster).filter_by(user_id=userID).first()
             # Check if user has already PlayerDetails row
-            details_exists = db.session.query(PlayerDetail).filter_by(user_id=userID).first()
+            details_exists = db.session.query(
+                PlayerDetail).filter_by(user_id=userID).first()
 
             # INSERT or UPDATE users PlayerMaster row
             if master_exists:
@@ -753,7 +770,8 @@ class PlayerDetails(Resource):
                 master_exists.last_name = _last_name
                 master_exists.save()
             else:
-                _new_player_master = PlayerMaster(user_id=userID, first_name=_first_name, last_name=_last_name)
+                _new_player_master = PlayerMaster(
+                    user_id=userID, first_name=_first_name, last_name=_last_name)
                 _new_player_master.save()
 
             # INSERT or UPDATE users PlayerDetails row
@@ -807,7 +825,8 @@ class Anthropometric(Resource):
         """create anthropometric data"""
 
         req_data = request.get_json()
-        _date_measured = datetime.strptime(req_data.get("date_measured"), '%Y-%m-%d')
+        _date_measured = datetime.strptime(
+            req_data.get("date_measured"), '%Y-%m-%d')
         _height = req_data.get("height")
         _sitting_height = req_data.get("sitting_height")
         _body_span = req_data.get("body_span")
@@ -825,11 +844,9 @@ class Anthropometric(Resource):
         try:
             _new_anthropometric_data.save()
 
-
         except Exception as e:
             return {"success": False,
-                "msg": "Anthropometric data could not be created"}, 400
-
+                    "msg": "Anthropometric data could not be created"}, 400
 
         return {"success": True,
                 "anthropometric_data": _new_anthropometric_data.toDICT(),
@@ -862,8 +879,8 @@ class Measurement(Resource):
             measurement = AnthropometricData.get_by_id(id)
         except:
             return {
-                       "success": False,
-                       "msg": "Could not read players anthropometric data"}, 500
+                "success": False,
+                "msg": "Could not read players anthropometric data"}, 500
 
         return {"success": True,
                 "measurement:": measurement.toDICT()
@@ -878,8 +895,8 @@ class Measurement(Resource):
             measurement_data.delete()
         except:
             return {
-                       "success": False,
-                       "msg": "Could not delete players anthropometric data"}, 500
+                "success": False,
+                "msg": "Could not delete players anthropometric data"}, 500
 
         return {"success": True,
                 "msg": "Measurement successfully deleted"}, 200
@@ -927,7 +944,8 @@ class Measurements(Resource):
         """Return all anthropometric measurements for all users"""
 
         try:
-            query = db.session.query(AnthropometricData, Users.username).join(Users).all()
+            query = db.session.query(
+                AnthropometricData, Users.username).join(Users).all()
             result = []
 
             for a, u in query:
@@ -940,6 +958,43 @@ class Measurements(Resource):
         except Exception as e:
             return {"success": False,
                     'msg': 'Could not read measurements.'}, 400
+
+    @token_required
+    def post(self, current_user):
+
+        req_data = request.get_json()
+        _date_measured = datetime.strptime(
+            req_data.get("date_measured"), '%Y-%m-%d')
+        _height = req_data.get("height")
+        _sitting_height = req_data.get("sitting_height")
+        _body_span = req_data.get("body_span")
+        _weight = req_data.get("weight")
+
+        if "authorization" in request.headers:
+            token = request.headers["authorization"]
+
+        try:
+            user = Users.verify_reset_token(token)
+
+            if not user:
+                return {"success": False, "msg": "Wrong auth token"}
+
+            _new_anthropometric_data = AnthropometricData(
+                user_id=user.id,
+                date_measured=_date_measured,
+                height=_height,
+                sitting_height=_sitting_height,
+                body_span=_body_span,
+                weight=_weight
+            )
+
+            try:
+                _new_anthropometric_data.save()
+            except:
+                return {"success": False, "msg": "Anthropometric data could not be created"}
+            return {"success": True, "msg": "Anthropometric data successful created"}, 200
+        except:
+            return {"success": False, "msg": "Token is invalid"}
 
 
 @rest_api.route('/api/measurements/last')

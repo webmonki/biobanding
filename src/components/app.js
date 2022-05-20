@@ -124,16 +124,8 @@ export default class App extends Component {
     );
   };
 
-  // Initial open navbar and set maxWidth, so that callapse is working
+  // Initial open navbar
   openDrawer = () => {
-    // let drawer = document.getElementById("navbar");
-
-    // drawer.style.maxWidth = "250px";
-    const vw = Math.max(
-      document.documentElement.clientWidth || 0,
-      window.innerWidth || 0
-    );
-
     this.drawer.MDComponent.open = true;
   };
 

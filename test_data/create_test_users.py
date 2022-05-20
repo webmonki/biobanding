@@ -1,7 +1,22 @@
+# -*- encoding: utf-8 -*-
+
+import sys
+import os
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
 import openpyxl
 from pathlib import Path
-
+from api.config import BaseConfig
+from datetime import datetime, timedelta
 from api_requests import Reguests
+import jwt
+
+import pandas as pd
+
+import chardet
+
+
+filePath = './test_data/Biobanding Datenerhebung_VFL Astrostars_08.01.2022.xlsx'
 
 xlsx_file = Path('./test_data', 'Biobanding Datenerhebung_VFL Astrostars_08.01.2022.xlsx')
 
@@ -36,55 +51,61 @@ sheet = wb_obj.active
 # 23: YAPHV
 # 24: AK_Bio
 
+
 req = Reguests()
 
-for user in sheet:
+adminToken, admin = req.login_admin()
 
+regisCode = req.getRegistrationCode(adminToken)
+
+for user in sheet:
 	
 	if user[0].value != None and user[0].value != 'ID':
 
-		firstname = user[2].value
-		lastname = user[1].value
-		birthday = user[4].value
-		date_measured = user[5].value
-		height = user[12].value
-		sitting_height = user[13].value
-		body_span = user[15].value
-		weight = user[14].value
+		firstname = str(user[2].value)
+		lastname = str(user[1].value)
+		birthday = str(user[4].value).split(' ')[0]
+		date_measured = str(user[5].value)
+		height = str(user[12].value)
+		sitting_height = str(user[13].value)
+		body_span = str(user[15].value)
+		weight = str(user[14].value)
+
 
 		charList = ['Ä', 'ä', 'Ö', 'ö', 'Ü', 'ü', 'ß']
 
-		# firstname = list(firstname)
-		# for i in range(len(firstname)):
-		# 	if firstname[i] in charList:
-		# 		firstname[i] = '%'
+		firstname = firstname.replace(' ', '')
+		lastname = lastname.replace(' ', '')
 
-		# firstname = "".join(firstname)
-
-		# lastname = list(lastname)
-		# for i in range(len(lastname)):
-		# 	if lastname[i] in charList:
-		# 		lastname[i] = '%'
-
-		# lastname = "".join(lastname)
 
 		if user[10].value == 'männlich':
-			sex = 0
+			sex = str(0)
 		elif user[10].value == 'weiblich':
-			sex = 1
+			sex = str(1)
 
 		height_mother = user[16].value
 		height_father = user[17].value
 
-		req.register_user(firstname, lastname)
+		req.register_user(firstname, lastname, regisCode)
 
-		# token, user_id = req.login_user(firstname, lastname)
+		email = firstname + '.' + lastname + '@test.de'
+
+
+		token = jwt.encode({'email': email, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+
+		heightMother = str(user[16].value)
+		heightFather = str(user[17].value)
+
+
+		req.confirmUser(token, firstname, lastname, birthday, sex, heightFather, heightMother)
+
+		token, user_id = req.login_user(firstname, lastname)
 
 
 		# req.create_player_details(token, user_id, firstname, lastname, birthday, sex, height_father, height_mother)
 
 
-		# req.create_measurement(token, user_id, date_measured, height, sitting_height, body_span, weight)
+		req.create_measurement(token, user_id, date_measured, height, sitting_height, body_span, weight)
 
 
 exit()
