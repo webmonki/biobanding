@@ -440,9 +440,7 @@ class SendMail(Resource):
         _email = req_data.get("email")
 
         _user = Users.get_by_email(_email)
-        print(_user)
         token = _user.get_jwt_token()
-        print(token)
         url = "{}/confirm?token={}".format(
             os.environ['PREACT_APP_HOST_URI'], token)
         try:
@@ -450,6 +448,7 @@ class SendMail(Resource):
                 _user, 'Bitte bestätige deine E-Mail-Adresse', 'confirm_email_address.html', url)
         except Exception as e:
             return {"success": False, "msg": e}
+
         return {"success": True,
                 "userID": _user.id,
                 "msg": "The user was successfully registered and a confirmation link was send"}, 200
