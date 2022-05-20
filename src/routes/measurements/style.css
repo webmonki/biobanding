@@ -103,6 +103,7 @@
 }
 
 .chip {
+	width: fit-content;
 	position: relative;
 	left: 80px;
 	top: 49px;
