@@ -375,6 +375,7 @@ tr:hover {
 }
 
 .filterContentContainer {
+	position: relative;
 	display: flex;
 	align-items: center;
 }
@@ -383,8 +384,8 @@ tr:hover {
 	background-color: white;
 	max-height: 0;
 	width: 600px;
+	top: 50px;
 	position: absolute;
-	top: 260px !important;
 	overflow-x: hidden;
 	transition: max-height 0.2s ease-out;
 	display: flex;
@@ -531,10 +532,13 @@ tr:hover {
 /* 768- */
 @media only screen and (max-width: 768px) {
 
-	.filterContainer {
+	.filterContentContainer {
 		width: 100%;
-		left: 0;
-		top: 200px;
+		position: relative;
+	}
+
+	.filterContainer {
+		width: 80vw;
 	}
 
 	.divider {
