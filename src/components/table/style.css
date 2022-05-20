@@ -297,7 +297,7 @@ tr:hover {
 }
 
 .deleteContainer:hover {
-	background-color: rgba(0, 0, 0, 0.3);
+	background-color: #d7d7d8;
 }
 
 .deleteContainer:active {
