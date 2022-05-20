@@ -431,6 +431,30 @@ class Register(Resource):
                 "msg": "The user was successfully registered and a confirmation link was send"}, 200
 
 
+@rest_api.route('/api/users/sendConfirm')
+class SendMail(Resource):
+
+    def post(self):
+
+        req_data = request.get_json()
+        _email = req_data.get("email")
+
+        _user = Users.get_by_email(_email)
+        print(_user)
+        token = _user.get_jwt_token()
+        print(token)
+        url = "{}/confirm?token={}".format(
+            os.environ['PREACT_APP_HOST_URI'], token)
+        try:
+            send_email_with_token(
+                _user, 'Bitte bestätige deine E-Mail-Adresse', 'confirm_email_address.html', url)
+        except Exception as e:
+            return {"success": False, "msg": e}
+        return {"success": True,
+                "userID": _user.id,
+                "msg": "The user was successfully registered and a confirmation link was send"}, 200
+
+
 @rest_api.route('/api/users/login')
 class Login(Resource):
     """
@@ -460,6 +484,7 @@ class Login(Resource):
 
         if not user_exists.confirmed:
             return {"success": False,
+                    "email": _email,
                     "msg": "Email address is not confirmed"}, 403
 
         # create access token uwing JWT
@@ -1045,7 +1070,8 @@ class MeasurementReminder(Resource):
     def post(self):
 
         req_data = request.get_json()
-        _date_measured = datetime.strptime(req_data.get("date_measured"), '%Y-%m-%d')
+        _date_measured = datetime.strptime(
+            req_data.get("date_measured"), '%Y-%m-%d')
         _height = req_data.get("height")
         _sitting_height = req_data.get("sitting_height")
         _body_span = req_data.get("body_span")
@@ -1067,7 +1093,8 @@ class MeasurementReminder(Resource):
                 return {"success": False,
                         "msg": "Sorry. Wrong auth token. This user does not exist."}, 400
 
-            token_expired = db.session.query(JWTTokenBlocklist.id).filter_by(jwt_token=token).scalar()
+            token_expired = db.session.query(
+                JWTTokenBlocklist.id).filter_by(jwt_token=token).scalar()
 
             if token_expired is not None:
                 return {"success": False, "msg": "Token revoked."}, 400
@@ -1084,7 +1111,6 @@ class MeasurementReminder(Resource):
             weight=_weight
         )
         _new_anthropometric_data.save()
-
 
         user.set_jwt_auth_active(True)
         # Save confirmed user
