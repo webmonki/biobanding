@@ -8,8 +8,36 @@ import Button from "preact-material-components/Button";
 import "preact-material-components/Button/style.css";
 import Auth from "../../components/state";
 import { route } from "preact-router";
+import Snackbar from "preact-material-components/Snackbar";
 
 export default class RemindedMeasurement extends Component {
+  componentWillMount = () => {
+    // gets token from URL
+    let queryString = window.location.search;
+
+    let urlParams = new URLSearchParams(queryString);
+
+    let token = urlParams.get("token");
+
+    this.setState({ token });
+
+    this.validateInput();
+  };
+
+  componentDidMount = () => {
+    document.addEventListener("keyup", this.handleKey);
+  };
+
+  componentWillUnmount = () => {
+    document.removeEventListener("keyup", this.handleKey);
+  };
+
+  handleKey = (event) => {
+    if (this.state.disabled === false && event.code === "Enter") {
+      this.sendData();
+    }
+  };
+
   validateInput = () => {
     let height = this.state.height;
     let sittingHeight = this.state.sittingHeight;
@@ -43,23 +71,38 @@ export default class RemindedMeasurement extends Component {
     }
   };
 
+  // Opens snackbar with given text, if error true text will be red else green
+  showSnackbar = (text, error) => {
+    let sbText = document.getElementsByClassName("mdc-snackbar__text");
+    let errorColor = "#B1262D";
+    let successColor = "#3C9052";
+
+    if (error) {
+      sbText[0].style.color = errorColor;
+    } else {
+      sbText[0].style.color = successColor;
+    }
+
+    this.bar.MDComponent.show({
+      message: text,
+    });
+  };
+
   sendData = () => {
-    let id;
-
-    // If user is admin, take the id from the user-id-list which was choosen via dropdown in dialog
-    // If user is not admin, take his user id
-
     let that = this;
-    let url = Auth.url + "/api/user/" + Auth.getUser().id + "/anthropometric";
+    let url = Auth.url + "/api/measurements";
     let xhttp = new XMLHttpRequest();
 
     xhttp.open("POST", url);
     xhttp.setRequestHeader("Accept", "application/json");
     xhttp.setRequestHeader("Content-Type", "application/json");
-    xhttp.setRequestHeader("authorization", Auth.getUser().token);
+    xhttp.setRequestHeader("authorization", this.state.token);
 
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
+        that.showSnackbar("Messung erfolgreich angelegt");
+      } else if (this.status !== 200) {
+        that.showSnackbar("Fehler beim Anlegen der Messung", true);
       }
     };
 
@@ -73,7 +116,6 @@ export default class RemindedMeasurement extends Component {
       today.getDate();
 
     let data = `{
-			"userID": ${id},
 			"date_measured": "${date}",
 			"height": ${this.state.height},
 			"sitting_height": ${this.state.sittingHeight},
@@ -274,11 +316,22 @@ export default class RemindedMeasurement extends Component {
             >
               Anmelden
             </Button>
-            <Button raised onClick={this.sendData}>
+            <Button
+              raised
+              onClick={this.sendData}
+              disabled={this.state.disabled}
+            >
               Speichern
             </Button>
           </div>
         </Card>
+        <div id="mySnackbar">
+          <Snackbar
+            ref={(bar) => {
+              this.bar = bar;
+            }}
+          />
+        </div>
       </div>
     );
   }

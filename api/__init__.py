@@ -42,9 +42,11 @@ def initialize_database():
         db.session.commit()
 
     if db.session.query(AdminConfig).first() is None:
-        config = AdminConfig(days_reminder=90, registration_code=randrange(1000, 9999, 4))
+        config = AdminConfig(
+            days_reminder=90, registration_code=randrange(1000, 9999, 4))
         db.session.add(config)
         db.session.commit()
+
 
 """
    Custom responses
@@ -98,22 +100,28 @@ def reminder():
             if user.is_active:
                 # Check if the user has already received a reminder email
                 if user.date_last_measurement_reminder is not None:
-                    delta2 = (date.today() - user.date_last_measurement_reminder).days
+                    delta2 = (date.today() -
+                              user.date_last_measurement_reminder).days
                     if delta2 >= 7:
                         # Set date of reminder in user table
                         user.date_last_measurement_reminder = date.today()
                         user.save()
                         # Generate token and url for email reminder
                         token = user.get_jwt_token()
-                        url = "{}/measurement?token={}".format(os.environ['PREACT_APP_HOST_URI'], token)
+                        url = "{}/measurement?token={}".format(
+                            os.environ['PREACT_APP_HOST_URI'], token)
                         # Send email reminder to user
-                        send_email_with_token(user, 'Neue Messung eintragen', 'measurement_reminder.html', url)
+                        send_email_with_token(
+                            user, 'Neue Messung eintragen', 'measurement_reminder.html', url)
+                else:
+                    user.date_last_measurement_reminder = date.today()
+                    user.save()
+                    # Generate token and url for email reminder
+                    token = user.get_jwt_token()
+                    url = "{}/measurement?token={}".format(
+                        os.environ['PREACT_APP_HOST_URI'], token)
+                    # Send email reminder to user
+                    send_email_with_token(
+                        user, 'Neue Messung eintragen', 'measurement_reminder.html', url)
+
 # [END reminder]
-
-
-
-
-
-
-
-

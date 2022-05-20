@@ -2,7 +2,6 @@ import { h, Component } from "preact";
 import Button from "preact-material-components/Button";
 import "preact-material-components/Button/style.css";
 import style from "./style";
-import Navbar from "../../components/navbar/navbar";
 import TextField from "preact-material-components/TextField";
 import "preact-material-components/TextField/style.css";
 import Radio from "preact-material-components/Radio";
@@ -55,7 +54,7 @@ export default class Confirm extends Component {
     xhttp.setRequestHeader("authorization", this.state.token);
 
     xhttp.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 201) {
+      if (this.readyState === 4 && this.status === 201) {
         let response = JSON.parse(this.responseText);
 
         Auth.createUser(response);

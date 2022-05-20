@@ -63,6 +63,18 @@
 	font-size: var(--global-feedback-size);
 }
 
+#mySnackbar :global(.mdc-snackbar) {
+	width: var(--global-snackbar-width);
+	background-color: var(--global-snackbar-color);
+	box-shadow: var(--global-shadow);
+
+}
+
+:global(.mdc-snackbar__text) {
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
 /* 768+ */
 @media only screen and (min-width: 768px) {}
 
