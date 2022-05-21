@@ -150,12 +150,19 @@ button {
 	display: flex;
 }
 
+.checkAll {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
 .btnsData {
 	padding: 8px;
-	width: fit-content !important;
 	max-height: var(--global-table-cell-height);
 	height: var(--global-table-cell-height);
 	min-height: var(--global-table-cell-height);
+	display: flex;
+	justify-content: center;
 }
 
 .headerCell {
@@ -195,7 +202,6 @@ table {
 }
 
 .alignLeft {
-	overflow-x: auto;
 	text-align: left;
 	justify-content: flex-start;
 	padding: 8px;
@@ -205,7 +211,6 @@ table {
 }
 
 .alignRight {
-	overflow-x: auto;
 	text-align: right;
 	justify-content: flex-end;
 	padding: 8px;
@@ -220,10 +225,9 @@ td {
 	padding: 0;
 }
 
-th {
-	word-break: keep-all;
-}
-
+/* tbody {
+	border-bottom: 1px solid #C7C1C1;
+} */
 
 tr:hover {
 	background-color: #EEEEF1;
@@ -314,11 +318,6 @@ tr:hover {
 
 .subTableTitleContainer {
 	margin: 10px 0 0 0;
-}
-
-.checkAll {
-	width: fit-content;
-	margin-left: 47px;
 }
 
 .roundBtn {
@@ -535,11 +534,6 @@ tr:hover {
 /* 768- */
 @media only screen and (max-width: 768px) {
 
-	.pageNumberBtn  {
-		display: none;
-	}
-
-
 	.filterContentContainer {
 		width: 100%;
 		position: relative;
@@ -601,7 +595,9 @@ tr:hover {
 	}
 
 	.checkAll {
-		margin-left: 8px;
+		display: flex;
+		justify-content: flex-start;
+		padding-left: 7px;
 	}
 
 	.menuContainer {

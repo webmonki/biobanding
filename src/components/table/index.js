@@ -64,7 +64,7 @@ export default class Table extends Component {
       window.innerWidth || 0
     );
 
-    let index = Math.ceil(vw / 160);
+    let index = Math.ceil(vw / 140);
 
     if (index <= 4) {
       this.setState({ subTableIndex: 4 });
