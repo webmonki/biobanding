@@ -162,19 +162,50 @@ export default class App extends Component {
 
   // Opens snackbar with given text, if error true text will be red else green
   showSnackbar = (text, error) => {
-    let sbText = document.getElementsByClassName("mdc-snackbar__text");
+    let snackbar = document.getElementById("mySnackbar");
+    let snackbarText = document.getElementById("snackbar");
     let errorColor = "#B1262D";
     let successColor = "#3C9052";
-
     if (error) {
-      sbText[0].style.color = errorColor;
+      snackbarText.style.color = errorColor;
     } else {
-      sbText[0].style.color = successColor;
+      snackbarText.style.color = successColor;
     }
 
-    this.bar.MDComponent.show({
-      message: text,
-    });
+    snackbarText.innerHTML = text;
+    let id = 0;
+    let pos = -100;
+    let direction = "up";
+    let holdTimer = 0;
+    clearInterval(id);
+    id = setInterval(frame, 0.2);
+
+    function frame() {
+      if (direction === "up") {
+        pos++;
+      }
+
+      if (direction === "down") {
+        pos--;
+      }
+      snackbar.style.bottom = pos + "px";
+
+      if (pos === 0) {
+        direction = "hold";
+      }
+
+      if (direction === "hold") {
+        holdTimer++;
+      }
+
+      if (holdTimer === 300) {
+        direction = "down";
+      }
+
+      if (pos === -100) {
+        clearInterval(id);
+      }
+    }
   };
 
   getSnackbar(userLoggedIn) {
@@ -184,11 +215,7 @@ export default class App extends Component {
 
     return (
       <div id="mySnackbar">
-        <Snackbar
-          ref={(bar) => {
-            this.bar = bar;
-          }}
-        />
+        <div id="snackbar" />
       </div>
     );
   }
