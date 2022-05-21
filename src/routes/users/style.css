@@ -111,6 +111,12 @@
 
 /* 768- */
 @media only screen and (max-width: 768px) {
+
+	.card {
+		box-shadow: none;
+		margin: 0;
+	}
+
 	.page {
 		padding: 0;
 		margin-bottom: calc(43px + var(--global-header-height));
@@ -118,10 +124,9 @@
 	}
 
 	.pageHeader {
+		padding-left: 30px;
 		border: none;
 		color: rgba(0, 0, 0, 0.5);
-		margin: 0;
-		margin-left: 10%;
 	}
 }
 

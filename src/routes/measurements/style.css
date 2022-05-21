@@ -1,5 +1,6 @@
 
 .page {
+	position: relative !important;
 	position: static;
 	height: calc(100% - var(--global-header-height));
 	padding: var(--global-page-margin);
@@ -104,9 +105,9 @@
 
 .chip {
 	width: fit-content;
-	position: relative;
-	left: 80px;
-	top: 49px;
+	position: absolute;
+	left: 120px;
+	top: 103px;
 	z-index: 3;
 }
 
@@ -132,6 +133,16 @@
 
 /* 768- */
 @media only screen and (max-width: 768px) {
+
+	.chip {
+		top: 54px;
+		left: 78px;
+	}
+
+	.card {
+		box-shadow: none;
+	}
+
 	.page {
 		padding: 0;
 		margin-bottom: calc(43px + var(--global-header-height));
@@ -139,10 +150,9 @@
 	}
 
 	.pageHeader {
+		padding-left: 30px;
 		border: none;
 		color: rgba(0, 0, 0, 0.5);
-		margin: 0;
-		margin-left: 10%;
 	}
 }
 
