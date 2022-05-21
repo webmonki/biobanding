@@ -46,7 +46,7 @@ export default class Settings extends Component {
         if (this.status === 200) {
           try {
             // Set Values in state to display them in textfields
-            let response = JSON.parse(this.responseText);
+            let response = JSON.parse(this.responseText.encode());
             that.setState({ reminder: response.config.days_reminder });
             that.setState({ mailService: response.config.mail_server });
             that.setState({ mailPort: response.config.mail_port });
@@ -58,10 +58,10 @@ export default class Settings extends Component {
             // Snackbar MSG
             that.props.showSnackbar("Einstellungen erfolgreich geladen");
           } catch (err) {}
+        } else {
+          // Snackbar MSG
+          that.props.showSnackbar("Fehler beim Laden der Einstellungen", true);
         }
-      } else {
-        // Snackbar MSG
-        that.showSnackbar("Fehler beim Laden der Einstellungen", true);
       }
     };
 

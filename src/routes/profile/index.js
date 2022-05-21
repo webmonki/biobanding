@@ -8,6 +8,7 @@ import Radio from "preact-material-components/Radio";
 import Auth from "../../components/state";
 import "preact-material-components/List/style.css";
 import "preact-material-components/Radio/style.css";
+import { exitCode } from "process";
 
 export default class Profile extends Component {
   componentWillMount = () => {
@@ -94,7 +95,13 @@ export default class Profile extends Component {
 
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
-        let response = JSON.parse(this.responseText);
+        let response;
+
+        try {
+          response = JSON.parse(this.responseText);
+        } catch (err) {}
+
+        that.props.showSnackbar("Profil erfolgreich geladen");
 
         // Set vaues in states to display them in textfields
         that.setState({ firstname: response["player_details:"].first_name });
@@ -125,6 +132,10 @@ export default class Profile extends Component {
 
         that.handleRadioChange();
       } else {
+        if (this.status === 404) {
+          that.props.showSnackbar("Kein Profil gefunden", true);
+        }
+
         try {
           let response = JSON.parse(this.responseText);
           if (response.msg === "Token is invalid") {

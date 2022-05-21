@@ -170,7 +170,6 @@ export default class App extends Component {
     let errorColor = "#B1262D";
     let successColor = "#3C9052";
 
-    snackbarText.innerHTML = text;
     let id = 0;
     let pos = -100;
     let direction = "up";
@@ -178,6 +177,7 @@ export default class App extends Component {
     clearInterval(id);
 
     let topPosition = 0;
+
     if (window.innerWidth < 768) {
       topPosition = 50;
     }
@@ -185,13 +185,8 @@ export default class App extends Component {
       // DO NOTHING
     } else {
       this.setState({ animating: true });
-      id = setInterval(frame, 0.2);
-    }
 
-    if (error) {
-      snackbarText.style.color = errorColor;
-    } else {
-      snackbarText.style.color = successColor;
+      id = setInterval(frame, 0.2);
     }
 
     function frame() {
@@ -203,6 +198,13 @@ export default class App extends Component {
         pos--;
       }
       snackbar.style.bottom = pos + "px";
+      snackbarText.innerHTML = text;
+
+      if (error) {
+        snackbarText.style.color = errorColor;
+      } else {
+        snackbarText.style.color = successColor;
+      }
 
       if (pos === topPosition) {
         direction = "hold";
