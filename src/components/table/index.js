@@ -1014,7 +1014,9 @@ export default class Table extends Component {
             </i>
           </button>
 
-          {pageNumbers.map((pageNumber) => this.createBtn(pageNumber))}
+          {pageNumbers.map((pageNumber) => (
+            <div class={style.pageNumberBtn}>{this.createBtn(pageNumber)}</div>
+          ))}
 
           <button
             class={style.btn}

@@ -532,6 +532,11 @@ tr:hover {
 /* 768- */
 @media only screen and (max-width: 768px) {
 
+	.pageNumberBtn  {
+		display: none;
+	}
+
+
 	.filterContentContainer {
 		width: 100%;
 		position: relative;
