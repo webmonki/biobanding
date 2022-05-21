@@ -16,7 +16,6 @@ import Navbar from "./navbar/navbar";
 import ConfirmDialog from "./dialogs/confirmDialog";
 import { deleteAccount } from "./reguests/requests";
 import RemindedMeasurement from "../routes/remindedMeasure/remindedMeasure";
-import Snackbar from "preact-material-components/Snackbar";
 import "preact-material-components/Snackbar/style.css";
 
 // Routes that can be visited without login or registration
@@ -44,6 +43,9 @@ export default class App extends Component {
 
     // drawerOpen will be given to the navbar and determines if the text is shown
     this.setState({ drawerOpen: false });
+
+    // true if snackbar slide animation is running
+    this.setState({ animating: false });
   };
 
   // To prevent the User from visiting routes he has no authorization for
@@ -162,15 +164,11 @@ export default class App extends Component {
 
   // Opens snackbar with given text, if error true text will be red else green
   showSnackbar = (text, error) => {
+    let that = this;
     let snackbar = document.getElementById("mySnackbar");
     let snackbarText = document.getElementById("snackbar");
     let errorColor = "#B1262D";
     let successColor = "#3C9052";
-    if (error) {
-      snackbarText.style.color = errorColor;
-    } else {
-      snackbarText.style.color = successColor;
-    }
 
     snackbarText.innerHTML = text;
     let id = 0;
@@ -178,7 +176,23 @@ export default class App extends Component {
     let direction = "up";
     let holdTimer = 0;
     clearInterval(id);
-    id = setInterval(frame, 0.2);
+
+    let topPosition = 0;
+    if (window.innerWidth < 768) {
+      topPosition = 50;
+    }
+    if (this.state.animating) {
+      // DO NOTHING
+    } else {
+      this.setState({ animating: true });
+      id = setInterval(frame, 0.2);
+    }
+
+    if (error) {
+      snackbarText.style.color = errorColor;
+    } else {
+      snackbarText.style.color = successColor;
+    }
 
     function frame() {
       if (direction === "up") {
@@ -190,7 +204,7 @@ export default class App extends Component {
       }
       snackbar.style.bottom = pos + "px";
 
-      if (pos === 0) {
+      if (pos === topPosition) {
         direction = "hold";
       }
 
@@ -204,6 +218,7 @@ export default class App extends Component {
 
       if (pos === -100) {
         clearInterval(id);
+        that.setState({ animating: false });
       }
     }
   };

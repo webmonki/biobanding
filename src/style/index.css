@@ -172,9 +172,8 @@ html, body {
 		overflow-y: auto;
 	}
 
-
-	#mySnackbar :global(.mdc-snackbar) {
-		margin-bottom: 43px !important;
+	#snackbar {
+		width: 90%;
 	}
 
 	#logoContainer {
