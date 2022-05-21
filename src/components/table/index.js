@@ -64,10 +64,16 @@ export default class Table extends Component {
       window.innerWidth || 0
     );
 
+    let topCount = 4;
+
+    if (this.props.title === "Benutzer") {
+      topCount = 2;
+    }
+
     let index = Math.ceil(vw / 140);
 
-    if (index <= 4) {
-      this.setState({ subTableIndex: 4 });
+    if (index <= topCount) {
+      this.setState({ subTableIndex: topCount });
     } else {
       this.setState({ subTableIndex: index - 1 });
     }
