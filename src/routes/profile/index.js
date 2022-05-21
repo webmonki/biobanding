@@ -51,6 +51,9 @@ export default class Profile extends Component {
         Auth.setEmail(that.state.email);
         Auth.setUsername(that.state.username);
       } else {
+        if (this.status !== 200) {
+          this.props.showSnackbar("Fehler beim Ändern", true);
+        }
         try {
           let response = JSON.parse(this.responseText);
           if (response.msg === "Token is invalid") {
@@ -132,6 +135,9 @@ export default class Profile extends Component {
 
         that.handleRadioChange();
       } else {
+        if (this.status !== 200 && this.status !== 404) {
+          this.props.showSnackbar("Fehler beim Ändern", true);
+        }
         if (this.status === 404) {
           that.props.showSnackbar("Kein Profil gefunden", true);
         }
@@ -165,6 +171,9 @@ export default class Profile extends Component {
         that.props.showSnackbar("Spielerdetails erfolgreich angelegt");
       } else {
         try {
+          if (this.status !== 200) {
+            this.props.showSnackbar("Fehler beim Anlegen", true);
+          }
           let response = JSON.parse(this.responseText);
           if (response.msg === "Token is invalid") {
             Auth.logout();
