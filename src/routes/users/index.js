@@ -36,7 +36,12 @@ export default class Users extends Component {
       if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
         that.setState({ users: response["users:"] });
+
+        that.props.showSnackbar("Benutzer erfolgreich geladen");
       } else {
+        if (this.status !== 200) {
+          that.props.showSnackbar("Fehler beim Laden", true);
+        }
         try {
           let response = JSON.parse(this.responseText);
           if (response.msg === "Token is invalid") {
@@ -66,6 +71,10 @@ export default class Users extends Component {
         that.getData();
       } else {
         try {
+          if (this.status !== 200) {
+            that.props.showSnackbar("Fehler beim Löschen", true);
+          }
+
           let response = JSON.parse(this.responseText);
           if (response.msg === "Token is invalid") {
             Auth.logout();
@@ -127,6 +136,9 @@ export default class Users extends Component {
         // Snackbar MSG
         that.props.showSnackbar("Benutzer erfolgreich geändert");
       } else {
+        if (this.status !== 200) {
+          that.props.showSnackbar("Fehler beim Bearbeiten", true);
+        }
         try {
           let response = JSON.parse(this.responseText);
           if (response.msg === "Token is invalid") {
@@ -165,6 +177,9 @@ export default class Users extends Component {
         // close dialog
         that.newUserDialog.MDComponent.close();
       } else {
+        if (this.status !== 200) {
+          that.props.showSnackbar("Fehler beim Anlegen", true);
+        }
         try {
           let response = JSON.parse(this.responseText);
           if (response.msg === "Token is invalid") {

@@ -33,6 +33,7 @@ export default class Settings extends Component {
 
   // API Request to load settings
   getConfiguration = () => {
+    console.log("GET");
     let that = this;
     let url = Auth.url + "/api/configurations";
     let xhttp = new XMLHttpRequest();
@@ -46,7 +47,7 @@ export default class Settings extends Component {
         if (this.status === 200) {
           try {
             // Set Values in state to display them in textfields
-            let response = JSON.parse(this.responseText.encode());
+            let response = JSON.parse(this.responseText);
             that.setState({ reminder: response.config.days_reminder });
             that.setState({ mailService: response.config.mail_server });
             that.setState({ mailPort: response.config.mail_port });
@@ -56,8 +57,8 @@ export default class Settings extends Component {
             Auth.setRegisCode(response.config.registration_code);
 
             // Snackbar MSG
-            that.props.showSnackbar("Einstellungen erfolgreich geladen");
           } catch (err) {}
+          that.props.showSnackbar("Einstellungen erfolgreich geladen");
         } else {
           // Snackbar MSG
           that.props.showSnackbar("Fehler beim Laden der Einstellungen", true);
@@ -85,7 +86,6 @@ export default class Settings extends Component {
           // Snackbar MSG
           that.props.showSnackbar("Einstellungen erfolgreich geändert");
         } else {
-          let response = JSON.parse(this.responseText);
           // Snackbar MSG
           that.props.showSnackbar("Fehler beim Ändern", true);
         }
@@ -122,13 +122,13 @@ export default class Settings extends Component {
     xhttp.setRequestHeader("authorization", Auth.getUser().token);
 
     xhttp.onreadystatechange = function () {
-      if ([1, 2, 3, 4].includes(this.readyState)) {
+      if (this.readyState === 4) {
         if (this.status === 200) {
           // Snackbar MSG
           that.props.showSnackbar("E-Mail erfolgreich gesendet");
         } else {
           // Snackbar MSG
-          that.showSnackbar("Fehler beim Senden", true);
+          that.props.showSnackbar("Fehler beim Senden", true);
         }
       }
     };

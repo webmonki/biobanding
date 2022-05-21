@@ -121,6 +121,9 @@ export default class Measurements extends Component {
         that.setState({ userIds: idList });
         that.getDialog();
       } else {
+        if (this.status !== 200) {
+          that.props.showSnackbar("Fehler beim Laden der Benutzerdaten", true);
+        }
         try {
           let response = JSON.parse(this.responseText);
 
@@ -177,6 +180,9 @@ export default class Measurements extends Component {
         // rerender table
         that.showTable(true);
       } else {
+        if (this.status !== 200) {
+          that.props.showSnackbar("Fehler beim Bearbeiten", true);
+        }
         try {
           let response = JSON.parse(this.responseText);
           if (response.msg === "Token is invalid") {
@@ -229,8 +235,16 @@ export default class Measurements extends Component {
         that.setState({
           measurements: that.convertDate(response.measurements),
         });
+
+        that.props.showSnackbar("Messungen erfolgreich geladen");
         that.showTable(true);
       } else {
+        if (this.status !== 200) {
+          that.props.showSnackbar(
+            "Messungen konnten nicht geladen werden",
+            true
+          );
+        }
         try {
           let response = JSON.parse(this.responseText);
           if (response.msg === "Token is invalid") {
@@ -259,9 +273,18 @@ export default class Measurements extends Component {
         that.setState({
           measurements: that.convertDate(response.measurements),
         });
+
+        that.props.showSnackbar("Messungen erfolgreich geladen");
         that.showTable(true);
       } else {
         try {
+          if (this.status !== 200) {
+            that.props.showSnackbar(
+              "Messungen konnten nicht geladen werden",
+              true
+            );
+          }
+
           let response = JSON.parse(this.responseText);
           if (response.msg === "Token is invalid") {
             Auth.logout();
@@ -289,8 +312,17 @@ export default class Measurements extends Component {
         that.setState({
           measurements: that.convertDate(response["measurements:"]),
         });
+        that.props.showSnackbar("Messungen erfolgreich geladen");
+
         that.showTable(true);
       } else {
+        if (this.status !== 200) {
+          that.props.showSnackbar(
+            "Messungen konnten nicht geladen werden",
+            true
+          );
+        }
+
         try {
           let response = JSON.parse(this.responseText);
           if (response.msg === "Token is invalid") {
@@ -324,6 +356,9 @@ export default class Measurements extends Component {
         that.showTable(true);
       } else {
         try {
+          if (this.status !== 200) {
+            that.props.showSnackbar("Fehler beim Löschen", true);
+          }
           let response = JSON.parse(this.responseText);
           if (response.msg === "Token is invalid") {
             Auth.logout();
@@ -365,6 +400,9 @@ export default class Measurements extends Component {
         // Snackbar MSG
         that.props.showSnackbar("Messung erfolgreich angelegt");
       } else {
+        if (this.status !== 200) {
+          that.props.showSnackbar("Fehler beim Anlegen", true);
+        }
         try {
           let response = JSON.parse(this.responseText);
           if (response.msg === "Token is invalid") {
