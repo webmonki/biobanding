@@ -145,15 +145,13 @@ button {
 	overflow-y: auto;
 }
 
+.checkAll {
+	width: 100%;
+}
+
 
 .tdBtnsContainer {
 	display: flex;
-}
-
-.checkAll {
-	width: 100%;
-	display: flex;
-	justify-content: center;
 }
 
 .btnsData {
@@ -580,6 +578,8 @@ tr:hover {
 
 	.btnsData {
 		width: fit-content !important;
+		height: fit-content;
+		display: contents;
 	}
 
 
@@ -588,8 +588,6 @@ tr:hover {
 		display: none;
 		width: fit-content;
 		flex-direction: column;
-		max-height: 0;
-		transition: max-height 0.2s ease-out;
 		z-index: 10;
 
 	}
@@ -597,7 +595,6 @@ tr:hover {
 	.checkAll {
 		display: flex;
 		justify-content: flex-start;
-		padding-left: 7px;
 	}
 
 	.menuContainer {
