@@ -120,12 +120,14 @@ export default class Filter extends Component {
           autocomplete="off"
           outlined
           value={this.props.value}
+          step=".01"
           onInput={(e) => {
             this.props.updateFilter(
               this.props.id,
               undefined,
               undefined,
-              e.target.value
+              e.target.value,
+              10
             );
           }}
         />

@@ -200,11 +200,13 @@ export default class Table extends Component {
       return data;
     }
 
+    val = parseFloat(val, 10);
+
     if (type === "number") {
       data.forEach((obj) => {
         let match = false;
 
-        if (obj[cols[chosenIndex]] > parseInt(val, 10)) {
+        if (obj[cols[chosenIndex]] > val) {
           match = true;
         }
 
@@ -244,8 +246,9 @@ export default class Table extends Component {
     if (type === "number") {
       data.forEach((obj) => {
         let match = false;
+        val = parseFloat(val, 10);
 
-        if (obj[cols[chosenIndex]] < parseInt(val, 10)) {
+        if (obj[cols[chosenIndex]] < val) {
           match = true;
         }
 
@@ -284,7 +287,7 @@ export default class Table extends Component {
     }
 
     if (type === "number") {
-      val = parseInt(val, 10);
+      val = parseFloat(val, 10);
 
       data.forEach((obj) => {
         let match = false;
@@ -315,8 +318,6 @@ export default class Table extends Component {
       return newData;
     } else if (type === "object") {
       data.forEach((obj) => {
-        console.log("OBJ: ", obj[cols[chosenIndex]].toDateString());
-        console.log("VAL: ", val.toDateString());
         let match = false;
         if (obj[cols[chosenIndex]].toDateString() === val.toDateString()) {
           match = true;
