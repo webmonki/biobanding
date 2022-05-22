@@ -61,6 +61,10 @@ export default class Settings extends Component {
         } else {
           // Snackbar MSG
           that.props.showSnackbar("Fehler beim Laden der Einstellungen", true);
+          let response = JSON.parse(this.responseText);
+          if (response.msg === "Token is invalid") {
+            Auth.logout();
+          }
         }
       }
     };
@@ -87,6 +91,10 @@ export default class Settings extends Component {
         } else {
           // Snackbar MSG
           that.props.showSnackbar("Fehler beim Ändern", true);
+          let response = JSON.parse(this.responseText);
+          if (response.msg === "Token is invalid") {
+            Auth.logout();
+          }
         }
       }
     };
@@ -128,6 +136,10 @@ export default class Settings extends Component {
         } else {
           // Snackbar MSG
           that.props.showSnackbar("Fehler beim Senden", true);
+          let response = JSON.parse(this.responseText);
+          if (response.msg === "Token is invalid") {
+            Auth.logout();
+          }
         }
       }
     };
@@ -163,6 +175,10 @@ export default class Settings extends Component {
         } else {
           // Snackbar MSG
           that.props.showSnackbar("Code konnte nicht generiert werden", true);
+          let response = JSON.parse(this.responseText);
+          if (response.msg === "Token is invalid") {
+            Auth.logout();
+          }
         }
       }
     };
