@@ -33,7 +33,6 @@ export default class Settings extends Component {
 
   // API Request to load settings
   getConfiguration = () => {
-    console.log("GET");
     let that = this;
     let url = Auth.url + "/api/configurations";
     let xhttp = new XMLHttpRequest();

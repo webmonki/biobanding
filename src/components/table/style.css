@@ -285,7 +285,7 @@ tr:hover {
 }
 
 .tableContainer {
-	overflow-x: auto;
+	overflow: auto;
 }
 
 

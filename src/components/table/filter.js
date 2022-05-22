@@ -134,7 +134,7 @@ export default class Filter extends Component {
       let date;
       if (typeof this.props.value === "object") {
         let year = this.props.value.getFullYear();
-        let month = this.props.value.getMonth();
+        let month = this.props.value.getMonth() + 1;
         if (month < 10) {
           month = "0" + month;
         }
@@ -161,7 +161,7 @@ export default class Filter extends Component {
 
             if (parts.length === 3) {
               if (parts[0].length === 4 && parts[0][0] !== "0") {
-                let newDate = new Date(parts[0], parts[1], parts[2]);
+                let newDate = new Date(parts[0], parts[1] - 1, parts[2]);
 
                 this.props.updateFilter(
                   this.props.id,

@@ -315,6 +315,8 @@ export default class Table extends Component {
       return newData;
     } else if (type === "object") {
       data.forEach((obj) => {
+        console.log("OBJ: ", obj[cols[chosenIndex]].toDateString());
+        console.log("VAL: ", val.toDateString());
         let match = false;
         if (obj[cols[chosenIndex]].toDateString() === val.toDateString()) {
           match = true;

@@ -190,11 +190,11 @@ export default class Users extends Component {
     };
 
     let data = `{
-            "username": "${this.state.username}",
-            "email": "${this.state.email}",
-            "password": "${this.state.password}",
-			"registration_code": ${Auth.getRegisCode()},
-			"is_admin": ${this.state.admin}
+            "username": "${String(this.state.username)}",
+            "email": "${String(this.state.email)}",
+            "password": "${String(this.state.password)}",
+			"registration_code": ${String(Auth.getRegisCode())},
+			"is_admin": ${String(this.state.admin)}
         }`;
 
     xhttp.send(data);
