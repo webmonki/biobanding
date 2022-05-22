@@ -286,6 +286,7 @@ tr:hover {
 
 .tableContainer {
 	overflow: auto;
+	min-height: 200px;
 }
 
 
