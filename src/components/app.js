@@ -167,6 +167,7 @@ export default class App extends Component {
     let that = this;
     let snackbar = document.getElementById("mySnackbar");
     let snackbarText = document.getElementById("snackbar");
+    let snackbarIcon = document.getElementById("snackbarIcon");
     let errorColor = "#B1262D";
     let successColor = "#3C9052";
 
@@ -175,11 +176,22 @@ export default class App extends Component {
     let direction = "up";
     let holdTimer = 0;
     clearInterval(id);
+    let icon;
+    let iconClass;
 
-    let topPosition = 0;
+    if (error === true) {
+      console.log("ERROER");
+      icon = "clear";
+      iconClass = "material-icons falseIcon";
+    } else if (error === false || error === undefined) {
+      icon = "check";
+      iconClass = "material-icons trueIcon";
+    }
+
+    let topPosition = 10;
 
     if (window.innerWidth < 768) {
-      topPosition = 50;
+      topPosition = 110;
     }
     if (this.state.animating) {
       // DO NOTHING
@@ -199,6 +211,10 @@ export default class App extends Component {
       }
       snackbar.style.bottom = pos + "px";
       snackbarText.innerHTML = text;
+      console.log("ICON: ", icon);
+      snackbarIcon.innerHTML = icon;
+      console.log("CLASS: ", iconClass);
+      snackbarIcon.className = iconClass;
 
       if (error) {
         snackbarText.style.color = errorColor;
@@ -228,7 +244,10 @@ export default class App extends Component {
   getSnackbar() {
     return (
       <div id="mySnackbar">
-        <div id="snackbar" />
+        <div class="snackbarContent">
+          <i id="snackbarIcon" class={`${"material-icons"} ${"falseIcon"}`} />
+          <div id="snackbar"> </div>
+        </div>
       </div>
     );
   }
