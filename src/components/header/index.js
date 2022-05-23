@@ -159,7 +159,7 @@ export default class Header extends Component {
           userIds={idList}
           usernames={this.state.usernames}
           sendData={this.getDataFromDialog}
-          header="Messung erstellen"
+          header="Neue Messung erstellen"
           subHeader="Anthropometrische Daten"
         />
       );
@@ -170,7 +170,7 @@ export default class Header extends Component {
             this.newMeasurementsDialog = newMeasurementsDialog;
           }}
           sendData={this.getDataFromDialog}
-          header="Messung erstellen"
+          header="Neue Messung erstellen"
           subHeader="Anthropometrische Daten"
         />
       );
