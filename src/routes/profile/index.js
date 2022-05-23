@@ -8,7 +8,6 @@ import Radio from "preact-material-components/Radio";
 import Auth from "../../components/state";
 import "preact-material-components/List/style.css";
 import "preact-material-components/Radio/style.css";
-import { exitCode } from "process";
 
 export default class Profile extends Component {
   componentWillMount = () => {

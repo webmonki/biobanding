@@ -593,6 +593,7 @@ export default class Table extends Component {
                         class={`${this.getTableDataStyle(row, key)} ${
                           style.subTableCell
                         }`}
+                        id={id + key}
                       >
                         <i class={`${"material-icons"} ${style.trueIcon}`}>
                           check
@@ -607,6 +608,7 @@ export default class Table extends Component {
                         class={`${this.getTableDataStyle(row, key)} ${
                           style.subTableCell
                         }`}
+                        id={id + key}
                       >
                         <i class={`${"material-icons"} ${style.falseIcon}`}>
                           clear
@@ -620,6 +622,7 @@ export default class Table extends Component {
                       class={`${this.getTableDataStyle(row, key)} ${
                         style.subTableCell
                       }`}
+                      id={id + key}
                     >
                       {row[key]}
                     </td>
@@ -824,12 +827,14 @@ export default class Table extends Component {
   };
 
   // Table columns
-  renderTableContent = (key, row) => {
+  renderTableContent = (id, row) => {
     let cols = this.getRangeList(0, this.state.subTableIndex);
+
+    console.log(row, id);
     return (
-      <tr id={key + "mainRow"}>
+      <tr id={id + "mainRow"}>
         <td id={"tableData"} class={style.btnsData}>
-          {this.getTdBtnsContainer(key)}
+          {this.getTdBtnsContainer(id)}
         </td>
 
         {/* create cells */}
@@ -851,11 +856,15 @@ export default class Table extends Component {
             let year = date.getFullYear();
 
             let output = month + "-" + day + "-" + year;
-            return <td class={this.getTableDataStyle(row, key)}>{output}</td>;
+            return (
+              <td id={id + key} class={this.getTableDataStyle(row, key)}>
+                {output}
+              </td>
+            );
           }
           if (row[key] === true) {
             return (
-              <td class={this.getTableDataStyle(row, key)}>
+              <td id={id + key} class={this.getTableDataStyle(row, key)}>
                 <i class={`${"material-icons"} ${style.trueIcon}`}>check</i>
               </td>
             );
@@ -863,13 +872,17 @@ export default class Table extends Component {
 
           if (row[key] === false) {
             return (
-              <td class={this.getTableDataStyle(row, key)}>
+              <td id={id + key} class={this.getTableDataStyle(row, key)}>
                 <i class={`${"material-icons"} ${style.falseIcon}`}>clear</i>
               </td>
             );
           }
 
-          return <td class={this.getTableDataStyle(row, key)}>{row[key]}</td>;
+          return (
+            <td id={id + key} class={this.getTableDataStyle(row, key)}>
+              {row[key]}
+            </td>
+          );
         })}
       </tr>
     );
