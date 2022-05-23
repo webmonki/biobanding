@@ -302,7 +302,6 @@ export default class Settings extends Component {
               <Formfield>
                 <Checkbox
                   name="serverCheck"
-                  class={style.fullWidth}
                   checked={this.state.ssl}
                   onChange={() => {
                     this.checkServer();
