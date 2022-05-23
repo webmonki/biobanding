@@ -18,12 +18,18 @@ export default class Menu extends Component {
   };
 
   componentDidMount = () => {
+    this.closeFilterContainer();
+  };
+
+  componentWillUnmount = () => {
     window.removeEventListener("click", this.handleOutsideClick);
   };
 
   handleOutsideClick = (event) => {
-    let container = document.getElementById("filterContainer");
-    let btn = document.getElementById("openFilterBtn");
+    let container = document.getElementById(
+      this.props.title + "filterContainer"
+    );
+    let btn = document.getElementById(this.props.title + "openFilterBtn");
     if (container.contains(event.target) || btn.contains(event.target)) {
     } else {
       this.collapseFilterContainer();
@@ -46,10 +52,22 @@ export default class Menu extends Component {
     return msg;
   };
 
+  closeFilterContainer = () => {
+    let coll = document.getElementById(this.props.title + "filterContainer");
+    let addContainer = document.getElementById(
+      this.props.title + "addFilterContainer"
+    );
+
+    coll.style.maxHeight = null;
+    addContainer.style.display = "none";
+  };
+
   // Collapse filter Container
   collapseFilterContainer = () => {
-    let coll = document.getElementById("filterContainer");
-    let addContainer = document.getElementById("addFilterContainer");
+    let coll = document.getElementById(this.props.title + "filterContainer");
+    let addContainer = document.getElementById(
+      this.props.title + "addFilterContainer"
+    );
 
     if (coll.style.maxHeight === "fit-content") {
       coll.style.maxHeight = null;
@@ -66,8 +84,14 @@ export default class Menu extends Component {
     let filterList = this.props.filters;
 
     let content = (
-      <div id={"filterContainer"} class={style.filterContainer}>
-        <div id="addFilterContainer" class={style.addFilterContainer}>
+      <div
+        id={this.props.title + "filterContainer"}
+        class={style.filterContainer}
+      >
+        <div
+          id={this.props.title + "addFilterContainer"}
+          class={style.addFilterContainer}
+        >
           {/* Add Filter Button */}
           <button class={style.menuBtn} onClick={this.props.addFilter}>
             <i
@@ -116,7 +140,7 @@ export default class Menu extends Component {
     if (this.props.cols.length > 0) {
       return (
         <button
-          id={"openFilterBtn"}
+          id={this.props.title + "openFilterBtn"}
           class={style.invertBtn}
           onClick={() => {
             this.collapseFilterContainer();
