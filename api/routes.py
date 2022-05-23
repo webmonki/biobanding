@@ -93,9 +93,9 @@ player_model = rest_api.model('PlayerModel', {"userID": fields.Integer(required=
 anthropometric_data_model = rest_api.model('AnthropometricDataModel', {
     "userID": fields.Integer(required=True, min=0),
     "date_measured": fields.Date(required=True),
-    "height": fields.Integer(required=True, min=0, max=300),
-    "sitting_height": fields.Integer(required=True, min=0, max=300),
-    "body_span": fields.Integer(required=True, min=0, max=300),
+    "height": fields.Float(required=True, min=0, max=300),
+    "sitting_height": fields.Float(required=True, min=0, max=300),
+    "body_span": fields.Float(required=True, min=0, max=300),
     "weight": fields.Float(required=True, min=0, max=300)
 }
 )
@@ -103,8 +103,8 @@ anthropometric_data_model = rest_api.model('AnthropometricDataModel', {
 anthropometric_data_edit_model = rest_api.model('AnthropometricDataEditModel', {
     "date_measured": fields.Date(required=True),
     "height": fields.Integer(required=True, min=0, max=300),
-    "sitting_height": fields.Integer(required=True, min=0, max=300),
-    "body_span": fields.Integer(required=True, min=0, max=300),
+    "sitting_height": fields.Float(required=True, min=0, max=300),
+    "body_span": fields.Float(required=True, min=0, max=300),
     "weight": fields.Float(required=True, min=0, max=300)
 })
 
