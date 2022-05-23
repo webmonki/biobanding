@@ -384,10 +384,9 @@ tr:hover {
 .filterContainer {
 	background-color: white;
 	max-height: 0;
-	width: 600px;
+	width: 50vw;
 	top: 50px;
 	position: absolute;
-	overflow-x: hidden;
 	transition: max-height 0.2s ease-out;
 	display: flex;
 	flex-direction: column;
@@ -396,21 +395,58 @@ tr:hover {
 }
 
 .addFilterContainer {
+	width: 100%;
+	position: relative;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-	display: flex;
+	display: none;
 	justify-content: center;
 	align-items: center;
 }
 
 .filterListContainer {
+	position: relative;
 	overflow-y: auto;
 	overflow-x: hidden;
 	max-height: 200px;
+}
 
-	width: 100%;
+.operatorContainer {
+	width: 15vw;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.filterInput {
+	position: relative;
+	width: 15vw;
+}
+
+.filterDatePicker {
+	position: relative;
+	height: 50px;
+	width: 15vw;
+}
+
+.filterSelect {
+	position: relative;
+	height: 55px;
+	width: 15vw;
+	border: 1px solid #C7C1C1;
+	border-radius: 5px;
+	background-color: white;
+	outline: none;
+	font-size: 15px;
+}
+
+.filterInput::before {
+	width: 100% !important;
 }
 
 .filter {
+	position: relative;
+	width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: space-evenly;
@@ -447,27 +483,7 @@ tr:hover {
 	background-color: rgba(0, 0, 0, 0.10);
 }
 
-.operatorContainer {
-	width: 100px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
 
-.filterDatePicker {
-	width: 233px;
-	height: 50px;
-}
-
-.filterSelect {
-	height: 55px;
-	width: 210px;
-	border: 1px solid #C7C1C1;
-	border-radius: 5px;
-	background-color: white;
-	outline: none;
-	font-size: 15px;
-}
 
 .invertIcon {
 	font-size: 20px;

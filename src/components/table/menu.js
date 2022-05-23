@@ -49,12 +49,15 @@ export default class Menu extends Component {
   // Collapse filter Container
   collapseFilterContainer = () => {
     let coll = document.getElementById("filterContainer");
+    let addContainer = document.getElementById("addFilterContainer");
 
     if (coll.style.maxHeight === "fit-content") {
       coll.style.maxHeight = null;
+      addContainer.style.display = "none";
       window.removeEventListener("click", this.handleOutsideClick);
     } else {
       coll.style.maxHeight = "fit-content";
+      addContainer.style.display = "flex";
       window.addEventListener("click", this.handleOutsideClick);
     }
   };
@@ -64,7 +67,7 @@ export default class Menu extends Component {
 
     let content = (
       <div id={"filterContainer"} class={style.filterContainer}>
-        <div class={style.addFilterContainer}>
+        <div id="addFilterContainer" class={style.addFilterContainer}>
           {/* Add Filter Button */}
           <button class={style.menuBtn} onClick={this.props.addFilter}>
             <i

@@ -100,6 +100,7 @@ export default class Filter extends Component {
     if (type === "string") {
       return (
         <TextField
+          class={style.filterInput}
           type="text"
           autocomplete="off"
           outlined
@@ -117,6 +118,7 @@ export default class Filter extends Component {
     } else if (type === "number") {
       return (
         <TextField
+          class={style.filterInput}
           type="number"
           autocomplete="off"
           outlined
