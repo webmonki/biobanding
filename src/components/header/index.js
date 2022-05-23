@@ -64,15 +64,20 @@ export default class Header extends Component {
 
         // creates the dialog to create a measurement
         that.getDialog(idList);
-      } else {
+      } 
+      if (this.status !== 200) {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg == "Token is invalid") {
+
+          // if token expired log out
+          if (response.msg === "Token is invalid" || "Token expired.") {
+            that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
+          } else {
+            that.props.showSnackbar("Fehler beim Laden", true);
           }
         } catch (err) {}
       }
-    };
     xhttp.send();
   };
 
@@ -114,13 +119,18 @@ export default class Header extends Component {
 
         // Tells measurement view to reload its data
         that.props.setReload();
-      } else {
+      }
+
+      if (this.status !== 200) {
         try {
           let response = JSON.parse(this.responseText);
 
           // if token expired log out
-          if (response.msg === "Token is invalid") {
+          if (response.msg === "Token is invalid" || "Token expired.") {
+            that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
+          } else {
+            that.props.showSnackbar("Fehler beim Anlegen", true);
           }
         } catch (err) {}
       }
