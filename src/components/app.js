@@ -190,7 +190,7 @@ export default class App extends Component {
     let topPosition = 10;
 
     if (window.innerWidth < 768) {
-      topPosition = 110;
+      topPosition = 60;
     }
     if (this.state.animating) {
       // DO NOTHING
