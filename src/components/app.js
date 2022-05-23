@@ -180,7 +180,6 @@ export default class App extends Component {
     let iconClass;
 
     if (error === true) {
-      console.log("ERROER");
       icon = "clear";
       iconClass = "material-icons falseIcon";
     } else if (error === false || error === undefined) {
@@ -211,9 +210,7 @@ export default class App extends Component {
       }
       snackbar.style.bottom = pos + "px";
       snackbarText.innerHTML = text;
-      console.log("ICON: ", icon);
       snackbarIcon.innerHTML = icon;
-      console.log("CLASS: ", iconClass);
       snackbarIcon.className = iconClass;
 
       if (error) {
@@ -246,7 +243,7 @@ export default class App extends Component {
       <div id="mySnackbar">
         <div class="snackbarContent">
           <i id="snackbarIcon" class={`${"material-icons"} ${"falseIcon"}`} />
-          <div id="snackbar"> </div>
+          <div id="snackbar" />
         </div>
       </div>
     );
