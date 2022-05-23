@@ -71,23 +71,6 @@ export default class RemindedMeasurement extends Component {
     }
   };
 
-  // Opens snackbar with given text, if error true text will be red else green
-  showSnackbar = (text, error) => {
-    let sbText = document.getElementsByClassName("mdc-snackbar__text");
-    let errorColor = "#B1262D";
-    let successColor = "#3C9052";
-
-    if (error) {
-      sbText[0].style.color = errorColor;
-    } else {
-      sbText[0].style.color = successColor;
-    }
-
-    this.bar.MDComponent.show({
-      message: text,
-    });
-  };
-
   sendData = () => {
     let that = this;
     let url = Auth.url + "/api/measurements/reminder";
@@ -100,9 +83,10 @@ export default class RemindedMeasurement extends Component {
 
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
-        that.showSnackbar("Messung erfolgreich angelegt");
+        that.props.showSnackbar("Messung erfolgreich angelegt");
+        route("/login", true);
       } else if (this.status !== 200) {
-        that.showSnackbar("Fehler beim Anlegen der Messung", true);
+        that.props.showSnackbar("Fehler beim Anlegen der Messung", true);
       }
     };
 
@@ -329,13 +313,6 @@ export default class RemindedMeasurement extends Component {
             </Button>
           </div>
         </Card>
-        <div id="mySnackbar">
-          <Snackbar
-            ref={(bar) => {
-              this.bar = bar;
-            }}
-          />
-        </div>
       </div>
     );
   }

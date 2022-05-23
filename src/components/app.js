@@ -225,11 +225,7 @@ export default class App extends Component {
     }
   };
 
-  getSnackbar(userLoggedIn) {
-    if (userLoggedIn === undefined || userLoggedIn === false) {
-      return undefined;
-    }
-
+  getSnackbar() {
     return (
       <div id="mySnackbar">
         <div id="snackbar" />
@@ -307,11 +303,14 @@ export default class App extends Component {
             <Settings path="/settings" showSnackbar={this.showSnackbar} />
             <Confirm path="/confirm" showSnackbar={this.showSnackbar} />
             <NotFound default />
-            <RemindedMeasurement path="/measurement" />
+            <RemindedMeasurement
+              path="/measurement"
+              showSnackbar={this.showSnackbar}
+            />
           </Router>
           {this.getLogo(this.state.userLoggedIn)}
         </div>
-        {this.getSnackbar(this.state.userLoggedIn)}
+        {this.getSnackbar()}
       </div>
     );
   }

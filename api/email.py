@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 import time
 from threading import Thread
 from email.mime.text import MIMEText
@@ -67,6 +69,8 @@ def send_email_with_token(user, subject, template, url):
 # [END send_email_password_reset]
 
 # [BEGIN send_email]
+
+
 def send_email(to_mail, content, subject):
 
     try:
@@ -87,12 +91,3 @@ def send_email(to_mail, content, subject):
 
     Thread(target=send_async_email, args=(to_email, config, msg)).start()
 # [END send_email]
-
-
-
-
-
-
-
-
-
