@@ -808,16 +808,7 @@ export default class Table extends Component {
           </button>
 
           {/* CheckBox */}
-          <Formfield>
-            <Checkbox
-              name="deleteCheck"
-              value={key}
-              checked={this.getCheckState(key)}
-              onChange={(e) => {
-                this.addToCheckList(key);
-              }}
-            />
-          </Formfield>
+          {this.getDeleteCheckboxForRow(key)}
           {this.getCollapseBtn(key)}
         </div>
       );
