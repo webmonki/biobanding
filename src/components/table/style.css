@@ -237,6 +237,18 @@ tr:hover {
 	margin-left: 50px;
 }
 
+.pageCount {
+	color: var(--mdc-theme-primary);
+	width: 40px!important;
+	height: var(--global-table-page-container-size);
+	border: none;
+	padding: 5px 0 5px 0;
+	background: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .btn {
 	color: var(--mdc-theme-primary);
 	width: var(--global-table-page-container-size) !important;

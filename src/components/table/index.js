@@ -1049,7 +1049,7 @@ export default class Table extends Component {
               chevron_left
             </i>
           </button>
-          <div class={style.btn} disabled>
+          <div class={style.pageCount} disabled>
             {this.createPageCounter()}
           </div>
 
