@@ -90,7 +90,7 @@ export default class RemindedMeasurement extends Component {
 
   sendData = () => {
     let that = this;
-    let url = Auth.url + "/api/measurements";
+    let url = Auth.url + "/api/measurements/reminder";
     let xhttp = new XMLHttpRequest();
 
     xhttp.open("POST", url);
