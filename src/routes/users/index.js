@@ -38,14 +38,19 @@ export default class Users extends Component {
         that.setState({ users: response["users:"] });
 
         that.props.showSnackbar("Benutzer erfolgreich geladen");
-      } else {
-        if (this.status !== 200) {
-          that.props.showSnackbar("Fehler beim Laden", true);
-        }
+      }
+
+      if (this.status !== 200) {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
+          } else {
+            that.props.showSnackbar("Fehler beim Laden", true);
           }
         } catch (err) {}
       }
@@ -69,15 +74,18 @@ export default class Users extends Component {
         that.props.showSnackbar("Benutzer erfolgreich gelöscht");
 
         that.getData();
-      } else {
+      }
+      if (this.status !== 200) {
         try {
-          if (this.status !== 200) {
-            that.props.showSnackbar("Fehler beim Löschen", true);
-          }
-
           let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
+          } else {
+            that.props.showSnackbar("Fehler beim Löschen", true);
           }
         } catch (err) {}
       }
@@ -135,14 +143,18 @@ export default class Users extends Component {
 
         // Snackbar MSG
         that.props.showSnackbar("Benutzer erfolgreich geändert");
-      } else {
-        if (this.status !== 200) {
-          that.props.showSnackbar("Fehler beim Bearbeiten", true);
-        }
+      }
+      if (this.status !== 200) {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
+          } else {
+            that.props.showSnackbar("Fehler beim Bearbeiten", true);
           }
         } catch (err) {}
       }
@@ -176,14 +188,18 @@ export default class Users extends Component {
 
         // close dialog
         that.newUserDialog.MDComponent.close();
-      } else {
-        if (this.status !== 200) {
-          that.props.showSnackbar("Fehler beim Anlegen", true);
-        }
+      }
+      if (this.status !== 200) {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
+          } else {
+            that.props.showSnackbar("Fehler beim Anlegen", true);
           }
         } catch (err) {}
       }

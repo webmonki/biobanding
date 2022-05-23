@@ -120,15 +120,23 @@ export default class Measurements extends Component {
         // Will be used in sendMeasurement
         that.setState({ userIds: idList });
         that.getDialog();
-      } else {
-        if (this.status !== 200) {
-          that.props.showSnackbar("Fehler beim Laden der Benutzerdaten", true);
-        }
+      }
+      if (this.status !== 200) {
         try {
           let response = JSON.parse(this.responseText);
 
-          if (response.msg === "Token is invalid") {
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            that.props.showSnackbar("Sitzung abgelaufen", true);
+
             Auth.logout();
+          } else {
+            that.props.showSnackbar(
+              "Fehler beim Laden der Benutzerdaten",
+              true
+            );
           }
         } catch (err) {}
       }
@@ -179,14 +187,19 @@ export default class Measurements extends Component {
 
         // rerender table
         that.showTable(true);
-      } else {
-        if (this.status !== 200) {
-          that.props.showSnackbar("Fehler beim Bearbeiten", true);
-        }
+      }
+      if (this.status !== 200) {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
+
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
+          } else {
+            that.props.showSnackbar("Fehler beim Ändern", true);
           }
         } catch (err) {}
       }
@@ -238,17 +251,23 @@ export default class Measurements extends Component {
 
         that.props.showSnackbar("Messungen erfolgreich geladen");
         that.showTable(true);
-      } else {
-        if (this.status !== 200) {
-          that.props.showSnackbar(
-            "Messungen konnten nicht geladen werden",
-            true
-          );
-        }
+      }
+      if (this.status !== 200) {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
+
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            that.props.showSnackbar("Sitzung abgelaufen", true);
+
             Auth.logout();
+          } else {
+            that.props.showSnackbar(
+              "Messungen konnten nicht geladen werden",
+              true
+            );
           }
         } catch (err) {}
       }
@@ -276,18 +295,23 @@ export default class Measurements extends Component {
 
         that.props.showSnackbar("Messungen erfolgreich geladen");
         that.showTable(true);
-      } else {
+      }
+      if (this.status !== 200) {
         try {
-          if (this.status !== 200) {
+          let response = JSON.parse(this.responseText);
+
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            that.props.showSnackbar("Sitzung abgelaufen", true);
+
+            Auth.logout();
+          } else {
             that.props.showSnackbar(
               "Messungen konnten nicht geladen werden",
               true
             );
-          }
-
-          let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
-            Auth.logout();
           }
         } catch (err) {}
       }
@@ -315,18 +339,23 @@ export default class Measurements extends Component {
         that.props.showSnackbar("Messungen erfolgreich geladen");
 
         that.showTable(true);
-      } else {
-        if (this.status !== 200) {
-          that.props.showSnackbar(
-            "Messungen konnten nicht geladen werden",
-            true
-          );
-        }
-
+      }
+      if (this.status !== 200) {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
+
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            that.props.showSnackbar("Sitzung abgelaufen", true);
+
             Auth.logout();
+          } else {
+            that.props.showSnackbar(
+              "Messungen konnten nicht geladen werden",
+              true
+            );
           }
         } catch (err) {}
       }
@@ -354,14 +383,20 @@ export default class Measurements extends Component {
 
         // rerender table
         that.showTable(true);
-      } else {
+      }
+      if (this.status !== 200) {
         try {
-          if (this.status !== 200) {
-            that.props.showSnackbar("Fehler beim Löschen", true);
-          }
           let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
+
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            that.props.showSnackbar("Sitzung abgelaufen", true);
+
             Auth.logout();
+          } else {
+            that.props.showSnackbar("Fehler beim Löschen", true);
           }
         } catch (err) {}
       }
@@ -399,14 +434,19 @@ export default class Measurements extends Component {
 
         // Snackbar MSG
         that.props.showSnackbar("Messung erfolgreich angelegt");
-      } else {
-        if (this.status !== 200) {
-          that.props.showSnackbar("Fehler beim Anlegen", true);
-        }
+      }
+      if (this.status !== 200) {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
+
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
+          } else {
+            that.props.showSnackbar("Fehler beim Anlegen", true);
           }
         } catch (err) {}
       }

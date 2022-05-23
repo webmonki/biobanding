@@ -49,14 +49,18 @@ export default class Profile extends Component {
         // Email und Username in Auth setzen
         Auth.setEmail(that.state.email);
         Auth.setUsername(that.state.username);
-      } else {
-        if (this.status !== 200) {
-          this.props.showSnackbar("Fehler beim Ändern", true);
-        }
+      }
+      if (this.status !== 200) {
         try {
           let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            that.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
+          } else {
+            this.props.showSnackbar("Fehler beim Ändern", true);
           }
         } catch (err) {}
       }
@@ -135,18 +139,21 @@ export default class Profile extends Component {
         that.handleRadioChange();
       } else {
         if (this.status !== 200 && this.status !== 404) {
-          this.props.showSnackbar("Fehler beim Ändern", true);
+          try {
+            let response = JSON.parse(this.responseText);
+            if (
+              response.msg === "Token is invalid" ||
+              response.msg === "Token expired."
+            ) {
+              Auth.logout();
+            } else {
+              this.props.showSnackbar("Fehler beim Ändern", true);
+            }
+          } catch (err) {}
         }
         if (this.status === 404) {
           that.props.showSnackbar("Kein Profil gefunden", true);
         }
-
-        try {
-          let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
-            Auth.logout();
-          }
-        } catch (err) {}
       }
     };
 
@@ -168,14 +175,18 @@ export default class Profile extends Component {
       if (this.readyState === 4 && this.status === 200) {
         // Snackbar MSG
         that.props.showSnackbar("Spielerdetails erfolgreich angelegt");
-      } else {
+      }
+      if (this.status !== 200) {
         try {
-          if (this.status !== 200) {
-            this.props.showSnackbar("Fehler beim Anlegen", true);
-          }
           let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            that.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
+          } else {
+            this.props.showSnackbar("Fehler beim Anlegen", true);
           }
         } catch (err) {}
       }

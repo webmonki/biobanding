@@ -54,16 +54,26 @@ export default class Settings extends Component {
             that.setState({ mailUsername: response.config.mail_username });
             that.setState({ regisCode: response.config.registration_code });
             Auth.setRegisCode(response.config.registration_code);
-
-            // Snackbar MSG
           } catch (err) {}
+          // Snackbar MSG
+
           that.props.showSnackbar("Einstellungen erfolgreich geladen");
         } else {
-          // Snackbar MSG
-          that.props.showSnackbar("Fehler beim Laden der Einstellungen", true);
           let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            // Snackbar MSG
+            that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
+          } else {
+            that.props.showSnackbar(
+              // Snackbar MSG
+
+              "Fehler beim Laden der Einstellungen",
+              true
+            );
           }
         }
       }
@@ -89,11 +99,19 @@ export default class Settings extends Component {
           // Snackbar MSG
           that.props.showSnackbar("Einstellungen erfolgreich geändert");
         } else {
-          // Snackbar MSG
-          that.props.showSnackbar("Fehler beim Ändern", true);
           let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            // Snackbar MSG
+
+            that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
+          } else {
+            // Snackbar MSG
+
+            that.props.showSnackbar("Fehler beim Ändern", true);
           }
         }
       }
@@ -134,11 +152,16 @@ export default class Settings extends Component {
           // Snackbar MSG
           that.props.showSnackbar("E-Mail erfolgreich gesendet");
         } else {
-          // Snackbar MSG
-          that.props.showSnackbar("Fehler beim Senden", true);
           let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
+          } else {
+            // Snackbar MSG
+            that.props.showSnackbar("Fehler beim Senden", true);
           }
         }
       }
@@ -173,11 +196,17 @@ export default class Settings extends Component {
           // Snackbar MSG
           that.props.showSnackbar("Code erfolgreich generiert");
         } else {
-          // Snackbar MSG
-          that.props.showSnackbar("Code konnte nicht generiert werden", true);
           let response = JSON.parse(this.responseText);
-          if (response.msg === "Token is invalid") {
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
+            that.props.showSnackbar("Sitzung abgelaufen", true);
+
             Auth.logout();
+          } else {
+            // Snackbar MSG
+            that.props.showSnackbar("Code konnte nicht generiert werden", true);
           }
         }
       }
