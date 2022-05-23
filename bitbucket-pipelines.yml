@@ -8,8 +8,8 @@ pipelines:
         caches:
           - pip
         script:
+          - apt-get update
           - pip install --upgrade pip
           - apt-get -y install libpq-dev python3-dev gcc
           - pip install -r requirements.txt
-          - apt-get update
           - pytest -v --junitxml=test-results/report.xml -s
