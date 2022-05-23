@@ -30,7 +30,12 @@ export default class Filter extends Component {
     if (type === "boolean") {
       if (this.state.operator !== 0) {
         this.setState({ operator: 0 });
-        this.props.updateFilter(this.props.id, undefined, undefined, false);
+        this.props.updateFilter(
+          this.props.id,
+          this.props.chosenIndex,
+          0,
+          false
+        );
       }
 
       return <button class={style.operatorBtn}>=</button>;
@@ -232,6 +237,18 @@ export default class Filter extends Component {
       outlined
       selectedIndex={this.props.chosenIndex}
       onChange={(e) => {
+        if (
+          typeof this.props.data[0][this.props.cols[e.target.selectedIndex]] ===
+          "boolean"
+        ) {
+          this.props.updateFilter(
+            this.props.id,
+            e.target.selectedIndex,
+            0,
+            true
+          );
+        }
+
         this.props.updateFilter(
           this.props.id,
           e.target.selectedIndex,
