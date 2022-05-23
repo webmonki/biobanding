@@ -144,6 +144,7 @@ export default class RemindedMeasurement extends Component {
                   class={style.fullWidth}
                   min={90}
                   max={300}
+                  step=".5"
                   label="Größe"
                   value={this.state.height}
                   onKeyUp={(e) => {
@@ -184,6 +185,7 @@ export default class RemindedMeasurement extends Component {
                   class={style.fullWidth}
                   min={0}
                   max={300}
+                  step=".5"
                   label="Größe im Sitzen"
                   value={this.state.sittingHeight}
                   onKeyUp={(e) => {
@@ -233,6 +235,7 @@ export default class RemindedMeasurement extends Component {
                   class={style.fullWidth}
                   min={60}
                   max={300}
+                  step=".5"
                   label="Arm Spannweite"
                   value={this.state.span}
                   onKeyUp={(e) => {
@@ -277,6 +280,7 @@ export default class RemindedMeasurement extends Component {
                   class={style.fullWidth}
                   min={0}
                   max={300}
+                  step=".5"
                   label="Gewicht"
                   value={this.state.weight}
                   onKeyUp={(e) => {

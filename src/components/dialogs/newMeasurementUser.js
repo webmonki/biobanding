@@ -115,6 +115,7 @@ export default class NewMeasurementUser extends Component {
                   class={style.fullWidth}
                   min={90}
                   max={300}
+                  step=".5"
                   label="Größe"
                   value={this.getFormValue("height")}
                   onKeyUp={(e) => {
@@ -154,6 +155,7 @@ export default class NewMeasurementUser extends Component {
                   class={style.fullWidth}
                   min={0}
                   max={300}
+                  step=".5"
                   label="Größe im Sitzen"
                   value={this.getFormValue("sittingHeight")}
                   onKeyUp={(e) => {
@@ -201,6 +203,7 @@ export default class NewMeasurementUser extends Component {
                   class={style.fullWidth}
                   min={60}
                   max={300}
+                  step=".5"
                   label="Arm Spannweite"
                   value={this.getFormValue("span")}
                   onKeyUp={(e) => {
@@ -243,6 +246,7 @@ export default class NewMeasurementUser extends Component {
                   class={style.fullWidth}
                   min={0}
                   max={300}
+                  step=".5"
                   label="Gewicht"
                   value={this.getFormValue("weight")}
                   onKeyUp={(e) => {
