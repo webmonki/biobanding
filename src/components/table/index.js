@@ -1005,6 +1005,14 @@ export default class Table extends Component {
     return currentPage === totalPage;
   };
 
+  lastPage = () => {
+    this.setState({ page: this.getPageCount() });
+  };
+
+  firstPage = () => {
+    this.setState({ page: 1 });
+  };
+
   // create pagination
   createTablePagination = () => {
     if (this.state.data !== undefined && this.state.data.length !== 0) {
@@ -1016,9 +1024,18 @@ export default class Table extends Component {
 
       let pagination = (
         <div class={style.paginationBar}>
-          <div class={style.btn} disabled>
-            {this.createPageCounter()}
-          </div>
+          <button
+            class={`${"material-icons"} ${style.btn}`}
+            onClick={this.firstPage}
+            disabled={this.disableBackBtn()}
+          >
+            <i
+              class={`${"material-icons"} ${style.btnIcon}`}
+              aria-hidden="true"
+            >
+              first_page
+            </i>
+          </button>
 
           <button
             class={style.btn}
@@ -1032,10 +1049,14 @@ export default class Table extends Component {
               chevron_left
             </i>
           </button>
+          <div class={style.btn} disabled>
+            {this.createPageCounter()}
+          </div>
 
+          {/* 
           {pageNumbers.map((pageNumber) => (
             <div class={style.pageNumberBtn}>{this.createBtn(pageNumber)}</div>
-          ))}
+          ))} */}
 
           <button
             class={style.btn}
@@ -1047,6 +1068,19 @@ export default class Table extends Component {
               aria-hidden="true"
             >
               chevron_right
+            </i>
+          </button>
+
+          <button
+            class={`${"material-icons"} ${style.btn}`}
+            onClick={this.lastPage}
+            disabled={this.disableForwardBtn()}
+          >
+            <i
+              class={`${"material-icons"} ${style.btnIcon}`}
+              aria-hidden="true"
+            >
+              last_page
             </i>
           </button>
         </div>
