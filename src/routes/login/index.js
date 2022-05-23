@@ -107,12 +107,10 @@ export default class Login extends Component {
       if (this.readyState === 4) {
         if (this.status === 200) {
           try {
-            let response = JSON.parse(this.responseText);
-            console.log("RES: ", response);
+            that.props.showSnackbar("E-Mail erfolgreich gesendet");
           } catch (err) {}
         } else {
-          let response = JSON.parse(this.responseText);
-          console.log("RESFAIL: ", response);
+          that.props.showSnackbar("Fehler beim Senden der E-Mail", true);
         }
       }
     };

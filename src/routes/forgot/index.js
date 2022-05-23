@@ -57,8 +57,9 @@ export default class Forgot extends Component {
     xhttp.setRequestHeader("Content-Type", "application/json");
 
     xhttp.onreadystatechange = function () {
-      if ([1, 2, 3, 4].includes(this.readyState)) {
+      if (this.readyState === 4) {
         if (this.status === 200) {
+          that.props.showSnackbar("E-Mail gesendet");
         } else {
           try {
             let response = JSON.parse(this.responseText);

@@ -69,8 +69,9 @@ export default class Reset extends Component {
     xhttp.setRequestHeader("Content-Type", "application/json");
 
     xhttp.onreadystatechange = function () {
-      if ([1, 2, 3, 4].includes(this.readyState)) {
-        if (this.status === 200) {
+      if (this.readyState === 4) {
+        if (this.status === 202) {
+          that.props.showSnackbar("Passwort erfolgreich geändert");
           route("login", true);
         } else {
           try {

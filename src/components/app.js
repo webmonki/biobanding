@@ -284,6 +284,7 @@ export default class App extends Component {
               path="/login"
               showInstruction={this.state.showInstruction}
               setInstructions={this.setInstructions}
+              showSnackbar={this.showSnackbar}
             />
             <Signup path="/signup" setInstructions={this.setInstructions} />
             <Profile
@@ -298,8 +299,8 @@ export default class App extends Component {
               showSnackbar={this.showSnackbar}
             />
             <Users path="/users" showSnackbar={this.showSnackbar} />
-            <Forgot path="/forgot" />
-            <Reset path="/reset" />
+            <Forgot path="/forgot" showSnackbar={this.showSnackbar} />
+            <Reset path="/reset" showSnackbar={this.showSnackbar} />
             <Settings path="/settings" showSnackbar={this.showSnackbar} />
             <Confirm path="/confirm" showSnackbar={this.showSnackbar} />
             <NotFound default />
