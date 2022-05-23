@@ -64,13 +64,16 @@ export default class Header extends Component {
 
         // creates the dialog to create a measurement
         that.getDialog(idList);
-      } 
+      }
       if (this.status !== 200) {
         try {
           let response = JSON.parse(this.responseText);
 
           // if token expired log out
-          if (response.msg === "Token is invalid" || "Token expired.") {
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
             that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
           } else {
@@ -78,6 +81,7 @@ export default class Header extends Component {
           }
         } catch (err) {}
       }
+    };
     xhttp.send();
   };
 
@@ -126,7 +130,10 @@ export default class Header extends Component {
           let response = JSON.parse(this.responseText);
 
           // if token expired log out
-          if (response.msg === "Token is invalid" || "Token expired.") {
+          if (
+            response.msg === "Token is invalid" ||
+            response.msg === "Token expired."
+          ) {
             that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
           } else {
