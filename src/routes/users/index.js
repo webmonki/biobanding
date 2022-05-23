@@ -50,7 +50,10 @@ export default class Users extends Component {
             that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
           } else {
-            that.props.showSnackbar("Fehler beim Laden", true);
+            that.props.showSnackbar(
+              "Benutzer konnten nich geladen werden",
+              true
+            );
           }
         } catch (err) {}
       }
@@ -85,7 +88,10 @@ export default class Users extends Component {
             that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
           } else {
-            that.props.showSnackbar("Fehler beim Löschen", true);
+            that.props.showSnackbar(
+              "Benutzer konnte nicht gelöscht werden",
+              true
+            );
           }
         } catch (err) {}
       }
@@ -154,7 +160,10 @@ export default class Users extends Component {
             that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
           } else {
-            that.props.showSnackbar("Fehler beim Bearbeiten", true);
+            that.props.showSnackbar(
+              "Benutzer konnte nicht geändert werden",
+              true
+            );
           }
         } catch (err) {}
       }
@@ -199,7 +208,10 @@ export default class Users extends Component {
             that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
           } else {
-            that.props.showSnackbar("Fehler beim Anlegen", true);
+            that.props.showSnackbar(
+              "Benutzer konnte nicht angelegt werden",
+              true
+            );
           }
         } catch (err) {}
       }

@@ -134,7 +134,7 @@ export default class Measurements extends Component {
             Auth.logout();
           } else {
             that.props.showSnackbar(
-              "Fehler beim Laden der Benutzerdaten",
+              "Benutzerdaten konnten nicht geladen werden",
               true
             );
           }
@@ -199,7 +199,10 @@ export default class Measurements extends Component {
             that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
           } else {
-            that.props.showSnackbar("Fehler beim Ändern", true);
+            that.props.showSnackbar(
+              "Messung konnte  nicht geändert werden",
+              true
+            );
           }
         } catch (err) {}
       }
@@ -396,7 +399,10 @@ export default class Measurements extends Component {
 
             Auth.logout();
           } else {
-            that.props.showSnackbar("Fehler beim Löschen", true);
+            that.props.showSnackbar(
+              "Messungen konnten nicht gelöscht werden",
+              true
+            );
           }
         } catch (err) {}
       }
@@ -446,7 +452,10 @@ export default class Measurements extends Component {
             that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
           } else {
-            that.props.showSnackbar("Fehler beim Anlegen", true);
+            that.props.showSnackbar(
+              "Messung konnte nicht angelegt werden",
+              true
+            );
           }
         } catch (err) {}
       }

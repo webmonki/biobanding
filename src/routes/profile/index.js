@@ -60,7 +60,10 @@ export default class Profile extends Component {
             that.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
           } else {
-            this.props.showSnackbar("Fehler beim Ändern", true);
+            this.props.showSnackbar(
+              "Login-Daten konnten nicht geändert werden",
+              true
+            );
           }
         } catch (err) {}
       }
@@ -147,7 +150,10 @@ export default class Profile extends Component {
             ) {
               Auth.logout();
             } else {
-              this.props.showSnackbar("Fehler beim Ändern", true);
+              this.props.showSnackbar(
+                "Profil konnte nicht geladen werden",
+                true
+              );
             }
           } catch (err) {}
         }
@@ -186,7 +192,10 @@ export default class Profile extends Component {
             that.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
           } else {
-            this.props.showSnackbar("Fehler beim Anlegen", true);
+            this.props.showSnackbar(
+              "Spielerdetails konnten nicht angelegt werden",
+              true
+            );
           }
         } catch (err) {}
       }

@@ -68,10 +68,10 @@ export default class Settings extends Component {
             that.props.showSnackbar("Sitzung abgelaufen", true);
             Auth.logout();
           } else {
-            that.props.showSnackbar(
-              // Snackbar MSG
+            // Snackbar MSG
 
-              "Fehler beim Laden der Einstellungen",
+            that.props.showSnackbar(
+              "Einstellungen konnten nicht geladen werden",
               true
             );
           }
@@ -111,7 +111,10 @@ export default class Settings extends Component {
           } else {
             // Snackbar MSG
 
-            that.props.showSnackbar("Fehler beim Ändern", true);
+            that.props.showSnackbar(
+              "Einstellungen konnten nicht geändert werden",
+              true
+            );
           }
         }
       }
@@ -161,7 +164,10 @@ export default class Settings extends Component {
             Auth.logout();
           } else {
             // Snackbar MSG
-            that.props.showSnackbar("Fehler beim Senden", true);
+            that.props.showSnackbar(
+              "E-Mail konnte nicht gesendet werden",
+              true
+            );
           }
         }
       }
