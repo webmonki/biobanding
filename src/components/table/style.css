@@ -530,7 +530,7 @@ tr:hover {
 .boolBtnContainer {
 	display: flex;
 	justify-content: center;
-	width: 235px;
+	width: 15vw;
 }
 
 /* 768+ */
