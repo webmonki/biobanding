@@ -17,6 +17,19 @@ export default class Menu extends Component {
     this.setState({ filterCount: 0 });
   };
 
+  componentDidMount = () => {
+    window.removeEventListener("click", this.handleOutsideClick);
+  };
+
+  handleOutsideClick = (event) => {
+    let container = document.getElementById("filterContainer");
+    let btn = document.getElementById("openFilterBtn");
+    if (container.contains(event.target) || btn.contains(event.target)) {
+    } else {
+      this.collapseFilterContainer();
+    }
+  };
+
   // Count meassage of selected rows for delete
   getSelectedCountMsg = () => {
     let msg = this.props.count.toString();
@@ -37,10 +50,12 @@ export default class Menu extends Component {
   collapseFilterContainer = () => {
     let coll = document.getElementById("filterContainer");
 
-    if (coll.style.maxHeight) {
+    if (coll.style.maxHeight === "fit-content") {
       coll.style.maxHeight = null;
+      window.removeEventListener("click", this.handleOutsideClick);
     } else {
       coll.style.maxHeight = "fit-content";
+      window.addEventListener("click", this.handleOutsideClick);
     }
   };
 
@@ -97,7 +112,13 @@ export default class Menu extends Component {
   renderFilterButton = () => {
     if (this.props.cols.length > 0) {
       return (
-        <button class={style.invertBtn} onClick={this.collapseFilterContainer}>
+        <button
+          id={"openFilterBtn"}
+          class={style.invertBtn}
+          onClick={() => {
+            this.collapseFilterContainer();
+          }}
+        >
           <i
             class={`${"material-icons"} ${style.invertIcon}`}
             aria-hidden="true"

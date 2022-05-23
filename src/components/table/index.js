@@ -830,7 +830,6 @@ export default class Table extends Component {
   renderTableContent = (id, row) => {
     let cols = this.getRangeList(0, this.state.subTableIndex);
 
-    console.log(row, id);
     return (
       <tr id={id + "mainRow"}>
         <td id={"tableData"} class={style.btnsData}>

@@ -12,6 +12,7 @@ export default class Filter extends Component {
   componentDidMount = () => {
     this.setState({ boolBtnIcon: "check" });
   };
+
   // Creates operator for filter determined by typeof cellcontent
   // Operator 0 : = , 1 = < , 2 = >
   getOperators = () => {
