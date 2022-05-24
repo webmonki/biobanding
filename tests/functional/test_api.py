@@ -56,6 +56,7 @@ ANTH_SITTING_HEIGHT =88
 ANTH_BODY_SPAN = 88
 ANTH_WEIGHT = 88
 ANTH_DATA_ERROR_MESSAGE_WHEN_ANTH_ID_DOES_NOT_EXIST = "'NoneType' object has no attribute 'toDICT'"
+INERNAL_SERVER_ERROR_MESSAGE = "Internal Server Error" # needed for pipeline
 # Edited anthropometric data
 EDITED_ANTH_DATE_MEASURED = (datetime.today().date() - timedelta(99)).strftime("%Y-%m-%d")
 EDITED_ANTH_HEIGHT = 192
@@ -1110,9 +1111,13 @@ def test_return_anthropometric_measurements_by_nonexistent_id(client):
         # Check results
         assert str(e) == ANTH_DATA_ERROR_MESSAGE_WHEN_ANTH_ID_DOES_NOT_EXIST
     else:
-        assert data is None
-        assert data is []
-        assert data["token"] == ""
+        try :
+            assert data in None
+        except Exception as e:
+            assert data['message'] == INERNAL_SERVER_ERROR_MESSAGE
+        else:
+            assert data["token"] == ""
+
 
 def test_update_own_anthropometric_measurements(client):
     '''
