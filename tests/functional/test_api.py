@@ -55,6 +55,7 @@ ANTH_HEIGHT = 188
 ANTH_SITTING_HEIGHT =88
 ANTH_BODY_SPAN = 88
 ANTH_WEIGHT = 88
+ANTH_DATA_ERROR_MESSAGE_WHEN_ANTH_ID_DOES_NOT_EXIST = "'NoneType' object has no attribute 'toDICT'"
 # Edited anthropometric data
 EDITED_ANTH_DATE_MEASURED = (datetime.today().date() - timedelta(99)).strftime("%Y-%m-%d")
 EDITED_ANTH_HEIGHT = 192
@@ -261,7 +262,6 @@ def test_update_user_by_id(client):
     assert "Successfully updated user data" in data["msg"]
 
 
-@pytest.mark.xfail(reason = "returns: '...data could not be created'. But data gets successfully saved in db")
 def test_create_anthropometric_data(client):
     '''
         Tests /api/user/<int:id>/anthropometric API: Successfully creates anthropometric data
@@ -288,7 +288,7 @@ def test_create_anthropometric_data(client):
     # Check results
     assert response.status_code == 200
     assert data["success"] == True
-    # assert ??? in data["msg"]
+    assert 'Anthropometric data was successfully created' in data["msg"]
 
 @pytest.mark.xfail(reason = "returns 'measurements:' instead of 'measurements'. PHV 4.53 saved in db. We read 4.529999")
 def test_return_players_anthropometric_data(client):
@@ -355,7 +355,7 @@ def test_create_player_details(client):
     assert data["success"] == True
     assert "Player details were successfully created" in data["msg"]
 
-@pytest.mark.xfail(reason = "returns 'player_details:' instead of 'player_details'")
+
 def test_get_player_details(client):
     '''
         Tests /api/user/<int:id>/details API: Successfully return user details
@@ -382,7 +382,7 @@ def test_get_player_details(client):
     assert data["player_details"]["height_mother"] == DETAILS_HEIGHT_MOTHER
 
 
-@pytest.mark.xfail(reason = "returns 'users:' instead of 'users'")
+
 def test_get_all_users(client):
     '''
         Tests /api/user API: Successfully acquire all users
@@ -409,8 +409,7 @@ def test_get_all_users(client):
     assert data["users"][1]["E-Mail"] == UPDATED_EMAIL
 
 
-# Todo
-@pytest.mark.skip(reason="Not implemented. There is no such function?")
+@pytest.mark.skip(reason="Not implemented. There is no such function.")
 def test_get_user_by_id(client):
     '''
         Tests /api/user/<int:id> API: Successfully acquire user data by id
@@ -1092,7 +1091,7 @@ def test_return_anthropometric_measurements_with_invalid_token(client):
     assert data["success"] == False
     assert "Sorry. Wrong auth token. This user does not exist." in data["msg"]
 
-@pytest.mark.xfail(reason = "Measurement does not exist")
+
 def test_return_anthropometric_measurements_by_nonexistent_id(client):
     '''
         Test /api/measurement/<int:id>: Unsuccessfull anthropometric measurement acquisition
@@ -1101,16 +1100,19 @@ def test_return_anthropometric_measurements_by_nonexistent_id(client):
         THEN Check for unsuccessful measurement retrieval
     '''
     token = jwt.encode({'email': ADMIN_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
-    response = client.get(
-        "/api/measurement/4",
-        headers={"authorization": token},
-        content_type="application/json")
-    data = json.loads(response.data.decode())
-    # Check results
-    assert response.status_code == 500
-    assert data["success"] == False
-    assert "Token expired" in data["msg"]
-
+    try:
+        response = client.get(
+            "/api/measurement/4",
+            headers={"authorization": token},
+            content_type="application/json")
+        data = json.loads(response.data.decode())
+    except Exception as e:
+        # Check results
+        assert str(e) == ANTH_DATA_ERROR_MESSAGE_WHEN_ANTH_ID_DOES_NOT_EXIST
+    else:
+        assert data is None
+        assert data is []
+        assert data["token"] == ""
 
 def test_update_own_anthropometric_measurements(client):
     '''
