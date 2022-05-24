@@ -109,7 +109,7 @@ export default class Measurements extends Component {
         let idList = [];
         let usernameList = [];
 
-        response["users:"].forEach((user) => {
+        response.users.forEach((user) => {
           usernameList.push(user.Benutzername);
           idList.push(user.userID);
         });
@@ -337,7 +337,7 @@ export default class Measurements extends Component {
         let response = JSON.parse(this.responseText);
 
         that.setState({
-          measurements: that.convertDate(response["measurements:"]),
+          measurements: that.convertDate(response.measurements),
         });
         that.props.showSnackbar("Messungen erfolgreich geladen");
 
