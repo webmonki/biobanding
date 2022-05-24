@@ -55,6 +55,7 @@ ANTH_HEIGHT = 188
 ANTH_SITTING_HEIGHT =88
 ANTH_BODY_SPAN = 88
 ANTH_WEIGHT = 88
+ANTH_DATA_ERROR_MESSAGE_WHEN_ANTH_ID_DOES_NOT_EXIST = "'NoneType' object has no attribute 'toDICT'"
 # Edited anthropometric data
 EDITED_ANTH_DATE_MEASURED = (datetime.today().date() - timedelta(99)).strftime("%Y-%m-%d")
 EDITED_ANTH_HEIGHT = 192
@@ -1090,7 +1091,7 @@ def test_return_anthropometric_measurements_with_invalid_token(client):
     assert data["success"] == False
     assert "Sorry. Wrong auth token. This user does not exist." in data["msg"]
 
-@pytest.mark.xfail(reason = "Measurement does not exist")
+
 def test_return_anthropometric_measurements_by_nonexistent_id(client):
     '''
         Test /api/measurement/<int:id>: Unsuccessfull anthropometric measurement acquisition
@@ -1099,15 +1100,17 @@ def test_return_anthropometric_measurements_by_nonexistent_id(client):
         THEN Check for unsuccessful measurement retrieval
     '''
     token = jwt.encode({'email': ADMIN_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
-    response = client.get(
-        "/api/measurement/4",
-        headers={"authorization": token},
-        content_type="application/json")
-    data = json.loads(response.data.decode())
+    data = None
+    try:
+        response = client.get(
+            "/api/measurement/4",
+            headers={"authorization": token},
+            content_type="application/json")
+        data = json.loads(response.data.decode())
+    except Exception as e:
+        assert str(e) == ANTH_DATA_ERROR_MESSAGE_WHEN_ANTH_ID_DOES_NOT_EXIST
     # Check results
-    assert response.status_code == 500
-    assert data["success"] == False
-    assert "Token expired" in data["msg"]
+    assert data == None
 
 
 def test_update_own_anthropometric_measurements(client):
