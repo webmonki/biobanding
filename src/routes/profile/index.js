@@ -131,7 +131,7 @@ export default class Profile extends Component {
           that.setState({ birthday: date });
         }
 
-        let sex = response["player_details:"].sex_m_0_f_1;
+        let sex = response.player_details.sex_m_0_f_1;
 
         if (sex === 0) {
           document.getElementById("radioMale").checked = true;
