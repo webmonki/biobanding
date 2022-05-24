@@ -261,7 +261,6 @@ def test_update_user_by_id(client):
     assert "Successfully updated user data" in data["msg"]
 
 
-@pytest.mark.xfail(reason = "returns: '...data could not be created'. But data gets successfully saved in db")
 def test_create_anthropometric_data(client):
     '''
         Tests /api/user/<int:id>/anthropometric API: Successfully creates anthropometric data
@@ -288,7 +287,7 @@ def test_create_anthropometric_data(client):
     # Check results
     assert response.status_code == 200
     assert data["success"] == True
-    # assert ??? in data["msg"]
+    assert 'Anthropometric data was successfully created' in data["msg"]
 
 @pytest.mark.xfail(reason = "returns 'measurements:' instead of 'measurements'. PHV 4.53 saved in db. We read 4.529999")
 def test_return_players_anthropometric_data(client):
@@ -355,7 +354,7 @@ def test_create_player_details(client):
     assert data["success"] == True
     assert "Player details were successfully created" in data["msg"]
 
-@pytest.mark.xfail(reason = "returns 'player_details:' instead of 'player_details'")
+
 def test_get_player_details(client):
     '''
         Tests /api/user/<int:id>/details API: Successfully return user details
@@ -382,7 +381,7 @@ def test_get_player_details(client):
     assert data["player_details"]["height_mother"] == DETAILS_HEIGHT_MOTHER
 
 
-@pytest.mark.xfail(reason = "returns 'users:' instead of 'users'")
+
 def test_get_all_users(client):
     '''
         Tests /api/user API: Successfully acquire all users
@@ -409,8 +408,7 @@ def test_get_all_users(client):
     assert data["users"][1]["E-Mail"] == UPDATED_EMAIL
 
 
-# Todo
-@pytest.mark.skip(reason="Not implemented. There is no such function?")
+@pytest.mark.skip(reason="Not implemented. There is no such function.")
 def test_get_user_by_id(client):
     '''
         Tests /api/user/<int:id> API: Successfully acquire user data by id
