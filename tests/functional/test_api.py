@@ -965,7 +965,7 @@ def test_generate_new_registration_code(client):
     assert data["success"] == False
     assert "Authenticated, but no permissions" in data["msg"]
 
-
+@pytest.mark.skip('TBD')
 def test_get_all_anthropometric_measurements(client):
     '''
         Test /api/measurements: Successfully get all measurements
