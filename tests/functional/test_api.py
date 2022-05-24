@@ -1100,7 +1100,7 @@ def test_return_anthropometric_measurements_by_nonexistent_id(client):
         THEN Check for unsuccessful measurement retrieval
     '''
     token = jwt.encode({'email': ADMIN_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
-    data = None
+    data = []
     try:
         response = client.get(
             "/api/measurement/4",
@@ -1110,7 +1110,7 @@ def test_return_anthropometric_measurements_by_nonexistent_id(client):
     except Exception as e:
         assert str(e) == ANTH_DATA_ERROR_MESSAGE_WHEN_ANTH_ID_DOES_NOT_EXIST
     # Check results
-    assert data == None
+    assert data == []
 
 
 def test_update_own_anthropometric_measurements(client):
