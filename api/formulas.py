@@ -1,5 +1,6 @@
 from datetime import datetime
 import pandas as pd
+from flask import abort
 
 
 # [BEGIN mirwald]
@@ -183,8 +184,8 @@ def predicted_adult_height(sex_m_0_f_1: int, height: float, weight: float, age: 
         mother_height (float): height of the child's mother in cm
 
     Raises:
-        ValueError: if sex_m_0_f_1 is not 0 or 1
-        ValueError: if 4 > age > 17.5
+        Error 400: if sex_m_0_f_1 is not 0 or 1
+        Error 400: if 4 > age > 17.5
 
     Return:
         res (dict): {'pah': value, 'pmh': value,  }
@@ -196,37 +197,38 @@ def predicted_adult_height(sex_m_0_f_1: int, height: float, weight: float, age: 
     elif sex_m_0_f_1 == 1:
         coefficients_df = female_coefficients_df
     else:
-        raise ValueError("sex_m_0_f_1 must be 0 or 1")
+        abort(400, "sex_m_0_f_1 must be 0 or 1")
 
     # Round age to nearest 0.5 step
     age = round(age * 2) / 2
 
     # Get age specific coefficients
-    if 4 > age > 17.5:
-        raise ValueError("Age must be between 4 and 17.5 years")
+    #if 4 > age > 17.5:
+    if 4 > age or age > 17.5:
+        abort(400, 'Age must be between 4 and 17.5 years')
     else:
         coeff = coefficients_df[coefficients_df['age'] == age].values
 
-    # Average calculation
-    midparent_height_cm = (father_height + mother_height) / 2
+        # Average calculation
+        midparent_height_cm = (father_height + mother_height) / 2
 
-    # Convert cm to inches
-    midparent_height_in = midparent_height_cm / 2.54
-    height_in = height / 2.54
-    # convert convert kg to lbs
-    weight_lbs = weight * 2.20462262185
+        # Convert cm to inches
+        midparent_height_in = midparent_height_cm / 2.54
+        height_in = height / 2.54
+        # convert convert kg to lbs
+        weight_lbs = weight * 2.20462262185
 
-    # Khamis Roche regression equation
-    pah_in = coeff[0][1] + coeff[0][2] * height_in + coeff[0][3] * weight_lbs + coeff[0][4] * midparent_height_in
+        # Khamis Roche regression equation
+        pah_in = coeff[0][1] + coeff[0][2] * height_in + coeff[0][3] * weight_lbs + coeff[0][4] * midparent_height_in
 
-    # Convert inches back to centimerts
-    pah = pah_in * 2.54
+        # Convert inches back to centimerts
+        pah = pah_in * 2.54
 
-    # Calculate percentage mature height (PMH)
-    pmh = height / pah
+        # Calculate percentage mature height (PMH)
+        pmh = height / pah
 
-    # Calculate remaining growth in cm
-    remaining_growth = pah - height
+        # Calculate remaining growth in cm
+        remaining_growth = pah - height
 
-    return {'pah': round(pah, 2), 'pmh': round(pmh, 2), 'remaining_growth': round(remaining_growth, 2)}
+        return {'pah': round(pah, 2), 'pmh': round(pmh, 2), 'remaining_growth': round(remaining_growth, 2)}
 # [END predicted_adult_height]

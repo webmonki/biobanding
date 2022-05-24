@@ -870,7 +870,7 @@ class Anthropometric(Resource):
 
         except Exception as e:
             return {"success": False,
-                    "msg": "Anthropometric data could not be created"}, 400
+                    "msg": "Anthropometric data could not be created: {}".format(e)}, 400
 
         return {"success": True,
                 "anthropometric_data": _new_anthropometric_data.toDICT(),
