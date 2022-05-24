@@ -236,12 +236,12 @@ export default class Confirm extends Component {
                       this.setState({ birthdayFB: "Mindestalter 4 Jahre" });
                     }
 
-                    if (diff > 18) {
+                    if (diff > 17.5) {
                       this.setState({ birthdayFBClass: style.feedbackErr });
-                      this.setState({ birthdayFB: "Maximalalter 18 Jahre" });
+                      this.setState({ birthdayFB: "Maximalalter 17.5 Jahre" });
                     }
 
-                    if (diff > 4 && diff < 18) {
+                    if (diff > 4 && diff < 17.5) {
                       this.setState({ birthdayFBClass: style.feedbackSucc });
                       this.setState({ birthdayFB: "" });
                     }
