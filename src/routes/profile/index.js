@@ -113,16 +113,16 @@ export default class Profile extends Component {
         that.props.showSnackbar("Profil erfolgreich geladen");
 
         // Set vaues in states to display them in textfields
-        that.setState({ firstname: response["player_details:"].first_name });
-        that.setState({ lastname: response["player_details:"].last_name });
+        that.setState({ firstname: response.player_details.first_name });
+        that.setState({ lastname: response.player_details.last_name });
         that.setState({
-          fatherHeight: response["player_details:"].height_father,
+          fatherHeight: response.player_details.height_father,
         });
         that.setState({
-          motherHeight: response["player_details:"].height_mother,
+          motherHeight: response.player_details.height_mother,
         });
 
-        let date = response["player_details:"].birthday;
+        let date = response.player_details.birthday;
 
         if (date !== undefined) {
           date = date.replace('"', "");
@@ -131,7 +131,7 @@ export default class Profile extends Component {
           that.setState({ birthday: date });
         }
 
-        let sex = response["player_details:"].sex_m_0_f_1;
+        let sex = response.player_details.sex_m_0_f_1;
 
         if (sex === 0) {
           document.getElementById("radioMale").checked = true;

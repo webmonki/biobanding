@@ -35,7 +35,7 @@ export default class Users extends Component {
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
-        that.setState({ users: response["users:"] });
+        that.setState({ users: response.users });
 
         that.props.showSnackbar("Benutzer erfolgreich geladen");
       }
