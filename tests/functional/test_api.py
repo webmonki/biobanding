@@ -1008,7 +1008,7 @@ def test_get_all_anthropometric_measurements(client):
     assert data["measurements"][0]["Id"] == 1
     assert data["measurements"][0]["UserId"] == ANTH_USER_ID
     assert data["measurements"][0]["Datum"] == '"' + ANTH_DATE_MEASURED + '"'
-    assert data["measurements"][0]["Alter"] == 7.03
+    assert data["measurements"][0]["Alter"] is not ""
     assert data["measurements"][0]["YAPHV"] == -2.49
     assert data["measurements"][0]["PHV"] == 4.54
     assert data["measurements"][0]["AK_BIO"] == "-2.5 bis -1.5"

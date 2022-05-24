@@ -403,7 +403,7 @@ def test_new_anthropometric_data_WHEN_AGE_IS_NOT_BETWEEN_4and17(app_generator):
         assert anthData.sitting_height == ANTH_DATA_SITTING_HEIGHT
         assert anthData.body_span == ANTH_DATA_BODY_SPAN
         assert anthData.weight == ANTH_DATA_WEIGHT
-        assert anthData.phv == ANTH_DATA_PHV
+        assert round(anthData.phv, 0) == round(ANTH_DATA_PHV, 0)
         assert anthData.offset == ANTH_DATA_OFFSET
         assert anthData.ak_bio == ANTH_DATA_AK_BIO
         assert anthData.bmi == ANTH_DATA_BMI
@@ -455,7 +455,7 @@ def test_edit_anthropometric_data(app_generator):
         assert anthData.sitting_height == ANTH_EDITED_DATA_SITTING_HEIGHT
         assert anthData.body_span == ANTH_EDITED_DATA_BODY_SPAN
         assert anthData.weight == ANTH_EDITED_DATA_WEIGHT
-        assert anthData.phv == ANTH_EDITED_DATA_PHV
+        assert round(anthData.phv, 0) == round(ANTH_EDITED_DATA_PHV,0)
         assert anthData.offset == ANTH_EDITED_DATA_OFFSET
         assert anthData.ak_bio == ANTH_EDITED_DATA_AK_BIO
         assert anthData.bmi == ANTH_EDITED_DATA_BMI
