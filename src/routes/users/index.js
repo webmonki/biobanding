@@ -169,10 +169,38 @@ export default class Users extends Component {
       }
     };
 
-    let data = `{
+    let editId = this.state.editId;
+    let users = this.state.users;
+    let newUsername = this.state.editUsername;
+    let newEmail = this.state.editEmail;
+    let data;
+
+    users.forEach((user) => {
+      if (user.userID === editId) {
+        if (user.Benutzername === newUsername) {
+          newUsername = undefined;
+        }
+
+        if (user["E-Mail"] === newEmail) {
+          newEmail = undefined;
+        }
+      }
+    });
+
+    if (newUsername !== undefined && newEmail === undefined) {
+      data = `{
+			"username": "${this.state.editUsername}"
+		}`;
+    } else if (newUsername === undefined && newEmail !== undefined) {
+      data = `{
+			"email": "${this.state.editEmail}"
+		}`;
+    } else if (newUsername !== undefined && newEmail !== undefined) {
+      data = `{
 			"username": "${this.state.editUsername}",
 			"email": "${this.state.editEmail}"
 		}`;
+    }
 
     xhttp.send(data);
   };
