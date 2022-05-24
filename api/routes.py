@@ -40,9 +40,8 @@ login_model = rest_api.model('LoginModel', {"email": fields.String(required=True
                                             "password": fields.String(required=True, max_length=16)
                                             })
 
-user_edit_model = rest_api.model('UserEditModel', {"userID": fields.String(required=True, min_length=1, max_length=32),
-                                                   "username": fields.String(required=True, min_length=2,
-                                                                             max_length=32),
+user_edit_model = rest_api.model('UserEditModel', {"userID": fields.String(min_length=1, max_length=32),
+                                                   "username": fields.String(min_length=2, max_length=32),
                                                    "email": fields.String(required=True, min_length=4, max_length=64)
                                                    })
 user_password_forget_model = rest_api.model('UserPasswordForgetModel',
@@ -340,6 +339,16 @@ class EditUser(Resource):
 
         _new_username = req_data.get("username")
         _new_email = req_data.get("email")
+
+        email_exists = Users.get_by_email(_new_email)
+        if email_exists:
+            return {"success": False,
+                    "msg": "Email {} already taken".format(_new_email)}, 402
+
+        user_exists = Users.get_by_username(_new_username)
+        if user_exists:
+            return {"success": False,
+                    "msg": "Username {} already taken".format(_new_username)}, 404
         try:
             user = Users.get_by_id(id)
 
