@@ -254,7 +254,7 @@ class AllUsers(Resource):
                 }
             )
         return {"success": True,
-                "users:": userList}, 200
+                "users": userList}, 200
 
 
 @rest_api.expect(user_password_forget_model)
@@ -827,7 +827,7 @@ class PlayerDetails(Resource):
         player_master = PlayerMaster.get_by_id(userID)
 
         return {"success": True,
-                "player_details:": {
+                "player_details": {
                     "userID": player_detail.user_id,
                     "first_name": player_master.first_name,
                     "last_name": player_master.last_name,
@@ -890,7 +890,7 @@ class Anthropometric(Resource):
         for measurement in user_data:
             measurements.append(measurement.toDICT())
         return {"success": True,
-                "measurements:": measurements}, 200
+                "measurements": measurements}, 200
 
 
 @rest_api.route('/api/measurement/<int:id>')
@@ -907,7 +907,7 @@ class Measurement(Resource):
                 "msg": "Could not read players anthropometric data"}, 500
 
         return {"success": True,
-                "measurement:": measurement.toDICT()
+                "measurement": measurement.toDICT()
                 }, 200
 
     @token_required
