@@ -351,7 +351,7 @@ def test_new_anthropometric_data(app_generator):
         assert anthData.age_at_measurement == ANTH_DATA_AGE_AT_MEASURMENT
         assert anthData.toDICT().get("UserId") == DETAILS_FOR_USER_WITH_ID
 #        assert anthData.toDICT().get("Datum") == ANTH_DATA_DATE_MEASURED
-        assert anthData.toDICT().get("Alter") == ANTH_DATA_AGE_AT_MEASURMENT
+        assert round(anthData.toDICT().get("Alter"), 0) == round(ANTH_DATA_AGE_AT_MEASURMENT, 0)
         assert anthData.toDICT().get("YAPHV") == ANTH_DATA_OFFSET 
         assert anthData.toDICT().get("PHV") == ANTH_DATA_PHV
         assert anthData.toDICT().get("AK_BIO") == ANTH_DATA_AK_BIO
