@@ -31,13 +31,13 @@ rest_api = Api(version="1.0", title="Users API", authorizations=authorizations)
 
 signup_model = rest_api.model('SignUpModel', {"username": fields.String(required=True, min_length=2, max_length=32),
                                               "email": fields.String(required=True, min_length=4, max_length=64),
-                                              "password": fields.String(required=True, min_length=4, max_length=16),
+                                              "password": fields.String(required=True, max_length=16),
                                               "registration_code": fields.Integer(required=True, min=1000, max=9999),
                                               "is_admin": fields.Boolean()
                                               })
 
 login_model = rest_api.model('LoginModel', {"email": fields.String(required=True, min_length=4, max_length=64),
-                                            "password": fields.String(required=True, min_length=4, max_length=16)
+                                            "password": fields.String(required=True, max_length=16)
                                             })
 
 user_edit_model = rest_api.model('UserEditModel', {"userID": fields.String(required=True, min_length=1, max_length=32),
@@ -50,7 +50,7 @@ user_password_forget_model = rest_api.model('UserPasswordForgetModel',
 
 user_password_reset_model = rest_api.model('UserPasswordResetModel',
                                            {"token": fields.String(required=True, min_length=1),
-                                            "password": fields.String(required=True, min_length=2, max_length=16)
+                                            "password": fields.String(required=True, max_length=16)
                                             })
 
 user_confirm_model = rest_api.model('UserConformModel',
