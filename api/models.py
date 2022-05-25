@@ -82,16 +82,16 @@ class Users(db.Model):
         db.session.commit()
 
     def get_jwt_token(self, expires=500):
-        return jwt.encode({'email': self.email, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+        return jwt.encode({'username': self.username, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
 
     @staticmethod
     def verify_reset_token(token):
         try:
-            email = jwt.decode(token, key=BaseConfig.SECRET_KEY, algorithms=["HS256"])['email']
+            username = jwt.decode(token, key=BaseConfig.SECRET_KEY, algorithms=["HS256"])['username']
         except Exception as e:
             print('verify_reset_token error: ', e)
             return
-        return Users.get_by_email(email)
+        return Users.get_by_username(username)
 
     @classmethod
     def get_all_users(cls):

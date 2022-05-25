@@ -128,7 +128,7 @@ def token_required(f):
         try:
             data = jwt.decode(token, BaseConfig.SECRET_KEY,
                               algorithms=["HS256"])
-            current_user = Users.get_by_email(data["email"])
+            current_user = Users.get_by_username(data["username"])
 
             if not current_user:
                 return {"success": False,
@@ -340,15 +340,10 @@ class EditUser(Resource):
         _new_username = req_data.get("username")
         _new_email = req_data.get("email")
 
-        email_exists = Users.get_by_email(_new_email)
-        if email_exists:
-            return {"success": False,
-                    "msg": "Email {} already taken".format(_new_email)}, 402
-
         user_exists = Users.get_by_username(_new_username)
         if user_exists:
             return {"success": False,
-                    "msg": "Username {} already taken".format(_new_username)}, 404
+                    "msg": "Username {} already taken".format(_new_username)}, 400
         try:
             user = Users.get_by_id(id)
 
@@ -412,11 +407,6 @@ class Register(Resource):
             return {"success": False,
                     "msg": "Email {} is not valid".format(_email)}, 400
 
-        email_exists = Users.get_by_email(_email)
-        if email_exists:
-            return {"success": False,
-                    "msg": "Email {} already taken".format(_email)}, 400
-
         user_exists = Users.get_by_username(_username)
         if user_exists:
             return {"success": False,
@@ -477,10 +467,10 @@ class Login(Resource):
 
         req_data = request.get_json()
 
-        _email = req_data.get("email")
+        _username = req_data.get("username")
         _password = req_data.get("password")
 
-        user_exists = Users.get_by_email(_email)
+        user_exists = Users.get_by_email(_username)
 
         if not user_exists:
             return {"success": False,
@@ -492,11 +482,10 @@ class Login(Resource):
 
         if not user_exists.confirmed:
             return {"success": False,
-                    "email": _email,
                     "msg": "Email address is not confirmed"}, 403
 
         # create access token uwing JWT
-        token = jwt.encode({'email': _email, 'exp': datetime.utcnow(
+        token = jwt.encode({'username': _username, 'exp': datetime.utcnow(
         ) + timedelta(minutes=30)}, BaseConfig.SECRET_KEY)
 
         user_exists.set_jwt_auth_active(True)
@@ -530,8 +519,7 @@ class EditUser(Resource):
 
         self.save()
 
-        token = jwt.encode({'email': _new_email, 'exp': datetime.utcnow() + timedelta(minutes=30)},
-                           BaseConfig.SECRET_KEY)
+        token = self.get_jwt_token()
         self.set_jwt_auth_active(True)
         self.save()
 
