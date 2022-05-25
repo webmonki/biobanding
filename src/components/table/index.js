@@ -286,7 +286,6 @@ export default class Table extends Component {
   searchNot = (val, data, chosenIndex) => {
     let cols = this.getCols();
 
-    let type = typeof data[0][cols[chosenIndex]];
     let newData = [];
 
     if (val === "") {
@@ -523,6 +522,18 @@ export default class Table extends Component {
     });
 
     this.setState({ checkList: [] });
+
+    let page = this.state.page;
+
+    if (page >= this.getPageCount()) {
+      let page = this.getPageCount() - 1;
+
+      if (page > 1) {
+        this.setState({ page: this.getPageCount() - 1 });
+      } else {
+        this.setState({ page: 1 });
+      }
+    }
   };
 
   // Checks if an element is in checklist
@@ -990,11 +1001,9 @@ export default class Table extends Component {
         pageCount = 1;
       }
       if (this.state.data.length > pageSize) {
-        pageCount = (this.props.data.length / pageSize + 1)
-          .toString()
-          .split(".")[0];
+        pageCount = this.props.data.length / pageSize;
 
-        pageCount = parseInt(pageCount, 10);
+        pageCount = Math.ceil(pageCount);
       }
 
       return pageCount;
