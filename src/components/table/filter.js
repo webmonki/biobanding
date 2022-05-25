@@ -11,6 +11,7 @@ import "preact-material-components/Select/style.css";
 export default class Filter extends Component {
   componentDidMount = () => {
     this.setState({ boolBtnIcon: "check" });
+    this.setState({ operator: 0 });
   };
 
   // Creates operator for filter determined by typeof cellcontent
@@ -43,10 +44,35 @@ export default class Filter extends Component {
 
     // Operator for Strings
     if (type === "string") {
-      if (this.state.operator !== 0) {
-        this.setState({ operator: 0 });
-      }
-      return <div>enthält</div>;
+      //   if (this.state.operator !== 0) {
+      //     this.setState({ operator: 0 });
+      //   }
+      return (
+        <button
+          class={style.operatorBtn}
+          onClick={() => {
+            let operator = this.state.operator;
+
+            if (operator === 0) {
+              this.setState({ operator: -1 });
+            }
+
+            if (operator === -1) {
+              this.setState({ operator: 0 });
+            }
+
+            // add to filterList which is applied to data
+            this.props.updateFilter(
+              this.props.id,
+              undefined,
+              this.state.operator,
+              undefined
+            );
+          }}
+        >
+          {this.getOperatorSign()}
+        </button>
+      );
 
       // Operator for number and date-object
     } else if (type === "number" || type === "object") {
@@ -55,6 +81,10 @@ export default class Filter extends Component {
           class={style.operatorBtn}
           onClick={() => {
             let operator = this.state.operator;
+
+            if (operator === -1) {
+              operator = 0;
+            }
 
             if (operator === 0 || operator === 1) {
               this.setState({ operator: this.state.operator + 1 });
@@ -81,11 +111,13 @@ export default class Filter extends Component {
     let operator = this.props.operator;
 
     if (operator === 0) {
-      return "=";
+      return <span>&#61;</span>;
     } else if (operator === 1) {
-      return "<";
+      return <span>&#60;</span>;
     } else if (operator === 2) {
-      return ">";
+      return <span>&#62;</span>;
+    } else if (operator === -1) {
+      return <span>&#8800;</span>;
     }
   };
 
