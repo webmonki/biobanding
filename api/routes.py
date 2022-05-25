@@ -36,7 +36,7 @@ signup_model = rest_api.model('SignUpModel', {"username": fields.String(required
                                               "is_admin": fields.Boolean()
                                               })
 
-login_model = rest_api.model('LoginModel', {"email": fields.String(required=True, min_length=4, max_length=64),
+login_model = rest_api.model('LoginModel', {"username": fields.String(required=True, min_length=4, max_length=64),
                                             "password": fields.String(required=True, max_length=16)
                                             })
 
