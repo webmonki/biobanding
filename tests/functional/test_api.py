@@ -71,7 +71,7 @@ ADMIN_USERNAME = "admin"
 ADMIN_EMAIL = "admin@example.org"
 ADMIN_PASSWORD = "admin"
 
-IMAGINARY_USERNAME = "imagine"
+IMAGINARY_USERNAME = "Imagine"
 # Admin configuration data
 AC_UPDATED_DAYS_REMINDER = 55
 AC_UPDATED_MAIL_SERVER = "edited.smtp.com"
@@ -142,8 +142,8 @@ def test_user_signup_invalid_data(client):
 
 def test_user_login_unconfirmed(client):
     '''
-       Tests api/users/login API: Email address is not confirmed
-       GIVEN Not confirmed user email
+       Tests api/users/login API: Username address is not confirmed
+       GIVEN Not confirmed user username
        WHEN Logging in
        THEN Check for unsuccessful login
    '''
@@ -196,7 +196,7 @@ def test_user_confirm_signup(client):
 def test_user_login_correct(client):
     '''
        Tests /users/signup API: Log in with correct credentials
-       GIVEN Valid email address and password
+       GIVEN Valid username address and password
        WHEN Logging in
        THEN Check for successful login
     '''
@@ -219,9 +219,9 @@ def test_user_login_correct(client):
 def test_user_login_error(client):
     '''
        Tests /users/signup API: Log in with wrong credentials
-       GIVEN Wrong credentials (correct email address and wrong password)
+       GIVEN Wrong credentials (correct username address and wrong password)
        WHEN Logging in
-       THEN Check for unsuccessful
+       THEN Check for unsuccessful login
     '''
     response = client.post(
         "api/users/login",
@@ -271,7 +271,7 @@ def test_create_anthropometric_data(client):
         Tests /api/user/<int:id>/anthropometric API: Successfully creates anthropometric data
         GIVEN User's id and anthropometric data
         WHEN Creating new anthropometric data
-        THEN Check id data has beeen successfully saved
+        THEN Check if data has beeen successfully created
     '''
     token = jwt.encode({'username': UPDATED_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.post(
@@ -294,7 +294,7 @@ def test_create_anthropometric_data(client):
     assert data["success"] == True
     assert 'Anthropometric data was successfully created' in data["msg"]
 
-@pytest.mark.xfail(reason = "returns 'measurements:' instead of 'measurements'. PHV 4.53 saved in db. We read 4.529999")
+@pytest.mark.xfail(reason = "PHV 4.53 saved in db. We read 4.529999")
 def test_return_players_anthropometric_data(client):
     '''
         Tests /api/user/<int:id>/anthropometric API: Successfully returns user's anthropometric data
@@ -468,16 +468,15 @@ def test_reset_password_with_invalid_token(client):
     assert "No valid token" in data["msg"]
 
 
-@pytest.mark.skip(reason="Password change with valid token without new pass is possible.")
+@pytest.mark.skip(reason="Changing password with valid token without new pass is possible.")
 def test_reset_password_with_valid_token_and_without_new_password(client):
     '''
         Tests /api/user/reset API: Fail to update user's password if token is valid but no new password is given
         GIVEN Valid token
-        WHEN Changing password (to leer string)
+        WHEN Changing password to leer string
         THEN Check results. Results should report issues.
     '''
     token = jwt.encode({'username': UPDATED_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
-    # Run HTTP PUT method with valid token and no password
     response = client.put(
         "/api/user/reset",
         data=json.dumps(
@@ -501,7 +500,7 @@ def test_edit_user(client):
         Tests /api/users/edit API: Successfully edit user data
         GIVEN A successfully logged in user
         WHEN His own data (username and email address) is edited
-        THEN Check for successful changes
+        THEN Check for successful edits
     '''
     token = jwt.encode({'username': UPDATED_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     # Change data base entries
@@ -525,7 +524,7 @@ def test_edit_user(client):
 def test_reset_password_with_registered_email(client):
     '''
         Tests /api/user/forget API: Send email to given address with option to reset the password.
-        GIVEN An email address registered/saved in data base 
+        GIVEN A username registered/saved in data base 
         WHEN User forgets his password and wants to reset it
         THEN Check for successful password reset
     '''
@@ -595,8 +594,8 @@ def test_reset_password_with_registered_email_2_more_sec_later(client):
 @pytest.mark.skip(reason="To be reseted by username")
 def test_reset_password_with_unregistered_username(client):
     '''
-        Tests /api/user/forget API: Send email to given address with option to reset the password.
-        GIVEN A not registered email address 
+        Tests /api/user/forget API: Send email to given user with option to reset the password.
+        GIVEN A not registered username 
         WHEN User wants to reset the password
         THEN Check for unsuccessful password reset
     '''
@@ -878,7 +877,6 @@ def test_check_registration_code(client):
 
 '''
     /api/measurement and /api/measurements tests
-    Create new user
 '''
 def test_signup_new_user_for_further_tests(client):
     # Trigger initial request to create db
@@ -1188,7 +1186,9 @@ def test_delete_anthropometric_measurement_by_id(client):
 
 # end of /api/measurement and /api/measurements tests
 
-# end of /api/users tests
+'''
+    /api/configurations tests
+'''
 def test_set_configuration(client):
     """
     Tests /api/configurations API: The config was successfully updated
@@ -1206,3 +1206,5 @@ def test_set_configuration(client):
             }
         ),
         content_type="application/json")
+
+# end of /api/configurations tests
