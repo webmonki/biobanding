@@ -232,3 +232,26 @@ def predicted_adult_height(sex_m_0_f_1: int, height: float, weight: float, age: 
 
         return {'pah': round(pah, 2), 'pmh': round(pmh, 2), 'remaining_growth': round(remaining_growth, 2)}
 # [END predicted_adult_height]
+
+
+# [BEGIN ape_index]
+def ape_index(body_span: float, height: float) -> float:
+    """
+   Calculate the ratio of an individual's body span relative to their height.
+
+    Args:
+        body_span (float): individual's body span in cm
+        height (float): individual's height in cm
+
+    Raises:
+        Error 400: if sex_m_0_f_1 is not 0 or 1
+
+    Return:
+        ape_index (float): ratio between body_span and height
+    """
+
+    ape_idx = body_span / height
+
+    return round(ape_idx, 2)
+
+

@@ -470,11 +470,11 @@ class Login(Resource):
         _username = req_data.get("username")
         _password = req_data.get("password")
 
-        user_exists = Users.get_by_email(_username)
+        user_exists = Users.get_by_username(_username)
 
         if not user_exists:
             return {"success": False,
-                    "msg": "This email does not exist."}, 401
+                    "msg": "This username does not exist."}, 401
 
         if not user_exists.check_password(_password):
             return {"success": False,

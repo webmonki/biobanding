@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from json import dumps
-from api.formulas import mirwald, bmi, predicted_adult_height
+from api.formulas import mirwald, bmi, predicted_adult_height, ape_index
 from .config import BaseConfig
 from .utils import json_serial
 import jwt
@@ -196,6 +196,7 @@ class AnthropometricData(db.Model):
     pmh = db.Column(db.Float())
     remaining_growth = db.Column(db.Float())
     age_at_measurement = db.Column(db.Float, nullable=False)
+    ape_index = db.Column(db.Float, nullable=False)
 
     # [BEGIN save()] #######
     def save(self):
@@ -219,6 +220,9 @@ class AnthropometricData(db.Model):
 
         # calculate bmi
         self.bmi = bmi(self.height, self.weight)
+
+        # calculate ape index
+        self.ape_index = ape_index(self.body_span, self.height)
 
         # Check if user as saved parent height
         if playerDetail.height_father is not None and playerDetail.height_mother is not None:
@@ -293,6 +297,7 @@ class AnthropometricData(db.Model):
                     'PMH': self.pmh,
                     'PAH': self.pah,
                     'CM until PAH': self.remaining_growth,
+                    'APE Index': self.ape_index,
                     "Größe": self.height,
                     'Sitzgröße': self.sitting_height,
                     'Körperspanne': self.body_span,
