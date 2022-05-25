@@ -22,6 +22,8 @@ DUMMY_USERNAME = "admin2"
 DUMMY_EMAIL = "admin2@example.org"
 DUMMY_PASS = "admin2"
 DUMMY_BIRTHDAY = "2015-05-10"
+DUMMY_FIRST_NAME = "Alf"
+DUMMY_LAST_NAME = "Brügger"
 # Configuration
 DUMMY_EMAIL_SERVER = "smtp.example-server.org"
 DUMMY_EMAIL_PORT = 100
@@ -30,6 +32,7 @@ DUMMY_DAYS_REMINDER = 5
 DUMMY_EMAIL_USE_SSL = False
 # Updated user data
 UPDATED_USERNAME = "Eddy"
+UPDATED_FIRST_NAME = "EddysUpdatedStName"
 UPDATED_EMAIL = "eddy@mail.com"
 UPDATED_PASS = "eddy22"
 PASSWORD_UPDATED_WITH_TOKEN = "token?password"
@@ -68,7 +71,7 @@ ADMIN_USERNAME = "admin"
 ADMIN_EMAIL = "admin@example.org"
 ADMIN_PASSWORD = "admin"
 
-IMAGINARY_EMAIL = "imagine@mails.en"
+IMAGINARY_USERNAME = "imagine"
 # Admin configuration data
 AC_UPDATED_DAYS_REMINDER = 55
 AC_UPDATED_MAIL_SERVER = "edited.smtp.com"
@@ -148,7 +151,7 @@ def test_user_login_unconfirmed(client):
         "api/users/login",
         data=json.dumps(
             {
-                "email": DUMMY_EMAIL,
+                "username": DUMMY_USERNAME,
                 "password": DUMMY_PASS
             }
         ),
@@ -166,14 +169,14 @@ def test_user_confirm_signup(client):
         WHEN User confirms his account
         THEN Check for successful confirmation
     '''
-    token = jwt.encode({'email': DUMMY_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': DUMMY_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.post(
         '/api/users/confirm',
         headers={"authorization": token},
         data=json.dumps(
             {
-                "last_name": DUMMY_USERNAME,
-                "first_name": DUMMY_USERNAME,
+                "last_name": DUMMY_LAST_NAME,
+                "first_name": DUMMY_FIRST_NAME,
                 "birthday": DUMMY_BIRTHDAY,
                 "sex_m_0_f_1": 0,
                 "height_father": 175,
@@ -201,7 +204,7 @@ def test_user_login_correct(client):
         "api/users/login",
         data=json.dumps(
             {
-                "email": DUMMY_EMAIL,
+                "username": DUMMY_USERNAME,
                 "password": DUMMY_PASS
             }
         ),
@@ -224,7 +227,7 @@ def test_user_login_error(client):
         "api/users/login",
         data=json.dumps(
             {
-                "email": DUMMY_EMAIL,
+                "username": DUMMY_USERNAME,
                 "password": DUMMY_PASS + "x"
             }
         ),
@@ -243,7 +246,7 @@ def test_update_user_by_id(client):
         WHEN Updating username, email and password
         THEN Check for successful data update
     '''
-    token = jwt.encode({'email': DUMMY_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': DUMMY_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.put(
         "/api/user/2",
         data=json.dumps(
@@ -270,7 +273,7 @@ def test_create_anthropometric_data(client):
         WHEN Creating new anthropometric data
         THEN Check id data has beeen successfully saved
     '''
-    token = jwt.encode({'email': UPDATED_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': UPDATED_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.post(
         "/api/user/" + str(ANTH_USER_ID) + "/anthropometric",
         headers={"authorization": token},
@@ -299,7 +302,7 @@ def test_return_players_anthropometric_data(client):
         WHEN Retrieving anthropometric data of that user
         THEN Check for successful data retrieval
     '''
-    token = jwt.encode({'email': UPDATED_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': UPDATED_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.get(
         "/api/user/" + str(ANTH_USER_ID) + "/anthropometric",
         headers={"authorization": token},
@@ -314,7 +317,7 @@ def test_return_players_anthropometric_data(client):
     assert data["measurements"][0]["UserId"] == ANTH_USER_ID
     assert data["measurements"][0]["Datum"] == '"' + ANTH_DATE_MEASURED + '"'
     assert data["measurements"][0]["Alter"] is not ""
-    assert data["measurements"][0]["YAPHV"] == -2.49
+    assert data["measurements"][0]["YAPHV"] == -2.48
     assert data["measurements"][0]["PHV"] == 4.53 # 4.53 in data base, yet we get: 4.529999999999999
     assert data["measurements"][0]["AK_BIO"] == "PHV -2.5 bis -1.5"
     assert data["measurements"][0]["BMI"] == 24.9
@@ -334,14 +337,14 @@ def test_create_player_details(client):
         WHEN Creating new user details
         THEN Check if user details where created successfully
     '''
-    token = jwt.encode({'email': UPDATED_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': UPDATED_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.post(
         "/api/user/" + str(ANTH_USER_ID) + "/details",
         headers={"authorization": token},
         data=json.dumps(
             {
                 "userID": ANTH_USER_ID,
-                "first_name": UPDATED_USERNAME,
+                "first_name": UPDATED_FIRST_NAME,
                 "last_name": DETAILS_LAST_NAME,
                 "birthday": DETAILS_BIRTHDAY,
                 "sex_m_0_f_1": DETAILS_GENDER,
@@ -364,7 +367,7 @@ def test_get_player_details(client):
         WHEN Retrieving user details of that user
         THEN Check for successful details retrieval
     '''
-    token = jwt.encode({'email': UPDATED_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': UPDATED_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.get(
         "/api/user/" + str(ANTH_USER_ID) + "/details",
         headers={"authorization": token},
@@ -375,13 +378,12 @@ def test_get_player_details(client):
     assert data["success"] == True
     assert data["player_details"] is not []
     assert data["player_details"]["userID"] == ANTH_USER_ID
-    assert data["player_details"]["first_name"] == UPDATED_USERNAME
+    assert data["player_details"]["first_name"] == UPDATED_FIRST_NAME
     assert data["player_details"]["last_name"] == DETAILS_LAST_NAME
     assert data["player_details"]["birthday"] == '"' + DETAILS_BIRTHDAY + '"'
     assert data["player_details"]["sex_m_0_f_1"] == DETAILS_GENDER
     assert data["player_details"]["height_father"] == DETAILS_HEIGHT_FATHER
     assert data["player_details"]["height_mother"] == DETAILS_HEIGHT_MOTHER
-
 
 
 def test_get_all_users(client):
@@ -391,7 +393,7 @@ def test_get_all_users(client):
         WHEN Retrieving: userId, Benutzername and E-Mail of all users
         THEN Check for successful data retrieval
     '''
-    token = jwt.encode({'email': UPDATED_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': UPDATED_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.get(
         '/api/users',
         headers={"authorization": token},
@@ -410,7 +412,7 @@ def test_get_all_users(client):
     assert data["users"][1]["E-Mail"] == UPDATED_EMAIL
 
 
-@pytest.mark.skip(reason="Not implemented. There is no such function.")
+@pytest.mark.skip(reason="There is no such function.")
 def test_get_user_by_id(client):
     '''
         Tests /api/user/<int:id> API: Successfully acquire user data by id
@@ -424,7 +426,7 @@ def test_reset_password_with_valid_token(client):
         WHEN Reseting a password
         THEN Check for successful reset
     '''
-    token = jwt.encode({'email': UPDATED_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': UPDATED_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.put(
         "/api/user/reset",
         data=json.dumps(
@@ -449,7 +451,7 @@ def test_reset_password_with_invalid_token(client):
         WHEN Reseting the password
         THEN Check if password has been changed
     '''
-    token = jwt.encode({'email': IMAGINARY_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': IMAGINARY_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.put(
         "/api/user/reset",
         data=json.dumps(
@@ -474,7 +476,7 @@ def test_reset_password_with_valid_token_and_without_new_password(client):
         WHEN Changing password (to leer string)
         THEN Check results. Results should report issues.
     '''
-    token = jwt.encode({'email': UPDATED_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': UPDATED_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     # Run HTTP PUT method with valid token and no password
     response = client.put(
         "/api/user/reset",
@@ -501,7 +503,7 @@ def test_edit_user(client):
         WHEN His own data (username and email address) is edited
         THEN Check for successful changes
     '''
-    token = jwt.encode({'email': UPDATED_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': UPDATED_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     # Change data base entries
     response = client.post(
         "/api/users/edit",
@@ -590,8 +592,8 @@ def test_reset_password_with_registered_email_2_more_sec_later(client):
     assert data["success"] == True
     assert "Link to reset the password was sent via email to " + EDITED_EMAIL + "." in data["msg"]
 
-@pytest.mark.skip(reason="Should return 'The email address does not exist' instead of INTERNAL SERVER ERROR")
-def test_reset_password_with_unregistered_email(client):
+@pytest.mark.skip(reason="To be reseted by username")
+def test_reset_password_with_unregistered_username(client):
     '''
         Tests /api/user/forget API: Send email to given address with option to reset the password.
         GIVEN A not registered email address 
@@ -602,14 +604,15 @@ def test_reset_password_with_unregistered_email(client):
         "api/user/forget",
         data=json.dumps(
             {
-                "email": IMAGINARY_EMAIL
+                "username": IMAGINARY_USERNAME # by email or by user name?
+                # "email": IMAGINARY_EMAIL # by email or by user name?
             }
         ),
         content_type = "application/json"
     )
     data = json.loads(response.data.decode())
     # Check results
-    #assert response.status_code == 200
+    #assert response.status_code == ???
     #assert data["success"] == ???
     #assert ??? in data["msg"]
 
@@ -620,7 +623,7 @@ def test_delete_nonexistent_user_by_id(client):
         WHEN Deleting user by id
         THEN Check for unsuccessful removal
     '''
-    token = jwt.encode({'email': EDITED_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': EDITED_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     # Execute HTTP DELETE method with notexistent id
     response = client.delete(
         "/api/user/4",
@@ -640,7 +643,7 @@ def test_delete_existing_user_by_id(client):
         WHEN Deleting user by id
         THEN check for successful removal
     '''
-    token = jwt.encode({'email': EDITED_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': EDITED_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     # Execute HTTP DELETE method
     response = client.delete(
         "/api/user/" + str(ANTH_USER_ID),
@@ -665,7 +668,7 @@ def test_user_logout(client):
         "api/users/login",
         data=json.dumps(
             {
-                "email": ADMIN_EMAIL,
+                "username": ADMIN_USERNAME,
                 "password": ADMIN_PASSWORD
             }
         ),
@@ -705,7 +708,7 @@ def test_update_admin_configuration(client):
         "api/users/login",
         data=json.dumps(
             {
-                "email": ADMIN_EMAIL,
+                "username": ADMIN_USERNAME,
                 "password": ADMIN_PASSWORD
             }
         ),
@@ -734,7 +737,7 @@ def test_update_admin_configuration(client):
     assert data["success"] == False
     assert "Valid JWT token is missing" in data["msg"]
     # Update admin configuration with valid token
-    token = jwt.encode({'email': ADMIN_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': ADMIN_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.post(
         "api/configurations",
         data=json.dumps(
@@ -785,7 +788,7 @@ def test_return_admin_configuration(client):
     assert data["success"] == False
     assert "Valid JWT token is missing" in data["msg"]
     # Get admin configuration with valid token
-    token = jwt.encode({'email': ADMIN_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': ADMIN_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.get(
         "api/configurations",
         headers = {"authorization": token},
@@ -856,7 +859,7 @@ def test_check_registration_code(client):
         WHEN Sending an email
         THEN Check for successful post
     '''
-    token = jwt.encode({'email': ADMIN_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': ADMIN_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.post(
     '/api/configurations/testmail',
     headers={"authorization": token},
@@ -904,7 +907,7 @@ def test_signup_new_user_for_further_tests(client):
     assert response.status_code == 200
     assert "The user was successfully registered and a confirmation link was send" in data["msg"]
     # Confirm sign up
-    token = jwt.encode({'email': WILLIE_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': WILLIE_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.post(
         '/api/users/confirm',
         headers={"authorization": token},
@@ -919,7 +922,6 @@ def test_signup_new_user_for_further_tests(client):
             }
         ),
         content_type="application/json")
-
     data = json.loads(response.data.decode())
     # Check results
     assert response.status_code == 201
@@ -940,7 +942,7 @@ def test_generate_new_registration_code(client):
         "api/users/login",
         data=json.dumps(
             {
-                "email": ADMIN_EMAIL,
+                "username": ADMIN_USERNAME,
                 "password": ADMIN_PASSWORD
             }
         ),
@@ -950,7 +952,7 @@ def test_generate_new_registration_code(client):
     assert response.status_code == 200
     assert data["token"] != ""
     # Token of another user
-    token2 = jwt.encode({'email': WILLIE_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token2 = jwt.encode({'username': WILLIE_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.post(
         "api/configurations/code",
         headers = {"authorization": token2},
@@ -974,7 +976,7 @@ def test_get_all_anthropometric_measurements(client):
         THEN Check for successful measurements retrieval
     '''
     # Enter second measurement
-    token = jwt.encode({'email': WILLIE_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': WILLIE_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.post(
         "/api/user/3/anthropometric",
         headers={"authorization": token},
@@ -1047,7 +1049,7 @@ def test_return_anthropometric_measurements(client):
         WHEN Acquiring measurement by id
         THEN Check for successfull obtainment of measurment
     '''
-    token = jwt.encode({'email': WILLIE_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': WILLIE_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.get(
         "/api/measurement/1",
         headers={"authorization": token},
@@ -1082,7 +1084,7 @@ def test_return_anthropometric_measurements_with_invalid_token(client):
         WHEN Acquiring measurement by id
         THEN Check for unsuccessful obtainment of measurement
     '''
-    token = jwt.encode({'email': IMAGINARY_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': IMAGINARY_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.get(
         "/api/measurement/1",
         headers={"authorization": token},
@@ -1100,7 +1102,7 @@ def test_return_anthropometric_measurements_by_nonexistent_id(client):
         WHEN Acquiring measurement of nonexistent user
         THEN Check for unsuccessful measurement retrieval
     '''
-    token = jwt.encode({'email': ADMIN_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': ADMIN_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     try: # get measurement by id = 4 (which doesn't exist)
         response = client.get(
             "/api/measurement/4",
@@ -1125,7 +1127,7 @@ def test_update_own_anthropometric_measurements(client):
         WHEN Updating own measurements by its id
         THEN Check for successfull update of a measurement
     '''
-    token = jwt.encode({'email': WILLIE_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': WILLIE_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.put(
         "/api/measurement/1",
         data=json.dumps(
@@ -1154,7 +1156,7 @@ def test_delete_nonexistent_anthropometric_measurement_by_id(client):
         WHEN Deleting measurement
         THEN Check for unsuccessful measurement removal
     '''
-    token = jwt.encode({'email': ADMIN_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': ADMIN_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.delete(
         "/api/measurement/4",
         headers={"authorization": token},
@@ -1173,7 +1175,7 @@ def test_delete_anthropometric_measurement_by_id(client):
         WHEN Deleting measurement
         THEN Check for successful measurement removal
     '''
-    token = jwt.encode({'email': WILLIE_EMAIL, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+    token = jwt.encode({'username': WILLIE_USERNAME, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
     response = client.delete(
         "/api/measurement/1",
         headers={"authorization": token},
@@ -1186,7 +1188,7 @@ def test_delete_anthropometric_measurement_by_id(client):
 
 # end of /api/measurement and /api/measurements tests
 
-
+# end of /api/users tests
 def test_set_configuration(client):
     """
     Tests /api/configurations API: The config was successfully updated
