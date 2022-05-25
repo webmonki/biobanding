@@ -157,6 +157,8 @@ export default class Table extends Component {
         data = this.searchLesserThan(filter.val, data, filter.chosenIndex);
       } else if (filter.operator === 2) {
         data = this.searchGreaterThan(filter.val, data, filter.chosenIndex);
+      } else if (filter.operator === -1) {
+        data = this.searchNot(filter.val, data, filter.chosenIndex);
       }
     });
 
@@ -278,6 +280,31 @@ export default class Table extends Component {
 
       return newData;
     }
+  };
+
+  // returns list of rows, where cell value does NOT match val
+  searchNot = (val, data, chosenIndex) => {
+    let cols = this.getCols();
+
+    let type = typeof data[0][cols[chosenIndex]];
+    let newData = [];
+
+    if (val === "") {
+      return data;
+    }
+    data.forEach((obj) => {
+      let match = false;
+
+      if (obj[cols[chosenIndex]] !== val) {
+        match = true;
+      }
+
+      if (match) {
+        newData.push(obj);
+      }
+    });
+
+    return newData;
   };
 
   // returns list of rows, where cellvalue matches val
