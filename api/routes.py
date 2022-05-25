@@ -268,8 +268,9 @@ class ResetPasswort(Resource):
 
         req_data = request.get_json()
 
-        _email = req_data.get("email")
-        user = Users.get_by_email(_email)
+        _username = req_data.get("username")
+        user = Users.get_by_username(_username)
+        _email = user.email
 
         token = user.get_jwt_token()
         url = "{}/reset?token={}".format(

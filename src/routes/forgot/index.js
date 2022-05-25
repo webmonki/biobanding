@@ -33,17 +33,15 @@ export default class Forgot extends Component {
 
   // Check Input and Enable Button
   handleChange = () => {
-    this.setState({ email: document.getElementById("emailInput").value });
+    this.setState({ name: document.getElementById("nameInput").value });
 
-    if (
-      this.state.email.match(
-        /^([\wäöüÜÖÄß])+(([\.]{0,1}[\wäöüÜÖÄß])?)*(([\+]{0,1}[\wäöüÜÖÄß])?)*([\wäöüÜÖÄß-])*\@([\wäöüÜÖÄß-]+\.)+([\w]{2,})+$/
-      )
-    ) {
-      this.setState({ btnDisabled: false });
-    } else {
-      this.setState({ btnDisabled: true });
+    let val = this.state.name;
+    let btnDisabled = true;
+
+    if (val.length > 2 && val.length < 32) {
+      btnDisabled = false;
     }
+    this.setState({ btnDisabled });
   };
 
   // API Request Email to reset password
@@ -71,7 +69,7 @@ export default class Forgot extends Component {
     };
 
     let data = `{
-            "email": "${this.state.email}"
+            "username": "${this.state.name}"
         }`;
 
     xhttp.send(data);
@@ -92,24 +90,25 @@ export default class Forgot extends Component {
             <div class={style.loginLabel}>Passwort vergessen</div>
             <div class={style.input}>
               <TextField
-                autocomplete="off"
-                id="emailInput"
-                label="E-Mail"
-                value={this.state.email}
+                id="nameInput"
+                label="Benutzername"
+                value={this.state.name}
                 onKeyUp={(e) => {
                   this.handleChange();
-                  this.setState({ email: e.target.value });
+                  this.setState({ name: e.target.value });
                   let val = e.target.value;
-                  if (
-                    val.match(
-                      /^([\wäöüÜÖÄß])+(([\.]{0,1}[\wäöüÜÖÄß])?)*(([\+]{0,1}[\wäöüÜÖÄß])?)*([\wäöüÜÖÄß-])*\@([\wäöüÜÖÄß-]+\.)+([\w]{2,})+$/
-                    )
-                  ) {
-                    this.setState({ emailFBClass: style.feedbackSucc });
-                    this.setState({ emailFB: "" });
-                  } else {
-                    this.setState({ emailFBClass: style.feedbackErr });
-                    this.setState({ emailFB: "keine E-Mail" });
+
+                  this.setState({ nameFBClass: style.feedbackSucc });
+                  this.setState({ nameFB: "" });
+
+                  if (val.length < 2) {
+                    this.setState({ nameFBClass: style.feedbackErr });
+                    this.setState({ nameFB: "Mindestens 2 Zeichen" });
+                  }
+
+                  if (val.length > 32) {
+                    this.setState({ nameFBClass: style.feedbackErr });
+                    this.setState({ nameFB: "Maximal 32 Zeichen" });
                   }
                 }}
               />
