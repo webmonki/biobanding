@@ -11,10 +11,6 @@ from datetime import datetime, timedelta
 from api_requests import Reguests
 import jwt
 
-import pandas as pd
-
-import chardet
-
 
 filePath = './test_data/Biobanding Datenerhebung_VFL Astrostars_08.01.2022.xlsx'
 
@@ -88,10 +84,10 @@ for user in sheet:
 
 		req.register_user(firstname, lastname, regisCode)
 
-		email = firstname + '.' + lastname + '@test.de'
+		username = firstname + '.' + lastname
 
 
-		token = jwt.encode({'email': email, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
+		token = jwt.encode({'username': username, 'exp': datetime.utcnow() + timedelta(hours=1)}, BaseConfig.SECRET_KEY)
 
 		heightMother = str(user[16].value)
 		heightFather = str(user[17].value)

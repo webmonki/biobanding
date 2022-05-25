@@ -74,10 +74,10 @@ class Reguests:
 		url_login = self.url + '/api/users/login'
 
 		password = 'admin'
-		email = 'admin@example.org'
+		username = 'admin'
 
 		data = '{' +\
-			'"email": ' + '"' + email + '",' +\
+			'"username": ' + '"' + username + '",' +\
 			'"password": ' + '"' + password + '"}' 
 
 		headers = CaseInsensitiveDict()
@@ -90,7 +90,7 @@ class Reguests:
 
 
 		if resp.status_code == 200:
-			print("SUCCESS: " + email + " logged in.")
+			print("SUCCESS: " + username + " logged in.")
 			return resdict['token'], resdict['user']['_id']
 		else:
 			print("ERROR: ", resdict)
@@ -141,12 +141,11 @@ class Reguests:
 
 		url_login = self.url + '/api/users/login'
 
-
-		email = firstname + '.' + lastname + '@test.de'
+		username = firstname + '.' + lastname
 		password = 'string'
 
 		data = '{' +\
-			'"email": ' + '"' + email + '",' +\
+			'"username": ' + '"' + username+ '",' +\
 			'"password": ' + '"' + password + '"}' 
 
 		headers = CaseInsensitiveDict()
@@ -160,7 +159,7 @@ class Reguests:
 			resdict = json.loads(resp.text)
 
 			if resp.status_code == 200:
-				print("SUCCESS: " + email + " logged in.")
+				print("SUCCESS: " + username + " logged in.")
 				return resdict['token'], resdict['user']['_id']
 			else:
 				print("ERROR: ", resdict)
