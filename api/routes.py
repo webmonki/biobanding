@@ -45,7 +45,7 @@ user_edit_model = rest_api.model('UserEditModel', {"userID": fields.String(min_l
                                                    "email": fields.String(required=True, min_length=4, max_length=64)
                                                    })
 user_password_forget_model = rest_api.model('UserPasswordForgetModel',
-                                            {"email": fields.String(required=True, min_length=4)})
+                                            {"username": fields.String(required=True, min_length=4)})
 
 user_password_reset_model = rest_api.model('UserPasswordResetModel',
                                            {"token": fields.String(required=True, min_length=1),
