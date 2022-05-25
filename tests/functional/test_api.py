@@ -521,10 +521,10 @@ def test_edit_user(client):
     assert data["token"] != ""
 
 
-def test_reset_password_with_registered_email(client):
+def test_reset_password_of_registered_user(client):
     '''
-        Tests /api/user/forget API: Send email to given address with option to reset the password.
-        GIVEN A username registered/saved in data base 
+        Tests /api/user/forget API: Send user an email with option to reset the password.
+        GIVEN A registered username
         WHEN User forgets his password and wants to reset it
         THEN Check for successful password reset
     '''
@@ -532,7 +532,7 @@ def test_reset_password_with_registered_email(client):
         "api/user/forget",
         data=json.dumps(
             {
-                "email": EDITED_EMAIL
+                "username": EDITED_USERNAME
             }
         ),
         content_type = "application/json"
@@ -544,10 +544,10 @@ def test_reset_password_with_registered_email(client):
     assert "Link to reset the password was sent via email to " + EDITED_EMAIL + "." in data["msg"]
 
 
-def test_reset_password_with_registered_email_59s_later(client):
+def test_reset_password_of_registered_user_59s_later(client):
     '''
-        Tests /api/user/forget API: Send email to given address with option to reset the password.
-        GIVEN An email address registered/saved in data base 
+        Tests /api/user/forget API: Send user an email with option to reset the password.
+        GIVEN A registered username 
         WHEN User wants to reset his password again 59s later
         THEN Check for unsuccessful password reset
     '''
@@ -556,7 +556,7 @@ def test_reset_password_with_registered_email_59s_later(client):
         "api/user/forget",
         data=json.dumps(
             {
-                "email": EDITED_EMAIL
+                "username": EDITED_USERNAME
             }
         ),
         content_type = "application/json"
@@ -568,10 +568,10 @@ def test_reset_password_with_registered_email_59s_later(client):
     assert "Only one password reset email can be sent per minute." in data["msg"]
 
 
-def test_reset_password_with_registered_email_2_more_sec_later(client):
+def test_reset_password_of_registered_user_2_more_sec_later(client):
     '''
-        Tests /api/user/forget API: Send email to given address with option to reset the password.
-        GIVEN An email address registered/saved in data base 
+        Tests /api/user/forget API: Send user an email with option to reset the password.
+        GIVEN A registered username
         WHEN User wants to reset his password 61s after his first attempt
         THEN Check for successful password reset
     '''
@@ -580,7 +580,7 @@ def test_reset_password_with_registered_email_2_more_sec_later(client):
         "api/user/forget",
         data=json.dumps(
             {
-                "email": EDITED_EMAIL
+                "username": EDITED_USERNAME
             }
         ),
         content_type = "application/json"
