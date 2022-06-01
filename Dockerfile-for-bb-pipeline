@@ -1,0 +1,18 @@
+FROM atlassian/default-image:3
+
+COPY requirements.txt ./
+
+RUN apt-get update && \
+    apt update && \
+    apt -y install python3-pip && \
+    pip install --upgrade pip && \
+    apt-get -y install libpq-dev python3-dev && \
+    npm install -g testcafe && \
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt install -y ./google-chrome-stable_current_amd64.deb
+
+RUN pip install -r requirements.txt
+
+ENV FLASK_APP=run.py
+ENV FLASK_ENV=development
+ENV PREACT_APP_HOST_URI=http://127.0.0.1:5000
