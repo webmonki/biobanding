@@ -10,7 +10,7 @@ pipelines:
         name: e2e Tests (testcafe)
         script:
           - npm install
-          - testcafe --config-file tests/front-end/testcaferc.json --no-sandbox --disable-dev-shm-usage --disable-setuid-sandbox tests/front-end/e2e-login.ts
+          - testcafe --config-file tests/front-end/testcaferc.json --no-sandbox --disable-dev-shm-usage --disable-setuid-sandbox tests/front-end/e2e-views.ts
     - step:
         runs-on: self.hosted # die wichtigste Zeile, notwendig bei jedem 'step'
         name: API Tests (pytest)

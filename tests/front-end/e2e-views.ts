@@ -6,9 +6,9 @@ fixture`Login`
     .page`http://localhost:8080`;
 
     const NO_MEASUREMENTS = Selector('div').withText('')
-    const DIVISION_EMAIL = Selector('div').withExactText('E-Mail')
+    const DIVISION_USERNAME = Selector('div').withExactText('Benutzername')
     const DIVISION_PASSWORD = Selector('div').withExactText('Passwort')
-    const ADMIN_EMAIL = 'admin@example.org'
+    const ADMIN_USERNAME = 'admin'
     const ADMIN_PASSWORD = 'admin'
     const ADMIN_PASSWORD_WRONG = '123456789'
     const ANMELDEN_BUTTON = Selector('button').withExactText('ANMELDEN')
@@ -18,14 +18,13 @@ fixture`Login`
     const LINK_PROFILE = Selector('a').withText('Profil')
     const LINK_EINSTELLUNGEN = Selector('a').withText('Einstellungen')
     const LINK_FEHLER_MELDEN = Selector('a').withText('Fehler melden')
-//    const INFO_PASSWORD_TOO_SHORT = Selector('div').withText('is too short') //this message shows up no more
     const INFO_PASSWORD_WRONG = Selector('div').withText('Wrong credentials.')
-    const INFO_EMAIL_WRONG = Selector('div').withText('This email does not exist.')
+    const INFO_USERNAME_NONEXISTENT = Selector('div').withText('This username does not exist.')
     
     const LOGIN_VIEW = ":8080/login"
     const LOGIN_LOGO = Selector('#page').find('img')
     const LOGIN_ANMELDUNG_DIV = Selector('div').withExactText('Anmeldung')
-    const LOGIN_INPUT_EMAIL = Selector('input').withAttribute('label', 'E-Mail')
+    const LOGIN_INPUT_USERNAME = Selector('input').withAttribute('label', 'Benutzername')
     const LOGIN_INPUT_PASSWORD = Selector('input').withAttribute('label', 'Passwort')
     const LOGIN_LINK_PASSWORT_VERGESSEN = Selector('a').withText('Passwort vergessen?')
     const LOGIN_BUTTON_REGISTRIEREN = Selector('button').withExactText('REGISTRIEREN')
@@ -34,8 +33,8 @@ fixture`Login`
     const FORGOT_VIEW = ":8080/forgot"
     const FORGOT_LOGO = Selector('#page').find('img')
     const FORGOT_PASSVER_DIV = Selector('div').withText('Passwort vergessen')
-    const FORGOT_INPUT_EMAIL = Selector('input').withAttribute('label', 'E-Mail')
-    const FORGOT_INPUT_EMAIL_LABEL = Selector('label').withText('E-Mail')
+    const FORGOT_INPUT_USERNAME = Selector('input').withAttribute('label', 'Benutzername')
+    const FORGOT_INPUT_USERNAME_LABEL = Selector('label').withText('Benutzername')
     const FORGOT_BUTTON_ANMELDEN = Selector('button').withExactText('ANMELDEN')
     const FORGOT_BUTTON_SENDEN = Selector('button').withExactText('SENDEN')
 
@@ -58,7 +57,6 @@ fixture`Login`
     const PROF_LINK = Selector('a').withText('Profil')
     const PROF_LABEL_NAME = Selector('label').withText('Vorname')
     const PROF_LABEL_LAST_NAME = Selector('label').withText('Nachname')
-//    const PROF_LABEL_BIRTHDAY = Selector('div').withText('Geburtstag')
     const PROF_LABEL_BIRTHDAY = Selector('input').withAttribute('type', 'date')
     const PROF_LABEL_HEIGHT_MOM = Selector('label').withText('Größe der Mutter')
     const PROF_LABEL_HEIGHT_DAD = Selector('label').withText('Größe des Vaters')
@@ -69,7 +67,6 @@ fixture`Login`
     const MESSUNG_DIALOG_MESSUNG_ERSTELLEN = Selector('header').withText('Messung erstellen')
     const MESSUNG_DIALOG_MESSUNG_ANTH = Selector('span').withText('Anthropometrische Daten')
     const MESSUNG_NO_MEASUREMENTS_INFO = Selector('table').withText('Keine Messungen vorhanden')
-    //    const MEAS_SELECT_ADMIN = Selector('select').withText('admin')
     const MEASUREMENTS_VIEW = ":8080/measurements"
     const MEAS_HEIGHT_LABEL = Selector('label').withText('Größe')
     const MEAS_SITTING_HEIGHT_LABEL = Selector('label').withText('Größe im Sitzen')
@@ -81,8 +78,8 @@ fixture`Login`
     const BUTTON_i_TAGGED_IN_FILTER_ADD_CIRCLE = Selector('#MessungenfilterContainer').find('button').withText('add_circle')
     const BUTTON_i_TAGGED_LETZTE_MESSUNGEN_ADD_CIRCLE = Selector('i').withText('add_circle')
     const CHECKBOX_DELETE_ALL_CHECK = Selector('input').withAttribute('name', 'deleteCheckAll')
-    const LETZTE_MESSUNGEN_CHIP_CONTAINER = Selector('div').withText('Letzte Messungen')
-    const LETZTE_MESSUNGEN_CHIP = Selector('i').withText('check')
+    const LETZTE_MESSUNGEN_CHIP_CONTAINER = Selector('#chip')
+    const LETZTE_MESSUNGEN_CHIP = Selector('#chipIcon')
     const MEAS_FILTER_CONTAINER = Selector('#MessungenfilterContainer')
     const BUTTON_i_TAGGED_CANCEL = Selector('button').withText('cancel')
     const MEAS_FILTER_CONTAINER_SELECT = Selector('#MessungenfilterContainer').find('select')
@@ -176,17 +173,17 @@ fixture`Login`
     let year = date.getFullYear();
     const today = month + '-' + day + '-' + year
 
-test('/login view - check if all HTML elements are displayed.',  async t => {
-    // e2e Test: 
-    // GIVEN
-    // WHEN
-    // THEN
+test('\'/login\' view',  async t => {
+    // Tests /login view.
+    // GIVEN Flask and npm are running.
+    // WHEN Displaying login view..
+    // THEN Check if login page is displayed, check if all HTML elements are present.
     const location = await getWindowLocation();
     await t.expect(location.href).contains(LOGIN_VIEW)
         .expect(LOGIN_LOGO.visible).ok()
         .expect(LOGIN_LOGO.count).eql(2)
         .expect(LOGIN_ANMELDUNG_DIV.visible).ok()
-        .expect(LOGIN_INPUT_EMAIL.visible).ok()
+        .expect(LOGIN_INPUT_USERNAME.visible).ok()
         .expect(LOGIN_INPUT_PASSWORD.visible).ok()
         .expect(LOGIN_LINK_PASSWORT_VERGESSEN.visible).ok()
         .expect(LOGIN_BUTTON_REGISTRIEREN.visible).ok()
@@ -194,41 +191,117 @@ test('/login view - check if all HTML elements are displayed.',  async t => {
         .expect(LOGIN_BUTTON_ANMELDEN.hasAttribute('disabled')).ok()
 });
 
+test('\'/login\' view (wrong password)', async t => {
+    // Tests /login view.
+    // GIVEN Flask and npm are running.
+    // WHEN Logging in with wrong password.
+    // THEN Check for unsuccessful log in.
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
+    await t.click(DIVISION_USERNAME);
+    for (let i = 0; i < ADMIN_USERNAME.length; i++) {
+        await t.pressKey(ADMIN_USERNAME.charAt(i));
+    }
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
+    await t.click(DIVISION_PASSWORD);
+    for (let i = 0; i < ADMIN_PASSWORD.length; i++) {
+        await t.pressKey(ADMIN_PASSWORD.charAt(i));
+        if (i > 2) {
+            await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
+        }
+    }
+    await t.pressKey('a');
+    await t.click(ANMELDEN_BUTTON);
+    await t.expect(INFO_PASSWORD_WRONG.visible).eql(true);
+    const location = await getWindowLocation();
+    await t.expect(location.href).contains(LOGIN_VIEW);
+});
 
-test('/forgot view - check if all HTML elements are displayed.',  async t => {
-    // e2e Test: 
-    // GIVEN
-    // WHEN
-    // THEN
+
+test('\'/login\' view (unregistered username)', async t => {
+    // Tests /login view.
+    // GIVEN Flask and npm are running.
+    // WHEN Attempting to log in with unregistered username.
+    // THEN Check for unsuccessful log in.
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
+    await t.click(DIVISION_USERNAME);
+    for (let i = 0; i < ADMIN_USERNAME.length; i++) {
+        await t.pressKey(ADMIN_USERNAME.charAt(i));
+    }
+    await t.pressKey('a');
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
+    await t.click(DIVISION_PASSWORD);
+    for (let i = 0; i < ADMIN_PASSWORD_WRONG.length; i++) {
+        await t.pressKey(ADMIN_PASSWORD_WRONG.charAt(i));
+    }
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
+    await t.click(ANMELDEN_BUTTON);
+    await t.expect(INFO_USERNAME_NONEXISTENT.visible).eql(true);
+    const location = await getWindowLocation();
+    await t.expect(location.href).contains(LOGIN_VIEW);
+});
+
+
+test('\'/login\' view (valid credentials)', async t => {
+    // Tests /login view.
+    // GIVEN Flask and npm are running.
+    // WHEN Logging in with registered username and corrrect password.
+    // THEN Check for successful log in.
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
+    await t.click(DIVISION_USERNAME);
+    for (let i = 0; i < ADMIN_USERNAME.length; i++) {
+        await t.pressKey(ADMIN_USERNAME.charAt(i));
+    }
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
+    await t.click(DIVISION_PASSWORD);
+    for (let i = 0; i < ADMIN_PASSWORD.length; i++) {
+        await t.pressKey(ADMIN_PASSWORD.charAt(i));
+    }
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
+    await t.click(ANMELDEN_BUTTON);
+    await t.expect(LINK_MEASUREMENTS.visible).eql(true);
+    const location = await getWindowLocation();
+    await t.expect(location.href).contains(MEASUREMENTS_VIEW);
+});
+
+
+
+test('\'/forgot\' view',  async t => {
+    // Tests /forgot view.
+    // GIVEN Flask and npm are running.
+    // WHEN A user attempts to retrieve forgotten password.
+    // THEN Check if forgot page is displayed. Check if all HTML elements are present.
     await t.click(LOGIN_LINK_PASSWORT_VERGESSEN)
     const location = await getWindowLocation();
     await t.expect(location.href).contains(FORGOT_VIEW)
         .expect(FORGOT_LOGO.visible).ok()
         .expect(FORGOT_LOGO.count).eql(2)
         .expect(FORGOT_PASSVER_DIV.visible).ok()
-        .expect(FORGOT_INPUT_EMAIL.visible).ok()
-        .expect(FORGOT_INPUT_EMAIL_LABEL.visible).ok()
+        .expect(FORGOT_INPUT_USERNAME.visible).ok()
+        .expect(FORGOT_INPUT_USERNAME_LABEL.visible).ok()
         .expect(FORGOT_BUTTON_ANMELDEN.visible).ok()
         .expect(FORGOT_BUTTON_SENDEN.visible).ok()
         .expect(FORGOT_BUTTON_SENDEN.hasAttribute('disabled')).ok()
 });
 
 
-test('/signup view - check if all HTML elements are displayed.',  async t => {
-    // e2e Test: 
-    // GIVEN
-    // WHEN
-    // THEN
-    // login as admin@example.org
+test('\'/signup\' view',  async t => {
+    // Tests /signup view.
+    // GIVEN Flask and npm are running.
+    // WHEN Signing up a new user.
+    // THEN Check if signup view is displayed. Check if all HTML elements are present. Sign up new user.
+    // log in
     await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
-    await t.click(DIVISION_EMAIL);
-    for (let i = 0; i < ADMIN_EMAIL.length; i++) {
-        await t.pressKey(ADMIN_EMAIL.charAt(i));
+    await t.click(DIVISION_USERNAME);
+    for (let i = 0; i < ADMIN_USERNAME.length; i++) {
+        await t.pressKey(ADMIN_USERNAME.charAt(i));
     }
-    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
     await t.click(DIVISION_PASSWORD);
     for (let i = 0; i < ADMIN_PASSWORD.length; i++) {
         await t.pressKey(ADMIN_PASSWORD.charAt(i));
+        if (i > 2) {
+            await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
+        }
     }
     await t.click(ANMELDEN_BUTTON);
     // navigate to /settings view
@@ -309,113 +382,26 @@ test('/signup view - check if all HTML elements are displayed.',  async t => {
         .click(SIGNUP_INPUT_CHECKBOX)
         .expect(SIGNUP_BUTTON_REGISTRIEREN.hasAttribute('disabled')).notOk()
         .click(SIGNUP_BUTTON_REGISTRIEREN)
-
-});
-
-// 'message' about üassword being too short shows up no more
-// test.skip('Log in as admin@example.org - invalid password', async t => {
-//     // e2e Test: Logging in as admin@example
-//     // GIVEN Valid email and invalid passsword
-//     // WHEN Logging in
-//     // THEN Check for unsuccessful log in
-//     await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
-//     await t.click(DIVISION_EMAIL);
-//     for (let i = 0; i < ADMIN_EMAIL.length; i++) {
-//         await t.pressKey(ADMIN_EMAIL.charAt(i));
-//     }
-//     await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
-//     await t.click(DIVISION_PASSWORD);
-//     await t.pressKey('a');
-//     await t.click(ANMELDEN_BUTTON);
-//     await t.expect(INFO_PASSWORD_TOO_SHORT.visible).eql(true);
-//     const location = await getWindowLocation();
-//     await t.expect(location.href).contains(LOGIN_VIEW);
-// });
-
-
-test('Log in as admin@example.org - wrong password', async t => {
-    // e2e Test: Logging in as admin@example
-    // GIVEN Valid email and wrong passsword
-    // WHEN Logging in
-    // THEN Check for unsuccessful log in
-    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
-    await t.click(DIVISION_EMAIL);
-    for (let i = 0; i < ADMIN_EMAIL.length; i++) {
-        await t.pressKey(ADMIN_EMAIL.charAt(i));
-    }
-    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
-    await t.click(DIVISION_PASSWORD);
-    for (let i = 0; i < ADMIN_PASSWORD_WRONG.length; i++) {
-        await t.pressKey(ADMIN_PASSWORD_WRONG.charAt(i));
-    }
-    await t.click(ANMELDEN_BUTTON);
-    await t.expect(INFO_PASSWORD_WRONG.visible).eql(true);
-    const location = await getWindowLocation();
-    await t.expect(location.href).contains(LOGIN_VIEW);
 });
 
 
-test('Log in as aadmin@example.org - nonexistent email', async t => {
-    // e2e Test: Logging in as aadmin@example
-    // GIVEN Not registered email
-    // WHEN Logging in
-    // THEN Check for unsuccessful log in
+test('\'/profile\' view', async t => {
+    // Tests /profile view.
+    // GIVEN Flask and npm are running, successful log in.
+    // WHEN Adding profile details.
+    // THEN Check if profile view is displayed, check if all HTML elements are present, add profile details.
+    // Log in
     await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
-    await t.click(DIVISION_EMAIL);
-    await t.pressKey('a');
-    for (let i = 0; i < ADMIN_EMAIL.length; i++) {
-        await t.pressKey(ADMIN_EMAIL.charAt(i));
+    await t.click(DIVISION_USERNAME);
+    for (let i = 0; i < ADMIN_USERNAME.length; i++) {
+        await t.pressKey(ADMIN_USERNAME.charAt(i));
     }
-    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
-    await t.click(DIVISION_PASSWORD);
-    for (let i = 0; i < ADMIN_PASSWORD_WRONG.length; i++) {
-        await t.pressKey(ADMIN_PASSWORD_WRONG.charAt(i));
-    }
-    await t.click(ANMELDEN_BUTTON);
-    await t.expect(INFO_EMAIL_WRONG.visible).eql(true);
-    const location = await getWindowLocation();
-    await t.expect(location.href).contains(LOGIN_VIEW);
-});
-
-
-test('Log in as admin@example.org - valid credentials', async t => {
-    // e2e Test: Log in as admin@example
-    // GIVEN Valid credentials
-    // WHEN Logging in
-    // THEN Check for successful log in
     await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
-    await t.click(DIVISION_EMAIL);
-    for (let i = 0; i < ADMIN_EMAIL.length; i++) {
-        await t.pressKey(ADMIN_EMAIL.charAt(i));
-    }
-    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
     await t.click(DIVISION_PASSWORD);
     for (let i = 0; i < ADMIN_PASSWORD.length; i++) {
         await t.pressKey(ADMIN_PASSWORD.charAt(i));
     }
-    await t.click(ANMELDEN_BUTTON);
-    await t.expect(LINK_MEASUREMENTS.visible).eql(true);
-    const location = await getWindowLocation();
-    await t.expect(location.href).contains(MEASUREMENTS_VIEW);
-});
-
-
-test('Profile view - add details', async t => {
-    // e2e Test: Add profile details
-    // GIVEN
-    // WHEN
-    // THEN
-    // Log in as admin@example.org
-    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
-    await t.click(DIVISION_EMAIL);
-    for (let i = 0; i < ADMIN_EMAIL.length; i++) {
-        await t.pressKey(ADMIN_EMAIL.charAt(i));
-    }
     await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
-    await t.click(DIVISION_PASSWORD);
-    for (let i = 0; i < ADMIN_PASSWORD.length; i++) {
-        await t.pressKey(ADMIN_PASSWORD.charAt(i));
-    }
     await t.click(ANMELDEN_BUTTON);
     await t.expect(LINK_MEASUREMENTS.visible).eql(true);
     let location = await getWindowLocation();
@@ -451,27 +437,27 @@ test('Profile view - add details', async t => {
 });
 
 
-test('Measurements view - add new measurement', async t => {
-    // e2e Test dialog box in /measurement viewA Add new measurement
-    // GIVEN
-    // WHEN
-    // THEN
-    // Log in as admin@example.org
+test('\'/measurements\' view (add new measurement)', async t => {
+    // Tests /measurements view.
+    // GIVEN Flask and npm are running, profile details are present, successful log in.
+    // WHEN Registering a measurement.
+    // THEN Check if measurements view is displayed, add new measurement, check if added measurement is displayed.
+    // Log in
     await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
-    await t.click(DIVISION_EMAIL);
-    for (let i = 0; i < ADMIN_EMAIL.length; i++) {
-        await t.pressKey(ADMIN_EMAIL.charAt(i));
+    await t.click(DIVISION_USERNAME);
+    for (let i = 0; i < ADMIN_USERNAME.length; i++) {
+        await t.pressKey(ADMIN_USERNAME.charAt(i));
     }
-    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
     await t.click(DIVISION_PASSWORD);
     for (let i = 0; i < ADMIN_PASSWORD.length; i++) {
         await t.pressKey(ADMIN_PASSWORD.charAt(i));
     }
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
     await t.click(ANMELDEN_BUTTON);
     await t.expect(LINK_MEASUREMENTS.visible).eql(true);
-    const location = await getWindowLocation();
+    let location = await getWindowLocation();
     await t.expect(location.href).contains(MEASUREMENTS_VIEW);
-    
     // Add measurement
     await t.click(BUTTON_MESSUNG_ADDIEREN)
         .expect(MESSUNG_DIALOG_MESSUNG_ERSTELLEN.visible).ok()
@@ -513,25 +499,26 @@ test('Measurements view - add new measurement', async t => {
 });
 
 
-test('Measurements view - check if all HTML elements are displayed.', async t => {
-    // e2e Test dialog box in /measurement view, add new measurement, edit measurement, delete measurement.
-    // GIVEN
-    // WHEN
-    // THEN
-    // Log in as admin@example.org
+test('\'/measurements\' view', async t => {
+    // Tests /measurement view.
+    // GIVEN Flask and npm are running. Successful log in.
+    // WHEN Displaying measurements view.
+    // THEN Check if all HTML elements are displayed, check if 'edit measurement' dialog box displays all HTML elements, delete selected measurement.
+    // Log in
     await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
-    await t.click(DIVISION_EMAIL);
-    for (let i = 0; i < ADMIN_EMAIL.length; i++) {
-        await t.pressKey(ADMIN_EMAIL.charAt(i));
+    await t.click(DIVISION_USERNAME);
+    for (let i = 0; i < ADMIN_USERNAME.length; i++) {
+        await t.pressKey(ADMIN_USERNAME.charAt(i));
     }
-    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
     await t.click(DIVISION_PASSWORD);
     for (let i = 0; i < ADMIN_PASSWORD.length; i++) {
         await t.pressKey(ADMIN_PASSWORD.charAt(i));
     }
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
     await t.click(ANMELDEN_BUTTON);
     await t.expect(LINK_MEASUREMENTS.visible).eql(true);
-    const location = await getWindowLocation();
+    let location = await getWindowLocation();
     await t.expect(location.href).contains(MEASUREMENTS_VIEW);
 
     // check if links and buttons are displayed
@@ -544,10 +531,10 @@ test('Measurements view - check if all HTML elements are displayed.', async t =>
             .expect(BUTTON_i_TAGGED_DOWNLOAD.visible).ok()
             .expect(LETZTE_MESSUNGEN_CHIP_CONTAINER.visible).ok()
             .expect(LETZTE_MESSUNGEN_CHIP.visible).notOk()
-//            .click(LETZTE_MESSUNGEN_CHIP_CONTAINER)
-//            .expect(LETZTE_MESSUNGEN_CHIP.visible).ok()
-//            .click(LETZTE_MESSUNGEN_CHIP_CONTAINER)
-//            .expect(LETZTE_MESSUNGEN_CHIP.visible).notOk()
+           .click(LETZTE_MESSUNGEN_CHIP_CONTAINER)
+           .expect(LETZTE_MESSUNGEN_CHIP.visible).ok()
+           .click(LETZTE_MESSUNGEN_CHIP_CONTAINER)
+           .expect(LETZTE_MESSUNGEN_CHIP.visible).notOk()
             .expect(BUTTON_i_TAGGED_FILTER_LIST.visible).ok()
             // in filter container:
     await t.click(BUTTON_i_TAGGED_FILTER_LIST)
@@ -567,10 +554,9 @@ test('Measurements view - check if all HTML elements are displayed.', async t =>
             .click(MEAS_FILTER_CONTAINER_SELECT)
             .click(MEAS_FILTER_CONTAINER_SELECT.find('option').withText(MEAS_DROPDOWN_OPTIONS[3]))
             .expect(MEAS_FILTER_CONTAINER_SELECT.value).eql(MEAS_DROPDOWN_OPTIONS[3])
-            // .click(MEAS_FILTER_CONTAINER_SELECT)
-            // .expect(MEAS_FILTER_CONTAINER_SELECT.find('option').withText(MEAS_DROPDOWN_OPTIONS[4]).visible).ok()
-            // .click(MEAS_FILTER_CONTAINER_SELECT.find('option').withText(MEAS_DROPDOWN_OPTIONS[4]))
-            // .expect(MEAS_FILTER_CONTAINER_SELECT.value).eql(MEAS_DROPDOWN_OPTIONS[4])
+//            .click(MEAS_FILTER_CONTAINER_SELECT)
+//            .click(MEAS_FILTER_CONTAINER_SELECT.find('option').withText(MEAS_DROPDOWN_OPTIONS[4]))
+//            .expect(MEAS_FILTER_CONTAINER_SELECT.value).eql(MEAS_DROPDOWN_OPTIONS[4])
             .click(MEAS_FILTER_CONTAINER_SELECT)
             .click(MEAS_FILTER_CONTAINER_SELECT.find('option').withText(MEAS_DROPDOWN_OPTIONS[5]))
             .expect(MEAS_FILTER_CONTAINER_SELECT.value).eql(MEAS_DROPDOWN_OPTIONS[5])
@@ -622,27 +608,30 @@ test('Measurements view - check if all HTML elements are displayed.', async t =>
         });
 
 
-test('Settings view - check if all HTML elements are displayed in /settings view..', async t => {
-    // e2e Test 
-    // GIVEN
-    // WHEN
-    // THEN
-    // Log in as admin@example.org
-    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok()
-            .click(DIVISION_EMAIL);
-    for (let i = 0; i < ADMIN_EMAIL.length; i++) {
-        await t.pressKey(ADMIN_EMAIL.charAt(i));
+test('\'/settings\' view', async t => {
+    // Tests /settings view.
+    // GIVEN Flask and npm are running. Successful log in.
+    // WHEN Displaying setting view.
+    // THEN Check if settings view is displayed. Check if all HTML are present.
+    // Log in as admin
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
+    await t.click(DIVISION_USERNAME);
+    for (let i = 0; i < ADMIN_USERNAME.length; i++) {
+        await t.pressKey(ADMIN_USERNAME.charAt(i));
     }
-    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk()
-            .click(DIVISION_PASSWORD);
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
+    await t.click(DIVISION_PASSWORD);
     for (let i = 0; i < ADMIN_PASSWORD.length; i++) {
         await t.pressKey(ADMIN_PASSWORD.charAt(i));
     }
-    await t.click(ANMELDEN_BUTTON)
-            .expect(LINK_EINSTELLUNGEN.visible).eql(true);
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
+    await t.click(ANMELDEN_BUTTON);
+    await t.expect(LINK_MEASUREMENTS.visible).eql(true);
+    let location = await getWindowLocation();
+    await t.expect(location.href).contains(MEASUREMENTS_VIEW);
     // Navigate to 'settings'
     await t.click(LINK_EINSTELLUNGEN);
-    let location = await getWindowLocation();
+    location = await getWindowLocation();
     await t.expect(location.href).contains(SETTINGS_VIEW)
             .expect(SETTINGS_HEADER.visible).ok()
             .expect(SETTINGS_ERINNERUNG_IN_TAGEN.visible).ok()
@@ -666,30 +655,30 @@ test('Settings view - check if all HTML elements are displayed in /settings view
 });
 
 
-test('Users view - check if all HTML elements in /users view are displayed.', async t => {
-    // e2e Test 
-    // GIVEN
-    // WHEN
-    // THEN
-    // Log in as admin@example.org
-    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok()
-            .click(DIVISION_EMAIL);
-    for (let i = 0; i < ADMIN_EMAIL.length; i++) {
-        await t.pressKey(ADMIN_EMAIL.charAt(i));
+test('\'/users\' view', async t => {
+    // Tests /users view.
+    // GIVEN Flask and npm are running. Successful login.
+    // WHEN Displaying users view.
+    // THEN Check if users view is displayed. Check if all HTML elements are present.
+    // Log in
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
+    await t.click(DIVISION_USERNAME);
+    for (let i = 0; i < ADMIN_USERNAME.length; i++) {
+        await t.pressKey(ADMIN_USERNAME.charAt(i));
     }
-    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk()
-            .click(DIVISION_PASSWORD);
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
+    await t.click(DIVISION_PASSWORD);
     for (let i = 0; i < ADMIN_PASSWORD.length; i++) {
         await t.pressKey(ADMIN_PASSWORD.charAt(i));
     }
-    // 
-    await t.click(ANMELDEN_BUTTON)
-            .expect(LINK_USERS.visible).eql(true);
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
+    await t.click(ANMELDEN_BUTTON);
+    await t.expect(LINK_MEASUREMENTS.visible).eql(true);
+    let location = await getWindowLocation();
+    await t.expect(location.href).contains(MEASUREMENTS_VIEW);
     // Navigate to 'users'
     await t.click(LINK_USERS);
-
-    
-    let location = await getWindowLocation();
+    location = await getWindowLocation();
     await t.expect(location.href).contains(USERS_VIEW)
             //check if all links are displayed
             .expect(LINK_MEASUREMENTS.visible).ok()
@@ -761,24 +750,27 @@ test('Users view - check if all HTML elements in /users view are displayed.', as
 });
 
 
-test('Users view - check if all HTML elements are displayed in "Fehler melden" iframe.', async t => {
-    // e2e Test 
-    // GIVEN
-    // WHEN
-    // THEN
-    // Log in as admin@example.org
-    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok()
-            .click(DIVISION_EMAIL);
-    for (let i = 0; i < ADMIN_EMAIL.length; i++) {
-        await t.pressKey(ADMIN_EMAIL.charAt(i));
+test('\'Fehler melden\' iframe', async t => {
+    // Test 'Fehler melden' iframe.
+    // GIVEN Flask and npm are running. Successful log in.
+    // WHEN Displaying 'Fehler melden' iframe.
+    // THEN Check if 'Fehler melden' iframe is displayed. Check if it displays all HTML elements.
+    // Log in
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
+    await t.click(DIVISION_USERNAME);
+    for (let i = 0; i < ADMIN_USERNAME.length; i++) {
+        await t.pressKey(ADMIN_USERNAME.charAt(i));
     }
-    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk()
-            .click(DIVISION_PASSWORD);
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).ok();
+    await t.click(DIVISION_PASSWORD);
     for (let i = 0; i < ADMIN_PASSWORD.length; i++) {
         await t.pressKey(ADMIN_PASSWORD.charAt(i));
     }
-    await t.click(ANMELDEN_BUTTON)
-            .expect(LINK_FEHLER_MELDEN.visible).eql(true);
+    await t.expect(ANMELDEN_BUTTON.hasAttribute('disabled')).notOk();
+    await t.click(ANMELDEN_BUTTON);
+    await t.expect(LINK_MEASUREMENTS.visible).eql(true);
+    let location = await getWindowLocation();
+    await t.expect(location.href).contains(MEASUREMENTS_VIEW);
     // Bring up 'Fehler melden' dialog box
     await t.expect(LINK_FEHLER_MELDEN.visible).ok()
             .click(LINK_FEHLER_MELDEN)
