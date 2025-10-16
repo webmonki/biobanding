@@ -9,8 +9,7 @@ from json import dumps
 from random import randrange
 
 import jwt
-import os
-from flask import request
+from flask import current_app, request
 from flask_restx import Api, Resource, fields
 
 from .config import BaseConfig
@@ -274,7 +273,11 @@ class ResetPasswort(Resource):
 
         token = user.get_jwt_token()
         url = "{}/reset?token={}".format(
-            os.environ['PREACT_APP_HOST_URI'], token)
+            current_app.config.get(
+                'PREACT_APP_HOST_URI', BaseConfig.PREACT_APP_HOST_URI
+            ),
+            token
+        )
 
         if user:
             block_reset = False
@@ -421,7 +424,11 @@ class Register(Resource):
 
         token = new_user.get_jwt_token()
         url = "{}/confirm?token={}".format(
-            os.environ['PREACT_APP_HOST_URI'], token)
+            current_app.config.get(
+                'PREACT_APP_HOST_URI', BaseConfig.PREACT_APP_HOST_URI
+            ),
+            token
+        )
 
         send_email_with_token(
             new_user, 'Bitte bestätige deine E-Mail-Adresse', 'confirm_email_address.html', url)
@@ -442,7 +449,11 @@ class SendMail(Resource):
         _user = Users.get_by_username(_username)
         token = _user.get_jwt_token()
         url = "{}/confirm?token={}".format(
-            os.environ['PREACT_APP_HOST_URI'], token)
+            current_app.config.get(
+                'PREACT_APP_HOST_URI', BaseConfig.PREACT_APP_HOST_URI
+            ),
+            token
+        )
         try:
             send_email_with_token(
                 _user, 'Bitte bestätige deine E-Mail-Adresse', 'confirm_email_address.html', url)

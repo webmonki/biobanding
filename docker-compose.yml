@@ -6,6 +6,8 @@ services:
     image: biobanding.azurecr.io/api
     restart: unless-stopped
     container_name: api
+    env_file:
+      - .env
     environment:
       - FLASK_ENV=production
       - FLASK_APP=run.py
@@ -23,6 +25,8 @@ services:
     depends_on:
       - api
     container_name: client
+    env_file:
+      - .env
 
 
 

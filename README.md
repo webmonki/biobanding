@@ -64,7 +64,19 @@ $ pip install -r requirements.txt
 
 <br />
 
-> **Step #4** - setup `flask` command for our app
+> **Step #4** - Configure environment variables
+
+The API now reads its configuration from environment variables. Copy the example
+file and adjust the values to match your local setup (secrets should never be
+committed to the repository):
+
+```bash
+$ cp .env.example .env
+```
+
+<br />
+
+> **Step #5** - setup `flask` command for our app
 
 ```bash
 $ export FLASK_APP=run.py
@@ -84,7 +96,7 @@ $ (Powershell) $env:FLASK_ENV = "development"
 
 <br />
 
-> **Step #5** - start test APIs server at `localhost:5000`
+> **Step #6** - start test APIs server at `localhost:5000`
 
 ```bash
 $ flask run
@@ -96,7 +108,7 @@ Use the API via `POSTMAN` or Swagger Dashboard.
 
 <br />
 
-> **Step #6** - start test client `localhost:8080`
+> **Step #7** - start test client `localhost:8080`
 ```bash
 $ yarn install
 $ yarn dev
