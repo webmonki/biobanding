@@ -4,7 +4,6 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 import json
-import os
 from flask import Flask
 from flask_cors import CORS
 from sqlalchemy import func, and_
@@ -14,6 +13,7 @@ from random import randrange
 from .routes import rest_api
 from .models import db, AdminConfig, Users, AnthropometricData
 from .email import send_email_with_token, send_email
+from .config import BaseConfig
 
 
 app = Flask(__name__)
@@ -109,7 +109,12 @@ def reminder():
                         # Generate token and url for email reminder
                         token = user.get_jwt_token()
                         url = "{}/measurement?token={}".format(
-                            os.environ['PREACT_APP_HOST_URI'], token)
+                            app.config.get(
+                                'PREACT_APP_HOST_URI',
+                                BaseConfig.PREACT_APP_HOST_URI
+                            ),
+                            token
+                        )
                         # Send email reminder to user
                         send_email_with_token(
                             user, 'Neue Messung eintragen', 'measurement_reminder.html', url)
@@ -119,7 +124,12 @@ def reminder():
                     # Generate token and url for email reminder
                     token = user.get_jwt_token()
                     url = "{}/measurement?token={}".format(
-                        os.environ['PREACT_APP_HOST_URI'], token)
+                        app.config.get(
+                            'PREACT_APP_HOST_URI',
+                            BaseConfig.PREACT_APP_HOST_URI
+                        ),
+                        token
+                    )
                     # Send email reminder to user
                     send_email_with_token(
                         user, 'Neue Messung eintragen', 'measurement_reminder.html', url)
